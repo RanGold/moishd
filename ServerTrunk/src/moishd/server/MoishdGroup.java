@@ -44,7 +44,11 @@ public class MoishdGroup {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public void setStats(GameStatistics stats) {
+		this.stats = stats;
+	}
+	
 	public GameStatistics getStats() {
 		return stats;
 	}

@@ -1,10 +1,6 @@
 package moishd.server;
 
 import com.google.appengine.api.datastore.Key;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -27,16 +23,12 @@ public class GameStatistics {
     
     @Persistent
     private Integer points;
-    
-    @Persistent
-    private List<Trophy> trophies;
 
     public GameStatistics() {
     	this.gamesPlayed = 0;
     	this.gamesWon = 0;
     	this.rank = -1;
     	this.points = 0;
-    	trophies = new LinkedList<Trophy>();
     }
     
     public GameStatistics(Integer gamesPlayed, Integer gamesWon, Integer rank, Integer points) {
@@ -44,7 +36,6 @@ public class GameStatistics {
         this.gamesWon = gamesWon;
         this.rank = rank;
         this.points = points;
-        trophies = new LinkedList<Trophy>();
     }
 
 	public Integer getGamesPlayed() {
@@ -82,38 +73,4 @@ public class GameStatistics {
 	public Key getStatsId() {
 		return statsId;
 	}
-
-	public List<Trophy> getTrophies() {
-		return trophies;
-	}
-    
-    
-/*
-    public Key getKey() {
-        return key;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }*/
 }

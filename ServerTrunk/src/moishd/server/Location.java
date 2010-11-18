@@ -18,8 +18,7 @@ public class Location {
     @Persistent
     private Integer yCoordinate;
     
-	public Location(Key locationId, Integer xCoordinate, Integer yCoordinate) {
-		this.locationId = locationId;
+	public Location(Integer xCoordinate, Integer yCoordinate) {
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
 	}

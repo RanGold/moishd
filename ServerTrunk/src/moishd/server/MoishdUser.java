@@ -3,6 +3,9 @@ package moishd.server;
 import com.google.appengine.api.datastore.Key;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -28,15 +31,27 @@ public class MoishdUser {
     
     @Persistent
     private Location location;
+    
+    @Persistent
+    private List<Trophy> trophies;
+    
+	@Persistent
+    private GameStatistics stats; 
 
+	public MoishdUser() {
+		setTrophies(new LinkedList<Trophy>());
+		setStats(new GameStatistics());
+	}
+	
 	public MoishdUser(String userNick, String pictureLink, Date dateRegistered,
 			MoishdGroup group, Location location) {
-		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
 		this.dateRegistered = dateRegistered;
 		this.group = group;
 		this.location = location;
+		setTrophies(new LinkedList<Trophy>());
+		setStats(new GameStatistics());
 	}
 
 	public String getUserNick() {
@@ -81,5 +96,21 @@ public class MoishdUser {
 
 	public Key getUserId() {
 		return userId;
+	}
+
+	public void setTrophies(List<Trophy> trophies) {
+		this.trophies = trophies;
+	}
+
+	public List<Trophy> getTrophies() {
+		return trophies;
+	}
+
+	public void setStats(GameStatistics stats) {
+		this.stats = stats;
+	}
+
+	public GameStatistics getStats() {
+		return stats;
 	}
 }
