@@ -1,5 +1,7 @@
 package moishd.server;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -8,8 +10,13 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class Trophy {
-    @PrimaryKey
+public class Trophy implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5193254881695253865L;
+
+	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key trophyId;
 

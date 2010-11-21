@@ -1,10 +1,8 @@
 package moishd.server;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,13 +11,12 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class InsertUser extends HttpServlet {
+public class DeleteUsers extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1306793921674383722L;
+	private static final long serialVersionUID = -141938567919490948L;
 
-	@SuppressWarnings("unchecked")
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		UserService userService = UserServiceFactory.getUserService();
@@ -27,24 +24,26 @@ public class InsertUser extends HttpServlet {
 
 		if (user == null) {
 			response.sendRedirect("/LoginServlet");
-		} else {
-			MoishdUser muser = new MoishdUser(
-					user.getNickname(),
-					"http://profile.ak.fbcdn.net/hprofile-ak-snc4/hs475.snc4/49860_791749386_1443_n.jpg",
-					new Location(1, 2), user.getEmail());
-
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			Query q = pm.newQuery(MoishdUser.class);
-			q.setFilter("userIdentifier == idParam");
-
-			if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {
+		}
+		else {
+			if (!user.getEmail().equals("BArkamir@gmail.com") &&
+					!user.getEmail().equals("dagan.tammy@gmail.com") &&
+					!user.getEmail().equals("hila.barzilai@gmail.com") &&
+					!user.getEmail().equals("mran.goldberg@gmail.com")) {
+				response.getWriter().println(user.getEmail() + " is not authorized to delete users");
+				response.getWriter().println("<p>" +
+	                    "<a href=\"/" +
+	                    "\">Return Home</a>.</p>");	
+			}
+			else {
+				PersistenceManager pm = PMF.get().getPersistenceManager();
 				try {
-					pm.makePersistent(muser);
+					pm.newQuery(MoishdUser.class).deletePersistentAll();
 				} finally {
 					pm.close();
 				}
+				response.sendRedirect("/");
 			}
 		}
-		response.sendRedirect("/");
 	}
 }

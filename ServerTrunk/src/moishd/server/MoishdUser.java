@@ -1,8 +1,9 @@
 package moishd.server;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,8 +13,13 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class MoishdUser {
-    @PrimaryKey
+public class MoishdUser implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8353060520322729907L;
+
+	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key userId;
 
@@ -26,32 +32,35 @@ public class MoishdUser {
     @Persistent
     private Date dateRegistered;
     
-    @Persistent
-    private MoishdGroup group;
-    
-    @Persistent
+    @Persistent(dependent = "true")
     private Location location;
     
     @Persistent
-    private List<Trophy> trophies;
+    private Set<Key> trophies;
     
+	@Persistent(dependent = "true")
+    private UserGameStatistics stats;
+	
 	@Persistent
-    private GameStatistics stats; 
+	private String userIdentifier;
 
 	public MoishdUser() {
-		setTrophies(new LinkedList<Trophy>());
-		setStats(new GameStatistics());
+		this.userIdentifier = "Guest";
+		this.location = new Location(0,0);
+		this.dateRegistered = new Date();
+		this.trophies = new HashSet<Key>();
+		this.stats = new UserGameStatistics();
 	}
 	
-	public MoishdUser(String userNick, String pictureLink, Date dateRegistered,
-			MoishdGroup group, Location location) {
+	public MoishdUser(String userNick, String pictureLink, 
+			Location location, String userIdentifier) {
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
-		this.dateRegistered = dateRegistered;
-		this.group = group;
 		this.location = location;
-		setTrophies(new LinkedList<Trophy>());
-		setStats(new GameStatistics());
+		this.userIdentifier = userIdentifier;
+		this.dateRegistered = new Date();
+		this.trophies = new HashSet<Key>();
+		this.stats = new UserGameStatistics();
 	}
 
 	public String getUserNick() {
@@ -78,14 +87,6 @@ public class MoishdUser {
 		this.dateRegistered = dateRegistered;
 	}
 
-	public MoishdGroup getGroup() {
-		return group;
-	}
-
-	public void setGroup(MoishdGroup group) {
-		this.group = group;
-	}
-
 	public Location getLocation() {
 		return location;
 	}
@@ -98,19 +99,23 @@ public class MoishdUser {
 		return userId;
 	}
 
-	public void setTrophies(List<Trophy> trophies) {
+	public void setTrophies(Set<Key> trophies) {
 		this.trophies = trophies;
 	}
 
-	public List<Trophy> getTrophies() {
+	public Set<Key> getTrophies() {
 		return trophies;
 	}
 
-	public void setStats(GameStatistics stats) {
+	public void setStats(UserGameStatistics stats) {
 		this.stats = stats;
 	}
 
-	public GameStatistics getStats() {
+	public UserGameStatistics getStats() {
 		return stats;
+	}
+
+	public String getUserIdentifier() {
+		return userIdentifier;
 	}
 }

@@ -1,5 +1,7 @@
 package moishd.server;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -8,8 +10,13 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class GameStatistics {
-    @PrimaryKey
+public class UserGameStatistics implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5610076177924180280L;
+
+	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key statsId;
 
@@ -24,15 +31,18 @@ public class GameStatistics {
     
     @Persistent
     private Integer points;
+    
+    @Persistent(mappedBy = "stats")
+    private MoishdUser moishdUser;
 
-    public GameStatistics() {
+    public UserGameStatistics() {
     	this.gamesPlayed = 0;
     	this.gamesWon = 0;
     	this.rank = -1;
     	this.points = 0;
     }
     
-    public GameStatistics(Integer gamesPlayed, Integer gamesWon, Integer rank, Integer points) {
+    public UserGameStatistics(Integer gamesPlayed, Integer gamesWon, Integer rank, Integer points) {
         this.gamesPlayed = gamesPlayed;
         this.gamesWon = gamesWon;
         this.rank = rank;
@@ -73,5 +83,9 @@ public class GameStatistics {
 
 	public Key getStatsId() {
 		return statsId;
+	}
+
+	public MoishdUser getMoishdUser() {
+		return moishdUser;
 	}
 }

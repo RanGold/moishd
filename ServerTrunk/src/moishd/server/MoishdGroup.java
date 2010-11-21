@@ -1,5 +1,6 @@
 package moishd.server;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -10,28 +11,28 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class MoishdGroup {
-    @PrimaryKey
+public class MoishdGroup implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6574787548336679082L;
+
+	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key groupId;
 
     @Persistent
     private String name;
-    
-	@Persistent
-    private GameStatistics stats; 
 
 	@Persistent
     private Date dateCreated; 
 	
 	public MoishdGroup() {
-		stats = new GameStatistics();
 	}
 	
-	public MoishdGroup(String name, Date dateCreated) {
+	public MoishdGroup(String name) {
 		this.name = name;
-		this.dateCreated = dateCreated;
-		stats = new GameStatistics();
+		this.dateCreated = new Date();
 	}
 	
 	public Key getGroupId() {
@@ -44,14 +45,6 @@ public class MoishdGroup {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public void setStats(GameStatistics stats) {
-		this.stats = stats;
-	}
-	
-	public GameStatistics getStats() {
-		return stats;
 	}
 
 	public void setDateCreated(Date dateCreated) {

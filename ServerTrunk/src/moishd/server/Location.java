@@ -1,5 +1,7 @@
 package moishd.server;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -8,8 +10,13 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class Location {
-    @PrimaryKey
+public class Location implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5699415381628138991L;
+
+	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Key locationId;
 
@@ -18,6 +25,9 @@ public class Location {
     
     @Persistent
     private Integer yCoordinate;
+    
+    @Persistent(mappedBy = "location")
+    private MoishdUser moishdUser;
     
 	public Location(Integer xCoordinate, Integer yCoordinate) {
 		this.xCoordinate = xCoordinate;
@@ -42,5 +52,9 @@ public class Location {
 
 	public Key getLocationId() {
 		return locationId;
+	}
+
+	public MoishdUser getMoishdUser() {
+		return moishdUser;
 	}
 }
