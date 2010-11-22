@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, Main!</string>
-    <string name="app_name">Moishd</string>
-<string name="list_8_no_photos">no photos</string>
-<string name="list_8_new_photo">new photo</string>
-<string name="list_8_clear_photos">clear photos</string>
+    <string name="app_name">Moishd!</string>
+    <string name="trophies">My Trophies</string>
 </resources>
