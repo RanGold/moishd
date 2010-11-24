@@ -29,6 +29,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/DeleteUsers</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>CookieServlet</servlet-name>
+		<servlet-class>moishd.server.CookieServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CookieServlet</servlet-name>
+		<url-pattern>/CookieServlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>Guestbook</servlet-name>
 		<servlet-class>moishd.server.GuestbookServlet</servlet-class></servlet>
 	<servlet-mapping>

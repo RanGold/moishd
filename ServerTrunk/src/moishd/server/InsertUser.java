@@ -44,7 +44,8 @@ public class InsertUser extends HttpServlet {
 					pm.close();
 				}
 			}
+			
+			response.sendRedirect("/");
 		}
-		response.sendRedirect("/");
 	}
 }
