@@ -145,16 +145,12 @@ public class AppInfo extends Activity {
 				HttpEntity resp_entity = result.getEntity();
 				if (resp_entity != null) {
 					ObjectInputStream ois = new ObjectInputStream(result.getEntity().getContent());
-					try {
-						String json = (String) ois.readObject();
-						Gson g = new Gson();
-						@SuppressWarnings("unchecked")
-						List<MoishdUser> users = (List<MoishdUser>)g.fromJson(json, new TypeToken<Collection<MoishdUser>>(){}.getType());
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
+					String json = (String) ois.readObject();
+					Gson g = new Gson();
+					@SuppressWarnings("unchecked")
+					List<MoishdUser> users = (List<MoishdUser>)g.fromJson(json, new TypeToken<Collection<MoishdUser>>(){}.getType());
+					//MoishdUser user = g.fromJson(json, MoishdUser.class);
+					//objectToTest obj = g.fromJson(json, objectToTest.class);
 				}
 				/*
 				BufferedReader reader = new BufferedReader(new InputStreamReader(result.getEntity().getContent()));
@@ -174,6 +170,9 @@ public class AppInfo extends Activity {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}  catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();				
 			}
 		}
 	}
