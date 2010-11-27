@@ -40,14 +40,14 @@ public class InsertUser extends HttpServlet {
 			Query q = pm.newQuery(MoishdUser.class);
 			q.setFilter("userIdentifier == idParam");
 
-			if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {
-				try {
+			try {
+				if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {
 					pm.makePersistent(muser);
-				} finally {
-					pm.close();
 				}
+			} finally {
+				pm.close();
 			}
-			
+
 			response.sendRedirect("/");
 		}
 	}
