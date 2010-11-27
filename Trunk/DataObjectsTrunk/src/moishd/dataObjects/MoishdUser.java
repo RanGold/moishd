@@ -12,7 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
 
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class MoishdUser implements Serializable {
     /**
 	 * 
