@@ -3,14 +3,17 @@ package moishd.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.jdo.PersistenceManager;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import moishd.dataObjects.MoishdUser;
+import moishd.dataObjects.objectToTest;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -26,36 +29,39 @@ public class GetAllUsersServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		ServletOutputStream sos = resp.getOutputStream();
-		sos.flush();
-		/*UserService userService = UserServiceFactory.getUserService();
+		ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
+		
+		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
 		if (user == null) {
 			resp.getWriter().write("Not Logged In");
 		}
-		else */{
+		else {
 			// TODO: check if user exists, else add him
 			try {
+				@SuppressWarnings("unchecked")
+				List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
+				//List<MoishdUser> detachedUsers = (List<MoishdUser>) pm.detachCopyAll(users);
+				
+				/*MoishdUser mUser = detachedUsers.get(0);
+				detachedUsers.clear();
+				mUser.setLocation(pm.detachCopy(mUser.getLocation()));
+				mUser.setStats(pm.detachCopy(mUser.getStats()));
+				detachedUsers.add(mUser);*/
+				
 				resp.setContentType("application/json");
 				
-				@SuppressWarnings("unchecked")
-				List<MoishdUser> users = (List<MoishdUser>) PMF.get().getPersistenceManager().newQuery(MoishdUser.class).execute();
-
 				Gson g = new Gson();
 				String json = g.toJson(users);
 				oos.writeObject(json);
-
-				//resp.getWriter().print(json.toCharArray());
-				sos.write(baos.toByteArray());
 			}
 			finally {
-				//sos.close();
-				baos.close();
+				oos.flush();				
 				oos.close();
-				PMF.get().close();
+				pm.close();
 			}
 		}
 	}
