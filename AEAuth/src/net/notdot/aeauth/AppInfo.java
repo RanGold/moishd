@@ -1,15 +1,31 @@
 package net.notdot.aeauth;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.HttpURLConnection;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import moishd.dataObjects.MoishdUser;
+import moishd.dataObjects.objectToTest;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -25,7 +41,7 @@ import android.widget.Toast;
 
 public class AppInfo extends Activity {
 	private DefaultHttpClient http_client = new DefaultHttpClient();
-	private final String appDomain = "moish-d.appspot.com"; //"localhost:8888/";
+	private final String appDomain = "moish-d.appspot.com"; // "10.0.0.2:8888"; //
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +97,7 @@ public class AppInfo extends Activity {
 				HttpGet http_get = new HttpGet("http://" + appDomain + "/_ah/login?continue=http://localhost/&auth=" + tokens[0]);
 				HttpResponse response;
 				response = http_client.execute(http_get);
-				if(response.getStatusLine().getStatusCode() != 302)
+				if(response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_MOVED_TEMP)
 					// Response should be a redirect
 					return false;
 				
@@ -102,7 +118,7 @@ public class AppInfo extends Activity {
 		}
 		
 		protected void onPostExecute(Boolean result) {
-			new AuthenticatedRequestTask().execute("http://" + appDomain + "/InsertUser");
+			new AuthenticatedRequestTask().execute("http://" + appDomain + "/GetAllUsersServlet");
 		}
 	}
 
@@ -110,8 +126,10 @@ public class AppInfo extends Activity {
 		@Override
 		protected HttpResponse doInBackground(String... urls) {
 			try {
-				HttpGet http_get = new HttpGet(urls[0]);
-				return http_client.execute(http_get);
+				HttpPost httpPost = new HttpPost(urls[0]);
+				return http_client.execute(httpPost);
+				/*HttpGet http_get = new HttpGet(urls[0]);
+				return http_client.execute(http_get);*/
 			} catch (ClientProtocolException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -124,6 +142,21 @@ public class AppInfo extends Activity {
 		
 		protected void onPostExecute(HttpResponse result) {
 			try {
+				HttpEntity resp_entity = result.getEntity();
+				if (resp_entity != null) {
+					ObjectInputStream ois = new ObjectInputStream(result.getEntity().getContent());
+					try {
+						String json = (String) ois.readObject();
+						Gson g = new Gson();
+						@SuppressWarnings("unchecked")
+						List<MoishdUser> users = (List<MoishdUser>)g.fromJson(json, new TypeToken<Collection<MoishdUser>>(){}.getType());
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+				/*
 				BufferedReader reader = new BufferedReader(new InputStreamReader(result.getEntity().getContent()));
 				String response;
 				StringBuffer sb = new StringBuffer();
@@ -134,7 +167,7 @@ public class AppInfo extends Activity {
 				reader.close();
 				response = sb.toString();
 				
-				Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();				
+				Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();*/				
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
