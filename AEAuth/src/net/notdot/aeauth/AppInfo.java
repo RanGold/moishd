@@ -1,18 +1,12 @@
 package net.notdot.aeauth;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-import moishd.dataObjects.MoishdUser;
-import moishd.dataObjects.objectToTest;
+import moishd.client.dataObjects.ClientMoishdUser;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,11 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -37,7 +27,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class AppInfo extends Activity {
 	private DefaultHttpClient http_client = new DefaultHttpClient();
@@ -148,9 +140,8 @@ public class AppInfo extends Activity {
 					String json = (String) ois.readObject();
 					Gson g = new Gson();
 					@SuppressWarnings("unchecked")
-					List<MoishdUser> users = (List<MoishdUser>)g.fromJson(json, new TypeToken<Collection<MoishdUser>>(){}.getType());
-					//MoishdUser user = g.fromJson(json, MoishdUser.class);
-					//objectToTest obj = g.fromJson(json, objectToTest.class);
+					List<ClientMoishdUser> users = (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
+					users.getClass();
 				}
 				/*
 				BufferedReader reader = new BufferedReader(new InputStreamReader(result.getEntity().getContent()));
