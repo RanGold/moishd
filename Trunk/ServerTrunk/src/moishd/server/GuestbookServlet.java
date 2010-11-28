@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.dataObjects.objectToTest;
+import moishd.client.dataObjects.objectToTest;
 
 import com.google.gson.Gson;
 

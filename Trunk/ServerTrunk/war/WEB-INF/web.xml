@@ -51,8 +51,8 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Guestbook</servlet-name>
 		<url-pattern>/guestbook</url-pattern></servlet-mapping>
 	<servlet>
-		
-		<servlet-name>RegistrationServlet</servlet-name><servlet-class>moishd.server.RegistrationServlet</servlet-class></servlet>
+		<servlet-name>RegistrationServlet</servlet-name>
+		<servlet-class>moishd.server.RegistrationServlet</servlet-class></servlet>
 	<servlet-mapping>
 		<servlet-name>RegistrationServlet</servlet-name>
 		<url-pattern>/registration</url-pattern></servlet-mapping>

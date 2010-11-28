@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.dataObjects.MoishdUser;
+import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;

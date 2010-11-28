@@ -1,19 +1,15 @@
 package moishd.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.dataObjects.MoishdUser;
-import moishd.dataObjects.objectToTest;
+import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -29,6 +25,7 @@ public class GetAllUsersServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		
 		ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
 		
 		UserService userService = UserServiceFactory.getUserService();
@@ -44,24 +41,20 @@ public class GetAllUsersServlet extends HttpServlet {
 			try {
 				@SuppressWarnings("unchecked")
 				List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
-				//List<MoishdUser> detachedUsers = (List<MoishdUser>) pm.detachCopyAll(users);
-				
-				/*MoishdUser mUser = detachedUsers.get(0);
-				detachedUsers.clear();
-				mUser.setLocation(pm.detachCopy(mUser.getLocation()));
-				mUser.setStats(pm.detachCopy(mUser.getStats()));
-				detachedUsers.add(mUser);*/
 				
 				resp.setContentType("application/json");
 				
 				Gson g = new Gson();
-				String json = g.toJson(users);
+				String json = g.toJson(MoishdUser.copyToClientMoishdUserList(users));
+				//String json = g.toJson(new objectToTest());
 				oos.writeObject(json);
 			}
 			finally {
 				oos.flush();				
 				oos.close();
-				pm.close();
+				if (!pm.isClosed()) {
+					pm.close();
+				}
 			}
 		}
 	}

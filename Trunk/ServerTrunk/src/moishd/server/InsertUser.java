@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.dataObjects.Location;
-import moishd.dataObjects.MoishdUser;
+import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -31,10 +30,8 @@ public class InsertUser extends HttpServlet {
 		if (user == null) {
 			response.sendRedirect("/LoginServlet");
 		} else {
-			MoishdUser muser = new MoishdUser(
-					user.getNickname(),
-					"http://profile.ak.fbcdn.net/hprofile-ak-snc4/hs475.snc4/49860_791749386_1443_n.jpg",
-					new Location(1, 2), user.getEmail());
+			// TODO : add proper constructor
+			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234");
 
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			Query q = pm.newQuery(MoishdUser.class);
