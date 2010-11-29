@@ -19,7 +19,26 @@ import com.google.gson.Gson;
 
 public class AndroidUtility {
 	
-	public static HttpResponse SendObjToServer(Object obj, String extension){
+	public enum serverExtEnum {
+		 
+	    USER_LOGIN("UserLogin"), 
+	    GET_ALL_USERS("GetAllUsers"),
+	    GUESTBOOK("guestbook"),
+	    REGISTRATION("registration");
+	    
+	    private String ext;
+	 
+	    private serverExtEnum(String ext) {
+	    this.ext = ext;
+	    }
+
+	     public String getExt() {
+	    return ext;
+	    }
+	}
+	
+	
+	public static HttpResponse SendObjToServer(Object obj, serverExtEnum extEnum){
 		
 		final int DURATION = 10000;
 		String serverPath = "http://10.0.2.2:8888/" ; //to be replaced with http://moish-d.appspot.com/
@@ -33,7 +52,7 @@ public class AndroidUtility {
 		HttpResponse response ;
 		URI uri;
 		try {
-			uri = new URI(serverPath+extension);
+			uri = new URI(serverPath+extEnum.getExt());
 
 			HttpPost postMethod = new HttpPost(uri);
 
