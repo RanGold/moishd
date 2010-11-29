@@ -41,7 +41,9 @@ public class AndroidUtility {
 	public static HttpResponse SendObjToServer(Object obj, serverExtEnum extEnum){
 		
 		final int DURATION = 10000;
-		String serverPath = "http://10.0.2.2:8888/" ; //to be replaced with http://moish-d.appspot.com/
+		String serverPath = "http://10.0.2.2:8888/" ; 
+		//to be replaced with http://moish-d.appspot.com/
+		//when change - change also in ServerRequest
 		
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
