@@ -1,4 +1,4 @@
-package moishd.server;
+package moishd.serever.servlets;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;

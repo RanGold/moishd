@@ -1,4 +1,4 @@
-package moishd.server;
+package moishd.serever.servlets;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -48,8 +48,8 @@ public class RegistrationServlet extends HttpServlet {
 	e.printStackTrace();
 }*/
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-
-		Gson g = new Gson();
+		// TODO : change use to server
+		/*Gson g = new Gson();
 		ObjectInputStream ois = new ObjectInputStream(req.getInputStream());
 		DevRegAndIDPairs pair = new DevRegAndIDPairs();
 		try {
@@ -109,7 +109,7 @@ public class RegistrationServlet extends HttpServlet {
 		} catch (IOException e) {
 		    // Exception handling
 		}
-
+*/
 
 	}
 

@@ -1,4 +1,4 @@
-package moishd.server;
+package moishd.serever.servlets;
 
 import java.io.IOException;
 
@@ -7,13 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class DeleteUsers extends HttpServlet {
+public class DeleteUsersServlet extends HttpServlet {
 	/**
 	 * 
 	 */

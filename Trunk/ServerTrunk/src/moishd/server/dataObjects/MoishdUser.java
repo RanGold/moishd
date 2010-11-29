@@ -14,7 +14,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.server.PMF;
+import moishd.server.common.PMF;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -130,6 +130,7 @@ public class MoishdUser implements Serializable {
 
 	//@SuppressWarnings("unchecked")
 	public List<Trophy> getTrophies() {
+		// TODO: fix this
 		List<Trophy> tList = new LinkedList<Trophy>();
 		/*if (this.getTrophyKeys().size() > 0) {
 			PersistenceManager pm = PMF.get().getPersistenceManager();
