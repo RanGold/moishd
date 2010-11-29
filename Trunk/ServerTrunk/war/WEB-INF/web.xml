@@ -6,7 +6,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>moishd.server.LoginServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
@@ -14,7 +14,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>InsertUserServlet</servlet-name>
-		<servlet-class>moishd.server.InsertUserServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.InsertUserServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>InsertUserServlet</servlet-name>
@@ -22,7 +22,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>DeleteUsersServlet</servlet-name>
-		<servlet-class>moishd.server.DeleteUsersServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.DeleteUsersServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DeleteUsersServlet</servlet-name>
@@ -30,7 +30,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>CookieServlet</servlet-name>
-		<servlet-class>moishd.server.CookieServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.CookieServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CookieServlet</servlet-name>
@@ -38,7 +38,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GetAllUsersServlet</servlet-name>
-		<servlet-class>moishd.server.GetAllUsersServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.GetAllUsersServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GetAllUsersServlet</servlet-name>
@@ -46,13 +46,13 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GuestbookServlet</servlet-name>
-		<servlet-class>moishd.server.GuestbookServlet</servlet-class></servlet>
+		<servlet-class>moishd.server.servlets.GuestbookServlet</servlet-class></servlet>
 	<servlet-mapping>
 		<servlet-name>GuestbookServlet</servlet-name>
 		<url-pattern>/guestbook</url-pattern></servlet-mapping>
 	<servlet>
 		<servlet-name>RegistrationServlet</servlet-name>
-		<servlet-class>moishd.server.RegistrationServlet</servlet-class></servlet>
+		<servlet-class>moishd.server.servlets.RegistrationServlet</servlet-class></servlet>
 	<servlet-mapping>
 		<servlet-name>RegistrationServlet</servlet-name>
 		<url-pattern>/registration</url-pattern></servlet-mapping>

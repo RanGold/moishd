@@ -1,4 +1,4 @@
-package moishd.serever.servlets;
+package moishd.server.servlets;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
