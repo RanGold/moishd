@@ -11,6 +11,8 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -28,10 +30,29 @@ public class AuthorizeGoogleAccount extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Intent resultIntent = new Intent();
-		setResult(WelcomeScreenActivity.RESULT_FAILED, resultIntent);
-		finish();
 
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
+		"Retry?")
+		.setCancelable(false)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				Intent intent = getIntent();
+				AccountManager accountManager = AccountManager.get(getApplicationContext());
+				Account account = (Account)intent.getExtras().get("account");
+				accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
+			}
+		})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				Intent resultIntent = new Intent();
+				setResult(WelcomeScreenActivity.RESULT_FAILED, resultIntent);	
+				finish();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	private class GetAuthTokenCallback implements AccountManagerCallback<Bundle> {

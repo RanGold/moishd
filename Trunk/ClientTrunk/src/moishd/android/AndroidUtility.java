@@ -55,7 +55,7 @@ public class AndroidUtility {
 	private static HttpResponse SendObjToServer(Object obj, String ext){
 		
 		final int DURATION = 10000;
-		String serverPath = "http://10.0.2.2:8888/" ; 
+		String serverPath = " http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
 		//to be replaced with http://moish-d.appspot.com/
 		//when change - change also in ServerRequest
 		

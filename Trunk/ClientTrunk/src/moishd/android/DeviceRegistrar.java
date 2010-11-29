@@ -125,7 +125,8 @@ public class DeviceRegistrar {
 		HttpConnectionParams.setSoTimeout(param, 100000);
 
 		DefaultHttpClient httpClient = new DefaultHttpClient(param);
-		URI uri = new URI("http://10.0.2.2:8888/registration"); 
+		
+		URI uri = new URI("http://moish-d.appspot.com/registration"); 
 		HttpPost postMethod = new HttpPost(uri);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Gson g = new Gson();

@@ -49,7 +49,7 @@ public class UsersTabWidget extends TabActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.layout.users_tab_layout, menu);
+	    inflater.inflate(R.layout.users_screen_menu, menu);
 	    return true;
 	}
 	
