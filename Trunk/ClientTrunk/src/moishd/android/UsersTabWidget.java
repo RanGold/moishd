@@ -1,9 +1,11 @@
 package moishd.android;
 
+import android.app.PendingIntent;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,13 @@ public class UsersTabWidget extends TabActivity {
 
         setContentView(R.layout.users_tab_layout);
 
+		//register to c2dm. once registered a registration_id will be received via c2dmreceiver 
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+		startService(registrationIntent);
+		Log.d("TEST","Resgistering...");
+        
 		Resources res = getResources(); // Resource object to get Drawables
 		TabHost tabHost = getTabHost();  // The activity TabHost
 		TabHost.TabSpec spec;  // Resusable TabSpec for each tab
