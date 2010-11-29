@@ -110,7 +110,7 @@ public class AppInfo extends Activity {
 		}
 		
 		protected void onPostExecute(Boolean result) {
-			new AuthenticatedRequestTask().execute("http://" + appDomain + "/GetAllUsersServlet");
+			new AuthenticatedRequestTask().execute("http://" + appDomain + "/GetAllUsers");
 		}
 	}
 
