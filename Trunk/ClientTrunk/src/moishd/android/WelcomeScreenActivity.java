@@ -58,11 +58,6 @@ public class WelcomeScreenActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        
-        appPref = getPreferences(MODE_PRIVATE);
-        boolean accountExists = appPref.contains("account");
-        if (!accountExists){
-        	
-        }
         
         setContentView(R.layout.main);
         loginButton = (LoginButton) findViewById(R.id.login);

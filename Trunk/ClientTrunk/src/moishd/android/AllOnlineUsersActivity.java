@@ -426,6 +426,12 @@ public class AllOnlineUsersActivity extends Activity {
 		alert.show();
 
 	}
+	
+	private boolean getAllUsers(){
+		
+		return false;
+		
+	}
 
 
 
