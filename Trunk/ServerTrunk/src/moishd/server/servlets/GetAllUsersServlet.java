@@ -47,7 +47,6 @@ public class GetAllUsersServlet extends HttpServlet {
 				
 				Gson g = new Gson();
 				String json = g.toJson(MoishdUser.copyToClientMoishdUserList(users));
-				//String json = g.toJson(new objectToTest());
 				oos.writeObject(json);
 			}
 			finally {
