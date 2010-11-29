@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import moishd.common.ServerRequest;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -50,7 +52,7 @@ public class AndroidUtility {
 		HttpConnectionParams.setConnectionTimeout(params, DURATION);
 		HttpConnectionParams.setSoTimeout(params, DURATION);
 		
-		DefaultHttpClient httpClient = new DefaultHttpClient(params);
+		//DefaultHttpClient httpClient = new DefaultHttpClient(params);
 		HttpResponse response ;
 		URI uri;
 		try {
@@ -68,7 +70,7 @@ public class AndroidUtility {
 
 			// associating entity with method
 			postMethod.setEntity(req_entity);
-			response = httpClient.execute(postMethod);
+			response = ServerRequest.Get().doPost(postMethod);
 			return response;
 		
 		} catch (URISyntaxException e) {
