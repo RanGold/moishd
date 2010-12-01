@@ -19,21 +19,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ServerRequest;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.Settings.Secure;
 import android.util.Log;
+
 import com.google.gson.Gson;
 
 /**
@@ -115,7 +112,8 @@ public class DeviceRegistrar {
     private static HttpResponse makeRequest(Context context, String deviceRegistrationID,
             String urlPath) throws Exception {
     	
-    	moishd.client.dataObjects.ClientMoishdUser user = new moishd.client.dataObjects.ClientMoishdUser();
+    	ClientMoishdUser user = new ClientMoishdUser();
+    	user.setRegisterID(deviceRegistrationID);
     	
 		URI uri = new URI("http://moish-d.appspot.com/RegisterUser"); 
 		HttpPost postMethod = new HttpPost(uri);
