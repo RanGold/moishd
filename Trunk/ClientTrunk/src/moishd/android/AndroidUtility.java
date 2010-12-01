@@ -97,23 +97,6 @@ public class AndroidUtility {
 		return false;
 	}
 	
-	
-	public static void c2dmRegisterUser(moishd.client.dataObjects.ClientMoishdUser user){
-		HttpResponse response = SendObjToServer(user, "RegisterUser");
-		try {
-			String content = convertStreamToString(response.getEntity().getContent());
-			if (!content.equals(""))
-				Log.d("GAE ERROR",content);
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
 	private static HttpResponse SendObjToServer(Object obj, String ext){
 		
 		final int DURATION = 10000;

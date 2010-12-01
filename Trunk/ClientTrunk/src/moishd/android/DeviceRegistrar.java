@@ -112,13 +112,9 @@ public class DeviceRegistrar {
 
     private static HttpResponse makeRequest(Context context, String deviceRegistrationID,
             String urlPath) throws Exception {
-       // SharedPreferences settings = Prefs.get(context);
-      //  String accountName = settings.getString("accountName", null);
-        DevRegAndIDPairs params;
-        String deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-        params = new DevRegAndIDPairs(deviceId, deviceRegistrationID);
- 
-        
+    	
+    	moishd.client.dataObjects.ClientMoishdUser user = new moishd.client.dataObjects.ClientMoishdUser();
+    	
         HttpParams param = new BasicHttpParams();
 		HttpConnectionParams.setStaleCheckingEnabled(param, false);
 		HttpConnectionParams.setConnectionTimeout(param, 100000);
@@ -130,7 +126,7 @@ public class DeviceRegistrar {
 		HttpPost postMethod = new HttpPost(uri);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Gson g = new Gson();
-		String json = g.toJson(params);
+		String json = g.toJson(user);
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
 		oos.writeObject(json);
 		ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
