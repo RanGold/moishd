@@ -12,8 +12,6 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
-
 public class ServerRequest  {
 	private final String appDomain = "http://moish-d.appspot.com"; //"http://10.0.2.2:8888/"
 	//to be replaced with http://moish-d.appspot.com
