@@ -19,12 +19,15 @@ package com.google.android.c2dm.server;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+
+import moishd.server.dataObjects.C2DMAuth;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -110,19 +113,13 @@ class C2DMConfigLoader {
             dmConfig.setKey(key);
             // Must be in classpath, before sending. Do not checkin !
             try {
-            	// TODO: change the next line
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream("/dataMessagingToken.txt");
-                if (is != null) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                    String token = reader.readLine();
-                    dmConfig.setAuthToken(token);
-                }
+                @SuppressWarnings("unchecked")
+				List<C2DMAuth> auths = (List<C2DMAuth>)pm.newQuery(C2DMAuth.class).execute();
+                dmConfig.setAuthToken(auths.get(0).getAuthKey());
             } catch (Throwable t) {
                 log.log(Level.SEVERE, 
                         "Can't load initial token, use admin console", t);
             }
-            
-            
             pm.makePersistent(dmConfig);
         }
         return dmConfig;

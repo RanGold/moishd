@@ -19,12 +19,12 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 
-public class UserLoginServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1306793921674383722L;
-
+	private static final long serialVersionUID = -8439643553907371646L;
+	
 	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		UserService userService = UserServiceFactory.getUserService();
@@ -49,16 +49,25 @@ public class UserLoginServlet extends HttpServlet {
 				} catch (ClassNotFoundException e) {
 					response.addHeader("Error", "");
 					response.getWriter().println(e.getMessage());
+					return;
 				}
 				
-				ClientMoishdUser newUser = (ClientMoishdUser) g.fromJson(json,
+				ClientMoishdUser clientUser = (ClientMoishdUser) g.fromJson(json,
 						ClientMoishdUser.class);
 
 				Query q = pm.newQuery(MoishdUser.class);
 				q.setFilter("userGoogleIdentifier == idParam");
 
-				if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {
-					pm.makePersistent(new MoishdUser(newUser.getUserNick(), "", user.getEmail(), "NULL"));
+				List<MoishdUser> users = (List<MoishdUser>)q.execute(user.getEmail());
+				if (users.size() == 0) {
+					response.addHeader("Error", "");
+					response.getWriter().println("RegisterServlet: user " + user.getEmail() + " not found");
+				} else if (users.size() > 1) {
+					response.addHeader("Error", "");
+					response.getWriter().println("RegisterServlet: user " + user.getEmail() + " more than 1 result");
+				} else {
+					users.get(0).setRegisterID(clientUser.getRegisterID());
+					pm.makePersistent(users.get(0));	
 				}
 			} catch (IOException e) {
 				response.addHeader("Error", e.getMessage());

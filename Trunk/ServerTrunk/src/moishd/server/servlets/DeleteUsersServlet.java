@@ -10,10 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
 public class DeleteUsersServlet extends HttpServlet {
 	/**
 	 * 
@@ -22,31 +18,13 @@ public class DeleteUsersServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
 
-		if (user == null) {
-			response.sendRedirect("/LoginServlet");
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.newQuery(MoishdUser.class).deletePersistentAll();
+		} finally {
+			pm.close();
 		}
-		else {
-			if (!user.getEmail().equals("BArkamir@gmail.com") &&
-					!user.getEmail().equals("dagan.tammy@gmail.com") &&
-					!user.getEmail().equals("hila.barzilai@gmail.com") &&
-					!user.getEmail().equals("mran.goldberg@gmail.com")) {
-				response.getWriter().println(user.getEmail() + " is not authorized to delete users");
-				response.getWriter().println("<p>" +
-	                    "<a href=\"/" +
-	                    "\">Return Home</a>.</p>");	
-			}
-			else {
-				PersistenceManager pm = PMF.get().getPersistenceManager();
-				try {
-					pm.newQuery(MoishdUser.class).deletePersistentAll();
-				} finally {
-					pm.close();
-				}
-				response.sendRedirect("/");
-			}
-		}
+		response.sendRedirect("/");
 	}
 }

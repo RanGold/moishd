@@ -44,18 +44,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>GetAllUsersServlet</servlet-name>
 		<url-pattern>/GetAllUsers</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>GuestbookServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.GuestbookServlet</servlet-class></servlet>
+		<servlet-name>RegisterServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.RegisterServlet</servlet-class></servlet>
 	<servlet-mapping>
-		<servlet-name>GuestbookServlet</servlet-name>
-		<url-pattern>/guestbook</url-pattern></servlet-mapping>
-	<servlet>
-		<servlet-name>RegistrationServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.RegistrationServlet</servlet-class></servlet>
-	<servlet-mapping>
-		<servlet-name>RegistrationServlet</servlet-name>
-		<url-pattern>/registration</url-pattern>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/RegisterUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>UserLoginServlet</servlet-name>
@@ -64,6 +57,33 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>UserLoginServlet</servlet-name>
 		<url-pattern>/UserLogin</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/RegisterUser</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>C2DMAuthServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.C2DMAuthServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>C2DMAuthServlet</servlet-name>
+		<url-pattern>/cron/C2DMAuth</url-pattern>
+	</servlet-mapping>
+	<security-constraint>
+        <web-resource-collection>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/DeleteUsers</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

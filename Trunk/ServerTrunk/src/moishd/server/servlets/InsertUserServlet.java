@@ -31,7 +31,6 @@ public class InsertUserServlet extends HttpServlet {
 		if (user == null) {
 			response.sendRedirect("/LoginServlet");
 		} else {
-			// TODO : add proper constructor
 			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234");
 
 			PersistenceManager pm = PMF.get().getPersistenceManager();
