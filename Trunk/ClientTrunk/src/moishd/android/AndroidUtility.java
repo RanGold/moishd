@@ -1,13 +1,17 @@
 package moishd.android;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import moishd.client.dataObjects.objectToTest;
 import moishd.common.ServerRequest;
 
 import org.apache.http.HttpEntity;
@@ -17,6 +21,8 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -41,21 +47,77 @@ public class AndroidUtility {
 	    }
 	}*/
 	
+
+
+
+	  private static String convertStreamToString(InputStream is) throws IOException {
+	        /*
+	         * To convert the InputStream to String we use the
+	         * Reader.read(char[] buffer) method. We iterate until the
+	         * Reader return -1 which means there's no more data to
+	         * read. We use the StringWriter class to produce the string.
+	         */
+	        if (is != null) {
+	            Writer writer = new StringWriter();
+
+	            char[] buffer = new char[1024];
+	            try {
+	                Reader reader = new BufferedReader(
+	                        new InputStreamReader(is, "UTF-8"));
+	                int n;
+	                while ((n = reader.read(buffer)) != -1) {
+	                    writer.write(buffer, 0, n);
+	                }
+	            } finally {
+	                is.close();
+	            }
+	            return writer.toString();
+	        } else {        
+	            return "";
+	        }
+	    }
+		
 	public static boolean enlist(moishd.client.dataObjects.ClientMoishdUser user){
 		HttpResponse response = SendObjToServer(user, "UserLogin");
-		HttpEntity resp_entity = response.getEntity();
-
-		if (resp_entity==null)
+		String content;
+		try {
+			content = convertStreamToString(response.getEntity().getContent());
+		if (!content.equals("")){
+			Log.d("GAE ERROR",content);
 			return false;
-		else 
+		} else
 			return true;
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	public static void c2dmRegisterUser(moishd.client.dataObjects.ClientMoishdUser user){
+		HttpResponse response = SendObjToServer(user, "RegisterUser");
+		try {
+			String content = convertStreamToString(response.getEntity().getContent());
+			if (!content.equals(""))
+				Log.d("GAE ERROR",content);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
 	private static HttpResponse SendObjToServer(Object obj, String ext){
 		
 		final int DURATION = 10000;
-		String serverPath = " http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
+		String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
 		//to be replaced with http://moish-d.appspot.com/
 		//when change - change also in ServerRequest
 		
