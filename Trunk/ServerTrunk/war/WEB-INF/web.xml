@@ -54,6 +54,14 @@
 		<url-pattern>/RegisterUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>UnRegisterServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.UnRegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UnRegisterServlet</servlet-name>
+		<url-pattern>/UnRegister</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UserLoginServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.UserLoginServlet</servlet-class>
 	</servlet>
