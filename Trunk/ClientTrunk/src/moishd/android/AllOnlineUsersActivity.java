@@ -304,6 +304,9 @@ package moishd.android;
 //            "Zanetti Grana Padano", "Zanetti Parmigiano Reggiano"}; 
 //}
 
+import java.util.List;
+
+import moishd.client.dataObjects.ClientMoishdUser;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -316,7 +319,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -326,8 +328,10 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private static class EfficientAdapter extends BaseAdapter {
       private LayoutInflater mInflater;
-      private Bitmap mIcon1;
-      private Bitmap mIcon2;
+      private Bitmap userIcon1;
+      private Bitmap userIcon2;
+      private Bitmap mIcon3;
+      private Bitmap mIcon4;
       private Bitmap moishd_logo;
 
       public EfficientAdapter(Context context) {
@@ -335,13 +339,15 @@ public class AllOnlineUsersActivity extends Activity {
           mInflater = LayoutInflater.from(context);
 
           // Icons bound to the rows.
-          mIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon48x48_1);
-          mIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon48x48_2);
+          userIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon1);
+          userIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon2);
+          mIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
+          mIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
           moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
       }
 
       public int getCount() {
-          return country.length;
+          return moishdUsers.size();
       }
 
       public Object getItem(int position) {
@@ -379,10 +385,21 @@ public class AllOnlineUsersActivity extends Activity {
           }
 
           // Bind the data efficiently with the holder.
-          holder.userName.setText(country[position]);
-          holder.userPicture.setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
-          holder.userRank.setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
-
+          holder.userName.setText(moishdUsers.get(position).getUserNick());
+          if (position % 4 == 0){
+        	  holder.userPicture.setImageBitmap(userIcon1);
+        	  holder.userRank.setImageBitmap((position & 1) == 1 ? userIcon1 : userIcon2);
+          }
+          else if (position % 4 == 1){
+        	  holder.userPicture.setImageBitmap(userIcon2);
+          }
+          else if (position % 4 == 2){
+        	  holder.userPicture.setImageBitmap(mIcon3);
+          }
+          else{
+        	  holder.userPicture.setImageBitmap(mIcon4); 
+          }
+          holder.userRank.setImageBitmap((position & 1) == 1 ? userIcon1 : userIcon2);
 
           return convertView;
       }
@@ -410,7 +427,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 	protected void inviteUserToMoish(int position){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've invited  " + country[position] + " to Moish. Continue?")
+		builder.setMessage("You've invited  " + moishdUsers.get(position).getUserNick() + " to Moish. Continue?")
 		.setCancelable(false)
 		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -426,24 +443,18 @@ public class AllOnlineUsersActivity extends Activity {
 		alert.show();
 
 	}
-	
-	private boolean getAllUsers(){
-		
-		return false;
-		
-	}
 
 
+	private static final List<ClientMoishdUser> moishdUsers = AndroidUtility.getAllUsers();
 
-
-	private static final String[] country = { "Iceland", "India", "Indonesia",
-		"Iran", "Iraq", "Ireland", "Israel", "Italy", "Laos", "Latvia",
-		"Lebanon", "Lesotho ", "Liberia", "Libya", "Lithuania",
-	"Luxembourg" };
-	private static final String[] curr = { "ISK", "INR", "IDR", "IRR", "IQD",
-		"EUR", "ILS", "EUR", "LAK", "LVL", "LBP", "LSL ", "LRD", "LYD",
-		"LTL ", "EUR"
-
-	};
+//	private static final String[] country = { "Iceland", "India", "Indonesia",
+//		"Iran", "Iraq", "Ireland", "Israel", "Italy", "Laos", "Latvia",
+//		"Lebanon", "Lesotho ", "Liberia", "Libya", "Lithuania",
+//	"Luxembourg" };
+//	private static final String[] curr = { "ISK", "INR", "IDR", "IRR", "IQD",
+//		"EUR", "ILS", "EUR", "LAK", "LVL", "LBP", "LSL ", "LRD", "LYD",
+//		"LTL ", "EUR"
+//
+//	};
 
 }

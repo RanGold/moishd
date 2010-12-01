@@ -30,6 +30,10 @@ import com.google.gson.reflect.TypeToken;
 
 public class AndroidUtility {
 	
+	private  static final String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
+	//to be replaced with http://moish-d.appspot.com/
+	//when change - change also in ServerRequest
+	
 	/*public enum serverExtEnum {
 		 
 	    USER_LOGIN("UserLogin"), 
@@ -98,85 +102,6 @@ public class AndroidUtility {
 		return false;
 	}
 	
-	private static HttpResponse SendObjToServer(Object obj, String ext){
-		
-		final int DURATION = 10000;
-		String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
-		//to be replaced with http://moish-d.appspot.com/
-		//when change - change also in ServerRequest
-		/*
-		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, DURATION);
-		HttpConnectionParams.setSoTimeout(params, DURATION);
-		
-		DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
-		HttpResponse response ;
-		URI uri;
-		try {
-			uri = new URI(serverPath+ext);
-
-			HttpPost postMethod = new HttpPost(uri);
-
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Gson g = new Gson();
-			String json = g.toJson(obj);
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(json);
-			ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
-			req_entity.setContentType("application/json");
-
-			// associating entity with method
-			postMethod.setEntity(req_entity);
-			response = ServerRequest.Get().doPost(postMethod);
-			return response;
-		
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		
-		return null;	
-			
-	}
-	
-private static HttpResponse SendReqToServer(String ext){
-		
-		final int DURATION = 10000;
-		String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
-		//to be replaced with http://moish-d.appspot.com/
-		//when change - change also in ServerRequest
-		
-		/*HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, DURATION);
-		HttpConnectionParams.setSoTimeout(params, DURATION);
-		
-		//DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
-		URI uri;
-		try {
-			uri = new URI(serverPath+ext);
-
-			HttpPost postMethod = new HttpPost(uri);
-
-			//ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
-			//req_entity.setContentType("application/json");
-
-			// associating entity with method
-			//postMethod.setEntity(req_entity);
-			return ServerRequest.Get().doPost(postMethod);
-			
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		
-		return null;	
-			
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static List<moishd.client.dataObjects.ClientMoishdUser> getAllUsers(){
 		List<moishd.client.dataObjects.ClientMoishdUser> users;
@@ -209,4 +134,82 @@ private static HttpResponse SendReqToServer(String ext){
 		}
 		return null;
 	}
+	
+	private static HttpResponse SendObjToServer(Object obj, String ext){
+		
+		final int DURATION = 10000;
+		//to be replaced with http://moish-d.appspot.com/
+		//when change - change also in ServerRequest
+		/*
+		HttpParams params = new BasicHttpParams();
+		HttpConnectionParams.setStaleCheckingEnabled(params, false);
+		HttpConnectionParams.setConnectionTimeout(params, DURATION);
+		HttpConnectionParams.setSoTimeout(params, DURATION);
+		
+		DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
+		HttpResponse response ;
+		URI uri;
+		String uriPath = serverPath+"/"+ext;
+		try {
+			uri = new URI(uriPath);
+
+			HttpPost postMethod = new HttpPost(uri);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			Gson g = new Gson();
+			String json = g.toJson(obj);
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(json);
+			ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
+			req_entity.setContentType("application/json");
+
+			// associating entity with method
+			postMethod.setEntity(req_entity);
+			response = ServerRequest.Get().doPost(postMethod);
+			return response;
+		
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		return null;	
+			
+	}
+	
+private static HttpResponse SendReqToServer(String ext){
+		
+		final int DURATION = 10000;
+		
+		/*HttpParams params = new BasicHttpParams();
+		HttpConnectionParams.setStaleCheckingEnabled(params, false);
+		HttpConnectionParams.setConnectionTimeout(params, DURATION);
+		HttpConnectionParams.setSoTimeout(params, DURATION);
+		
+		//DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
+		URI uri;
+		String uriPath = serverPath+"/"+ext;
+		try {
+			uri = new URI(uriPath);
+
+			HttpPost postMethod = new HttpPost(uri);
+
+			//ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
+			//req_entity.setContentType("application/json");
+
+			// associating entity with method
+			//postMethod.setEntity(req_entity);
+			return ServerRequest.Get().doPost(postMethod);
+			
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		return null;	
+			
+	}
+
 }

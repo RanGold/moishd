@@ -89,6 +89,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
 		if (requestCode == PICK_ACCOUNT_REQUEST){
 			if (resultCode == RESULT_FAILED){
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -108,6 +109,7 @@ public class WelcomeScreenActivity extends Activity{
 				authorizeGoogleAccount(userGoogleAccount);
 			}
 		}
+		
 		else if(requestCode == GET_ACCOUNT_TOKEN_REQUEST){
 
 			if (resultCode == RESULT_OK){
@@ -162,6 +164,8 @@ public class WelcomeScreenActivity extends Activity{
 					Intent intent = new Intent().setClass(getApplicationContext(), UsersTabWidget.class);
 					startActivity(intent);
 				}
+				
+				//if registration fails, need to logout the user, show an error message and quit.
 				
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");

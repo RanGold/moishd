@@ -36,8 +36,7 @@ public class SessionStore {
     }
 
     public static boolean restore(Facebook session, Context context) {
-        SharedPreferences savedSession =
-            context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
+        SharedPreferences savedSession = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
         session.setAccessToken(savedSession.getString(TOKEN, null));
         session.setAccessExpires(savedSession.getLong(EXPIRES, 0));
         return session.isSessionValid();
