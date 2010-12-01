@@ -21,35 +21,6 @@ import android.widget.Toast;
 public class FastTyping extends Activity {
 
 	final String[] ourDict ={"dangerous", "lovely", "believe", "addictive", "energy", "parachute"};
-
-	
-	public String mix(String str){
-		
-		int length = str.length();
-		int middle = length/2-1;
-		int offset = 0;
-		
-		String result = "";
-		for (int j=0; j<length;j++){
-			if (j==0) {
-				result.concat( new String(new char[] {str.charAt(middle)}));
-			}
-			else {
-				result.concat( new String(new char[] {str.charAt(middle+offset)}));
-				j++;
-				if (j < length){
-					result.concat( new String(new char[] {str.charAt(middle-offset)}));
-					j++;
-			
-				}
-			}
-			offset++;
-		}
-		
-		return result;
-		
-	}
-	
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -65,8 +36,6 @@ public class FastTyping extends Activity {
 		Random random = new Random();  
 		int i = random.nextInt(5);
 		final String currentWord = ourDict[i];
-
-
 		
 		word.setText(currentWord);
 		word.setTextSize(60);
