@@ -1,5 +1,9 @@
 package moishd.server.servlets;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 //TODO : change use to server
 /*
  * Gson g = new Gson(); ObjectInputStream ois = new
@@ -42,6 +46,13 @@ package moishd.server.servlets;
  * (IOException e) { // Exception handling }
  */
 
-public class SendServlet {
-
+public class SendServlet extends HttpServlet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8857306020859881060L;
+	
+	public void doPost(HttpServletRequest request, HttpServletResponse response) {
+		
+	}
 }

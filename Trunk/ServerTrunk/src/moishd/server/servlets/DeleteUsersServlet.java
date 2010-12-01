@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.users.UserServiceFactory;
+
 import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
 
@@ -18,13 +20,15 @@ public class DeleteUsersServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		try {
-			pm.newQuery(MoishdUser.class).deletePersistentAll();
-		} finally {
-			pm.close();
+		if (UserServiceFactory.getUserService().isUserLoggedIn()
+				&& UserServiceFactory.getUserService().isUserAdmin()) {
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			try {
+				pm.newQuery(MoishdUser.class).deletePersistentAll();
+			} finally {
+				pm.close();
+			}
+			response.sendRedirect("/");
 		}
-		response.sendRedirect("/");
 	}
 }

@@ -39,7 +39,7 @@ public class GetAllUsersServlet extends HttpServlet {
 		} else {
 			try {
 				Query q = pm.newQuery(MoishdUser.class);
-				q.setFilter("userGoogleIdentifier == idParam");
+				q.setFilter("userGoogleIdentifier == :idParam");
 
 				@SuppressWarnings("unchecked")
 				List<MoishdUser> users = (List<MoishdUser>)q.execute(user.getEmail());
@@ -50,6 +50,7 @@ public class GetAllUsersServlet extends HttpServlet {
 					response.addHeader("Error", "");
 					response.getWriter().println("RegisterServlet: user " + user.getEmail() + " more than 1 result");
 				} else {
+					// TODO Returning just registered users 
 					@SuppressWarnings("unchecked")
 					List<MoishdUser> allUsers = (List<MoishdUser>) pm.newQuery(
 							MoishdUser.class, "userGoogleIdentifier != :paramId")

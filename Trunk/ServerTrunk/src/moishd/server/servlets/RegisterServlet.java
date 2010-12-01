@@ -56,7 +56,7 @@ public class RegisterServlet extends HttpServlet {
 						ClientMoishdUser.class);
 
 				Query q = pm.newQuery(MoishdUser.class);
-				q.setFilter("userGoogleIdentifier == idParam");
+				q.setFilter("userGoogleIdentifier == :idParam");
 
 				List<MoishdUser> users = (List<MoishdUser>)q.execute(user.getEmail());
 				if (users.size() == 0) {

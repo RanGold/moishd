@@ -20,12 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
 import moishd.server.common.PMF;
 import moishd.server.dataObjects.C2DMAuth;
+
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class C2DMAuthServlet extends HttpServlet {
 	/**
@@ -34,7 +32,8 @@ public class C2DMAuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 8795970457297476756L;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
-		if (UserServiceFactory.getUserService().isUserAdmin()) {
+		if (UserServiceFactory.getUserService().isUserLoggedIn()
+				&& UserServiceFactory.getUserService().isUserAdmin()) {
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			Transaction tx = pm.currentTransaction();
 			try {

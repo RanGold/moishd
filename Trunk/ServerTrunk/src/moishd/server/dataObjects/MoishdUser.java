@@ -7,14 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.server.common.PMF;
 
 import com.google.appengine.api.datastore.Key;
 
