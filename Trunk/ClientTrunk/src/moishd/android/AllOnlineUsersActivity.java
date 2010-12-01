@@ -311,6 +311,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -325,14 +326,75 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
+	
+	private static List<ClientMoishdUser> moishdUsers;
+	
+	private static final String GOOGLE_AUTH_PREF = "google_authentication";
+	private static final String GOOGLE_AUTH_STRING = "auth_String";
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		String authString = getGoogleAuthString();
+		moishdUsers = AndroidUtility.getAllUsers(authString);
+		
+		setContentView(R.layout.all_users_layout);
+		ListView l1 = (ListView) findViewById(R.id.allUsersListView);
+
+		l1.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				//Toast.makeText(getBaseContext(), "You clciked "+country[arg2], Toast.LENGTH_LONG).show();
+				inviteUserToMoish(arg2);
+			}});
+		l1.setAdapter(new EfficientAdapter(this));
+	}
+	
+	
+	protected void inviteUserToMoish(int position){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("You've invited  " + moishdUsers.get(position).getUserNick() + " to Moish. Continue?")
+		.setCancelable(false)
+		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		})
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
+
+	}
+	
+	private String getGoogleAuthString() {
+
+		Context context = getApplicationContext();
+		final SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
+		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
+		
+		return authString;
+	}
+
+	
 	private static class EfficientAdapter extends BaseAdapter {
       private LayoutInflater mInflater;
       private Bitmap userIcon1;
       private Bitmap userIcon2;
-      private Bitmap mIcon3;
-      private Bitmap mIcon4;
-      private Bitmap moishd_logo;
+      private Bitmap userIcon3;
+      private Bitmap userIcon4;
+      private Bitmap userRank0;
+      private Bitmap userRank1;
+      private Bitmap userRank2;
+      private Bitmap userRank3;
+      //private Bitmap userRank4;
+      //private Bitmap userRank5;
+
+      //private Bitmap moishd_logo;
 
       public EfficientAdapter(Context context) {
           // Cache the LayoutInflate to avoid asking for a new one each time.
@@ -341,9 +403,16 @@ public class AllOnlineUsersActivity extends Activity {
           // Icons bound to the rows.
           userIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon1);
           userIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon2);
-          mIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
-          mIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
-          moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
+          userIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
+          userIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
+          userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
+          userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
+          userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
+          userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
+          //userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
+          //userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
+
+          //moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
       }
 
       public int getCount() {
@@ -388,18 +457,20 @@ public class AllOnlineUsersActivity extends Activity {
           holder.userName.setText(moishdUsers.get(position).getUserNick());
           if (position % 4 == 0){
         	  holder.userPicture.setImageBitmap(userIcon1);
-        	  holder.userRank.setImageBitmap((position & 1) == 1 ? userIcon1 : userIcon2);
+        	  holder.userRank.setImageBitmap(userRank0);
           }
           else if (position % 4 == 1){
         	  holder.userPicture.setImageBitmap(userIcon2);
+        	  holder.userRank.setImageBitmap(userRank1);
           }
           else if (position % 4 == 2){
-        	  holder.userPicture.setImageBitmap(mIcon3);
+        	  holder.userPicture.setImageBitmap(userIcon3);
+        	  holder.userRank.setImageBitmap(userRank2);
           }
           else{
-        	  holder.userPicture.setImageBitmap(mIcon4); 
+        	  holder.userPicture.setImageBitmap(userIcon4);
+        	  holder.userRank.setImageBitmap(userRank3);
           }
-          holder.userRank.setImageBitmap((position & 1) == 1 ? userIcon1 : userIcon2);
 
           return convertView;
       }
@@ -411,41 +482,6 @@ public class AllOnlineUsersActivity extends Activity {
 		}
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.all_users_layout);
-		ListView l1 = (ListView) findViewById(R.id.allUsersListView);
-
-		l1.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				//Toast.makeText(getBaseContext(), "You clciked "+country[arg2], Toast.LENGTH_LONG).show();
-				inviteUserToMoish(arg2);
-			}});
-		l1.setAdapter(new EfficientAdapter(this));
-	}
-	protected void inviteUserToMoish(int position){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've invited  " + moishdUsers.get(position).getUserNick() + " to Moish. Continue?")
-		.setCancelable(false)
-		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
-
-	}
-
-
-	private static final List<ClientMoishdUser> moishdUsers = AndroidUtility.getAllUsers();
 
 //	private static final String[] country = { "Iceland", "India", "Indonesia",
 //		"Iran", "Iraq", "Ireland", "Israel", "Italy", "Laos", "Latvia",

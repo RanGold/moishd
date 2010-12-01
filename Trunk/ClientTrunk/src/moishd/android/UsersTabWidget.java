@@ -58,7 +58,7 @@ public class UsersTabWidget extends TabActivity {
 	  case R.id.trophies:
 		  return true;
 	  case R.id.welcomeScreen:
-		  WelcomeScreenActivity.logout(null);
+		  WelcomeScreenActivity.facebookLogout(null);
 		  finish();
 	    return true;
 	  default:

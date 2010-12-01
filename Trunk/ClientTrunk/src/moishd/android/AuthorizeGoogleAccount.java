@@ -2,8 +2,6 @@ package moishd.android;
 
 import java.io.IOException;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -86,7 +84,6 @@ public class AuthorizeGoogleAccount extends Activity {
 		resultIntent.putExtra("auth_token", auth_token);
 		setResult(WelcomeScreenActivity.RESULT_OK, resultIntent);
 		finish();
-		//new GetCookieTask().execute(auth_token);
 	}
 
 }

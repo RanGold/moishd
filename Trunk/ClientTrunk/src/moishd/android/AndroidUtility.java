@@ -29,20 +29,20 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class AndroidUtility {
-	
+
 	private  static final String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
 	//to be replaced with http://moish-d.appspot.com/
 	//when change - change also in ServerRequest
-	
+
 	/*public enum serverExtEnum {
-		 
+
 	    USER_LOGIN("UserLogin"), 
 	    GET_ALL_USERS("GetAllUsers"),
 	    GUESTBOOK("guestbook"),
 	    REGISTRATION("registration");
-	    
+
 	    private String ext;
-	 
+
 	    private serverExtEnum(String ext) {
 	    this.ext = ext;
 	    }
@@ -51,47 +51,45 @@ public class AndroidUtility {
 	    return ext;
 	    }
 	}*/
-	
 
 
+	private static String convertStreamToString(InputStream is) throws IOException {
+		/*
+		 * To convert the InputStream to String we use the
+		 * Reader.read(char[] buffer) method. We iterate until the
+		 * Reader return -1 which means there's no more data to
+		 * read. We use the StringWriter class to produce the string.
+		 */
+		if (is != null) {
+			Writer writer = new StringWriter();
 
-	  private static String convertStreamToString(InputStream is) throws IOException {
-	        /*
-	         * To convert the InputStream to String we use the
-	         * Reader.read(char[] buffer) method. We iterate until the
-	         * Reader return -1 which means there's no more data to
-	         * read. We use the StringWriter class to produce the string.
-	         */
-	        if (is != null) {
-	            Writer writer = new StringWriter();
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} finally {
+				is.close();
+			}
+			return writer.toString();
+		} else {        
+			return "";
+		}
+	}
 
-	            char[] buffer = new char[1024];
-	            try {
-	                Reader reader = new BufferedReader(
-	                        new InputStreamReader(is, "UTF-8"));
-	                int n;
-	                while ((n = reader.read(buffer)) != -1) {
-	                    writer.write(buffer, 0, n);
-	                }
-	            } finally {
-	                is.close();
-	            }
-	            return writer.toString();
-	        } else {        
-	            return "";
-	        }
-	    }
-		
 	public static boolean enlist(moishd.client.dataObjects.ClientMoishdUser user){
 		HttpResponse response = SendObjToServer(user, "UserLogin");
 		String content;
 		try {
 			content = convertStreamToString(response.getEntity().getContent());
-		if (!content.equals("")){
-			Log.d("GAE ERROR",content);
-			return false;
-		} else
-			return true;
+			if (!content.equals("")){
+				Log.d("GAE ERROR",content);
+				return false;
+			} else
+				return true;
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -101,10 +99,10 @@ public class AndroidUtility {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static List<moishd.client.dataObjects.ClientMoishdUser> getAllUsers(){
-		List<moishd.client.dataObjects.ClientMoishdUser> users;
+	public static List<moishd.client.dataObjects.ClientMoishdUser> getAllUsers(String authString){
+		boolean hasCookie = ServerRequest.Get().GetCookie(authString);
 		HttpResponse response = SendReqToServer("GetAllUsers");
 		String content;
 		try {
@@ -134,9 +132,9 @@ public class AndroidUtility {
 		}
 		return null;
 	}
-	
+
 	private static HttpResponse SendObjToServer(Object obj, String ext){
-		
+
 		final int DURATION = 10000;
 		//to be replaced with http://moish-d.appspot.com/
 		//when change - change also in ServerRequest
@@ -145,7 +143,7 @@ public class AndroidUtility {
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
 		HttpConnectionParams.setConnectionTimeout(params, DURATION);
 		HttpConnectionParams.setSoTimeout(params, DURATION);
-		
+
 		DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
 		HttpResponse response ;
 		URI uri;
@@ -167,26 +165,26 @@ public class AndroidUtility {
 			postMethod.setEntity(req_entity);
 			response = ServerRequest.Get().doPost(postMethod);
 			return response;
-		
+
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-		
+
 		return null;	
-			
+
 	}
-	
-private static HttpResponse SendReqToServer(String ext){
-		
+
+	private static HttpResponse SendReqToServer(String ext){
+
 		final int DURATION = 10000;
-		
+
 		/*HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setStaleCheckingEnabled(params, false);
 		HttpConnectionParams.setConnectionTimeout(params, DURATION);
 		HttpConnectionParams.setSoTimeout(params, DURATION);
-		
+
 		//DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
 		URI uri;
 		String uriPath = serverPath+"/"+ext;
@@ -201,15 +199,15 @@ private static HttpResponse SendReqToServer(String ext){
 			// associating entity with method
 			//postMethod.setEntity(req_entity);
 			return ServerRequest.Get().doPost(postMethod);
-			
+
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-		
+
 		return null;	
-			
+
 	}
 
 }

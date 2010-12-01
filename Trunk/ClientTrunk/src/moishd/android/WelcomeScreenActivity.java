@@ -13,16 +13,17 @@ import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ServerRequest;
 
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,23 +37,23 @@ public class WelcomeScreenActivity extends Activity{
 	protected static final int RESULT_FAILED = 1;
 
 	private static final String APP_ID = "108614622540129";
-	private final String appDomain = "moish-d.appspot.com"; //"localhost:8888/";
 
 	private Account userGoogleAccount;
-	private static String authString;
+	private static final String GOOGLE_AUTH_PREF = "google_authentication";
+	private static final String GOOGLE_AUTH_STRING = "auth_String";
 
 	private static LoginButton loginButton;
 	private Facebook facebook;
 	private AsyncFacebookRunner asyncRunner;
 
-	private DefaultHttpClient http_client = new DefaultHttpClient();
-
-	private AccountManager accountManager;
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		startGoogleAuth();
+		String googleAuthString = getGoogleAuthString();
+
+		if (googleAuthString == null){
+			startGoogleAuth();
+		}
 
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
@@ -82,14 +83,14 @@ public class WelcomeScreenActivity extends Activity{
 		startActivityForResult(intent, GET_ACCOUNT_TOKEN_REQUEST);
 	}
 
-	protected static void logout(View arg0){
+	protected static void facebookLogout(View arg0){
 		loginButton.logout(arg0);
 
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		if (requestCode == PICK_ACCOUNT_REQUEST){
 			if (resultCode == RESULT_FAILED){
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -109,11 +110,12 @@ public class WelcomeScreenActivity extends Activity{
 				authorizeGoogleAccount(userGoogleAccount);
 			}
 		}
-		
+
 		else if(requestCode == GET_ACCOUNT_TOKEN_REQUEST){
 
 			if (resultCode == RESULT_OK){
-				authString = data.getExtras().getString("auth_token");
+				String authString = data.getExtras().getString("auth_token");
+				saveGoogleAuthString(authString);
 			}
 			else{
 				finish();
@@ -122,6 +124,24 @@ public class WelcomeScreenActivity extends Activity{
 		else{
 			facebook.authorizeCallback(requestCode, resultCode, data);
 		}
+	}	
+
+	private void saveGoogleAuthString(String authString) {
+
+		Context context = getApplicationContext();
+		SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putString("auth_String", authString);
+		editor.commit();
+	}
+
+	private String getGoogleAuthString() {
+
+		Context context = getApplicationContext();
+		final SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
+		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
+
+		return authString;
 	}
 
 	private void doAuthSucceed(){
@@ -156,17 +176,17 @@ public class WelcomeScreenActivity extends Activity{
 				final String userName = json.getString("name");
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
-				
-				ServerRequest.Get().GetCookie(authString);
+
+				ServerRequest.Get().GetCookie(getGoogleAuthString());
 				boolean registrationComplete = AndroidUtility.enlist(newUser); // what a stupid name.
-				
+
 				if (registrationComplete){
 					Intent intent = new Intent().setClass(getApplicationContext(), UsersTabWidget.class);
 					startActivity(intent);
 				}
-				
+
 				//if registration fails, need to logout the user, show an error message and quit.
-				
+
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
 			} catch (FacebookError e) {
