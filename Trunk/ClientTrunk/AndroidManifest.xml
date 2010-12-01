@@ -65,5 +65,9 @@
 		<activity android:name=".FastTyping3" android:label="@string/app_name"></activity>
 		<activity android:name=".TruthPart" android:label="@string/app_name"></activity>
 		<activity android:name=".Mixing" android:label="@string/app_name"></activity>
+		<activity android:name=".Click" android:label="@string/app_name"></activity>
+		<activity android:name=".Simon" android:label="@string/app_name"></activity>
+		<activity android:name=".SimonPro" android:label="@string/app_name"></activity>
+				
 
 </manifest> 
