@@ -19,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 
+import moishd.common.ServerRequest;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -115,13 +117,6 @@ public class DeviceRegistrar {
     	
     	moishd.client.dataObjects.ClientMoishdUser user = new moishd.client.dataObjects.ClientMoishdUser();
     	
-        HttpParams param = new BasicHttpParams();
-		HttpConnectionParams.setStaleCheckingEnabled(param, false);
-		HttpConnectionParams.setConnectionTimeout(param, 100000);
-		HttpConnectionParams.setSoTimeout(param, 100000);
-
-		DefaultHttpClient httpClient = new DefaultHttpClient(param);
-		
 		URI uri = new URI("http://moish-d.appspot.com/RegisterUser"); 
 		HttpPost postMethod = new HttpPost(uri);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -136,6 +131,6 @@ public class DeviceRegistrar {
 		postMethod.setEntity(req_entity);
 
 
-		return httpClient.execute(postMethod);
+		return ServerRequest.Get().doPost(postMethod);
     }
 }
