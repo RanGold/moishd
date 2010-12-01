@@ -63,7 +63,8 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>C2DMAuthServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.C2DMAuthServlet</servlet-class></servlet>
+		<servlet-class>moishd.server.servlets.C2DMAuthServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMAuthServlet</servlet-name>
 		<url-pattern>/cron/C2DMAuth</url-pattern>
