@@ -122,7 +122,7 @@ public class DeviceRegistrar {
 
 		DefaultHttpClient httpClient = new DefaultHttpClient(param);
 		
-		URI uri = new URI("http://moish-d.appspot.com/registration"); 
+		URI uri = new URI("http://moish-d.appspot.com/RegisterUser"); 
 		HttpPost postMethod = new HttpPost(uri);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		Gson g = new Gson();
