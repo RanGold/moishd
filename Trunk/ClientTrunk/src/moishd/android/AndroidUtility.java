@@ -102,17 +102,17 @@ public class AndroidUtility {
 
 	@SuppressWarnings("unchecked")
 	public static List<moishd.client.dataObjects.ClientMoishdUser> getAllUsers(String authString){
-		boolean hasCookie = ServerRequest.Get().GetCookie(authString);
+		
+		ServerRequest.Get().GetCookie(authString);
 		HttpResponse response = SendReqToServer("GetAllUsers");
-		String content;
 		try {
-			content = convertStreamToString(response.getEntity().getContent());
-			if (!content.equals(""))
-				Log.d("GAE ERROR",content);
+			InputStream contentStream = response.getEntity().getContent();
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+			}
 			else{
-				HttpEntity respEntity = response.getEntity();
-				if (respEntity != null) {
-					ObjectInputStream ois = new ObjectInputStream(response.getEntity().getContent());
+				if (contentStream != null) {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
 					try {
 						String json = (String) ois.readObject();
 						Gson g = new Gson();
