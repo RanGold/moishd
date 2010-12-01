@@ -53,4 +53,8 @@ public class C2DMAuth implements Serializable {
 	public Date getDate() {
 		return date;
 	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }

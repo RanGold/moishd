@@ -55,7 +55,7 @@ public class UserLoginServlet extends HttpServlet {
 						ClientMoishdUser.class);
 
 				Query q = pm.newQuery(MoishdUser.class);
-				q.setFilter("userGoogleIdentifier == idParam");
+				q.setFilter("userGoogleIdentifier == :idParam");
 
 				if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {
 					pm.makePersistent(new MoishdUser(newUser.getUserNick(), "", user.getEmail(), "NULL"));

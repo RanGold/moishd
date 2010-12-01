@@ -9,13 +9,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Date;
+import java.util.List;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.jdo.Transaction;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 import moishd.server.common.PMF;
 import moishd.server.dataObjects.C2DMAuth;
@@ -27,26 +34,31 @@ public class C2DMAuthServlet extends HttpServlet {
 	private static final long serialVersionUID = 8795970457297476756L;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Transaction tx = pm.currentTransaction();
-		try {
+		if (UserServiceFactory.getUserService().isUserAdmin()) {
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			Transaction tx = pm.currentTransaction();
 			try {
-				tx.begin();
-				C2DMAuth auth = new C2DMAuth(getAuthToken());
-				pm.newQuery(C2DMAuth.class).deletePersistentAll();
-				pm.makePersistent(auth);
-				tx.commit();
-			} catch (Exception e) {
+				try {
+					tx.begin();
+					Query q = pm.newQuery(C2DMAuth.class);
+					@SuppressWarnings("unchecked")
+					C2DMAuth c2dmAuth = ((List<C2DMAuth>) q.execute()).get(0);
+					c2dmAuth.setAuthKey(getAuthToken());
+					c2dmAuth.setDate(new Date());
+					pm.makePersistent(c2dmAuth);
+					tx.commit();
+				} catch (Exception e) {
+					response.addHeader("Error", e.getMessage());
+					response.getWriter().println(e.getMessage());
+				}
+			} catch (IOException e) {
 				response.addHeader("Error", e.getMessage());
-				response.getWriter().println(e.getMessage());
+			} finally {
+				if (tx.isActive()) {
+					tx.rollback();
+				}
+				pm.close();
 			}
-		} catch (IOException e) {
-			response.addHeader("Error", e.getMessage());
-		} finally {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			pm.close();
 		}
 
 	}
