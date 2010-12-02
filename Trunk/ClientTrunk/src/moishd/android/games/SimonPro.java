@@ -95,8 +95,9 @@ public class SimonPro extends Activity{
 				if (arr[counter] == indentify[0]){
 					messUp();
 					counter++;
-					if (counter == 5)
-						rightAnswer();
+					
+				if (counter == 5)
+					rightAnswer();
 						
 			
 				}
@@ -116,8 +117,6 @@ public class SimonPro extends Activity{
 				}
 				else 
 					wrongAnswer();
-				
-				
 			}
 		});		
 		
@@ -154,13 +153,13 @@ public class SimonPro extends Activity{
 			super(millisInFuture, countDownInterval);
 		}    
 		public void onFinish() {
+			counter=0;
 			word.setTextSize(30);
 			word.setPadding(80, 0, 0, 0);
 			word.setText("go go go!!!");
 			click1.setVisibility(0);		
 			click2.setVisibility(0);
 			click3.setVisibility(0);
-			counter=0;
 			RunAnimations();
 			giveUp.setVisibility(0);
 			tries.setText("number of tries:" + tr);
@@ -218,11 +217,11 @@ public class SimonPro extends Activity{
 
 	
 	public void wrongAnswer(){
+		counter=0;
 		tr--;
 		//LittleCount c1 = new LittleCount(2000,1000);
 		//c1.start();
 		//wrong = (TextView) findViewById(R.id.wrong);
-		counter=0;
 		wrong = (TextView) findViewById(R.id.wrong);
 		tries = (TextView) findViewById(R.id.tries);
 		Animation anim = AnimationUtils.loadAnimation(SimonPro.this, R.anim.animation3);
