@@ -40,6 +40,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		Intent usersTabIntent = new Intent();
 		usersTabIntent.setClass(getApplicationContext(), AllOnlineUsersActivity.class);
+		usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		usersTabIntent.putExtra("push_game_id", game_id);
 		usersTabIntent.setAction("android.intent.action.MAIN");
 		usersTabIntent.addCategory("android.intent.category.LAUNCHER");
