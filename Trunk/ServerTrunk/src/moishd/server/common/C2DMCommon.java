@@ -24,7 +24,7 @@ public class C2DMCommon {
 		WordForGame,
 		GameResult,
 		GameCanceled,
-		GameDenyed
+		GameDeclined
 	}
 	// TODO : change use to server
 	public static boolean PushGenericMessage 

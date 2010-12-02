@@ -35,7 +35,7 @@ public class GetTimeGameInitiatorServlet extends HttpServlet {
 				DSCommon.GetUserByGoogleId(user.getEmail());
 
 				String gameId = request.getReader().readLine();
-				TimeGame tg = DSCommon.GetTimeGameByIdRecId(gameId, user.getEmail());
+				TimeGame tg = DSCommon.GetTimeGameByIdRecId(Long.valueOf(gameId), user.getEmail());
 				MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 				GsonCommon.WriteJsonToResponse(muser, response);
 			} catch (DataAccessException e) {

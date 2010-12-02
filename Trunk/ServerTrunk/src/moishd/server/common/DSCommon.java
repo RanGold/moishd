@@ -74,22 +74,16 @@ public class DSCommon {
 			pm.close();
 		}
 	}
-	public static MoishdUser GetUserByGoogleId(String GoogleId) throws DataAccessException {
+	
+	@SuppressWarnings("unchecked")
+	private static List<MoishdUser> GetUsersByGoogleId(String GoogleId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(MoishdUser.class);
 			q.setFilter("userGoogleIdentifier == :idParam");
 
-			@SuppressWarnings("unchecked")
-			List<MoishdUser> users = (List<MoishdUser>)q.execute(GoogleId);
-			if (users.size() == 0) {
-				throw new DataAccessException("user " + GoogleId + " not found");
-			} else if (users.size() > 1) {
-				throw new DataAccessException("user " + GoogleId + " more than 1 result");
-			} else {
-				return users.get(0);
-			}
+			return ((List<MoishdUser>)q.execute(GoogleId));
 		}
 		finally {
 			if (q != null) {
@@ -99,7 +93,28 @@ public class DSCommon {
 		}
 	}
 	
-	public static TimeGame GetTimeGameByIdRecId(String gameId, String recId) throws DataAccessException {
+	public static Boolean DoesUserByGoogleIdExist(String GoogleId) throws DataAccessException {
+		List<MoishdUser> users = GetUsersByGoogleId(GoogleId);
+		
+		if (users.size() > 1) {
+			throw new DataAccessException("user " + GoogleId + " more than 1 result");
+		} else {
+			return (users.size() == 0);
+		}
+	}
+	
+	public static MoishdUser GetUserByGoogleId(String GoogleId) throws DataAccessException {
+		List<MoishdUser> users = GetUsersByGoogleId(GoogleId);
+		if (users.size() == 0) {
+			throw new DataAccessException("user " + GoogleId + " not found");
+		} else if (users.size() > 1) {
+			throw new DataAccessException("user " + GoogleId + " more than 1 result");
+		} else {
+			return users.get(0);
+		}
+	}
+	
+	public static TimeGame GetTimeGameByIdRecId(long gameId, String recId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
@@ -114,7 +129,35 @@ public class DSCommon {
 						" doesn't exist for " + recId);
 			} else if (games.size() > 1) {
 				throw new DataAccessException("game " + gameId + 
-						" doesn't exist for " + recId + " more than 1 result");
+						" has more than 1 result for " + recId);
+			} else {
+				return (games.get(0));
+			}
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
+	
+	public static TimeGame GetTimeGameById(long gameId) throws DataAccessException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(TimeGame.class);
+			q.setFilter("gameId == :gId");
+
+			@SuppressWarnings("unchecked")
+			List<TimeGame> games = (List<TimeGame>)q.execute(gameId);
+
+			if (games.size() == 0) {
+				throw new DataAccessException("game " + gameId + 
+						" doesn't exist");
+			} else if (games.size() > 1) {
+				throw new DataAccessException("game " + gameId + 
+						" has more than 1 result");
 			} else {
 				return (games.get(0));
 			}
