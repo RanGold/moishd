@@ -327,38 +327,51 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 	
-	private static List<ClientMoishdUser> moishdUsers;
+	protected final String authString = getGoogleAuthString();
+	protected String game_id;
 	
 	private static final String GOOGLE_AUTH_PREF = "google_authentication";
 	private static final String GOOGLE_AUTH_STRING = "auth_String";
+	
+	private static List<ClientMoishdUser> moishdUsers;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		String authString = getGoogleAuthString();
+
 		moishdUsers = AndroidUtility.getAllUsers(authString);
-		
+
 		setContentView(R.layout.all_users_layout);
 		ListView l1 = (ListView) findViewById(R.id.allUsersListView);
 
 		l1.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				//Toast.makeText(getBaseContext(), "You clciked "+country[arg2], Toast.LENGTH_LONG).show();
 				inviteUserToMoish(arg2);
 			}});
 		l1.setAdapter(new EfficientAdapter(this));
 	}
-	
-	
-	protected void inviteUserToMoish(int position){
+
+	@Override
+	protected void onResume (){
+		super.onResume();
+
+		game_id = getIntent().getStringExtra("push_game_id");
+
+		if (game_id!=null){
+			getInvitation();
+		}
+	}
+
+	private void inviteUserToMoish(int position){
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("You've invited  " + moishdUsers.get(position).getUserNick() + " to Moish. Continue?")
 		.setCancelable(false)
 		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
+				inviteUserToMoish(moishdUsers.get(id));
 			}
 		})
 		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -370,110 +383,135 @@ public class AllOnlineUsersActivity extends Activity {
 		alert.show();
 
 	}
-	
+
+	private void inviteUserToMoish(ClientMoishdUser user){
+
+		game_id = AndroidUtility.inviteUser(user, authString);
+
+	}
+
+	private void getInvitation(){
+
+		ClientMoishdUser user = AndroidUtility.retrieveInvitation(game_id, authString);
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
+		.setCancelable(false)
+		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				sendInvitationResponse("Accept");	
+				dialog.cancel();
+			}
+		})
+		.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				sendInvitationResponse("Decline");	
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
+	}
+
+	private boolean sendInvitationResponse(String response){
+		return AndroidUtility.sendInvitationResponse(game_id, response, authString);
+
+	}
+
 	private String getGoogleAuthString() {
 
 		Context context = getApplicationContext();
 		final SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
 		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
-		
+
 		return authString;
 	}
 
-	
 	private static class EfficientAdapter extends BaseAdapter {
-      private LayoutInflater mInflater;
-      private Bitmap userIcon1;
-      private Bitmap userIcon2;
-      private Bitmap userIcon3;
-      private Bitmap userIcon4;
-      private Bitmap userRank0;
-      private Bitmap userRank1;
-      private Bitmap userRank2;
-      private Bitmap userRank3;
-      //private Bitmap userRank4;
-      //private Bitmap userRank5;
+		private LayoutInflater mInflater;
+		private Bitmap userIcon1;
+		private Bitmap userIcon2;
+		private Bitmap userIcon3;
+		private Bitmap userIcon4;
+		private Bitmap userRank0;
+		private Bitmap userRank1;
+		private Bitmap userRank2;
+		private Bitmap userRank3;
+		//private Bitmap userRank4;
+		//private Bitmap userRank5;
 
-      //private Bitmap moishd_logo;
+		//private Bitmap moishd_logo;
 
-      public EfficientAdapter(Context context) {
-          // Cache the LayoutInflate to avoid asking for a new one each time.
-          mInflater = LayoutInflater.from(context);
+		public EfficientAdapter(Context context) {
+			// Cache the LayoutInflate to avoid asking for a new one each time.
+			mInflater = LayoutInflater.from(context);
 
-          // Icons bound to the rows.
-          userIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon1);
-          userIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon2);
-          userIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
-          userIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
-          userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
-          userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
-          userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
-          userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
-          //userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
-          //userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
+			// Icons bound to the rows.
+			userIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon1);
+			userIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon2);
+			userIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
+			userIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
+			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
+			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
+			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
+			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
+			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
+			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
 
-          //moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
-      }
+			//moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
+		}
 
-      public int getCount() {
-          return moishdUsers.size();
-      }
+		public int getCount() {
+			return moishdUsers.size();
+		}
 
-      public Object getItem(int position) {
-          return position;
-      }
+		public Object getItem(int position) {
+			return position;
+		}
 
-      public long getItemId(int position) {
-          return position;
-      }
+		public long getItemId(int position) {
+			return position;
+		}
 
-      public View getView(int position, View convertView, ViewGroup parent) {
-          // A ViewHolder keeps references to children views to avoid unneccessary calls
-          // to findViewById() on each row.
-          ViewHolder holder;
+		public View getView(int position, View convertView, ViewGroup parent) {
 
-          // When convertView is not null, we can reuse it directly, there is no need
-          // to reinflate it. We only inflate a new View when the convertView supplied
-          // by ListView is null.
-          if (convertView == null) {
-              convertView = mInflater.inflate(R.layout.all_users_list_item, null);
+			ViewHolder holder;
 
-              // Creates a ViewHolder and store references to the two children views
-              // we want to bind data to.
-              holder = new ViewHolder();
-              holder.userName = (TextView) convertView.findViewById(R.id.text);
-              holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
-              holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
-              //holder.moishdButton = (ImageButton) convertView.findViewById(R.id.moishdButton);
-              
-              convertView.setTag(holder);
-          } else {
-              // Get the ViewHolder back to get fast access to the TextView
-              // and the ImageView.
-              holder = (ViewHolder) convertView.getTag();
-          }
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.all_users_list_item, null);
 
-          // Bind the data efficiently with the holder.
-          holder.userName.setText(moishdUsers.get(position).getUserNick());
-          if (position % 4 == 0){
-        	  holder.userPicture.setImageBitmap(userIcon1);
-        	  holder.userRank.setImageBitmap(userRank0);
-          }
-          else if (position % 4 == 1){
-        	  holder.userPicture.setImageBitmap(userIcon2);
-        	  holder.userRank.setImageBitmap(userRank1);
-          }
-          else if (position % 4 == 2){
-        	  holder.userPicture.setImageBitmap(userIcon3);
-        	  holder.userRank.setImageBitmap(userRank2);
-          }
-          else{
-        	  holder.userPicture.setImageBitmap(userIcon4);
-        	  holder.userRank.setImageBitmap(userRank3);
-          }
+				holder = new ViewHolder();
+				holder.userName = (TextView) convertView.findViewById(R.id.text);
+				holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
+				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
+				//holder.moishdButton = (ImageButton) convertView.findViewById(R.id.moishdButton);
 
-          return convertView;
-      }
+				convertView.setTag(holder);
+			} else {
+
+				holder = (ViewHolder) convertView.getTag();
+			}
+
+			holder.userName.setText(moishdUsers.get(position).getUserNick());
+			if (position % 4 == 0){
+				holder.userPicture.setImageBitmap(userIcon1);
+				holder.userRank.setImageBitmap(userRank0);
+			}
+			else if (position % 4 == 1){
+				holder.userPicture.setImageBitmap(userIcon2);
+				holder.userRank.setImageBitmap(userRank1);
+			}
+			else if (position % 4 == 2){
+				holder.userPicture.setImageBitmap(userIcon3);
+				holder.userRank.setImageBitmap(userRank2);
+			}
+			else{
+				holder.userPicture.setImageBitmap(userIcon4);
+				holder.userRank.setImageBitmap(userRank3);
+			}
+
+			return convertView;
+		}
 		static class ViewHolder {
 			TextView userName;
 			ImageView userPicture;
@@ -481,16 +519,4 @@ public class AllOnlineUsersActivity extends Activity {
 			//ImageButton moishdButton;
 		}
 	}
-
-
-//	private static final String[] country = { "Iceland", "India", "Indonesia",
-//		"Iran", "Iraq", "Ireland", "Israel", "Italy", "Laos", "Latvia",
-//		"Lebanon", "Lesotho ", "Liberia", "Libya", "Lithuania",
-//	"Luxembourg" };
-//	private static final String[] curr = { "ISK", "INR", "IDR", "IRR", "IQD",
-//		"EUR", "ILS", "EUR", "LAK", "LVL", "LBP", "LSL ", "LRD", "LYD",
-//		"LTL ", "EUR"
-//
-//	};
-
 }

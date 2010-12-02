@@ -12,19 +12,15 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class UsersTabWidget extends TabActivity {
-    
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.users_tab_layout);
+		setContentView(R.layout.users_tab_layout);
 
 		//register to c2dm. once registered a registration_id will be received via c2dmreceiver 
-		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
-		startService(registrationIntent);
-		Log.d("TEST","Resgistering...");
-        
+		registerC2DM();
+
 		Resources res = getResources(); // Resource object to get Drawables
 		TabHost tabHost = getTabHost();  // The activity TabHost
 		TabHost.TabSpec spec;  // Resusable TabSpec for each tab
@@ -44,26 +40,34 @@ public class UsersTabWidget extends TabActivity {
 
 		tabHost.setCurrentTab(2);
 	}
-	
-	
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.layout.users_screen_menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.users_screen_menu, menu);
+		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
-	  switch (item.getItemId()) {
-	  case R.id.trophies:
-		  return true;
-	  case R.id.welcomeScreen:
-		  WelcomeScreenActivity.facebookLogout(null);
-		  finish();
-	    return true;
-	  default:
-	    return super.onOptionsItemSelected(item);
-	  }
+		switch (item.getItemId()) {
+		case R.id.trophies:
+			return true;
+		case R.id.welcomeScreen:
+			WelcomeScreenActivity.facebookLogout(null);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
+
+	private void registerC2DM() {
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+		startService(registrationIntent);
+		Log.d("TEST","Resgistering...");
+	}
+
 }

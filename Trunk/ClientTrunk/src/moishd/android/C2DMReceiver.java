@@ -15,9 +15,6 @@
  */
 package moishd.android;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -37,26 +34,41 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
+
+
 		Log.d("TEST", "got Message"); 
-		Log.d("TEST","one of the payloads is: "+intent.getStringExtra("payload2"));
 
-		//playing with notifications
-		String ns = Context.NOTIFICATION_SERVICE;
-		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
-		CharSequence tickerText = "YESHHHHH - incoming PUSH msg";
-		long when = System.currentTimeMillis();
-		Notification notification = new Notification(R.drawable.icon,tickerText, when);
-		Context contextt = getApplicationContext();
-		CharSequence contentTitle = "My notification";
-		CharSequence contentText = "Hello World!";
-		Intent notificationIntent = new Intent(this, UsersTabWidget.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		String action = intent.getStringExtra("Action");
 
-		notification.setLatestEventInfo(contextt, contentTitle, contentText, contentIntent);
-		final int HELLO_ID = 1;
+		if (action.equals("GameInvitation")){
+			String game_id = intent.getStringExtra("GameId");
+			Intent usersTabIntent = new Intent();
+			usersTabIntent.setClass(getApplicationContext(), AllOnlineUsersActivity.class);
+			usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			usersTabIntent.putExtra("push_game_id", game_id);
+			startActivity(usersTabIntent);
+		}			
 
-		mNotificationManager.notify(HELLO_ID, notification);
-		
+		//		Log.d("TEST", "got Message"); 
+		//		Log.d("TEST","one of the payloads is: "+intent.getStringExtra("payload2"));
+		//
+		//		//playing with notifications
+		//		String ns = Context.NOTIFICATION_SERVICE;
+		//		NotificationManager mNotificationManager = (NotificationManager) getSystemService(ns);
+		//		CharSequence tickerText = "YESHHHHH - incoming PUSH msg";
+		//		long when = System.currentTimeMillis();
+		//		Notification notification = new Notification(R.drawable.icon,tickerText, when);
+		//		Context contextt = getApplicationContext();
+		//		CharSequence contentTitle = "My notification";
+		//		CharSequence contentText = "Hello World!";
+		//		Intent notificationIntent = new Intent(this, UsersTabWidget.class);
+		//		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		//
+		//		notification.setLatestEventInfo(contextt, contentTitle, contentText, contentIntent);
+		//		final int HELLO_ID = 1;
+		//
+		//		mNotificationManager.notify(HELLO_ID, notification);
+
 	}
 
 	@Override
@@ -64,13 +76,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Log.d("TEST", "got Error"); 
 		// TODO Auto-generated method stub
 	}
-		
-    @Override
-    public void onRegistrered(Context context, String registration) {
-    	Log.d("TEST", "got RegistrationIntent"); 
-    	DeviceRegistrar.registerWithServer(context, registration);
-        
-    }
+
+	@Override
+	public void onRegistrered(Context context, String registration) {
+		Log.d("TEST", "got RegistrationIntent"); 
+		DeviceRegistrar.registerWithServer(context, registration);
+
+	}
 
 	/*
     public C2DMReceiver() {
@@ -146,5 +158,5 @@ public class C2DMReceiver extends C2DMBaseReceiver {
                 }
             }
         }
-    */
+	 */
 }

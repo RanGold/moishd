@@ -15,9 +15,9 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ServerRequest;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -52,59 +52,23 @@ public class AndroidUtility {
 	    }
 	}*/
 
+	public static boolean enlistUser(ClientMoishdUser user, String authString){
 
-	private static String convertStreamToString(InputStream is) throws IOException {
-		/*
-		 * To convert the InputStream to String we use the
-		 * Reader.read(char[] buffer) method. We iterate until the
-		 * Reader return -1 which means there's no more data to
-		 * read. We use the StringWriter class to produce the string.
-		 */
-		if (is != null) {
-			Writer writer = new StringWriter();
-
-			char[] buffer = new char[1024];
-			try {
-				Reader reader = new BufferedReader(
-						new InputStreamReader(is, "UTF-8"));
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-			} finally {
-				is.close();
-			}
-			return writer.toString();
-		} else {        
-			return "";
+		ServerRequest.Get().GetCookie(authString);
+		HttpResponse response = SendObjToServer(user, "InviteUser", authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
 		}
-	}
-
-	public static boolean enlist(moishd.client.dataObjects.ClientMoishdUser user){
-		HttpResponse response = SendObjToServer(user, "UserLogin");
-		String content;
-		try {
-			content = convertStreamToString(response.getEntity().getContent());
-			if (!content.equals("")){
-				Log.d("GAE ERROR",content);
-				return false;
-			} else
-				return true;
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
+		else{
+			return true;
+		} 
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<moishd.client.dataObjects.ClientMoishdUser> getAllUsers(String authString){
-		
-		ServerRequest.Get().GetCookie(authString);
-		HttpResponse response = SendReqToServer("GetAllUsers");
+	public static List<ClientMoishdUser> getAllUsers(String authString){
+
+		HttpResponse response = SendReqToServer("GetAllUsers", null, authString);
 		try {
 			InputStream contentStream = response.getEntity().getContent();
 			if (response.containsHeader("Error")){
@@ -116,7 +80,7 @@ public class AndroidUtility {
 					try {
 						String json = (String) ois.readObject();
 						Gson g = new Gson();
-						return (List<moishd.client.dataObjects.ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<moishd.client.dataObjects.ClientMoishdUser>>(){}.getType());
+						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -133,7 +97,75 @@ public class AndroidUtility {
 		return null;
 	}
 
-	private static HttpResponse SendObjToServer(Object obj, String ext){
+	public static String inviteUser(ClientMoishdUser user, String authString){
+
+		HttpResponse response = SendObjToServer(user, "InviteUser", authString);
+		try {
+			String content = convertStreamToString(response.getEntity().getContent());
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+				return null;
+			}
+			else{
+				return content;
+			}
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
+
+		HttpResponse response = SendReqToServer("GetTimeGameInitiator", gameId, authString);
+		try {
+			InputStream contentStream = response.getEntity().getContent();
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+			}
+			else{
+				if (contentStream != null) {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
+					try {
+						String json = (String) ois.readObject();
+						Gson g = new Gson();
+						return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}			}
+		}
+		catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static boolean sendInvitationResponse(String gameId, String responseString, String authString) {
+		
+		String invitationResponse = gameId + "#" + responseString;
+		HttpResponse response = SendReqToServer("InvitationResponse", invitationResponse, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		}			
+	}
+
+
+	private static HttpResponse SendObjToServer(Object obj, String ext, String authString){
 
 		final int DURATION = 10000;
 		//to be replaced with http://moish-d.appspot.com/
@@ -147,7 +179,8 @@ public class AndroidUtility {
 		DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
 		HttpResponse response ;
 		URI uri;
-		String uriPath = serverPath+"/"+ext;
+		String uriPath = serverPath + "/" + ext;
+		ServerRequest.Get().GetCookie(authString);
 		try {
 			uri = new URI(uriPath);
 
@@ -176,7 +209,7 @@ public class AndroidUtility {
 
 	}
 
-	private static HttpResponse SendReqToServer(String ext){
+	private static HttpResponse SendReqToServer(String ext, String content, String authString){
 
 		final int DURATION = 10000;
 
@@ -187,17 +220,17 @@ public class AndroidUtility {
 
 		//DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
 		URI uri;
-		String uriPath = serverPath+"/"+ext;
+		String uriPath = serverPath + "/" + ext;
+		ServerRequest.Get().GetCookie(authString);
 		try {
 			uri = new URI(uriPath);
-
 			HttpPost postMethod = new HttpPost(uri);
 
-			//ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
-			//req_entity.setContentType("application/json");
-
-			// associating entity with method
-			//postMethod.setEntity(req_entity);
+			if (content!=null){
+				ByteArrayEntity entity = new ByteArrayEntity(content.getBytes());
+				entity.setContentEncoding("UTF-8");
+				postMethod.setEntity(entity);
+			}
 			return ServerRequest.Get().doPost(postMethod);
 
 		} catch (URISyntaxException e) {
@@ -208,6 +241,33 @@ public class AndroidUtility {
 
 		return null;	
 
+	}
+
+	private static String convertStreamToString(InputStream is) throws IOException {
+		/*
+		 * To convert the InputStream to String we use the
+		 * Reader.read(char[] buffer) method. We iterate until the
+		 * Reader return -1 which means there's no more data to
+		 * read. We use the StringWriter class to produce the string.
+		 */
+		if (is != null) {
+			Writer writer = new StringWriter();
+
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} finally {
+				is.close();
+			}
+			return writer.toString();
+		} else {        
+			return "";
+		}
 	}
 
 }

@@ -11,7 +11,6 @@ import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.ServerRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,9 +175,9 @@ public class WelcomeScreenActivity extends Activity{
 				final String userName = json.getString("name");
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
-
-				ServerRequest.Get().GetCookie(getGoogleAuthString());
-				boolean registrationComplete = AndroidUtility.enlist(newUser); // what a stupid name.
+				
+				String authString = getGoogleAuthString();
+				boolean registrationComplete = AndroidUtility.enlistUser(newUser, authString); // what a stupid name.
 
 				if (registrationComplete){
 					Intent intent = new Intent().setClass(getApplicationContext(), UsersTabWidget.class);
