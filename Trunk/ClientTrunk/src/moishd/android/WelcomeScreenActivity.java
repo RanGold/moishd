@@ -66,7 +66,7 @@ public class WelcomeScreenActivity extends Activity{
 		loginButton.init(this, facebook);
 
 		if (isSessionValid){
-			Intent intent = new Intent().setClass(this, UsersTabWidget.class);
+			Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
 			startActivity(intent);
 		}
 	}
