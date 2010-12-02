@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:id="@+id/TODlinear" 
+	android:orientation="vertical"
+	android:layout_width="match_parent" 
+	android:layout_height="fill_parent"
+  	android:background="#FFFFFF">
+  
+    <TextView
+  	android:id="@+id/youoishd"
+  	android:layout_marginTop="30dip" 
+  	android:text="Great job! You Moish'd the opponent" 
+	android:layout_marginLeft="10px"
+	android:gravity="center_vertical|center_horizontal"
+	android:layout_marginRight="10px"
+	android:textSize="25dip"
+	android:textColor="#BA55D3" 
+	android:textStyle="bold"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+	
+
+<ImageView android:id="@+id/hands"
+  	android:layout_marginTop="20dip" 
+	android:layout_width="wrap_content" 
+	android:layout_marginLeft="50dip"
+	android:layout_height="wrap_content"
+	android:clickable="true"
+	android:src="@drawable/bigger_hand">
+</ImageView>
+  
+  
+    <TextView
+  	android:id="@+id/clickOnHand" 
+  	android:text="Click on the hand to go back to main menu" 
+	android:paddingLeft="20dip"
+	android:paddingRight="20dip"
+	android:gravity="center_vertical|center_horizontal"
+	android:textSize="17dip"
+	android:textColor="#1C86EE" 
+	android:textStyle="bold"
+	android:layout_marginTop="10dip"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>  
+</LinearLayout>

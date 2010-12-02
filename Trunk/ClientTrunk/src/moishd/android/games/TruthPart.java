@@ -19,8 +19,13 @@ public class TruthPart extends Activity {
 	final String[][] questions ={{"Is tammy's last name is Dagan?","yes"}, 
 			{"Is it 2012?","no"},
 			{"Is this the first milestone?","yes"},
-			{"Is the spoken language in France is hebrew?","no"}
+			{"Is the spoken language in France is hebrew?","no"},
+			{"Do dogs have color sight?","no"},
+			{"Is Bariloche the capital city of Argentina?", "no"},
+			{"Is 'Step on no pets' a palindrome?", "yes"},
+			{"Is 'Was it a rat I saw' a palindrome?", "yes"}
 		};
+	
 	public void currectAnswer(){
 		Toast.makeText(TruthPart.this, 
 				"good job", 
