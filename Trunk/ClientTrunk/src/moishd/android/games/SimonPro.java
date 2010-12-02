@@ -96,8 +96,10 @@ public class SimonPro extends Activity{
 					messUp();
 					counter++;
 					
-				if (counter == 5)
+				if (counter == 5){
+					counter=0;
 					rightAnswer();
+				}
 						
 			
 				}
@@ -111,8 +113,10 @@ public class SimonPro extends Activity{
 					messUp();
 					counter++;
 
-					if (counter ==5)
+					if (counter ==5) {
+						counter=0;
 						rightAnswer();
+					}
 					
 				}
 				else 
@@ -126,8 +130,10 @@ public class SimonPro extends Activity{
 				if (arr[counter] == indentify[2]){
 					messUp();
 					counter++;
-					if (counter ==5)
+					if (counter ==5){
+						counter=0;
 						rightAnswer();
+					}
 				}
 				else
 					wrongAnswer();
