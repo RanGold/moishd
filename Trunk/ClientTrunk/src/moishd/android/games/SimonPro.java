@@ -4,6 +4,7 @@ package moishd.android.games;
 
 import java.util.Random;
 
+import moishd.android.AndroidUtility;
 import moishd.android.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -229,7 +230,7 @@ public class SimonPro extends Activity{
 		tries.setText("number of tries:" + tr);
 		if (tr > 0)
 			wrong.setText("WRONG!!!");
-		else {
+		else { //LOSE
 			Intent intent = new Intent(SimonPro.this, youHaveBeenMoishd.class);
 			startActivity(intent);
 		}
@@ -240,9 +241,11 @@ public class SimonPro extends Activity{
 	}
 	
 	public void rightAnswer(){
-		Intent intent = new Intent(SimonPro.this, youMoishd.class);
+		AndroidUtility.sendWinToServer(getIntent().getStringExtra("game_id"),getIntent().getStringExtra("auth_string"));
+		
+		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
 		startActivity(intent);
-		finish();
+		finish();*/
 		
 	}
 	public void messUp(){	
