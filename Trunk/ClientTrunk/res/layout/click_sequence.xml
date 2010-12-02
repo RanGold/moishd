@@ -135,7 +135,7 @@ android:layout_height="wrap_content">
 	</TextView>
 	
 	<Button android:id="@+id/giveUp" 
-	android:text="I give up..."
+	android:text="I give up!"
 	android:textStyle="bold"
 	android:textColor="#FFFF00"
 	android:background="#000000"

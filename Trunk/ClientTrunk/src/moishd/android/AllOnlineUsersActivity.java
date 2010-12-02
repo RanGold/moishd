@@ -398,6 +398,10 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals("game_start")){
 				startGame();
 			}
+			else if (action.equals("game_result")){
+				String result = getIntent().getStringExtra("Result");
+				gameResultDialog(result);
+			}
 		}
 		
 	}
@@ -408,7 +412,6 @@ public class AllOnlineUsersActivity extends Activity {
 		unregisterC2DM();
 	}
 	
-
 	private void inviteUserToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -482,9 +485,25 @@ public class AllOnlineUsersActivity extends Activity {
 	private void startGame(){
 		
 		Intent intent = new Intent(this, SimonPro.class);
+		intent.putExtra("game_id", game_id);
+		intent.putExtra("auth_string", authString);
 		startActivity(intent);
 	}
 	
+	private void gameResultDialog(String result){
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("You've " + result + "!")
+		.setCancelable(false)
+		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
+
+	}
 
 	private String getGoogleAuthString() {
 
@@ -495,7 +514,6 @@ public class AllOnlineUsersActivity extends Activity {
 		return authString;
 	}
 	
-
 	private boolean isC2DMRegistered() {
 
 		Context context = getApplicationContext();

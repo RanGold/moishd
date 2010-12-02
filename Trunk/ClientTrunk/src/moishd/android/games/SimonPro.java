@@ -255,12 +255,13 @@ public class SimonPro extends Activity{
 		Toast.makeText(SimonPro.this, 
 				"please wait for result", 
 				Toast.LENGTH_LONG).show();
-		
-		AndroidUtility.sendWinToServer(getIntent().getStringExtra("game_id"),getIntent().getStringExtra("auth_string"));
+		String gameId = getIntent().getStringExtra("game_id");
+		String authString = getIntent().getStringExtra("auth_string");
+		AndroidUtility.sendWinToServer(gameId, authString);
 		
 		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
-		startActivity(intent);
-		finish();*/
+		startActivity(intent);*/
+		finish();
 		
 	}
 	public void messUp(){	

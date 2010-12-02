@@ -52,6 +52,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if(action.equals("StartGame")){
 			usersTabIntent.putExtra("Action", "game_start");
 		}
+		else if(action.equals("GameResult")){
+			usersTabIntent.putExtra("Action", "game_result");
+			String result = intent.getStringExtra("Result");
+			usersTabIntent.putExtra("Result", result);
+		}
 		startActivity(usersTabIntent);
 
 
