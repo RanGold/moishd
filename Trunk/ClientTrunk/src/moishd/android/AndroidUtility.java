@@ -151,6 +151,17 @@ public class AndroidUtility {
 		return null;
 	}
 	
+	public static boolean sendWinToServer(String gameId, String authString) {
+		HttpResponse response = SendReqToServer("GameTimeWin", null, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		}			
+	}
+	
 	public static boolean sendInvitationResponse(String gameId, String responseString, String authString) {
 		
 		String invitationResponse = gameId + "#" + responseString;
@@ -163,6 +174,8 @@ public class AndroidUtility {
 			return true;
 		}			
 	}
+	
+	
 
 
 	private static HttpResponse SendObjToServer(Object obj, String ext, String authString){
