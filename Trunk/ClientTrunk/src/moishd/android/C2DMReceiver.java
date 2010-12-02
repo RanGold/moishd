@@ -15,6 +15,7 @@
  */
 package moishd.android;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -38,9 +39,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		String action = intent.getStringExtra("Action");
 		String game_id = intent.getStringExtra("GameId");
 
-		Intent usersTabIntent = new Intent();
+		Intent usersTabIntent = new Intent(this, AllOnlineUsersActivity.class);
 		usersTabIntent.setClass(getApplicationContext(), AllOnlineUsersActivity.class);
-		usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		usersTabIntent.putExtra("push_game_id", game_id);
 		usersTabIntent.setAction("android.intent.action.MAIN");
 		usersTabIntent.addCategory("android.intent.category.LAUNCHER");
@@ -58,7 +58,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			String result = intent.getStringExtra("Result");
 			usersTabIntent.putExtra("Result", result);
 		}
-		startActivity(usersTabIntent);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, usersTabIntent, 0);
 
 
 		//		Log.d("TEST", "got Message"); 
