@@ -1,0 +1,154 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/myLayout" 
+	android:orientation="vertical"
+	android:layout_width="match_parent" 
+	android:layout_height="fill_parent"
+	android:background="#FFFFF0">
+
+	<TextView android:text="Click on the hand buttons AFTER the sequence of numbers is displayed." 
+	android:paddingLeft="20px"
+	android:paddingRight="20px"
+	android:paddingTop="10px"
+	android:textSize="20dip"
+	android:gravity="center_vertical|center_horizontal"
+	android:id="@+id/explain"
+	android:textColor="#7A67EE" 
+	android:textStyle="bold"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+
+	<TextView 
+	android:id="@+id/theWord"
+	android:text="click here when you're ready"
+	android:clickable="true" 
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:textColor="#00FF00" 
+	android:textStyle="bold"
+	android:paddingTop="5px"
+	android:paddingLeft="35px"
+	android:layout_marginLeft="10dip">
+	</TextView>
+	
+  
+  	
+<TableRow android:id="@+id/TableRow01" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:layout_marginTop="30dip"
+android:layout_marginBottom="30dip"
+android:paddingLeft="20dip">
+
+<Button android:id="@+id/clickOnMe1" 
+	android:text="1"
+	android:textStyle="bold"
+	android:textSize="30px"
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip"
+	android:background="#FF6347"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="40dip"
+	android:drawableBottom="@drawable/hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="35dip"
+	android:layout_height="wrap_content"
+	android:clickable="true"
+	android:visibility="invisible">
+</Button>
+
+<Button android:id="@+id/clickOnMe2" 
+	android:text="2"
+	android:textStyle="bold"
+	android:textSize="30px"
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip"
+	android:background="#FFFF00"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="40dip"
+	android:drawableBottom="@drawable/hand"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="20dip"
+	android:clickable="true"
+	android:visibility="invisible">
+</Button>
+
+<Button android:id="@+id/clickOnMe3" 
+	android:text="3"
+	android:textStyle="bold"
+	android:textSize="30px"
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip"
+	android:background="#9932CC"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="40dip"
+	android:drawableBottom="@drawable/hand"
+	android:layout_marginLeft="20dip"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:clickable="true"
+	android:visibility="invisible">
+</Button>
+
+</TableRow>
+
+<TableRow android:id="@+id/TableRow02" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content">
+
+<TextView 
+	android:id="@+id/wrong"
+	android:text="WRONG!!!"
+	android:layout_marginRight="70px"
+	android:clickable="true" 
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:textColor="#EE0000" 
+	android:textStyle="bold"
+	android:paddingTop="5px"
+	android:paddingLeft="60px"
+	android:paddingBottom="10px"
+	android:visibility="invisible"
+	android:layout_marginLeft="10dip">
+	</TextView>
+</TableRow>
+
+<TableRow android:id="@+id/TableRow03" 
+android:layout_width="wrap_content" 
+android:layout_height="wrap_content">
+
+<TextView android:id="@+id/tries" 
+	android:textStyle="bold"
+	android:textColor="#FF6EC7"
+	android:background="#000000"
+	android:paddingLeft="20dip"
+	android:paddingRight="20dip"
+	android:clickable="true"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="20px"
+	android:layout_marginRight="20px"
+	android:visibility="invisible"
+	android:layout_marginTop="5dip"
+	android:layout_height="wrap_content">
+	</TextView>
+	
+	<Button android:id="@+id/giveUp" 
+	android:text="I give up..."
+	android:textStyle="bold"
+	android:textColor="#FFFF00"
+	android:background="#000000"
+	android:paddingLeft="20dip"
+	android:paddingRight="20dip"
+	android:clickable="true"
+	android:layout_width="wrap_content"
+	android:visibility="invisible"
+	android:layout_marginTop="5dip"
+	android:layout_height="wrap_content">
+</Button>
+
+
+</TableRow>
+
+</LinearLayout>
