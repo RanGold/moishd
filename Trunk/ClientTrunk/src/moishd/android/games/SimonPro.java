@@ -1,9 +1,12 @@
 package moishd.android.games;
 
+
+
 import java.util.Random;
 
 import moishd.android.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -12,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SimonPro extends Activity{
 
@@ -136,14 +138,10 @@ public class SimonPro extends Activity{
 		giveUp.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				
-				Toast.makeText(SimonPro.this, 
-						"loser :)", 
-						Toast.LENGTH_SHORT).show();
+				//have to pop up the screen of the loser
+				Intent intent = new Intent(SimonPro.this, youHaveBeenMoishd.class);
+				startActivity(intent);
 				finish();
-				
-				
-				
 			}
 		});
 		
@@ -186,7 +184,7 @@ public class SimonPro extends Activity{
 	}
 	
 	
-	public class LittleCount extends CountDownTimer {
+/*	public class LittleCount extends CountDownTimer {
 		public LittleCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}    
@@ -215,21 +213,35 @@ public class SimonPro extends Activity{
 				
 			wrong.startAnimation(anim);
 		}
-	}
+	}*/
 
 	
 	public void wrongAnswer(){
 		tr--;
-		LittleCount c1 = new LittleCount(2000,1000);
-		c1.start();
+		//LittleCount c1 = new LittleCount(2000,1000);
+		//c1.start();
+		//wrong = (TextView) findViewById(R.id.wrong);
+		counter=0;
 		wrong = (TextView) findViewById(R.id.wrong);
+		tries = (TextView) findViewById(R.id.tries);
+		Animation anim = AnimationUtils.loadAnimation(SimonPro.this, R.anim.animation3);
+		wrong.setVisibility(0);
+		tries.setText("number of tries:" + tr);
+		if (tr > 0)
+			wrong.setText("WRONG!!!");
+		else {
+			Intent intent = new Intent(SimonPro.this, youHaveBeenMoishd.class);
+			startActivity(intent);
+		}
+			
+		wrong.startAnimation(anim);
+		wrong.setVisibility(View.INVISIBLE);
 
 	}
 	
 	public void rightAnswer(){
-		Toast.makeText(SimonPro.this, 
-				"you made it!!!!!!", 
-				Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(SimonPro.this, youMoishd.class);
+		startActivity(intent);
 		finish();
 		
 	}
