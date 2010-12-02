@@ -380,13 +380,11 @@ public class AllOnlineUsersActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	
 	@Override
-	protected void onResume (){
-		super.onResume();
-
-		game_id = getIntent().getStringExtra("push_game_id");
-		String action = getIntent().getStringExtra("Action");
+	protected void onNewIntent (Intent intent){
+		game_id = intent.getStringExtra("push_game_id");
+		String action = intent.getStringExtra("Action");
 		if (action!=null){
 			if (action.equals("game_invitation")){
 				getInvitation();
@@ -403,8 +401,32 @@ public class AllOnlineUsersActivity extends Activity {
 				gameResultDialog(result);
 			}
 		}
-		
 	}
+
+//	@Override
+//	protected void onResume (){
+//		super.onResume();
+//
+//		game_id = getIntent().getStringExtra("push_game_id");
+//		String action = getIntent().getStringExtra("Action");
+//		if (action!=null){
+//			if (action.equals("game_invitation")){
+//				getInvitation();
+//			}
+//			else if (action.equals("game_declined")){
+//				userDeclinedToMoishDialog();
+//				game_id = null;
+//			}
+//			else if (action.equals("game_start")){
+//				startGame();
+//			}
+//			else if (action.equals("game_result")){
+//				String result = getIntent().getStringExtra("Result");
+//				gameResultDialog(result);
+//			}
+//		}
+//		
+//	}
 	
 	@Override
 	protected void onDestroy (){
