@@ -16,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SimonPro extends Activity{
 
@@ -114,7 +115,6 @@ public class SimonPro extends Activity{
 					counter++;
 
 					if (counter ==5) {
-						counter=0;
 						rightAnswer();
 					}
 					
@@ -245,6 +245,17 @@ public class SimonPro extends Activity{
 	}
 	
 	public void rightAnswer(){
+		click1 = (Button) findViewById(R.id.clickOnMe1);
+		click2 = (Button) findViewById(R.id.clickOnMe2);
+		click3 = (Button) findViewById(R.id.clickOnMe3);
+		
+		click1.setClickable(false);
+		click2.setClickable(false);
+		click3.setClickable(false);
+		Toast.makeText(SimonPro.this, 
+				"please wait for result", 
+				Toast.LENGTH_LONG).show();
+		
 		AndroidUtility.sendWinToServer(getIntent().getStringExtra("game_id"),getIntent().getStringExtra("auth_string"));
 		
 		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
