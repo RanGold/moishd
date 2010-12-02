@@ -11,7 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class MoishdGroup implements Serializable {
+public class MoishdGroup extends CommonJDO implements Serializable {
     /**
 	 * 
 	 */

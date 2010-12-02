@@ -14,7 +14,7 @@ import moishd.client.dataObjects.ClientTrophy;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class Trophy implements Serializable {
+public class Trophy extends CommonJDO implements Serializable {
     /**
 	 * 
 	 */

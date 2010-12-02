@@ -17,7 +17,7 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class MoishdUser implements Serializable {
+public class MoishdUser extends CommonJDO implements Serializable {
 	/**
 	 * 
 	 */

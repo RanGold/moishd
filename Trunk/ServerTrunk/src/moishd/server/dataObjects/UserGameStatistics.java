@@ -12,7 +12,7 @@ import moishd.client.dataObjects.ClientUserGameStatistics;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class UserGameStatistics implements Serializable {
+public class UserGameStatistics extends CommonJDO implements Serializable {
 	/**
 	 * 
 	 */

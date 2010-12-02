@@ -9,7 +9,6 @@ import java.lang.reflect.Type;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class GsonCommon {
 	private GsonCommon() {
@@ -32,13 +31,13 @@ public class GsonCommon {
 			}
 		}
 	}
-	public static <T extends Type> T GetObjFromJsonStream(InputStream s) 
+	public static <T> T GetObjFromJsonStream(InputStream s, Type t) 
 	throws IOException,ClassNotFoundException {
 		// TODO : make this work
 		ObjectInputStream ois = new ObjectInputStream(s);
 		String json = (String) ois.readObject();
 		@SuppressWarnings("unchecked")
-		T obj = (T)(new Gson()).fromJson(json, new TypeToken<T>(){}.getType());
+		T obj = (T)(new Gson()).fromJson(json, t);
 		return obj;
 	}
 }

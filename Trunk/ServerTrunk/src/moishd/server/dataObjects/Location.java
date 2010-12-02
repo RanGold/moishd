@@ -12,7 +12,7 @@ import moishd.client.dataObjects.ClientLocation;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class Location implements Serializable {
+public class Location extends CommonJDO implements Serializable {
     /**
 	 * 
 	 */

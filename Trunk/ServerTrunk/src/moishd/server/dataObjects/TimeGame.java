@@ -9,7 +9,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 @PersistenceCapable
-public class TimeGame implements Serializable {
+public class TimeGame extends CommonJDO implements Serializable {
 	/**
 	 * 
 	 */
@@ -40,11 +40,14 @@ public class TimeGame implements Serializable {
 	@Persistent
 	private Boolean isDecided;
 
+	@Persistent
+	private Date initiated;
 	
 	public TimeGame(String playerInitId, String playerRecId) {
 		super();
 		this.playerInitId = playerInitId;
 		this.playerRecId = playerRecId;
+		this.initiated = new Date();
 	}
 
 	public String getPlayerInitId() {
@@ -105,5 +108,9 @@ public class TimeGame implements Serializable {
 
 	public long getGameId() {
 		return gameId;
+	}
+
+	public Date getInitiated() {
+		return initiated;
 	}
 }

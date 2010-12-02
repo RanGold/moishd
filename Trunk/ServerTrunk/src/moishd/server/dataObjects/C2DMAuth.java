@@ -11,7 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class C2DMAuth implements Serializable {
+public class C2DMAuth extends CommonJDO implements Serializable {
 	/**
 	 * 
 	 */
