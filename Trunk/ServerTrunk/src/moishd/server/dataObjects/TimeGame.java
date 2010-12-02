@@ -20,77 +20,79 @@ public class TimeGame implements Serializable {
 	private long gameId;
 	
 	@Persistent
-	private String player1Id;
+	private String playerInitId;
 	
 	@Persistent
-	private String player2Id;
+	private String playerRecId;
 	
 	@Persistent
-	private Date player1StartTime;
+	private Date playerInitStartTime;
 	
 	@Persistent
-	private Date player2StartTime;
+	private Date playerRecStartTime;
 	
 	@Persistent
-	private Date player1EndTime;
+	private Date playerInitEndTime;
 	
 	@Persistent
-	private Date player2EndTime;
+	private Date playerRecEndTime;
 	
 	@Persistent
 	private Boolean isDecided;
 
-	public TimeGame(String player1Id) {
+	
+	public TimeGame(String playerInitId, String playerRecId) {
 		super();
-		this.player1Id = player1Id;
+		this.playerInitId = playerInitId;
+		this.playerRecId = playerRecId;
 	}
 
-	public String getPlayer1Id() {
-		return player1Id;
+	public String getPlayerInitId() {
+		return playerInitId;
 	}
 
-	public void setPlayer1Id(String player1Id) {
-		this.player1Id = player1Id;
+	public void setPlayerInitId(String playerInitId) {
+		this.playerInitId = playerInitId;
 	}
 
-	public String getPlayer2Id() {
-		return player2Id;
+	public String getPlayerRecId() {
+		return playerRecId;
 	}
 
-	public void setPlayer2Id(String player2Id) {
-		this.player2Id = player2Id;
+	public void setPlayerRecId(String playerRecId) {
+		this.playerRecId = playerRecId;
 	}
 
-	public Date getPlayer1StartTime() {
-		return player1StartTime;
+	public Date getPlayerInitStartTime() {
+		return playerInitStartTime;
 	}
 
-	public void setPlayer1StartTime(Date player1StartTime) {
-		this.player1StartTime = player1StartTime;
+	public void setPlayerInitStartTime(Date playerInitStartTime) {
+		this.playerInitStartTime = playerInitStartTime;
 	}
 
-	public Date getPlayer2StartTime() {
-		return player2StartTime;
+	public Date getPlayerRecStartTime() {
+		return playerRecStartTime;
 	}
 
-	public void setPlayer2StartTime(Date player2StartTime) {
-		this.player2StartTime = player2StartTime;
+	public void setPlayerRecStartTime(Date playerRecStartTime) {
+		this.playerRecStartTime = playerRecStartTime;
 	}
 
-	public Date getPlayer1EndTime() {
-		return player1EndTime;
+	public Date getPlayerInitEndTime() {
+		return playerInitEndTime;
 	}
 
-	public void setPlayer1EndTime(Date player1EndTime) {
-		this.player1EndTime = player1EndTime;
+	public void setPlayerInitEndTime(Date playerInitEndTime) {
+		this.playerInitEndTime = playerInitEndTime;
 	}
 
-	public Date getPlayer2EndTime() {
-		return player2EndTime;
+	public Date getPlayerRecEndTime() {
+		return playerRecEndTime;
 	}
 
-	public void setPlayer2EndTime(Date player2EndTime) {
-		this.player2EndTime = player2EndTime;
+	public void setPlayerRecEndTime(Date playerRecEndTime) {
+		this.playerRecEndTime = playerRecEndTime;
 	}
 
 	public Boolean getIsDecided() {
