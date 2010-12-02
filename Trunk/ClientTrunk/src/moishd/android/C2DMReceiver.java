@@ -44,7 +44,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			String game_id = intent.getStringExtra("GameId");
 			Intent usersTabIntent = new Intent();
 			usersTabIntent.setClass(getApplicationContext(), AllOnlineUsersActivity.class);
-			usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			//usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			usersTabIntent.putExtra("push_game_id", game_id);
 			startActivity(usersTabIntent);
 		}			
