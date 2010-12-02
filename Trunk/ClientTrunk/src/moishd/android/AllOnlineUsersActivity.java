@@ -327,7 +327,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 	
-	protected final String authString = getGoogleAuthString();
+	protected String authString;
 	protected String game_id;
 	
 	private static final String GOOGLE_AUTH_PREF = "google_authentication";
@@ -338,7 +338,7 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		authString = getGoogleAuthString();
 		moishdUsers = AndroidUtility.getAllUsers(authString);
 
 		setContentView(R.layout.all_users_layout);
