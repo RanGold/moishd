@@ -1,11 +1,13 @@
 package moishd.server.common;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.dataObjects.C2DMAuth;
 import moishd.server.dataObjects.MoishdUser;
 import moishd.server.dataObjects.TimeGame;
@@ -14,8 +16,21 @@ public class DSCommon {
 	private DSCommon() {
 	}
 	
+	private static List<MoishdUser> DetachCopyRecursively(List<MoishdUser> users, PersistenceManager pm) {
+		List<MoishdUser> dUsers = new LinkedList<MoishdUser>();
+		
+		for (MoishdUser user : users) {
+			MoishdUser tempUser = pm.detachCopy(user);
+			tempUser.setLocation(pm.detachCopy(user.getLocation()));
+			tempUser.setStats(pm.detachCopy(user.getStats()));
+			dUsers.add(tempUser);
+		}
+		
+		return (dUsers);
+	}
+	
 	@SuppressWarnings("unchecked")
-	public static List<MoishdUser> GetAllRegisteredUsers(String GoogleId, Boolean exclude) 
+	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, Boolean exclude) 
 	throws DataAccessException {
 		// TODO Returning just registered users
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -27,11 +42,14 @@ public class DSCommon {
 				q.setFilter("userGoogleIdentifier != :idParam");
 			}
 
+			List<MoishdUser> users = null;
 			if (exclude) {
-				return ((List<MoishdUser>)q.execute(GoogleId));
+				users = ((List<MoishdUser>)q.execute(GoogleId));
 			} else {
-				return ((List<MoishdUser>)q.execute());
+				users = ((List<MoishdUser>)q.execute());
 			}
+			
+			return (MoishdUser.copyToClientMoishdUserList(users));
 		}
 		finally {
 			if (q != null) {
@@ -48,7 +66,7 @@ public class DSCommon {
 		try {
 			q = pm.newQuery(C2DMAuth.class);
 
-			return (((List<C2DMAuth>) q.execute()).get(0));
+			return (pm.detachCopy(((List<C2DMAuth>) q.execute()).get(0)));
 		}
 		finally {
 			if (q != null) {
@@ -83,7 +101,7 @@ public class DSCommon {
 			q = pm.newQuery(MoishdUser.class);
 			q.setFilter("userGoogleIdentifier == :idParam");
 
-			return ((List<MoishdUser>)q.execute(GoogleId));
+			return (DetachCopyRecursively((List<MoishdUser>)q.execute(GoogleId), pm));
 		}
 		finally {
 			if (q != null) {
@@ -99,7 +117,7 @@ public class DSCommon {
 		if (users.size() > 1) {
 			throw new DataAccessException("user " + GoogleId + " more than 1 result");
 		} else {
-			return (users.size() == 0);
+			return (users.size() != 0);
 		}
 	}
 	
@@ -131,7 +149,7 @@ public class DSCommon {
 				throw new DataAccessException("game " + gameId + 
 						" has more than 1 result for " + recId);
 			} else {
-				return (games.get(0));
+				return (pm.detachCopy(games.get(0)));
 			}
 		}
 		finally {
@@ -159,7 +177,7 @@ public class DSCommon {
 				throw new DataAccessException("game " + gameId + 
 						" has more than 1 result");
 			} else {
-				return (games.get(0));
+				return (pm.detachCopy(games.get(0)));
 			}
 		}
 		finally {

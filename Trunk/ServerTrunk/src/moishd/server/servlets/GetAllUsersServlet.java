@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
-import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -34,9 +34,8 @@ public class GetAllUsersServlet extends HttpServlet {
 		} else {
 			try {
 				DSCommon.GetUserByGoogleId(user.getEmail());
-				List<MoishdUser> allUsers = DSCommon.GetAllRegisteredUsers(user.getEmail(), true);
-				GsonCommon.WriteJsonToResponse(MoishdUser
-						.copyToClientMoishdUserList(allUsers), response);
+				List<ClientMoishdUser> allUsers = DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true);
+				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
 				response.getWriter().println("GetAllUsersServlet: " + e.getMessage());
