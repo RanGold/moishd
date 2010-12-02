@@ -35,7 +35,7 @@ public class UnRegisterServlet extends HttpServlet {
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
-				response.getWriter().println("RegisterServlet: " + e.getMessage());
+				response.getWriter().println("UnRegisterServlet: " + e.getMessage());
 			}
 		}
 	}

@@ -93,6 +93,22 @@
 		<servlet-name>GetTimeGameInitiatorServlet</servlet-name>
 		<url-pattern>/GetTimeGameInitiator</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>TimeGameInvReplyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.TimeGameInvReplyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TimeGameInvReplyServlet</servlet-name>
+		<url-pattern>/InvitationResponse</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>GameTimeWinServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.GameTimeWinServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GameTimeWinServlet</servlet-name>
+		<url-pattern>/GameTimeWin</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

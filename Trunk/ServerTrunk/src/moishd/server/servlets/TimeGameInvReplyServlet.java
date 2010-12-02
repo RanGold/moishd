@@ -35,23 +35,31 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 		} else {
 			try {
 				String paramters = request.getReader().readLine();
-				if (paramters.split("#").length > 0) {
+				
+				if (paramters.split("#").length != 2) {
 					response.addHeader("Error", "");
-					response.getWriter().println("Error: no logged in user");
+					response.getWriter().println("TimeGameInvReplyServlet: invalid parameters " + paramters);
 				} else {
-					long gameId = Long.valueOf(paramters.split("#")[0]);
+					String gameId = paramters.split("#")[0];
 					String invReply = paramters.split("#")[1];
 
 					TimeGame tg = DSCommon.GetTimeGameById(gameId);
-					MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
+					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
+					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();
-					payload.put("GameId", String.valueOf(tg.getGameId()));
+					payload.put("GameId", String.valueOf(tg.getGameLongId()));
 					
-					if (invReply == "Decline") {
-						C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
+					if (invReply.equals("Decline")) {
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameDeclined.toString(), payload);
+					} else if (invReply.equals("Accept")) {
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGame.toString(), payload);
+						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGame.toString(), payload);
 					} else {
-						
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.Actions.GameCanceled.toString(), payload);
 					}
 				}
 			} catch (DataAccessException e) {

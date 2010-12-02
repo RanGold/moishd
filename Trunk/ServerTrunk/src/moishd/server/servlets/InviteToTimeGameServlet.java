@@ -46,10 +46,10 @@ public class InviteToTimeGameServlet extends HttpServlet {
 
 				TimeGame tg = new TimeGame(user.getEmail(), clientUser.getUserGoogleIdentifier());
 				tg.SaveChanges();
-				response.getWriter().write(String.valueOf(tg.getGameId()));
+				response.getWriter().write(String.valueOf(tg.getGameLongId()));
 
 				HashMap<String, String> payload = new HashMap<String, String>();
-				payload.put("GameId", String.valueOf(tg.getGameId()));
+				payload.put("GameId", String.valueOf(tg.getGameId().getId()));
 				C2DMCommon.PushGenericMessage(invUser.getRegisterID(), 
 						C2DMCommon.Actions.GameInvitation.toString(), payload);
 			} catch (DataAccessException e) {

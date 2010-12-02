@@ -24,7 +24,8 @@ public class C2DMCommon {
 		WordForGame,
 		GameResult,
 		GameCanceled,
-		GameDeclined
+		GameDeclined,
+		StartGame
 	}
 	// TODO : change use to server
 	public static boolean PushGenericMessage 
@@ -57,9 +58,9 @@ public class C2DMCommon {
 						(payloads.size() > 0 ? 
 								(String)payloads.values().toArray()[0] : 
 									"")).hashCode()))); 
-		addEncodedParameter(sb, "Action", action);
+		addEncodedParameter(sb, "data.Action", action);
 		for (Map.Entry<String, String> keyVal : payloads.entrySet()) {
-			addEncodedParameter(sb, keyVal.getKey(), keyVal.getValue()); 
+			addEncodedParameter(sb, "data." + keyVal.getKey(), keyVal.getValue()); 
 		}
 		String data = sb.toString();
 		try { 

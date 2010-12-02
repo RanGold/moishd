@@ -132,15 +132,15 @@ public class DSCommon {
 		}
 	}
 	
-	public static TimeGame GetTimeGameByIdRecId(long gameId, String recId) throws DataAccessException {
+	public static TimeGame GetTimeGameByIdRecId(String gameId, String recId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(TimeGame.class);
-			q.setFilter("playerRecId = :playerId && gameId == :gId");
+			q.setFilter("playerRecId == :playerId && gameLongId == :gId");
 
 			@SuppressWarnings("unchecked")
-			List<TimeGame> games = (List<TimeGame>)q.execute(recId, gameId);
+			List<TimeGame> games = (List<TimeGame>)q.execute(recId, Long.valueOf(gameId));
 
 			if (games.size() == 0) {
 				throw new DataAccessException("game " + gameId + 
@@ -160,15 +160,15 @@ public class DSCommon {
 		}
 	}
 	
-	public static TimeGame GetTimeGameById(long gameId) throws DataAccessException {
+	public static TimeGame GetTimeGameById(String gameId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(TimeGame.class);
-			q.setFilter("gameId == :gId");
+			q.setFilter("gameLongId == :gId");
 
 			@SuppressWarnings("unchecked")
-			List<TimeGame> games = (List<TimeGame>)q.execute(gameId);
+			List<TimeGame> games = (List<TimeGame>)q.execute(Long.valueOf(gameId));
 
 			if (games.size() == 0) {
 				throw new DataAccessException("game " + gameId + 

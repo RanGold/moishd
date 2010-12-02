@@ -3,10 +3,15 @@ package moishd.server.dataObjects;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+
+import moishd.server.common.PMF;
+
+import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
 public class TimeGame extends CommonJDO implements Serializable {
@@ -17,7 +22,10 @@ public class TimeGame extends CommonJDO implements Serializable {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private long gameId;
+	private Key gameId;
+	
+	@Persistent
+	private long gameLongId;
 	
 	@Persistent
 	private String playerInitId;
@@ -106,11 +114,32 @@ public class TimeGame extends CommonJDO implements Serializable {
 		this.isDecided = isDecided;
 	}
 
-	public long getGameId() {
+	public Key getGameId() {
 		return gameId;
 	}
 
 	public Date getInitiated() {
 		return initiated;
+	}
+
+	public void setGameLongId(long gameLongId) {
+		this.gameLongId = gameLongId;
+	}
+
+	public long getGameLongId() {
+		return gameLongId;
+	}
+	
+	@Override
+	public void SaveChanges() {
+		super.SaveChanges();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			this.setGameLongId(this.getGameId().getId());
+			pm.makePersistent(this);
+		}
+		finally {
+			pm.close();
+		}
 	}
 }
