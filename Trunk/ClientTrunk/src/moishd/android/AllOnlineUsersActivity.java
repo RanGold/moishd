@@ -306,16 +306,22 @@ package moishd.android;
 
 import java.util.List;
 
+import moishd.android.games.SimonPro;
 import moishd.client.dataObjects.ClientMoishdUser;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -332,13 +338,22 @@ public class AllOnlineUsersActivity extends Activity {
 	protected int currentClickPosition;
 	private static final String GOOGLE_AUTH_PREF = "google_authentication";
 	private static final String GOOGLE_AUTH_STRING = "auth_String";
-	
+	private static final String C2DM_PREF = "c2dm_registeration";
+	private static final String C2DM_REGISTERED_STRING = "auth_String";
+
 	private static List<ClientMoishdUser> moishdUsers;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		authString = getGoogleAuthString();
+		
+		boolean isRegistered = isC2DMRegistered();
+		if (!isRegistered){
+			registerC2DM();
+		}
+			
 		moishdUsers = AndroidUtility.getAllUsers(authString);
 
 		setContentView(R.layout.all_users_layout);
@@ -348,9 +363,22 @@ public class AllOnlineUsersActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				currentClickPosition = arg2;
-				inviteUserToMoish();
+				inviteUserToMoishDialog();
 			}});
 		l1.setAdapter(new EfficientAdapter(this));
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.trophies:
+			return true;
+		case R.id.welcomeScreen:
+			WelcomeScreenActivity.facebookLogout(null);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -358,13 +386,28 @@ public class AllOnlineUsersActivity extends Activity {
 		super.onResume();
 
 		game_id = getIntent().getStringExtra("push_game_id");
-
-		if (game_id!=null){
+		String action = getIntent().getStringExtra("Action");
+		if (action.equals("game_invitation")){
 			getInvitation();
 		}
+		else if (action.equals("game_declined")){
+			userDeclinedToMoishDialog();
+			game_id = null;
+		}
+		else if (action.equals("game_start")){
+			startGame();
+		}
+		
 	}
+	
+	@Override
+	protected void onDestroy (){
+		super.onDestroy();
+		unregisterC2DM();
+	}
+	
 
-	private void inviteUserToMoish(){
+	private void inviteUserToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("You've invited  " + moishdUsers.get(currentClickPosition).getUserNick() + " to Moish. Continue?")
@@ -400,13 +443,13 @@ public class AllOnlineUsersActivity extends Activity {
 		.setCancelable(false)
 		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				//sendInvitationResponse("Accept");	
+				sendInvitationResponse("Accept");	
 				dialog.cancel();
 			}
 		})
 		.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				//sendInvitationResponse("Decline");	
+				sendInvitationResponse("Decline");	
 				dialog.cancel();
 			}
 		});
@@ -418,6 +461,28 @@ public class AllOnlineUsersActivity extends Activity {
 		return AndroidUtility.sendInvitationResponse(game_id, response, authString);
 
 	}
+	
+	private void userDeclinedToMoishDialog(){
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Your invitation has been declined")
+		.setCancelable(false)
+		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
+
+	}
+	
+	private void startGame(){
+		
+		Intent intent = new Intent(this, SimonPro.class);
+		startActivity(intent);
+	}
+	
 
 	private String getGoogleAuthString() {
 
@@ -426,6 +491,42 @@ public class AllOnlineUsersActivity extends Activity {
 		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
 
 		return authString;
+	}
+	
+
+	private boolean isC2DMRegistered() {
+
+		Context context = getApplicationContext();
+		final SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
+		boolean isRegistered = prefs.getBoolean(C2DM_REGISTERED_STRING, false);
+
+		return isRegistered;
+	}
+	
+	private void registerC2DM() {
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+		startService(registrationIntent);
+		
+		Context context = getApplicationContext();
+		SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putBoolean(C2DM_REGISTERED_STRING, true);
+		editor.commit();
+		
+		Log.d("TEST","Resgistering...");
+		
+	}
+	
+	private void unregisterC2DM() {
+		
+		Context context = getApplicationContext();
+		SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putBoolean(C2DM_REGISTERED_STRING, false);
+		editor.commit();
+				
 	}
 
 	private static class EfficientAdapter extends BaseAdapter {

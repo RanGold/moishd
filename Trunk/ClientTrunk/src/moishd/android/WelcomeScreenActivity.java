@@ -130,7 +130,7 @@ public class WelcomeScreenActivity extends Activity{
 		Context context = getApplicationContext();
 		SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putString("auth_String", authString);
+		editor.putString(GOOGLE_AUTH_STRING, authString);
 		editor.commit();
 	}
 
@@ -180,7 +180,7 @@ public class WelcomeScreenActivity extends Activity{
 				boolean registrationComplete = AndroidUtility.enlistUser(newUser, authString); // what a stupid name.
 
 				if (registrationComplete){
-					Intent intent = new Intent().setClass(getApplicationContext(), UsersTabWidget.class);
+					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);
 				}
 

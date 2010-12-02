@@ -117,66 +117,66 @@ public class Mixing extends Activity{
 	
 	
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);   
-		setContentView(R.layout.mixing);       
-		final Button MoishButton = (Button) findViewById(R.id.MoishButton);
-
-		final EditText wordOfUser = (EditText) findViewById(R.id.wordOfUser);
-		word = (TextView) findViewById(R.id.theWord);
-		
-		TheWordIs = (TextView) findViewById(R.id.TheWordIs);
-		Animation anim = AnimationUtils.loadAnimation(Mixing.this, R.anim.animation5);
-		TheWordIs.startAnimation(anim);
-
-		LittleCount count = new LittleCount(3000,1000);
-		count.start();
-		Random random = new Random();  
-		int i = random.nextInt(100);
-		i = i % ourDict.length;
-		final String currentWord = ourDict[i];
-		
-		String mixedWord;
-		int k = random.nextInt(100);
-		k = k % 3 +1;
-		
-		if (k==1)
-			mixedWord= mix1(currentWord);
-		else if (k==2)
-			mixedWord= mix2(currentWord);
-		else
-			mixedWord= mix3(currentWord);
-			
-		word.setText(mixedWord);
-		word.setTextSize(60);
-		word.setTextScaleX(1);
-
-
-		MoishButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-
-				String wordByUser = wordOfUser.getText().toString();
-				if (wordByUser.compareTo(currentWord)==0){
-					Intent intent = new Intent(Mixing.this, youMoishd.class);
-					startActivity(intent);
-					Mixing.this.finish();
-				}
-				
-				else {
-					Toast.makeText(Mixing.this, 
-							"please try again", 
-							Toast.LENGTH_LONG).show();
-				}
-
-
-			}});
-
-
-
-	}
-	
+//	/** Called when the activity is first created. */
+//	@Override
+//	public void onCreate(Bundle savedInstanceState) {
+//		super.onCreate(savedInstanceState);   
+//		setContentView(R.layout.mixing);       
+//		final Button MoishButton = (Button) findViewById(R.id.MoishButton);
+//
+//		final EditText wordOfUser = (EditText) findViewById(R.id.wordOfUser);
+//		word = (TextView) findViewById(R.id.theWord);
+//		
+//		TheWordIs = (TextView) findViewById(R.id.TheWordIs);
+//		Animation anim = AnimationUtils.loadAnimation(Mixing.this, R.anim.animation5);
+//		TheWordIs.startAnimation(anim);
+//
+//		LittleCount count = new LittleCount(3000,1000);
+//		count.start();
+//		Random random = new Random();  
+//		int i = random.nextInt(100);
+//		i = i % ourDict.length;
+//		final String currentWord = ourDict[i];
+//		
+//		String mixedWord;
+//		int k = random.nextInt(100);
+//		k = k % 3 +1;
+//		
+//		if (k==1)
+//			mixedWord= mix1(currentWord);
+//		else if (k==2)
+//			mixedWord= mix2(currentWord);
+//		else
+//			mixedWord= mix3(currentWord);
+//			
+//		word.setText(mixedWord);
+//		word.setTextSize(60);
+//		word.setTextScaleX(1);
+//
+//
+//		MoishButton.setOnClickListener(new OnClickListener() {
+//			public void onClick(View v) {
+//
+//				String wordByUser = wordOfUser.getText().toString();
+//				if (wordByUser.compareTo(currentWord)==0){
+//					Intent intent = new Intent(Mixing.this, youMoishd.class);
+//					startActivity(intent);
+//					Mixing.this.finish();
+//				}
+//				
+//				else {
+//					Toast.makeText(Mixing.this, 
+//							"please try again", 
+//							Toast.LENGTH_LONG).show();
+//				}
+//
+//
+//			}});
+//
+//
+//
+//	}
+//	
 	public class LittleCount extends CountDownTimer {
 		public LittleCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
