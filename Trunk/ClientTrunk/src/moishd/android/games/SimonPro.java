@@ -229,11 +229,10 @@ public class SimonPro extends Activity{
 		tries.setText("number of tries:" + tr);
 		if (tr > 0)
 			wrong.setText("WRONG!!!");
-		else { //LOSE
+	/*	else { //LOSE
 			Intent intent = new Intent(SimonPro.this, youHaveBeenMoishd.class);
 			startActivity(intent);
-		}
-			
+		}*/
 		wrong.startAnimation(anim);
 		wrong.setVisibility(View.INVISIBLE);
 
@@ -256,6 +255,7 @@ public class SimonPro extends Activity{
 		for(int k=0; k<3;k++){	
 			i = random.nextInt(100);
 			i = i % 4;
+			
 			
 			while (i==0 ||(i==1 && i1 == 1 ) || (i==2 && i2 ==1)|| (i==3 && i3 == 1) ) {
 				i = random.nextInt(100);
