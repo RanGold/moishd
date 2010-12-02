@@ -55,7 +55,7 @@ public class AndroidUtility {
 	public static boolean enlistUser(ClientMoishdUser user, String authString){
 
 		ServerRequest.Get().GetCookie(authString);
-		HttpResponse response = SendObjToServer(user, "InviteUser", authString);
+		HttpResponse response = SendObjToServer(user, "UserLogin", authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;

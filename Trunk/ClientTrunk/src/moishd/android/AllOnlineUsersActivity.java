@@ -399,13 +399,13 @@ public class AllOnlineUsersActivity extends Activity {
 		.setCancelable(false)
 		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				sendInvitationResponse("Accept");	
+				//sendInvitationResponse("Accept");	
 				dialog.cancel();
 			}
 		})
 		.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				sendInvitationResponse("Decline");	
+				//sendInvitationResponse("Decline");	
 				dialog.cancel();
 			}
 		});
