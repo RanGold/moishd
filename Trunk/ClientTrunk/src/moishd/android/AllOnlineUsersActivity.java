@@ -387,15 +387,17 @@ public class AllOnlineUsersActivity extends Activity {
 
 		game_id = getIntent().getStringExtra("push_game_id");
 		String action = getIntent().getStringExtra("Action");
-		if (action.equals("game_invitation")){
-			getInvitation();
-		}
-		else if (action.equals("game_declined")){
-			userDeclinedToMoishDialog();
-			game_id = null;
-		}
-		else if (action.equals("game_start")){
-			startGame();
+		if (action!=null){
+			if (action.equals("game_invitation")){
+				getInvitation();
+			}
+			else if (action.equals("game_declined")){
+				userDeclinedToMoishDialog();
+				game_id = null;
+			}
+			else if (action.equals("game_start")){
+				startGame();
+			}
 		}
 		
 	}
