@@ -30,19 +30,19 @@
 		<activity android:name=".UsersTabWidget" android:label="@string/app_name"></activity>
 		<activity android:name=".AllOnlineUsersActivity" android:label="@string/app_name"></activity>
 		<activity android:name=".NearbyUsersActivity" android:label="@string/app_name"></activity>
-		<activity android:name=".FastTyping" android:label="@string/app_name"> </activity>
-		<activity android:name=".youHaveBeenMoishd" android:label="@string/app_name"> </activity>
-		<activity android:name=".youMoishd" android:label="@string/app_name"> </activity>        
-        <activity android:name=".FastClick" android:label="@string/app_name"></activity>
-		<activity android:name=".FastTyping" android:label="@string/app_name"></activity>
-		<activity android:name=".FastTyping2" android:label="@string/app_name"></activity>
-		<activity android:name=".FastTyping3" android:label="@string/app_name"></activity>
-		<activity android:name=".TruthPart" android:label="@string/app_name"></activity>
-		<activity android:name=".Mixing" android:label="@string/app_name"></activity>
-		<activity android:name=".Click" android:label="@string/app_name"></activity>
-		<activity android:name=".Simon" android:label="@string/app_name"></activity>
-		<activity android:name=".SimonPro" android:label="@string/app_name"></activity>
-		<activity android:name=".TruthOrDare" android:label="@string/app_name"></activity>
+		<activity android:name=".games.FastTyping" android:label="@string/app_name"> </activity>
+		<activity android:name=".games.youHaveBeenMoishd" android:label="@string/app_name"> </activity>
+		<activity android:name=".games.youMoishd" android:label="@string/app_name"> </activity>        
+        <activity android:name=".games.FastClick" android:label="@string/app_name"></activity>
+		<activity android:name=".games.FastTyping" android:label="@string/app_name"></activity>
+		<activity android:name=".games.FastTyping2" android:label="@string/app_name"></activity>
+		<activity android:name=".games.FastTyping3" android:label="@string/app_name"></activity>
+		<activity android:name=".games.TruthPart" android:label="@string/app_name"></activity>
+		<activity android:name=".games.Mixing" android:label="@string/app_name"></activity>
+		<activity android:name=".games.Click" android:label="@string/app_name"></activity>
+		<activity android:name=".games.Simon" android:label="@string/app_name"></activity>
+		<activity android:name=".games.SimonPro" android:label="@string/app_name"></activity>
+		<activity android:name=".games.TruthOrDare" android:label="@string/app_name"></activity>
 		
 		<service android:name=".C2DMReceiver"/>
 		<receiver android:name="com.google.android.c2dm.C2DMBroadcastReceiver" 
