@@ -329,7 +329,7 @@ public class AllOnlineUsersActivity extends Activity {
 	
 	protected String authString;
 	protected String game_id;
-	
+	protected int currentClickPosition;
 	private static final String GOOGLE_AUTH_PREF = "google_authentication";
 	private static final String GOOGLE_AUTH_STRING = "auth_String";
 	
@@ -347,7 +347,8 @@ public class AllOnlineUsersActivity extends Activity {
 		l1.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				inviteUserToMoish(arg2);
+				currentClickPosition = arg2;
+				inviteUserToMoish();
 			}});
 		l1.setAdapter(new EfficientAdapter(this));
 	}
@@ -363,15 +364,15 @@ public class AllOnlineUsersActivity extends Activity {
 		}
 	}
 
-	private void inviteUserToMoish(int position){
+	private void inviteUserToMoish(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've invited  " + moishdUsers.get(position).getUserNick() + " to Moish. Continue?")
+		builder.setMessage("You've invited  " + moishdUsers.get(currentClickPosition).getUserNick() + " to Moish. Continue?")
 		.setCancelable(false)
 		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
-				inviteUserToMoish(moishdUsers.get(id));
+				inviteUserToMoish(moishdUsers.get(currentClickPosition));
 			}
 		})
 		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
