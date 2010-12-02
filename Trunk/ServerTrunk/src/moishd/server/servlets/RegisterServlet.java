@@ -2,7 +2,6 @@ package moishd.server.servlets;
 
 import java.io.IOException;
 
-import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +10,6 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
-import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
