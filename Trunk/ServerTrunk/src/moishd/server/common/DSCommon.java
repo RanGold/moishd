@@ -179,6 +179,9 @@ public class DSCommon {
 			} else {
 				return (pm.detachCopy(games.get(0)));
 			}
+		} catch (NumberFormatException e) {
+			throw new DataAccessException("game id " + gameId + 
+			" is invalid");
 		}
 		finally {
 			if (q != null) {

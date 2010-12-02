@@ -60,11 +60,11 @@ public class GameTimeWinServlet extends HttpServlet {
 					
 					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					winPayload.put("Result", "Win");
+					winPayload.put("Result", "Won");
 					
 					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					losePayload.put("Result", "Lose");
+					losePayload.put("Result", "Lost");
 					
 					if ((tg.getPlayerRecEndTime() == null) ||
 							((tg.getPlayerInitEndTime() != null) && 
