@@ -21,8 +21,6 @@ import android.util.Log;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
 
-
-
 public class C2DMReceiver extends C2DMBaseReceiver {
 
 	static final String SENDER_ID = "app.moishd@gmail.com";
