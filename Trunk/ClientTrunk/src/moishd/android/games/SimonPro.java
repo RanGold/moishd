@@ -94,16 +94,12 @@ public class SimonPro extends Activity{
 		click1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (arr[counter] == indentify[0]){
-					messUp();
-					counter++;
-					
-				if (counter == 5){
-					counter=0;
-					rightAnswer();
-				}
-						
-			
-				}
+						counter++;
+					if (counter !=5)
+						messUp();
+					else
+						rightAnswer();
+					}
 				else
 					wrongAnswer();
 			}
@@ -111,16 +107,15 @@ public class SimonPro extends Activity{
 		click2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (arr[counter] == indentify[1]){
-					messUp();
-					counter++;
-
-					if (counter ==5) {
-						rightAnswer();
-					}
-					
+						counter++;
+						if (counter !=5)
+							messUp();
+						else
+							rightAnswer();
 				}
-				else 
+				else
 					wrongAnswer();
+		
 			}
 		});		
 		
@@ -128,16 +123,15 @@ public class SimonPro extends Activity{
 	
 			public void onClick(View v) {
 				if (arr[counter] == indentify[2]){
-					messUp();
 					counter++;
-					if (counter ==5){
-						counter=0;
+					if (counter !=5)
+						messUp();
+					else
 						rightAnswer();
 					}
-				}
-				else
-					wrongAnswer();
-				
+					else
+						wrongAnswer();
+		
 			}
 		});
 		
