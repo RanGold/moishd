@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:id="@+id/TODlinear" 
+	android:orientation="vertical"
+	android:layout_width="match_parent" 
+	android:layout_height="fill_parent"
+  	android:background="#FFFFFF">
+  
+  	<TextView
+  	android:id="@+id/choose"
+  	android:layout_marginTop="70dip" 
+  	android:text="Truth or dare? what would it be? you get to choose!" 
+	android:layout_marginLeft="30px"
+	android:gravity="center_vertical|center_horizontal"
+	android:layout_marginRight="30px"
+	android:textSize="20dip"
+	android:textColor="#000000" 
+	android:textStyle="bold"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+	
+	
+<TableRow 
+	android:id="@+id/Row01" 
+	android:layout_width="match_parent" 
+	android:layout_height="wrap_content"
+	android:layout_marginTop="30dip"
+	android:paddingLeft="20dip">
+
+<Button android:id="@+id/dare" 
+	android:text="Dare"
+	android:textStyle="bold"
+	android:textSize="20px"
+	android:paddingLeft="11dip"
+	android:paddingRight="11dip"
+	android:background="#836FFF"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="40dip"
+	android:drawableBottom="@drawable/dare"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_marginLeft="6dip"
+	android:clickable="true">
+</Button>
+
+<Button android:id="@+id/truth" 
+	android:text="Truth"
+	android:textStyle="bold"
+	android:textSize="20px"
+	android:paddingLeft="10dip"
+	android:paddingRight="10dip"
+	android:background="#FF6347"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="40dip"
+	android:drawableBottom="@drawable/truth"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="20dip"
+	android:layout_height="wrap_content"
+	android:clickable="true">
+</Button>	
+</TableRow>
+</LinearLayout>
