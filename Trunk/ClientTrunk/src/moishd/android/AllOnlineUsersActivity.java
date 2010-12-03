@@ -321,6 +321,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -368,6 +370,13 @@ public class AllOnlineUsersActivity extends Activity {
 		l1.setAdapter(new EfficientAdapter(this));
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.users_screen_menu, menu);
+		return true;
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.trophies:
@@ -402,31 +411,6 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 		}
 	}
-
-//	@Override
-//	protected void onResume (){
-//		super.onResume();
-//
-//		game_id = getIntent().getStringExtra("push_game_id");
-//		String action = getIntent().getStringExtra("Action");
-//		if (action!=null){
-//			if (action.equals("game_invitation")){
-//				getInvitation();
-//			}
-//			else if (action.equals("game_declined")){
-//				userDeclinedToMoishDialog();
-//				game_id = null;
-//			}
-//			else if (action.equals("game_start")){
-//				startGame();
-//			}
-//			else if (action.equals("game_result")){
-//				String result = getIntent().getStringExtra("Result");
-//				gameResultDialog(result);
-//			}
-//		}
-//		
-//	}
 	
 	@Override
 	protected void onDestroy (){
