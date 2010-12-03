@@ -65,7 +65,7 @@ public class GameTimeWinServlet extends HttpServlet {
 					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", "Lost");
-					
+					// TODO: Find a way to mutex the send proccess
 					if ((tg.getPlayerRecEndTime() == null) ||
 							((tg.getPlayerInitEndTime() != null) && 
 									(tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {

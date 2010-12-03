@@ -46,7 +46,7 @@ public class TimeGame extends CommonJDO implements Serializable {
 	private Date playerRecEndTime;
 	
 	@Persistent
-	private Boolean isDecided;
+	private boolean isDecided;
 
 	@Persistent
 	private Date initiated;
@@ -56,6 +56,7 @@ public class TimeGame extends CommonJDO implements Serializable {
 		this.playerInitId = playerInitId;
 		this.playerRecId = playerRecId;
 		this.initiated = new Date();
+		this.isDecided = false;
 	}
 
 	public String getPlayerInitId() {
@@ -106,11 +107,11 @@ public class TimeGame extends CommonJDO implements Serializable {
 		this.playerRecEndTime = playerRecEndTime;
 	}
 
-	public Boolean getIsDecided() {
+	public boolean getIsDecided() {
 		return isDecided;
 	}
 
-	public void setIsDecided(Boolean isDecided) {
+	public void setIsDecided(boolean isDecided) {
 		this.isDecided = isDecided;
 	}
 
