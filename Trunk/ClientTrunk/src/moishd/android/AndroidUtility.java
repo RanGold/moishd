@@ -152,7 +152,7 @@ public class AndroidUtility {
 	}
 	
 	public static boolean sendWinToServer(String gameId, String authString) {
-		HttpResponse response = SendReqToServer("GameTimeWin", null, authString);
+		HttpResponse response = SendReqToServer("GameTimeWin", gameId, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
