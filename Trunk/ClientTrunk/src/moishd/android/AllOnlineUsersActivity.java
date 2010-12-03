@@ -397,7 +397,7 @@ public class AllOnlineUsersActivity extends Activity {
 				startGame();
 			}
 			else if (action.equals("game_result")){
-				String result = getIntent().getStringExtra("Result");
+				String result = intent.getStringExtra("Result");
 				gameResultDialog(result);
 			}
 		}
