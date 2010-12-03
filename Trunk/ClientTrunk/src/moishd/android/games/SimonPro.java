@@ -7,6 +7,8 @@ import java.util.Random;
 import moishd.android.AndroidUtility;
 import moishd.android.R;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -293,5 +295,24 @@ public class SimonPro extends Activity{
 
 	}
 	
+	@Override
+	protected void onNewIntent (Intent intent){
+		String action = intent.getStringExtra("Action");
+		if (action.equals("game_result")){
+			String result = intent.getStringExtra("Result");
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("You've " + result + "!")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			AlertDialog alert = builder.create();  
+			alert.show();
+		}
+	}
+
 	
 }

@@ -15,7 +15,7 @@
  */
 package moishd.android;
 
-import android.app.PendingIntent;
+import moishd.android.games.SimonPro;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -39,27 +39,36 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		String action = intent.getStringExtra("Action");
 		String game_id = intent.getStringExtra("GameId");
 
-		Intent usersTabIntent = new Intent(this, AllOnlineUsersActivity.class);
-		usersTabIntent.setClass(getApplicationContext(), AllOnlineUsersActivity.class);
-		usersTabIntent.putExtra("push_game_id", game_id);
-		usersTabIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		//usersTabIntent.setAction("android.intent.action.MAIN");
-		//usersTabIntent.addCategory("android.intent.category.LAUNCHER");
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra("push_game_id", game_id);
+		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 		if (action.equals("GameInvitation")){
-			usersTabIntent.putExtra("Action", "game_invitation");
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra("Action", "game_invitation");
 		}
 		else if (action.equals("GameDeclined")){
-			usersTabIntent.putExtra("Action", "game_declined");
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra("Action", "game_declined");
 		}
 		else if(action.equals("StartGame")){
-			usersTabIntent.putExtra("Action", "game_start");
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra("Action", "game_start");
 		}
 		else if(action.equals("GameResult")){
-			usersTabIntent.putExtra("Action", "game_result");
+			resultIntent.putExtra("Action", "game_result");
 			String result = intent.getStringExtra("Result");
-			usersTabIntent.putExtra("Result", result);
+			resultIntent.putExtra("Result", result);
+
+			if (result.equals("Won")){
+				resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			}
+			else{
+				resultIntent.setClass(this, SimonPro.class);
+			}
 		}
-		startActivity(usersTabIntent);
+		startActivity(resultIntent);
+
 		//PendingIntent contentIntent = PendingIntent.getActivity(this, 0, usersTabIntent, 0);
 
 		//		Log.d("TEST", "got Message"); 
