@@ -1,0 +1,1 @@
+http://moishd.googlecode.com/files/yes_and_no_question.JPG
