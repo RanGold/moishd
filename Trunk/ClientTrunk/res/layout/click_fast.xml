@@ -6,37 +6,116 @@
 	android:layout_height="fill_parent"
 	android:background="#FFFFF0">
 
-	<TextView android:text="click on the button" 
-	android:paddingLeft="70px"
-	android:paddingTop="30px"
-	android:textSize="30dip"
-	android:id="@+id/TheWordIs"
+	<TextView android:text="Click on the buttons as fast as you can according to the number on the screen" 
+	android:paddingLeft="12px"
+	android:paddingRight="12px"
+	
+	android:gravity="center_vertical|center_horizontal"
+	android:paddingTop="10px"
+	android:textSize="15dip"
+	android:id="@+id/explaination"
 	android:textColor="#7A67EE" 
 	android:textStyle="bold"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content">
 	</TextView>
+	
+	  	
+<TableRow android:id="@+id/TableRow01" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:layout_marginTop="20dip"
+android:layout_marginBottom="30dip"
+android:paddingLeft="20dip">
 
 	<TextView 
 	android:id="@+id/theWord" 
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
 	android:textColor="#00FF00" 
 	android:textStyle="bold"
 	android:paddingTop="5px"
-	android:layout_marginLeft="10dip">
+	android:gravity="center_vertical|center_horizontal"
+	android:layout_marginLeft="50dip"
+	android:layout_marginRight="55dip">
 	</TextView>
+	
+	</TableRow>
 	
   
   
-<ImageButton android:id="@+id/clickOnMe" 
-	android:paddingLeft="20dip"
+
+
+
+  	
+<TableRow android:id="@+id/TableRow01" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:paddingLeft="20dip">
+
+
+
+<Button android:id="@+id/clickOnMe1" 
 	android:clickable="true"
-	android:src="@drawable/handcolor2"
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content">
-</ImageButton>
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="40px" 
+	android:layout_height="wrap_content"
+	
+	android:background="#FF6347">
+	
+</Button>
 
 
 
+<Button android:id="@+id/clickOnMe2" 
+		android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:layout_marginLeft = "60px"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:visibility="invisible"
+	android:background="#FFFF00"
+	>
+</Button>
+
+</TableRow>
+
+<TableRow android:id="@+id/TableRow02" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:layout_marginBottom="30dip"
+android:paddingLeft="20dip">
+
+<Button android:id="@+id/clickOnMe3" 
+	android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="40px" 
+	android:visibility="invisible"
+	android:layout_height="wrap_content"
+	android:background="#9932CC">
+	
+</Button>
+
+<Button android:id="@+id/clickOnMe4" 
+		android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="60px" 
+	android:layout_height="wrap_content"
+	android:visibility="invisible"
+	android:background="#00FF00"
+		>
+</Button>
+
+</TableRow>
 </LinearLayout>
