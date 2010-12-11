@@ -34,7 +34,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 /**
- * Register/unregister with the Chrome to Phone App Engine server.
+ * Register/unregister with the Moish'd! App Engine server.
  */
 public class DeviceRegistrar {
     public static final String STATUS_EXTRA = "Status";
@@ -109,8 +109,7 @@ public class DeviceRegistrar {
         }).start();*/
     }
 
-    private static HttpResponse makeRequest(Context context, String deviceRegistrationID,
-            String urlPath) throws Exception {
+    private static HttpResponse makeRequest(Context context, String deviceRegistrationID, String urlPath) throws Exception {
     	
     	ClientMoishdUser user = new ClientMoishdUser();
     	user.setRegisterID(deviceRegistrationID);

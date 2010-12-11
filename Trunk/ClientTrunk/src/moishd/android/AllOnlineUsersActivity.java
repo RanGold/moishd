@@ -304,10 +304,15 @@ package moishd.android;
 //            "Zanetti Grana Padano", "Zanetti Parmigiano Reggiano"}; 
 //}
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import moishd.android.games.SimonPro;
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.common.ActionByPushNotificationEnum;
+import moishd.common.IntentExtraKeysEnum;
+import moishd.common.SharedPreferencesKeysEnum;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -318,6 +323,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -334,54 +341,53 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
-	
+
 	protected String authString;
 	protected String game_id;
 	protected int currentClickPosition;
-	private static final String GOOGLE_AUTH_PREF = "google_authentication";
-	private static final String GOOGLE_AUTH_STRING = "auth_String";
-	private static final String C2DM_PREF = "c2dm_registeration";
-	private static final String C2DM_REGISTERED_STRING = "auth_String";
-
+	private ListView list;
 	private static List<ClientMoishdUser> moishdUsers;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		authString = getGoogleAuthString();
-		
+
 		boolean isRegistered = isC2DMRegistered();
 		if (!isRegistered){
 			registerC2DM();
 		}
-			
-		moishdUsers = AndroidUtility.getAllUsers(authString);
+
+		moishdUsers = ServerCommunication.getAllUsers(authString);
 
 		setContentView(R.layout.all_users_layout);
-		ListView l1 = (ListView) findViewById(R.id.allUsersListView);
+		list = (ListView) findViewById(R.id.allUsersListView);
 
-		l1.setOnItemClickListener(new OnItemClickListener() {
+		list.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				currentClickPosition = arg2;
 				inviteUserToMoishDialog();
 			}});
-		l1.setAdapter(new EfficientAdapter(this));
+		list.setAdapter(new EfficientAdapter(this));
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.users_screen_menu, menu);
 		return true;
 	}
-	
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.trophies:
+		case R.id.RefreshList:
+			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
+			moishdUsers = ServerCommunication.getAllUsers(authString);
+			listAdapter.notifyDataSetChanged();
 			return true;
-		case R.id.welcomeScreen:
+		case R.id.Logout:
 			WelcomeScreenActivity.facebookLogout(null);
 			finish();
 			return true;
@@ -389,35 +395,35 @@ public class AllOnlineUsersActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	protected void onNewIntent (Intent intent){
-		game_id = intent.getStringExtra("push_game_id");
-		String action = intent.getStringExtra("Action");
+		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		if (action!=null){
-			if (action.equals("game_invitation")){
+			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
 				getInvitation();
 			}
-			else if (action.equals("game_declined")){
+			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
-			else if (action.equals("game_start")){
+			else if (action.equals(ActionByPushNotificationEnum.GameStart.toString())){
 				startGame();
 			}
-			else if (action.equals("game_result")){
-				String result = intent.getStringExtra("Result");
+			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
+				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 				gameResultDialog(result);
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy (){
 		super.onDestroy();
 		unregisterC2DM();
 	}
-	
+
 	private void inviteUserToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -441,13 +447,13 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private void inviteUserToMoish(ClientMoishdUser user){
 
-		game_id = AndroidUtility.inviteUser(user, authString);
+		game_id = ServerCommunication.inviteUser(user, authString);
 
 	}
 
 	private void getInvitation(){
 
-		ClientMoishdUser user = AndroidUtility.retrieveInvitation(game_id, authString);
+		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authString);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
@@ -469,10 +475,10 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private boolean sendInvitationResponse(String response){
-		return AndroidUtility.sendInvitationResponse(game_id, response, authString);
+		return ServerCommunication.sendInvitationResponse(game_id, response, authString);
 
 	}
-	
+
 	private void userDeclinedToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -487,17 +493,17 @@ public class AllOnlineUsersActivity extends Activity {
 		alert.show();
 
 	}
-	
+
 	private void startGame(){
-		
+
 		Intent intent = new Intent(this, SimonPro.class);
 		intent.putExtra("game_id", game_id);
 		intent.putExtra("auth_string", authString);
 		startActivity(intent);
 	}
-	
+
 	private void gameResultDialog(String result){
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("You've " + result + "!")
 		.setCancelable(false)
@@ -514,49 +520,50 @@ public class AllOnlineUsersActivity extends Activity {
 	private String getGoogleAuthString() {
 
 		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
-		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
+		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), null);
 
 		return authString;
 	}
-	
+
 	private boolean isC2DMRegistered() {
 
 		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
-		boolean isRegistered = prefs.getBoolean(C2DM_REGISTERED_STRING, false);
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
+		boolean isRegistered = prefs.getBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), false);
 
 		return isRegistered;
 	}
-	
+
 	private void registerC2DM() {
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
 		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
 		startService(registrationIntent);
-		
+
 		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
+		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putBoolean(C2DM_REGISTERED_STRING, true);
+		editor.putBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), true);
 		editor.commit();
-		
+
 		Log.d("TEST","Resgistering...");
-		
+
 	}
-	
+
 	private void unregisterC2DM() {
-		
+
 		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(C2DM_PREF,Context.MODE_PRIVATE);
+		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putBoolean(C2DM_REGISTERED_STRING, false);
+		editor.putBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), false);
 		editor.commit();
-				
+
 	}
 
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
+		private Uri.Builder uriBuilder = new Uri.Builder();
 		private Bitmap userIcon1;
 		private Bitmap userIcon2;
 		private Bitmap userIcon3;
@@ -622,29 +629,48 @@ public class AllOnlineUsersActivity extends Activity {
 
 			holder.userName.setText(moishdUsers.get(position).getUserNick());
 			if (position % 4 == 0){
-				holder.userPicture.setImageBitmap(userIcon1);
+				//holder.userPicture.setImageBitmap(userIcon1);
 				holder.userRank.setImageBitmap(userRank0);
 			}
 			else if (position % 4 == 1){
-				holder.userPicture.setImageBitmap(userIcon2);
+				//holder.userPicture.setImageBitmap(userIcon2);
 				holder.userRank.setImageBitmap(userRank1);
 			}
 			else if (position % 4 == 2){
-				holder.userPicture.setImageBitmap(userIcon3);
+				//holder.userPicture.setImageBitmap(userIcon3);
 				holder.userRank.setImageBitmap(userRank2);
 			}
 			else{
-				holder.userPicture.setImageBitmap(userIcon4);
+				//holder.userPicture.setImageBitmap(userIcon4);
 				holder.userRank.setImageBitmap(userRank3);
 			}
-
+			if (moishdUsers.get(position).getPictureLink()!=null){
+			Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(position).getPictureLink());
+			holder.userPicture.setImageDrawable(userPic);
+			}
+			else{
+				holder.userPicture.setImageBitmap(userIcon1);
+			}
 			return convertView;
 		}
+
+		private Drawable LoadImageFromWebOperations(String url){
+			
+			try{
+				InputStream is = (InputStream) new URL(url).getContent();
+				Drawable d = Drawable.createFromStream(is, "src name");
+				return d;
+				}
+			catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
 		static class ViewHolder {
 			TextView userName;
 			ImageView userPicture;
 			ImageView userRank;
-			//ImageButton moishdButton;
 		}
 	}
 }

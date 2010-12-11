@@ -4,17 +4,10 @@ import java.util.Random;
 
 import moishd.android.R;
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Mixing extends Activity{
 	TextView TheWordIs, word;

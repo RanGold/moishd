@@ -11,7 +11,12 @@ import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.common.IntentExtraKeysEnum;
+import moishd.common.IntentRequestCodesEnum;
+import moishd.common.IntentResultCodesEnum;
+import moishd.common.SharedPreferencesKeysEnum;
 
+import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,17 +34,9 @@ import android.view.View;
 
 public class WelcomeScreenActivity extends Activity{
 
-	protected static final int PICK_ACCOUNT_REQUEST = 0;
-	protected static final int GET_ACCOUNT_TOKEN_REQUEST = 1;
-
-	protected static final int RESULT_OK = 0;
-	protected static final int RESULT_FAILED = 1;
-
 	private static final String APP_ID = "108614622540129";
 
 	private Account userGoogleAccount;
-	private static final String GOOGLE_AUTH_PREF = "google_authentication";
-	private static final String GOOGLE_AUTH_STRING = "auth_String";
 
 	private static LoginButton loginButton;
 	private Facebook facebook;
@@ -65,21 +62,21 @@ public class WelcomeScreenActivity extends Activity{
 		SessionEvents.addLogoutListener(new MoishdLogoutListener());
 		loginButton.init(this, facebook);
 
-		if (isSessionValid){
-			Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
-			startActivity(intent);
-		}
+		//if (isSessionValid){
+			//Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
+			//startActivity(intent);
+		//}
 	}
 
 	protected void startGoogleAuth(){
 		Intent intent = new Intent(this, AccountList.class);
-		startActivityForResult(intent, PICK_ACCOUNT_REQUEST);
+		startActivityForResult(intent, IntentRequestCodesEnum.PickGoogleAccount.getCode());
 	}
 
 	protected void authorizeGoogleAccount(Account account){
 		Intent intent = new Intent(this, AuthorizeGoogleAccount.class);
-		intent.putExtra("account", account);
-		startActivityForResult(intent, GET_ACCOUNT_TOKEN_REQUEST);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
+		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
 	}
 
 	protected static void facebookLogout(View arg0){
@@ -90,8 +87,8 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == PICK_ACCOUNT_REQUEST){
-			if (resultCode == RESULT_FAILED){
+		if (requestCode == IntentRequestCodesEnum.PickGoogleAccount.getCode()){
+			if (resultCode == IntentResultCodesEnum.Failed.getCode()){
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
 				builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
 				"Please create one under Settings/Accounts & Sync.")
@@ -105,15 +102,15 @@ public class WelcomeScreenActivity extends Activity{
 				alert.show();
 			}
 			else{
-				userGoogleAccount = (Account) data.getExtras().get("account");
+				userGoogleAccount = (Account) data.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
 				authorizeGoogleAccount(userGoogleAccount);
 			}
 		}
 
-		else if(requestCode == GET_ACCOUNT_TOKEN_REQUEST){
+		else if(requestCode == IntentRequestCodesEnum.GetGoogleAccountToken.getCode()){
 
-			if (resultCode == RESULT_OK){
-				String authString = data.getExtras().getString("auth_token");
+			if (resultCode == IntentResultCodesEnum.OK.getCode()){
+				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
 				saveGoogleAuthString(authString);
 			}
 			else{
@@ -128,17 +125,17 @@ public class WelcomeScreenActivity extends Activity{
 	private void saveGoogleAuthString(String authString) {
 
 		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
+		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putString(GOOGLE_AUTH_STRING, authString);
+		editor.putString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), authString);
 		editor.commit();
 	}
 
 	private String getGoogleAuthString() {
 
 		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(GOOGLE_AUTH_PREF,Context.MODE_PRIVATE);
-		String authString = prefs.getString(GOOGLE_AUTH_STRING, null);
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
+		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), null);
 
 		return authString;
 	}
@@ -173,12 +170,15 @@ public class WelcomeScreenActivity extends Activity{
 			try {
 				JSONObject json = Util.parseJson(response);
 				final String userName = json.getString("name");
+				final String userId = json.getString("id");
+				String pictureLink = "http://graph.facebook.com/" + userId + "/picure";
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
+				newUser.setPictureLink(pictureLink);
 				
 				String authString = getGoogleAuthString();
-				boolean registrationComplete = AndroidUtility.enlistUser(newUser, authString); // what a stupid name.
-
+				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
+				
 				if (registrationComplete){
 					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);

@@ -1,5 +1,7 @@
 package moishd.android;
 
+import moishd.common.IntentExtraKeysEnum;
+import moishd.common.IntentResultCodesEnum;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.ListActivity;
@@ -11,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class AccountList extends ListActivity {
+	
 	protected AccountManager accountManager;
 
 	@Override
@@ -40,12 +43,12 @@ public class AccountList extends ListActivity {
 	private void returnAccountToCallingActivity(Account account){
 		Intent resultIntent = new Intent();
 		if (account == null){
-			resultIntent.putExtra("account", "noAccount");
-			setResult(WelcomeScreenActivity.RESULT_FAILED, resultIntent);
+			resultIntent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), "noAccount");
+			setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
 		}
 		else{
-			resultIntent.putExtra("account", account);
-			setResult(WelcomeScreenActivity.RESULT_OK, resultIntent);
+			resultIntent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
+			setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 		}
 		finish();		
 	}

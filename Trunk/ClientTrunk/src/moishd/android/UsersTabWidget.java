@@ -49,18 +49,18 @@ public class UsersTabWidget extends TabActivity {
 		return true;
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.trophies:
-			return true;
-		case R.id.welcomeScreen:
-			WelcomeScreenActivity.facebookLogout(null);
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case R.id.trophies:
+//			return true;
+//		case R.id.welcomeScreen:
+//			WelcomeScreenActivity.facebookLogout(null);
+//			finish();
+//			return true;
+//		default:
+//			return super.onOptionsItemSelected(item);
+//		}
+//	}
 
 	private void registerC2DM() {
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");

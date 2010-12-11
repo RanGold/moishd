@@ -4,7 +4,7 @@ package moishd.android.games;
 
 import java.util.Random;
 
-import moishd.android.AndroidUtility;
+import moishd.android.ServerCommunication;
 import moishd.android.R;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -253,7 +253,7 @@ public class SimonPro extends Activity{
 				Toast.LENGTH_LONG).show();
 		String gameId = getIntent().getStringExtra("game_id");
 		String authString = getIntent().getStringExtra("auth_string");
-		AndroidUtility.sendWinToServer(gameId, authString);
+		ServerCommunication.sendWinToServer(gameId, authString);
 		
 		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
 		startActivity(intent);*/

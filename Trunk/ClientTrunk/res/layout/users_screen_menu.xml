@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/trophies"
+    <item android:id="@+id/RefreshList"
           android:icon="@drawable/icon"
           android:title="@string/trophies" />
-    <item android:id="@+id/welcomeScreen"
+    <item android:id="@+id/Logout"
           android:icon="@drawable/logout"/>
 </menu>
