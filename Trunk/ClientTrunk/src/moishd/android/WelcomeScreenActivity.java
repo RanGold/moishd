@@ -182,7 +182,6 @@ public class WelcomeScreenActivity extends Activity{
 					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);
 				}
-
 				//if registration fails, need to logout the user, show an error message and quit.
 
 			} catch (JSONException e) {
