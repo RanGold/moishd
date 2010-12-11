@@ -15,7 +15,7 @@ public enum PushNotificationTypeEnum {
 		this.name = name;
 	}
 
-	public String getText() {
+	public String toString() {
 		return this.name;
 	}
 

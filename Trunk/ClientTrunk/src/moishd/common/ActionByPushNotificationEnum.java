@@ -13,7 +13,7 @@ public enum ActionByPushNotificationEnum {
 		this.name = name;
 	}
 
-	public String getText() {
+	public String toString() {
 		return this.name;
 	}
 }

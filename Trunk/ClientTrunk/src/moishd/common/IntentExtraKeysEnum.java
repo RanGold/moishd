@@ -14,7 +14,7 @@ public enum IntentExtraKeysEnum {
 		this.name = name;
 	}
 
-	public String getText() {
+	public String toString() {
 		return this.name;
 	}
 }
