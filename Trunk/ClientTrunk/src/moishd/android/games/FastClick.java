@@ -4,6 +4,7 @@ package moishd.android.games;
 
 import java.util.Random;
 
+import moishd.android.AndroidUtility;
 import moishd.android.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -85,9 +86,11 @@ public class FastClick extends Activity{
 		word.setText(number);
 		if (i==0) {
 			Toast.makeText(FastClick.this, 
-					"You made it!", 
+					"please wait for result", 
 					Toast.LENGTH_LONG).show();
-			
+			String gameId = getIntent().getStringExtra("game_id");
+			String authString = getIntent().getStringExtra("auth_string");
+			AndroidUtility.sendWinToServer(gameId, authString);
 			finish();
 
 		}
