@@ -37,7 +37,7 @@ public class UserLoginServlet extends HttpServlet {
 					ClientMoishdUser newUser = 
 						GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
 								new TypeToken<ClientMoishdUser>(){}.getType());
-					(new MoishdUser(newUser.getUserNick(), "", user.getEmail(), "NULL")).SaveChanges();
+					(new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), user.getEmail(), "NULL")).SaveChanges();
 				}
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
