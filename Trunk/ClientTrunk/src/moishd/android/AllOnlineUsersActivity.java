@@ -563,11 +563,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
-		private Uri.Builder uriBuilder = new Uri.Builder();
-		private Bitmap userIcon1;
-		private Bitmap userIcon2;
-		private Bitmap userIcon3;
-		private Bitmap userIcon4;
+
 		private Bitmap userRank0;
 		private Bitmap userRank1;
 		private Bitmap userRank2;
@@ -582,10 +578,7 @@ public class AllOnlineUsersActivity extends Activity {
 			mInflater = LayoutInflater.from(context);
 
 			// Icons bound to the rows.
-			userIcon1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon1);
-			userIcon2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon2);
-			userIcon3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon3);
-			userIcon4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon4);
+
 			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
@@ -629,28 +622,21 @@ public class AllOnlineUsersActivity extends Activity {
 
 			holder.userName.setText(moishdUsers.get(position).getUserNick());
 			if (position % 4 == 0){
-				//holder.userPicture.setImageBitmap(userIcon1);
 				holder.userRank.setImageBitmap(userRank0);
 			}
 			else if (position % 4 == 1){
-				//holder.userPicture.setImageBitmap(userIcon2);
 				holder.userRank.setImageBitmap(userRank1);
 			}
 			else if (position % 4 == 2){
-				//holder.userPicture.setImageBitmap(userIcon3);
 				holder.userRank.setImageBitmap(userRank2);
 			}
 			else{
-				//holder.userPicture.setImageBitmap(userIcon4);
 				holder.userRank.setImageBitmap(userRank3);
 			}
-			if (moishdUsers.get(position).getPictureLink()!=null){
+
 			Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(position).getPictureLink());
 			holder.userPicture.setImageDrawable(userPic);
-			}
-			else{
-				holder.userPicture.setImageBitmap(userIcon1);
-			}
+
 			return convertView;
 		}
 

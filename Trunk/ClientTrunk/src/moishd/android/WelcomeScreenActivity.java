@@ -62,10 +62,10 @@ public class WelcomeScreenActivity extends Activity{
 		SessionEvents.addLogoutListener(new MoishdLogoutListener());
 		loginButton.init(this, facebook);
 
-		//if (isSessionValid){
-			//Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
-			//startActivity(intent);
-		//}
+		if (isSessionValid){
+			Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	protected void startGoogleAuth(){
@@ -171,7 +171,7 @@ public class WelcomeScreenActivity extends Activity{
 				JSONObject json = Util.parseJson(response);
 				final String userName = json.getString("name");
 				final String userId = json.getString("id");
-				String pictureLink = "http://graph.facebook.com/" + userId + "/picure";
+				String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
 				newUser.setPictureLink(pictureLink);
