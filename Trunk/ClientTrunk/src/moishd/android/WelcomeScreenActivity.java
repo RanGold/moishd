@@ -16,7 +16,6 @@ import moishd.common.IntentRequestCodesEnum;
 import moishd.common.IntentResultCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
 
-import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
