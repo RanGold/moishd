@@ -6,10 +6,10 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -65,6 +66,17 @@ public class WelcomeScreenActivity extends Activity{
 			Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
 			startActivity(intent);
 		}
+	}
+	
+	public void onDestroy(){
+		super.onDestroy();
+		
+		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
+		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+		startService(unregIntent);
+		
+		
+		
 	}
 
 	protected void startGoogleAuth(){

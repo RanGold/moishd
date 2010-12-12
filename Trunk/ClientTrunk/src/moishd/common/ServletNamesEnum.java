@@ -7,7 +7,9 @@ public enum ServletNamesEnum {
 	InviteUser("InviteUser"),
 	GetTimeGameInitiator("GetTimeGameInitiator"),
 	GameTimeWin("GameTimeWin"),
-	InvitationResponse("InvitationResponse");
+	InvitationResponse("InvitationResponse"),
+	UserRegistration("RegisterUser"),
+	UserUnregistration("UnRegister");
 	
 	private String name;
 

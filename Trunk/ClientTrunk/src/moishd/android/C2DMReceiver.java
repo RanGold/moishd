@@ -82,4 +82,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Log.d("TEST", "got RegistrationIntent"); 
 		DeviceRegistrar.registerWithServer(context, registration);
 	}
+	
+	@Override
+	public void onUnregistered(Context context) {
+		Log.d("TEST", "got UnRegistrationIntent");
+		DeviceRegistrar.unregisterWithServer(context);
+	}
 }

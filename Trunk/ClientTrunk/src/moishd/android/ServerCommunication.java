@@ -20,6 +20,7 @@ import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 
@@ -34,6 +35,17 @@ public class ServerCommunication {
 	//to be replaced with http://moish-d.appspot.com/
 	//when change - change also in ServerRequest
 
+	public static int registerC2DMToServer(ClientMoishdUser user){
+		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.UserRegistration, null);
+		return resp.getStatusLine().getStatusCode();
+	}
+	
+	public static int unregisterC2DMToServer(){
+		HttpResponse resp = activateServlet(ServletNamesEnum.UserUnregistration);
+		return resp.getStatusLine().getStatusCode();
+	}
+
+	
 	public static boolean enlistUser(ClientMoishdUser user, String authString){
 
 		ServerRequest.Get().GetCookie(authString);
@@ -151,6 +163,31 @@ public class ServerCommunication {
 		}			
 	}
 	
+	private static HttpResponse activateServlet(ServletNamesEnum servletName){
+		HttpResponse response ;
+		URI uri;
+		String uriPath = serverPath + "/" + servletName.toString();
+		
+		ServerRequest.Get().GetCookie();
+		
+		try {
+			uri = new URI(uriPath);
+			HttpPost postMethod = new HttpPost(uri);
+			
+			response = ServerRequest.Get().doPost(postMethod);
+			return response;
+	
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	private static HttpResponse SendObjToServer(Object obj, ServletNamesEnum servletName, String authString){
 
 		final int DURATION = 10000;
@@ -166,7 +203,10 @@ public class ServerCommunication {
 		HttpResponse response ;
 		URI uri;
 		String uriPath = serverPath + "/" + servletName.toString();
-		ServerRequest.Get().GetCookie(authString);
+		if (authString == null)
+			ServerRequest.Get().GetCookie();
+		else
+			ServerRequest.Get().GetCookie(authString);
 		try {
 			uri = new URI(uriPath);
 

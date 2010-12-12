@@ -15,23 +15,10 @@
  */
 package moishd.android;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.net.URI;
-
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.ServerRequest;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.google.gson.Gson;
 
 /**
  * Register/unregister with the Moish'd! App Engine server.
@@ -46,69 +33,74 @@ public class DeviceRegistrar {
     private static final String TAG = "DeviceRegistrar";
     static final String SENDER_ID = "app.moishd@gmail.com";
 
-    private static final String REGISTER_PATH = "/register";
-    private static final String UNREGISTER_PATH = "/unregister";
 
     public static void registerWithServer(final Context context, final String deviceRegistrationID) {
         new Thread(new Runnable() {
             public void run() {
-                Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
+                //Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
                 try {
-                    HttpResponse res = makeRequest(context, deviceRegistrationID, REGISTER_PATH);
-                    if (res.getStatusLine().getStatusCode() == 200) {
-                        SharedPreferences settings = Prefs.get(context);
+                    
+                	ClientMoishdUser user = new ClientMoishdUser();
+                	user.setRegisterID(deviceRegistrationID);
+                	
+                	int statusCode = ServerCommunication.registerC2DMToServer(user); 
+                    if (statusCode == 200) {
+                    	Log.d("TEST","Registration Successful");
+                      /*  SharedPreferences settings = Prefs.get(context);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString("deviceRegistrationID", deviceRegistrationID);
                         editor.commit();
-                        updateUIIntent.putExtra(STATUS_EXTRA, REGISTERED_STATUS);
-                    } else if (res.getStatusLine().getStatusCode() == 400) {
-                        updateUIIntent.putExtra(STATUS_EXTRA, AUTH_ERROR_STATUS);
+                     //   updateUIIntent.putExtra(STATUS_EXTRA, REGISTERED_STATUS);
+*/                    } else if (statusCode == 400) {
+                     //  updateUIIntent.putExtra(STATUS_EXTRA, AUTH_ERROR_STATUS);
                     } else {
                         Log.w(TAG, "Registration error " +
-                                String.valueOf(res.getStatusLine().getStatusCode()));
-                        updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
+                                String.valueOf(statusCode));
+                      //  updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
                     }
-                    context.sendBroadcast(updateUIIntent);
+                   // context.sendBroadcast(updateUIIntent);
               //  } catch (AppEngineClient.PendingAuthException pae) {
               //      // Ignore - we'll reregister later
                 } catch (Exception e) {
                     Log.w(TAG, "Registration error " + e.getMessage());
-                    updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
-                    context.sendBroadcast(updateUIIntent);
+                 //   updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
+                  //  context.sendBroadcast(updateUIIntent);
                 }
             }
         }).start();
     }
 
-    public static void unregisterWithServer(final Context context,
-            final String deviceRegistrationID) {/*
+    public static void unregisterWithServer(final Context context) {
         new Thread(new Runnable() {
             public void run() {
-                Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
+              //  Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
                 try {
-                    HttpResponse res = makeRequest(context, deviceRegistrationID, UNREGISTER_PATH);
-                    if (res.getStatusLine().getStatusCode() == 200) {
-                        SharedPreferences settings = Prefs.get(context);
+                    
+                	int statusCode = ServerCommunication.unregisterC2DMToServer();
+                	
+                    if (statusCode == 200) {
+                    	Log.d("TEST","Unregistration Successful");
+                      /*  SharedPreferences settings = Prefs.get(context);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.remove("deviceRegistrationID");
                         editor.commit();
-                        updateUIIntent.putExtra(STATUS_EXTRA, UNREGISTERED_STATUS);
+                        updateUIIntent.putExtra(STATUS_EXTRA, UNREGISTERED_STATUS);*/
                     } else {
-                        Log.w(TAG, "Unregistration error " +
-                                String.valueOf(res.getStatusLine().getStatusCode()));
-                        updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
+                        Log.w(TAG, "Unregistration error " + String.valueOf(statusCode));
+                       // updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
                     }
                 } catch (Exception e) {
-                    updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
+                   // updateUIIntent.putExtra(STATUS_EXTRA, ERROR_STATUS);
                     Log.w(TAG, "Unegistration error " + e.getMessage());
                 }
 
                 // Update dialog activity
-                context.sendBroadcast(updateUIIntent);
+               // context.sendBroadcast(updateUIIntent);
             }
-        }).start();*/
+        
+        }).start();
     }
-
+/*
     private static HttpResponse makeRequest(Context context, String deviceRegistrationID, String urlPath) throws Exception {
     	
     	ClientMoishdUser user = new ClientMoishdUser();
@@ -129,5 +121,5 @@ public class DeviceRegistrar {
 
 
 		return ServerRequest.Get().doPost(postMethod);
-    }
+    }*/
 }
