@@ -18,6 +18,7 @@ public class ServerRequest  {
 	//when change - change also is AndroidUtilty
 	
 	private DefaultHttpClient http_client;
+	private String authToken;
 	
 	private static ServerRequest instance;
 
@@ -26,11 +27,16 @@ public class ServerRequest  {
 	}
 
 	public boolean GetCookie(String auth_token) {
+		this.authToken = auth_token;
+		return this.GetCookie();
+	}
+	
+	public boolean GetCookie() {
 		if (this.DoesHaveCookie()) {
 			return true;
 		}
 		else {
-			return GetCookieFromServer(auth_token);
+			return (authToken != null ? GetCookieFromServer(this.authToken) : false);
 		}
 	}
 	
