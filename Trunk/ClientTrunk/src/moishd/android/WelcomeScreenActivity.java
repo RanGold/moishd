@@ -44,7 +44,8 @@ public class WelcomeScreenActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		String googleAuthString = getGoogleAuthString();
+		//check if the user already authorized Moish'd! to use his Google Account for registration
+		String googleAuthString = getGoogleAuthToken();
 
 		if (googleAuthString == null){
 			startGoogleAuth();
@@ -56,22 +57,24 @@ public class WelcomeScreenActivity extends Activity{
 		facebook = new Facebook(APP_ID);
 		asyncRunner = new AsyncFacebookRunner(facebook);
 
+		//check if the user is logged in into Facebook
 		boolean isSessionValid = SessionStore.restore(facebook, this);
 		SessionEvents.addAuthListener(new MoishdAuthListener());
 		SessionEvents.addLogoutListener(new MoishdLogoutListener());
 		loginButton.init(this, facebook);
 
 		if (isSessionValid){
-			Intent intent = new Intent().setClass(this, AllOnlineUsersActivity.class);
-			startActivity(intent);
+			doAuthSucceed();
 		}
 	}
-	
+
+	//retrieve user's Google account
 	protected void startGoogleAuth(){
 		Intent intent = new Intent(this, AccountList.class);
 		startActivityForResult(intent, IntentRequestCodesEnum.PickGoogleAccount.getCode());
 	}
 
+	//authorize user's Google account
 	protected void authorizeGoogleAccount(Account account){
 		Intent intent = new Intent(this, AuthorizeGoogleAccount.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
@@ -80,7 +83,6 @@ public class WelcomeScreenActivity extends Activity{
 
 	protected static void facebookLogout(View arg0){
 		loginButton.logout(arg0);
-
 	}
 
 	@Override
@@ -110,27 +112,29 @@ public class WelcomeScreenActivity extends Activity{
 
 			if (resultCode == IntentResultCodesEnum.OK.getCode()){
 				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
-				saveGoogleAuthString(authString);
+				saveGoogleAuthToken(authString);
 			}
 			else{
 				finish();
 			}
 		}
-		else{
+		else if (requestCode == IntentRequestCodesEnum.FacebookAuth.getCode()){
 			facebook.authorizeCallback(requestCode, resultCode, data);
 		}
 	}	
 
-	private void saveGoogleAuthString(String authString) {
+	//save user's GoogleAuthToken in SharedPrefernces
+	private void saveGoogleAuthToken(String authToken) {
 
 		Context context = getApplicationContext();
 		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
-		editor.putString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), authString);
+		editor.putString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), authToken);
 		editor.commit();
 	}
 
-	private String getGoogleAuthString() {
+	//retrieve user's GoogleAuthToken from SharedPrefernces
+	private String getGoogleAuthToken() {
 
 		Context context = getApplicationContext();
 		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
@@ -139,6 +143,7 @@ public class WelcomeScreenActivity extends Activity{
 		return authString;
 	}
 
+	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
 
 		asyncRunner.request("me", new ProfileRequestListener());
@@ -162,6 +167,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
+	//listener for incoming HttpResponse containing user's Facebook profile. Continues registration process
 	public class ProfileRequestListener extends BaseRequestListener {
 
 		public void onComplete(final String response) {
@@ -170,15 +176,15 @@ public class WelcomeScreenActivity extends Activity{
 				final String userName = json.getString("name");
 				final String userId = json.getString("id");
 				final String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
-				
+
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
-				
-				String authString = getGoogleAuthString();
+
+				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
-				
+
 				if (registrationComplete){
 					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);

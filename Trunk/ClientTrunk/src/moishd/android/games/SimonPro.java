@@ -6,6 +6,8 @@ import java.util.Random;
 
 import moishd.android.ServerCommunication;
 import moishd.android.R;
+import moishd.common.IntentExtraKeysEnum;
+import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -251,8 +253,8 @@ public class SimonPro extends Activity{
 		Toast.makeText(SimonPro.this, 
 				"please wait for result", 
 				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra("game_id");
-		String authString = getIntent().getStringExtra("auth_string");
+		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		ServerCommunication.sendWinToServer(gameId, authString);
 		
 		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
@@ -297,9 +299,9 @@ public class SimonPro extends Activity{
 	
 	@Override
 	protected void onNewIntent (Intent intent){
-		String action = intent.getStringExtra("Action");
-		if (action.equals("game_result")){
-			String result = intent.getStringExtra("Result");
+		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
+		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
+			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("You've " + result + "!")

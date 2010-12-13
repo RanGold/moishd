@@ -1,9 +1,12 @@
 package moishd.common;
 
+import moishd.android.facebook.Facebook;
+
 public enum IntentRequestCodesEnum {
 	
 	PickGoogleAccount(0),
-	GetGoogleAccountToken(1);
+	GetGoogleAccountToken(1),
+	FacebookAuth(Facebook.DEFAULT_AUTH_ACTIVITY_CODE);
 	
 	private int requestCode;
 

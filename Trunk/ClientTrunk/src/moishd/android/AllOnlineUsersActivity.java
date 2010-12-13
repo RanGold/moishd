@@ -324,7 +324,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -342,26 +341,25 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 
-	protected String authString;
+	protected String authToken;
 	protected String game_id;
 	protected int currentClickPosition;
 	private ListView list;
 	private static List<ClientMoishdUser> moishdUsers;
-
-	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		authString = getGoogleAuthString();
+		//need the authToken for server requests
+		authToken = getGoogleAuthToken();
 
 		boolean isRegistered = isC2DMRegistered();
 		if (!isRegistered){
 			registerC2DM();
 		}
 
-		moishdUsers = ServerCommunication.getAllUsers(authString);
+		moishdUsers = ServerCommunication.getAllUsers(authToken);
 
 		setContentView(R.layout.all_users_layout);
 		list = (ListView) findViewById(R.id.allUsersListView);
@@ -386,7 +384,7 @@ public class AllOnlineUsersActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
 			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
-			moishdUsers = ServerCommunication.getAllUsers(authString);
+			moishdUsers = ServerCommunication.getAllUsers(authToken);
 			listAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.Logout:
@@ -400,11 +398,13 @@ public class AllOnlineUsersActivity extends Activity {
 
 	@Override
 	protected void onNewIntent (Intent intent){
-		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		
+		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
+		
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
-				getInvitation();
+				retrieveInvitation();
 			}
 			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
@@ -444,18 +444,17 @@ public class AllOnlineUsersActivity extends Activity {
 		});
 		AlertDialog alert = builder.create();  
 		alert.show();
-
 	}
 
 	private void inviteUserToMoish(ClientMoishdUser user){
 
-		game_id = ServerCommunication.inviteUser(user, authString);
+		game_id = ServerCommunication.inviteUser(user, authToken);
 
 	}
 
-	private void getInvitation(){
+	private void retrieveInvitation(){
 
-		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authString);
+		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authToken);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
@@ -477,7 +476,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private boolean sendInvitationResponse(String response){
-		return ServerCommunication.sendInvitationResponse(game_id, response, authString);
+		return ServerCommunication.sendInvitationResponse(game_id, response, authToken);
 
 	}
 
@@ -499,8 +498,8 @@ public class AllOnlineUsersActivity extends Activity {
 	private void startGame(){
 
 		Intent intent = new Intent(this, SimonPro.class);
-		intent.putExtra("game_id", game_id);
-		intent.putExtra("auth_string", authString);
+		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
 	}
 
@@ -519,7 +518,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 
-	private String getGoogleAuthString() {
+	private String getGoogleAuthToken() {
 
 		Context context = getApplicationContext();
 		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
