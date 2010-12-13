@@ -32,9 +32,18 @@ public class GetAllUsersServlet extends HttpServlet {
 			response.addHeader("Error", "");
 			response.getWriter().write("Not Logged In");
 		} else {
+			long amount = -1;
+			try {
+				String strAmount = request.getReader().readLine();
+				amount = Long.valueOf(strAmount);
+			} catch (NumberFormatException e) {
+				// Ignoring
+			}
 			try {
 				DSCommon.GetUserByGoogleId(user.getEmail());
-				List<ClientMoishdUser> allUsers = DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true);
+				List<ClientMoishdUser> allUsers = (amount == -1 ? 
+						DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true, amount) :
+							DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true));
 				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");

@@ -33,11 +33,24 @@ public class UserLoginServlet extends HttpServlet {
 			response.getWriter().println("Error: no logged in user");
 		} else {
 			try {
-				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {
-					ClientMoishdUser newUser = 
-						GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
-								new TypeToken<ClientMoishdUser>(){}.getType());
-					(new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMacAddress())).SaveChanges();
+				ClientMoishdUser newUser = 
+					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
+							new TypeToken<ClientMoishdUser>(){}.getType());
+				
+				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
+					(new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
+							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress())).SaveChanges();
+				} else {
+					MoishdUser curUser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
+					if (!curUser.getFacebookID().equals(newUser.getFacebookID())) {
+						response.addHeader("Error", "");
+						response.getWriter().println("UserLoginServlet: facebook id given " + 
+								"differes from the database version");
+						return;
+					}
+					
+					curUser.setMACAddress(newUser.getMACAddress());
+					curUser.SaveChanges();
 				}
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");

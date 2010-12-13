@@ -1,5 +1,6 @@
 package moishd.server.common;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class DSCommon {
 		
 		for (MoishdUser user : users) {
 			MoishdUser tempUser = pm.detachCopy(user);
-			//tempUser.setLocation(pm.detachCopy(user.getLocation()));
+			tempUser.setLocation(pm.detachCopy(user.getLocation()));
 			tempUser.setStats(pm.detachCopy(user.getStats()));
 			dUsers.add(tempUser);
 		}
@@ -29,25 +30,52 @@ public class DSCommon {
 		return (dUsers);
 	}
 	
+	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, 
+			Boolean exclude) throws DataAccessException {
+		return GetRegisteredClientUsers(GoogleId, exclude, -1, "NULL", null);
+	}
+	
+	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, 
+			Boolean exclude, long amount) throws DataAccessException {
+		return GetRegisteredClientUsers(GoogleId, exclude, amount, "NULL", null);
+	}
+	
 	@SuppressWarnings("unchecked")
-	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, Boolean exclude) 
+	private static List<ClientMoishdUser> GetRegisteredClientUsers(String GoogleId, 
+			boolean exclude, long amount, String fieldName, List<String> filterValues) 
 	throws DataAccessException {
-		// TODO Returning just registered users
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(MoishdUser.class);
+			List<Object> filterParams = new LinkedList<Object>();
 			
 			if (exclude) {
 				q.setFilter("userGoogleIdentifier != :idParam");
+				filterParams.add(GoogleId);
 			}
 
-			List<MoishdUser> users = null;
-			if (exclude) {
-				users = ((List<MoishdUser>)q.execute(GoogleId));
-			} else {
-				users = ((List<MoishdUser>)q.execute());
+			// TODO Check this
+			q.setFilter("registerID != :nullParam");
+			filterParams.add("NULL");
+			
+			// TODO Check this
+			if (amount != -1) {
+				q.setRange(0, amount);
 			}
+			// TODO Check this
+			if (!fieldName.equals("NULL")) {
+				q.setFilter(":p.contains(" + fieldName + ")");
+				filterParams.add(filterValues);
+			}
+			
+			// TODO add filter implementation
+			List<MoishdUser> users = (List<MoishdUser>) q.executeWithArray(filterValues);
+//			if (exclude) {
+//				users = ((List<MoishdUser>)q.execute(GoogleId));
+//			} else {
+//				users = ((List<MoishdUser>)q.execute());
+//			}
 			
 			return (MoishdUser.copyToClientMoishdUserList(users));
 		}
@@ -188,6 +216,17 @@ public class DSCommon {
 				q.closeAll();
 			}
 			pm.close();
+		}
+	}
+
+	public static List<ClientMoishdUser> GetFilteredRegisteredClientUsers(
+			String GoogleId, Boolean exclude, Field field, 
+			List<String> macAddresses) throws DataAccessException {
+		if (!field.getDeclaringClass().getName().equals("MoishdUser")) {
+			throw new DataAccessException("Field " + field.getName() + " isn't a part of MoishdUser");
+		} else {
+			return GetRegisteredClientUsers(GoogleId, exclude, -1, 
+					field.getName(), macAddresses);
 		}
 	}
 }

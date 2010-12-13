@@ -109,6 +109,22 @@
 		<servlet-name>GameTimeWinServlet</servlet-name>
 		<url-pattern>/GameTimeWin</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>GetFriendUsersServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.GetFriendUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetFriendUsersServlet</servlet-name>
+		<url-pattern>/GetFriendUsers</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>GetNearbyUsersServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.GetNearbyUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetNearbyUsersServlet</servlet-name>
+		<url-pattern>/GetNearbyUsers</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

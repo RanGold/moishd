@@ -22,8 +22,10 @@ public class ClientMoishdUser implements Serializable {
 	private String registerID;
 	
 	private String facebookID;
+	
+	private String MACAddress;
     
-    private String macAddress;
+    private ClientLocation location;
     
     private List<ClientTrophy> trophies;
     
@@ -37,14 +39,15 @@ public class ClientMoishdUser implements Serializable {
 		this.userGoogleIdentifier = "";
 		this.registerID = "";
 		this.facebookID = "";
-		this.macAddress = "";
+		this.MACAddress = "";
+		this.location = null;
 		this.trophies = null;
 		this.stats = null;
 	}
 
 	public ClientMoishdUser(String userNick, String pictureLink,
 			Date dateRegistered, String userGoogleIdentifier,
-			String registerID, String facebookID, String macAddress,
+			String registerID, String facebookID, String MACAddress, ClientLocation location,
 			List<ClientTrophy> trophies, ClientUserGameStatistics stats) {
 		super();
 		this.userNick = userNick;
@@ -53,7 +56,8 @@ public class ClientMoishdUser implements Serializable {
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
 		this.facebookID = facebookID;
-		this.macAddress = macAddress;
+		this.MACAddress = MACAddress;
+		this.location = location;
 		this.trophies = trophies;
 		this.stats = stats;
 	}
@@ -106,12 +110,12 @@ public class ClientMoishdUser implements Serializable {
 		this.facebookID = facebookID;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public ClientLocation getLocation() {
+		return location;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setLocation(ClientLocation location) {
+		this.location = location;
 	}
 
 	public List<ClientTrophy> getTrophies() {
@@ -128,6 +132,14 @@ public class ClientMoishdUser implements Serializable {
 
 	public void setStats(ClientUserGameStatistics stats) {
 		this.stats = stats;
+	}
+
+	public void setMACAddress(String mACAddress) {
+		MACAddress = mACAddress;
+	}
+
+	public String getMACAddress() {
+		return MACAddress;
 	}
 
 }

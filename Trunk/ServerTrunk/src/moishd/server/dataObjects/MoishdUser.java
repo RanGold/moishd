@@ -44,9 +44,12 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	
 	@Persistent
 	private String facebookID;
-
+	
 	@Persistent
-	private String macAddress;
+	private String MACAddress;
+
+	@Persistent(dependent = "true")
+	private Location location;
 
 	@Persistent
 	private Set<Key> trophies;
@@ -55,23 +58,25 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private UserGameStatistics stats;
 
 	public MoishdUser(String userNick, String pictureLink,
-			String userGoogleIdentifier, String registerID, String facebookID, String macAddress) {
+			String userGoogleIdentifier, String registerID, String facebookID, String MACAddress) {
 		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
 		this.facebookID = facebookID;
+		this.setMACAddress(MACAddress);
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
-		this.macAddress = macAddress;
+		this.location = new Location(-1, -1);
 	}
 
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
-				this.getRegisterID(), this.getFacebookID(), this.getMacAddress(),
+				this.getRegisterID(), this.getFacebookID(), this.getMACAddress(), 
+				this.getLocation().toClientLocaion(),
 				Trophy.copyToClientTrophyList(this.getTrophies()), this
 						.getStats().toClientUserGameStatistics()));
 	}
@@ -110,12 +115,12 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.dateRegistered = dateRegistered;
 	}
 
-	public String getMacAddress() {
-		return macAddress;
+	public Location getLocation() {
+		return location;
 	}
 
-	public void setMacAddress(String macAddress) {
-		this.macAddress = macAddress;
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 
 	public Key getUserId() {
@@ -172,5 +177,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	}
 	public String getUserGoogleIdentifier() {
 		return userGoogleIdentifier;
+	}
+
+	public void setMACAddress(String mACAddress) {
+		MACAddress = mACAddress;
+	}
+
+	public String getMACAddress() {
+		return MACAddress;
 	}
 }
