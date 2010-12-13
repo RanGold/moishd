@@ -23,7 +23,7 @@ public class ClientMoishdUser implements Serializable {
 	
 	private String facebookID;
     
-    private ClientLocation location;
+    private String macAddress;
     
     private List<ClientTrophy> trophies;
     
@@ -37,14 +37,14 @@ public class ClientMoishdUser implements Serializable {
 		this.userGoogleIdentifier = "";
 		this.registerID = "";
 		this.facebookID = "";
-		this.location = null;
+		this.macAddress = "";
 		this.trophies = null;
 		this.stats = null;
 	}
 
 	public ClientMoishdUser(String userNick, String pictureLink,
 			Date dateRegistered, String userGoogleIdentifier,
-			String registerID, String facebookID, ClientLocation location,
+			String registerID, String facebookID, String macAddress,
 			List<ClientTrophy> trophies, ClientUserGameStatistics stats) {
 		super();
 		this.userNick = userNick;
@@ -53,7 +53,7 @@ public class ClientMoishdUser implements Serializable {
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
 		this.facebookID = facebookID;
-		this.location = location;
+		this.macAddress = macAddress;
 		this.trophies = trophies;
 		this.stats = stats;
 	}
@@ -106,12 +106,12 @@ public class ClientMoishdUser implements Serializable {
 		this.facebookID = facebookID;
 	}
 
-	public ClientLocation getLocation() {
-		return location;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setLocation(ClientLocation location) {
-		this.location = location;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	public List<ClientTrophy> getTrophies() {

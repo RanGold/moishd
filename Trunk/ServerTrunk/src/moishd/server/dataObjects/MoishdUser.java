@@ -45,8 +45,8 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	@Persistent
 	private String facebookID;
 
-	@Persistent(dependent = "true")
-	private Location location;
+	@Persistent
+	private String macAddress;
 
 	@Persistent
 	private Set<Key> trophies;
@@ -55,7 +55,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private UserGameStatistics stats;
 
 	public MoishdUser(String userNick, String pictureLink,
-			String userGoogleIdentifier, String registerID, String facebookID) {
+			String userGoogleIdentifier, String registerID, String facebookID, String macAddress) {
 		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
@@ -65,13 +65,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
-		this.location = new Location(-1, -1);
+		this.macAddress = macAddress;
 	}
 
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
-				this.getRegisterID(), this.getFacebookID(), this.getLocation().toClientLocaion(),
+				this.getRegisterID(), this.getFacebookID(), this.getMacAddress(),
 				Trophy.copyToClientTrophyList(this.getTrophies()), this
 						.getStats().toClientUserGameStatistics()));
 	}
@@ -110,12 +110,12 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.dateRegistered = dateRegistered;
 	}
 
-	public Location getLocation() {
-		return location;
+	public String getMacAddress() {
+		return macAddress;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
 	}
 
 	public Key getUserId() {

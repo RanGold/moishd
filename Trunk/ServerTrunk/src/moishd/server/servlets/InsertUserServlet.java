@@ -31,7 +31,7 @@ public class InsertUserServlet extends HttpServlet {
 		if (user == null) {
 			response.sendRedirect("/LoginServlet");
 		} else {
-			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234", "5678");
+			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234", "5678", "91011");
 
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			Query q = pm.newQuery(MoishdUser.class);

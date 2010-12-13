@@ -21,7 +21,7 @@ public class DSCommon {
 		
 		for (MoishdUser user : users) {
 			MoishdUser tempUser = pm.detachCopy(user);
-			tempUser.setLocation(pm.detachCopy(user.getLocation()));
+			//tempUser.setLocation(pm.detachCopy(user.getLocation()));
 			tempUser.setStats(pm.detachCopy(user.getStats()));
 			dUsers.add(tempUser);
 		}
