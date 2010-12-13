@@ -182,7 +182,18 @@ public class ServerCommunication {
 	}
 	
 	public static boolean sendWinToServer(String gameId, String authString) {
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GameTimeWin, gameId, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GameWin, gameId, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		}			
+	}
+	
+	public static boolean sendLoseToServer(String gameId, String authString) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GameLose, gameId, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;

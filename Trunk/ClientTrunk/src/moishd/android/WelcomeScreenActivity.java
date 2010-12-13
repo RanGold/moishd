@@ -68,17 +68,6 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 	
-	public void onDestroy(){
-		super.onDestroy();
-		
-		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-		startService(unregIntent);
-		
-		
-		
-	}
-
 	protected void startGoogleAuth(){
 		Intent intent = new Intent(this, AccountList.class);
 		startActivityForResult(intent, IntentRequestCodesEnum.PickGoogleAccount.getCode());

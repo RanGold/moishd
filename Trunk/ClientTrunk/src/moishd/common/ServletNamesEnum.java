@@ -7,7 +7,8 @@ public enum ServletNamesEnum {
 	GetFacebookFriends("GetFacebookFriends"),
 	InviteUser("InviteUser"),
 	GetTimeGameInitiator("GetTimeGameInitiator"),
-	GameTimeWin("GameTimeWin"),
+	GameWin("GameWin"),
+	GameLose("GameLose"),
 	InvitationResponse("InvitationResponse"),
 	UserRegistration("RegisterUser"),
 	UserUnregistration("UnRegister");

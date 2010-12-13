@@ -348,6 +348,8 @@ public class AllOnlineUsersActivity extends Activity {
 	private ListView list;
 	private static List<ClientMoishdUser> moishdUsers;
 
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -553,6 +555,10 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private void unregisterC2DM() {
 
+		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
+		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+		startService(unregIntent);
+		
 		Context context = getApplicationContext();
 		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
 		Editor editor = prefs.edit();
