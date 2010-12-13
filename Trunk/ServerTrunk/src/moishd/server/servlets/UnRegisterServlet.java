@@ -32,6 +32,7 @@ public class UnRegisterServlet extends HttpServlet {
 			try {
 				MoishdUser muser = DSCommon.GetUserByGoogleId(user.getEmail());
 				muser.setRegisterID("NULL");
+				muser.setRegistered(false);
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");

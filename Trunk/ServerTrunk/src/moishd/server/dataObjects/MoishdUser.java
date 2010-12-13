@@ -43,11 +43,14 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private String registerID;
 	
 	@Persistent
+	private boolean isRegistered;
+	
+	@Persistent
 	private String facebookID;
 	
 	@Persistent
 	private String MACAddress;
-
+	
 	@Persistent(dependent = "true")
 	private Location location;
 
@@ -64,6 +67,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.pictureLink = pictureLink;
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
+		this.isRegistered = false;
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
 		this.dateRegistered = new Date();
@@ -185,5 +189,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public String getMACAddress() {
 		return MACAddress;
+	}
+
+	public void setRegistered(boolean isRegistered) {
+		this.isRegistered = isRegistered;
+	}
+
+	public boolean isRegistered() {
+		return isRegistered;
 	}
 }

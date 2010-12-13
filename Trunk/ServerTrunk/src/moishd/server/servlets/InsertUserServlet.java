@@ -35,7 +35,7 @@ public class InsertUserServlet extends HttpServlet {
 
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			Query q = pm.newQuery(MoishdUser.class);
-			q.setFilter("userIdentifier == idParam");
+			q.setFilter("userGoogleIdentifier == idParam");
 
 			try {
 				if (((List<MoishdUser>) q.execute(user.getEmail())).size() == 0) {

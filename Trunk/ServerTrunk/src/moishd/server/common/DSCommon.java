@@ -36,7 +36,7 @@ public class DSCommon {
 	}
 	
 	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, 
-			Boolean exclude, long amount) throws DataAccessException {
+			boolean exclude, long amount) throws DataAccessException {
 		return GetRegisteredClientUsers(GoogleId, exclude, amount, "NULL", null);
 	}
 	
@@ -49,15 +49,18 @@ public class DSCommon {
 		try {
 			q = pm.newQuery(MoishdUser.class);
 			List<Object> filterParams = new LinkedList<Object>();
+			String filter = "";
 			
 			if (exclude) {
 				q.setFilter("userGoogleIdentifier != :idParam");
+				filter = "userGoogleIdentifier != :idParam && ";
 				filterParams.add(GoogleId);
 			}
 
 			// TODO Check this
-			q.setFilter("registerID != :nullParam");
-			filterParams.add("NULL");
+			filter += "isRegistered == :trueParam && ";
+			q.setFilter(filter);
+			filterParams.add(true);
 			
 			// TODO Check this
 			if (amount != -1) {
@@ -65,12 +68,18 @@ public class DSCommon {
 			}
 			// TODO Check this
 			if (!fieldName.equals("NULL")) {
-				q.setFilter(":p.contains(" + fieldName + ")");
+				filter += ":p.contains(" + fieldName + ")";
+				q.setFilter(filter);
 				filterParams.add(filterValues);
 			}
 			
+			if (filter.endsWith("&& ")) {
+				filter = filter.substring(0, filter.length() - 3);
+				q.setFilter(filter);
+			}
+			
 			// TODO add filter implementation
-			List<MoishdUser> users = (List<MoishdUser>) q.executeWithArray(filterValues);
+			List<MoishdUser> users = (List<MoishdUser>) q.executeWithArray(filterParams.toArray());
 //			if (exclude) {
 //				users = ((List<MoishdUser>)q.execute(GoogleId));
 //			} else {

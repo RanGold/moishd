@@ -39,6 +39,7 @@ public class RegisterServlet extends HttpServlet {
 
 				MoishdUser muser = DSCommon.GetUserByGoogleId(user.getEmail());
 				muser.setRegisterID(clientUser.getRegisterID());
+				muser.setRegistered(true);
 				muser.SaveChanges();
 			} catch (ClassNotFoundException e) {
 				response.addHeader("Error", "");
