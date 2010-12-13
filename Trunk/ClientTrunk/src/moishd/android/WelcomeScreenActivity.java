@@ -115,7 +115,22 @@ public class WelcomeScreenActivity extends Activity{
 				saveGoogleAuthToken(authString);
 			}
 			else{
-				finish();
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. Retry?")
+				.setCancelable(false)
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+						authorizeGoogleAccount(userGoogleAccount);
+					}
+				})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {	
+						finish();
+					}});
+
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		}
 		else if (requestCode == IntentRequestCodesEnum.FacebookAuth.getCode()){
@@ -179,7 +194,7 @@ public class WelcomeScreenActivity extends Activity{
 
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
-				newUser.setFacebookID(userId);
+				//newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 
 				String authString = getGoogleAuthToken();

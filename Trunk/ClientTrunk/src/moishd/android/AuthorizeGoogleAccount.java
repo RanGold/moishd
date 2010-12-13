@@ -18,7 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class AuthorizeGoogleAccount extends Activity {
-
+	
 	boolean firstTime = true;
 
 	@Override
@@ -28,43 +28,22 @@ public class AuthorizeGoogleAccount extends Activity {
 		Intent intent = getIntent();
 		AccountManager accountManager = AccountManager.get(getApplicationContext());
 		Account account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
-		accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);	
+
+		accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
 	}
 
-	@Override
-	protected void onResume() {
+	protected void onResume(){
 		super.onResume();
-
-		if (!firstTime){
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
-			"Retry?")
-			.setCancelable(false)
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-					Intent intent = getIntent();
-					AccountManager accountManager = AccountManager.get(getApplicationContext());
-					Account account = (Account)intent.getExtras().get("account");
-					accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
-				}
-			})
-			.setNegativeButton("No", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Intent resultIntent = new Intent();
-					setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);	
-					finish();
-				}
-			});
-			AlertDialog alert = builder.create();
-			alert.show();
+		
+		if (firstTime){
+			firstTime = false;
 		}
-
-	}
-	
-	protected void onPause(){
-		super.onPause();
-		firstTime = false;
+		else{
+			Intent resultIntent = new Intent();
+			setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+			finish();
+		}
+		
 	}
 
 	private class GetAuthTokenCallback implements AccountManagerCallback<Bundle> {
