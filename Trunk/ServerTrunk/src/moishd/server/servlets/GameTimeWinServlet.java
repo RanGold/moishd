@@ -51,12 +51,13 @@ public class GameTimeWinServlet extends HttpServlet {
 				tg.SaveChanges();
 				
 				tg = DSCommon.GetTimeGameById(gameId);
-				MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
-				MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 				
 				if (!tg.getIsDecided()) {
 					tg.setIsDecided(true);
 					tg.SaveChanges();
+					
+					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
+					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					
 					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
@@ -65,15 +66,20 @@ public class GameTimeWinServlet extends HttpServlet {
 					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", "Lost");
-					// TODO: Find a way to mutex the send proccess
+					
+					tg = DSCommon.GetTimeGameById(gameId);
+					
+					// TODO: Check if concurrent win is consistent
 					if ((tg.getPlayerRecEndTime() == null) ||
 							((tg.getPlayerInitEndTime() != null) && 
 									(tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {
-						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), winPayload);
-						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), losePayload);
-					} else {
+						if (user.getEmail().equals(mInitUser.getUserGoogleIdentifier())) {
+							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+									C2DMCommon.Actions.GameResult.toString(), winPayload);
+							C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+									C2DMCommon.Actions.GameResult.toString(), losePayload);
+						}
+					} else if (user.getEmail().equals(mRecUser.getUserGoogleIdentifier())) {
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 								C2DMCommon.Actions.GameResult.toString(), winPayload);
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
