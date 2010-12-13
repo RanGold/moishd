@@ -20,6 +20,8 @@ public class ClientMoishdUser implements Serializable {
 	private String userGoogleIdentifier;
     
 	private String registerID;
+	
+	private String facebookID;
     
     private ClientLocation location;
     
@@ -34,6 +36,7 @@ public class ClientMoishdUser implements Serializable {
 		this.dateRegistered = null;
 		this.userGoogleIdentifier = "";
 		this.registerID = "";
+		this.facebookID = "";
 		this.location = null;
 		this.trophies = null;
 		this.stats = null;
@@ -41,7 +44,7 @@ public class ClientMoishdUser implements Serializable {
 
 	public ClientMoishdUser(String userNick, String pictureLink,
 			Date dateRegistered, String userGoogleIdentifier,
-			String registerID, ClientLocation location,
+			String registerID, String facebookID, ClientLocation location,
 			List<ClientTrophy> trophies, ClientUserGameStatistics stats) {
 		super();
 		this.userNick = userNick;
@@ -49,6 +52,7 @@ public class ClientMoishdUser implements Serializable {
 		this.dateRegistered = dateRegistered;
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
+		this.facebookID = facebookID;
 		this.location = location;
 		this.trophies = trophies;
 		this.stats = stats;
@@ -92,6 +96,14 @@ public class ClientMoishdUser implements Serializable {
 
 	public void setRegisterID(String registerID) {
 		this.registerID = registerID;
+	}
+	
+	public String getFacebookID() {
+		return facebookID;
+	}
+
+	public void setFacebookID(String facebookID) {
+		this.facebookID = facebookID;
 	}
 
 	public ClientLocation getLocation() {

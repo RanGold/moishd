@@ -41,6 +41,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	@Persistent
 	private String registerID;
+	
+	@Persistent
+	private String facebookID;
 
 	@Persistent(dependent = "true")
 	private Location location;
@@ -52,12 +55,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private UserGameStatistics stats;
 
 	public MoishdUser(String userNick, String pictureLink,
-			String userGoogleIdentifier, String registerID) {
+			String userGoogleIdentifier, String registerID, String facebookID) {
 		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
+		this.facebookID = facebookID;
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
@@ -67,7 +71,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
-				this.getRegisterID(), this.getLocation().toClientLocaion(),
+				this.getRegisterID(), this.getFacebookID(), this.getLocation().toClientLocaion(),
 				Trophy.copyToClientTrophyList(this.getTrophies()), this
 						.getStats().toClientUserGameStatistics()));
 	}
@@ -159,6 +163,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		return registerID;
 	}
 
+	public void setFacebookID(String facebookID) {
+		this.facebookID = facebookID;
+	}
+
+	public String getFacebookID() {
+		return facebookID;
+	}
 	public String getUserGoogleIdentifier() {
 		return userGoogleIdentifier;
 	}
