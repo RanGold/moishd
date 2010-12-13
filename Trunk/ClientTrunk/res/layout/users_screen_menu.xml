@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/RefreshList"
-          android:icon="@drawable/icon"
+          android:icon="@drawable/refresh_button"
           android:title="@string/refresh" />
     <item android:id="@+id/Logout"
           android:icon="@drawable/logout"/>

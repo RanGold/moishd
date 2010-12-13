@@ -39,7 +39,7 @@ public class WelcomeScreenActivity extends Activity{
 	private Account userGoogleAccount;
 
 	private static LoginButton loginButton;
-	private Facebook facebook;
+	private static Facebook facebook;
 	private AsyncFacebookRunner asyncRunner;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,7 +174,6 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
-
 	public class ProfileRequestListener extends BaseRequestListener {
 
 		public void onComplete(final String response) {
@@ -182,9 +181,11 @@ public class WelcomeScreenActivity extends Activity{
 				JSONObject json = Util.parseJson(response);
 				final String userName = json.getString("name");
 				final String userId = json.getString("id");
-				String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
+				final String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
+				
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
+				//newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				
 				String authString = getGoogleAuthString();
@@ -203,5 +204,4 @@ public class WelcomeScreenActivity extends Activity{
 			}
 		}
 	}
-
 }

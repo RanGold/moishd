@@ -18,7 +18,8 @@
      
      <ImageView android:id="@+id/userRank"
         android:layout_width="48dip"
-        android:layout_height="48dip" />
+        android:layout_height="48dip"
+        android:paddingRight="5dip"/>
 
 
 </LinearLayout>

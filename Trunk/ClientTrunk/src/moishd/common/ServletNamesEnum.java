@@ -4,6 +4,7 @@ public enum ServletNamesEnum {
 
 	UserLogin("UserLogin"),
 	GetAllUsers("GetAllUsers"),
+	GetFacebookFriends("GetFacebookFriends"),
 	InviteUser("InviteUser"),
 	GetTimeGameInitiator("GetTimeGameInitiator"),
 	GameTimeWin("GameTimeWin"),

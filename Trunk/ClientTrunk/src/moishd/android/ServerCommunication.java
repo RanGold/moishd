@@ -87,6 +87,35 @@ public class ServerCommunication {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<ClientMoishdUser> getFacebookFriends(String authString){
+
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetFacebookFriends, null, authString);
+		try {
+			InputStream contentStream = response.getEntity().getContent();
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+			}
+			else{
+				if (contentStream != null) {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
+					try {
+						String json = (String) ois.readObject();
+						Gson g = new Gson();
+						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}			}
+		}
+		catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static String inviteUser(ClientMoishdUser user, String authString){
 
