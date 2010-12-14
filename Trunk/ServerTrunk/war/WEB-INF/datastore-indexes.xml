@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes
+  autoGenerate="true">
+    <datastore-index kind="MoishdUser" ancestor="false">
+        <property name="isRegistered" direction="asc" />
+        <property name="userGoogleIdentifier" direction="asc" />
+    </datastore-index>
+
+	<datastore-index kind="MoishdUser" ancestor="false">
+        <property name="isRegistered" direction="asc" />
+        <property name="userGoogleIdentifier" direction="asc" />
+        <property name="MACAddress" direction="asc" />
+    </datastore-index>    
+	
+	<datastore-index kind="MoishdUser" ancestor="false">
+        <property name="isRegistered" direction="asc" />
+        <property name="userGoogleIdentifier" direction="asc" />
+        <property name="facebookID" direction="asc" />
+    </datastore-index>        
+</datastore-indexes>
