@@ -30,7 +30,7 @@ public class InsertUserServlet extends HttpServlet {
 
 		if (user == null) {
 			response.sendRedirect("/LoginServlet");
-		} else {
+		} else if (UserServiceFactory.getUserService().isUserAdmin()) {
 			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234", "5678", "9101");
 
 			PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -44,8 +44,7 @@ public class InsertUserServlet extends HttpServlet {
 			} finally {
 				pm.close();
 			}
-
-			response.sendRedirect("/");
 		}
+		response.sendRedirect("/");
 	}
 }
