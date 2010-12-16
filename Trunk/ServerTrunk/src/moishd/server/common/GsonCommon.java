@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class GsonCommon {
 	private GsonCommon() {
@@ -18,7 +19,8 @@ public class GsonCommon {
 	throws IOException {
 		response.setContentType("application/json");
 
-		Gson g = new Gson();
+		//Gson g = new Gson();
+		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 		String json = g.toJson(obj);
 		ObjectOutputStream oos = null;
 		try {
@@ -36,8 +38,9 @@ public class GsonCommon {
 		// TODO : make this work
 		ObjectInputStream ois = new ObjectInputStream(s);
 		String json = (String) ois.readObject();
+		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 		@SuppressWarnings("unchecked")
-		T obj = (T)(new Gson()).fromJson(json, t);
+		T obj = (T)g.fromJson(json, t);
 		return obj;
 	}
 }
