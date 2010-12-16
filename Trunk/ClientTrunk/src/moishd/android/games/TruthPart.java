@@ -17,9 +17,7 @@ import android.widget.Toast;
 
 public class TruthPart extends Activity {
 	int i;
-	String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-	String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-	
+		
 	final String[][] questions ={{"Is tammy's last name is Dagan?","yes"}, 
 			{"Is it 2012?","no"},
 			{"Is this the first milestone?","yes"},
@@ -35,6 +33,8 @@ public class TruthPart extends Activity {
 		Toast.makeText(TruthPart.this, 
 				"please wait for result", 
 				Toast.LENGTH_LONG).show();
+		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		ServerCommunication.sendWinToServer(gameId, authString);
 		finish();
 	}
@@ -44,6 +44,8 @@ public class TruthPart extends Activity {
 		Toast.makeText(TruthPart.this, 
 				"please wait for result", 
 				Toast.LENGTH_LONG).show();
+		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		ServerCommunication.sendLoseToServer(gameId, authString);
 		finish();
 	}

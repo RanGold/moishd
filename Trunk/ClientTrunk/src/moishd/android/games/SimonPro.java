@@ -256,9 +256,6 @@ public class SimonPro extends Activity{
 		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		ServerCommunication.sendWinToServer(gameId, authString);
-		
-		/*Intent intent = new Intent(SimonPro.this, youMoishd.class);
-		startActivity(intent);*/
 		finish();
 		
 	}
