@@ -10,6 +10,7 @@ import moishd.android.facebook.SessionStore;
 import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
@@ -37,8 +38,8 @@ public class WelcomeScreenActivity extends Activity{
 
 	private Account userGoogleAccount;
 
+	protected static Facebook facebook;
 	private static LoginButton loginButton;
-	private static Facebook facebook;
 	private AsyncFacebookRunner asyncRunner;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -197,6 +198,7 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
+				newUser.setLocation(new ClientLocation(0,0));
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 
@@ -209,7 +211,7 @@ public class WelcomeScreenActivity extends Activity{
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
 			} catch (FacebookError e) {
-				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage());
+				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage()); //TODO HILA : Q@##@!#@@!#
 			}
 		}
 	}

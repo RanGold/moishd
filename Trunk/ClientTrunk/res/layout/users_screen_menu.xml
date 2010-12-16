@@ -3,6 +3,16 @@
     <item android:id="@+id/RefreshList"
           android:icon="@drawable/refresh_button"
           android:title="@string/refresh" />
-    <item android:id="@+id/Logout"
+    
+    <item android:id="@+id/allUsers"
+          android:title="@string/get_all_users"/>
+    
+    <item android:id="@+id/facebookFriends"
+          android:title="@string/get_all_facebook_friends"/>
+    
+    <item android:id="@+id/nearbyUsers"
+          android:title="@string/get_all_nearby_users"/>
+                 
+    <item android:id="@+id/logout"
           android:icon="@drawable/logout"/>
 </menu>
