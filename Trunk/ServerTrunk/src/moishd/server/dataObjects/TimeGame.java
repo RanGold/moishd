@@ -130,6 +130,7 @@ public class TimeGame extends CommonJDO implements Serializable {
 	
 	@Override
 	public void SaveChanges() {
+		super.SaveChanges();
 		this.setGameLongId(this.getGameId().getId());
 		super.SaveChanges();
 	}
