@@ -37,7 +37,6 @@ import moishd.server.common.PMF;
 
 import com.google.appengine.api.labs.taskqueue.Queue;
 import com.google.appengine.api.labs.taskqueue.QueueFactory;
-import com.google.appengine.api.labs.taskqueue.TaskHandle;
 import com.google.appengine.api.labs.taskqueue.TaskOptions;
 
 /**
@@ -72,7 +71,7 @@ public class C2DMessaging {
     private C2DMessaging(C2DMConfigLoader serverConfig) {
         this.serverConfig = serverConfig;
     }
-
+    
     public synchronized static C2DMessaging get(ServletContext servletContext) {
         if (singleton == null) {
             C2DMConfigLoader serverConfig = new C2DMConfigLoader(getPMF(servletContext));
@@ -301,7 +300,8 @@ public class C2DMessaging {
             long jitter = (int) Math.random() * DATAMESSAGING_MAX_JITTER_MSEC;
             url.countdownMillis(jitter);
 
-            TaskHandle add = dmQueue.add(url);
+            /*TaskHandle add = */
+            dmQueue.add(url);
         } catch (UnsupportedEncodingException e) {
             // Ignore - UTF8 should be supported
             log.log(Level.SEVERE, "Unexpected error", e);

@@ -11,8 +11,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+
+import com.google.android.c2dm.server.C2DMRetryServlet;
+import com.google.android.c2dm.server.C2DMessaging;
 
 import moishd.server.dataObjects.C2DMAuth;
 
@@ -27,7 +32,57 @@ public class C2DMCommon {
 		StartGameTruth,
 		StartGameDare
 	}
-	// TODO : change use to server
+	
+	 private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
+
+	 public static final String URI = "/tasks/c2dm";
+
+	 public static final String RETRY_COUNT = "X-AppEngine-TaskRetryCount";
+
+	 static int MAX_RETRY = 3;
+	
+//	public static int PushGenericMessage1 
+//	(String regId, String action, int retries, ServletContext context,
+//			Map<String,String> payloads) {
+//		String registrationId = regId;
+//        int retryCount = retries;
+//        if (retryCount != -1) {
+//            if (retryCount > MAX_RETRY) {
+//                log.severe("Too many retries, drop message for :" + registrationId);
+//                return 200;
+//            }
+//        }
+//        
+//        @SuppressWarnings("unchecked")
+//		//Map<String, String[]> params = req.getParameterMap();
+//        String collapse =  String.valueOf((action + 
+//				(payloads.size() > 0 ? 
+//						(String)payloads.values().toArray()[0] : 
+//							"")).hashCode());
+//        boolean delayWhenIdle = false;
+//            //null != req.getParameter(C2DMessaging.PARAM_DELAY_WHILE_IDLE);
+//
+//        try {
+//            // Send doesn't retry !! 
+//            // We use the queue exponential backoff for retries.
+//            boolean sentOk = C2DMessaging.get(context)
+//              .sendNoRetry(registrationId, collapse, params, delayWhenIdle);
+//            log.info("Retry result " + sentOk + " " + registrationId);
+//            if (sentOk) {
+//                resp.setStatus(200); 
+//                resp.getOutputStream().write("OK".getBytes());
+//            } else {
+//                resp.setStatus(500); // retry this task
+//            }
+//        } catch (IOException ex) {
+//            resp.setStatus(200); 
+//            resp.getOutputStream().write(("Non-retriable error:" + 
+//              ex.toString()).getBytes());            
+//        }
+//		
+//	}
+	
+	
 	public static boolean PushGenericMessage 
 	(String regId, String action, 
 			Map<String,String> payloads) throws ServletException, IOException {

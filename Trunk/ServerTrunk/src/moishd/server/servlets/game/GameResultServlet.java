@@ -19,11 +19,20 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class GameTimeWinServlet extends HttpServlet {
+public class GameResultServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8439643553907371646L;
+	private static final long serialVersionUID = -530008367358724317L;
+	
+	protected enum Result {
+		Won,
+		Lost
+	}
+	
+	protected String servletName;
+	protected Result winValue;
+	protected Result loseValue;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -44,7 +53,7 @@ public class GameTimeWinServlet extends HttpServlet {
 					tg.setPlayerRecEndTime(endDate);
 				} else {
 					response.addHeader("Error", "");
-					response.getWriter().println("GameTimeWinServlet: player " + 
+					response.getWriter().println(servletName + ": player " + 
 							user.getEmail() + " isn't in game " + gameId);
 					return;
 				}
@@ -61,11 +70,11 @@ public class GameTimeWinServlet extends HttpServlet {
 					
 					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					winPayload.put("Result", "Won");
+					winPayload.put("Result", winValue.toString());
 					
 					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					losePayload.put("Result", "Lost");
+					losePayload.put("Result", loseValue.toString());
 					
 					tg = DSCommon.GetTimeGameById(gameId);
 					
@@ -88,10 +97,10 @@ public class GameTimeWinServlet extends HttpServlet {
 				}
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
-				response.getWriter().println("GameTimeWinServlet: " + e.getMessage());
+				response.getWriter().println(servletName + ": " + e.getMessage());
 			} catch (ServletException e) {
 				response.addHeader("Error", "");
-				response.getWriter().println("GameTimeWinServlet: " + e.getMessage());
+				response.getWriter().println(servletName + ": " + e.getMessage());
 			}
 		}
 	}
