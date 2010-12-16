@@ -1,4 +1,4 @@
-package moishd.server.servlets;
+package moishd.server.servlets.game;
 
 import java.io.IOException;
 import java.util.HashMap;

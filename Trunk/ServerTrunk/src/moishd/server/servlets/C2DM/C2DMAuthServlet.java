@@ -1,4 +1,4 @@
-package moishd.server.servlets;
+package moishd.server.servlets.C2DM;
 
 import java.io.IOException;
 

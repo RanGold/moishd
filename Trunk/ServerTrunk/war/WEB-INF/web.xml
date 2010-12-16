@@ -7,7 +7,7 @@
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.LoginServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.test.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
@@ -15,7 +15,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>InsertUserServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.InsertUserServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.test.InsertUserServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>InsertUserServlet</servlet-name>
@@ -23,7 +23,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>DeleteUsersServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.DeleteUsersServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.test.DeleteUsersServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DeleteUsersServlet</servlet-name>
@@ -31,7 +31,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>CookieServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.CookieServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.test.CookieServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CookieServlet</servlet-name>
@@ -39,11 +39,27 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>C2DMAuthServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.C2DMAuthServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.C2DM.C2DMAuthServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>C2DMAuthServlet</servlet-name>
 		<url-pattern>/cron/C2DMAuth</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>RegisterServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.C2DM.RegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RegisterServlet</servlet-name>
+		<url-pattern>/RegisterUser</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>UnRegisterServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.C2DM.UnRegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UnRegisterServlet</servlet-name>
+		<url-pattern>/UnregisterUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GetAllUsersServlet</servlet-name>
@@ -52,22 +68,6 @@
 	<servlet-mapping>
 		<servlet-name>GetAllUsersServlet</servlet-name>
 		<url-pattern>/GetAllUsers</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>RegisterServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.RegisterServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RegisterServlet</servlet-name>
-		<url-pattern>/RegisterUser</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>UnRegisterServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.UnRegisterServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>UnRegisterServlet</servlet-name>
-		<url-pattern>/UnregisterUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>UserLoginServlet</servlet-name>
@@ -79,7 +79,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>InviteToTimeGameServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.InviteToTimeGameServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.InviteToTimeGameServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>InviteToTimeGameServlet</servlet-name>
@@ -87,7 +87,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GetTimeGameInitiatorServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.GetTimeGameInitiatorServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.GetTimeGameInitiatorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GetTimeGameInitiatorServlet</servlet-name>
@@ -95,7 +95,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>TimeGameInvReplyServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.TimeGameInvReplyServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.TimeGameInvReplyServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>TimeGameInvReplyServlet</servlet-name>
@@ -103,7 +103,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GameTimeWinServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.GameTimeWinServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.GameTimeWinServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GameTimeWinServlet</servlet-name>

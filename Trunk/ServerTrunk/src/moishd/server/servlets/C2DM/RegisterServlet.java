@@ -1,4 +1,4 @@
-package moishd.server.servlets;
+package moishd.server.servlets.C2DM;
 
 import java.io.IOException;
 
@@ -6,24 +6,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.reflect.TypeToken;
 
-public class GetTimeGameInitiatorServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3337103676796125760L;
+	private static final long serialVersionUID = -8439643553907371646L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
-	throws IOException{
+	throws IOException {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 
@@ -32,15 +33,20 @@ public class GetTimeGameInitiatorServlet extends HttpServlet {
 			response.getWriter().println("Error: no logged in user");
 		} else {
 			try {
-				DSCommon.GetUserByGoogleId(user.getEmail());
+				ClientMoishdUser clientUser = 
+					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
+							new TypeToken<ClientMoishdUser>(){}.getType());
 
-				String gameId = request.getReader().readLine();
-				TimeGame tg = DSCommon.GetTimeGameByIdRecId(gameId, user.getEmail());
-				MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
-				GsonCommon.WriteJsonToResponse(muser, response);
+				MoishdUser muser = DSCommon.GetUserByGoogleId(user.getEmail());
+				muser.setRegisterID(clientUser.getRegisterID());
+				muser.setRegistered(true);
+				muser.SaveChanges();
+			} catch (ClassNotFoundException e) {
+				response.addHeader("Error", "");
+				response.getWriter().println("RegisterServlet: " + e.getMessage());
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
-				response.getWriter().println("GetTimeGameInitiatorServlet: " + e.getMessage());
+				response.getWriter().println("RegisterServlet: " + e.getMessage());
 			}
 		}
 	}

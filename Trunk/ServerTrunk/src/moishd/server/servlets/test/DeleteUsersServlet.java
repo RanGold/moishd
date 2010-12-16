@@ -1,4 +1,4 @@
-package moishd.server.servlets;
+package moishd.server.servlets.test;
 
 import java.io.IOException;
 
