@@ -36,12 +36,12 @@ public class ServerCommunication {
 	//when change - change also in ServerRequest
 
 	public static int registerC2DMToServer(ClientMoishdUser user){
-		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.UserRegistration, null);
+		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, null);
 		return resp.getStatusLine().getStatusCode();
 	}
 	
 	public static int unregisterC2DMToServer(){
-		HttpResponse resp = activateServlet(ServletNamesEnum.UserUnregistration);
+		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser);
 		return resp.getStatusLine().getStatusCode();
 	}
 
@@ -92,7 +92,7 @@ public class ServerCommunication {
 	@SuppressWarnings("unchecked")
 	public static List<ClientMoishdUser> getFacebookFriends(String authString){
 
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetFacebookFriends, null, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetFriendUsers, null, authString);
 		try {
 			InputStream contentStream = response.getEntity().getContent();
 			if (response.containsHeader("Error")){

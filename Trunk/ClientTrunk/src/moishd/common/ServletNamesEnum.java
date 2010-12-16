@@ -4,14 +4,15 @@ public enum ServletNamesEnum {
 
 	UserLogin("UserLogin"),
 	GetAllUsers("GetAllUsers"),
-	GetFacebookFriends("GetFacebookFriends"),
+	GetFriendUsers("GetFriendUsers"),
+	GetNearbyUsers("GetNearbyUsers"),
 	InviteUser("InviteUser"),
 	GetTimeGameInitiator("GetTimeGameInitiator"),
 	GameWin("GameWin"),
 	GameLose("GameLose"),
 	InvitationResponse("InvitationResponse"),
-	UserRegistration("RegisterUser"),
-	UserUnregistration("UnRegister");
+	RegisterUser("RegisterUser"),
+	UnregisterUser("UnregisterUser");
 	
 	private String name;
 
