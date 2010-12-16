@@ -86,10 +86,16 @@ public class ServerRequest  {
 	}
 
 	public HttpResponse doPost(HttpPost post) throws ClientProtocolException, IOException {
+		if (!this.GetCookie()) {
+			throw new ClientProtocolException("Error getting cookie");
+		}
 		return http_client.execute(post);
 	}
 	
 	public HttpResponse doGet(HttpGet get) throws ClientProtocolException, IOException {
+		if (!this.GetCookie()) {
+			throw new ClientProtocolException("Error getting cookie");
+		}
 		return http_client.execute(get);
 	}
 }
