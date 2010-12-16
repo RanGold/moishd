@@ -52,11 +52,16 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 					if (invReply.equals("Decline")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameDeclined.toString(), payload);
-					} else if (invReply.equals("Accept")) {
+					} else if (invReply.equals("AcceptTruth")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGame.toString(), payload);
+								C2DMCommon.Actions.StartGameTruth.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGame.toString(), payload);
+								C2DMCommon.Actions.StartGameTruth.toString(), payload);
+					} else if (invReply.equals("AcceptDare")) {
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDare.toString(), payload);
+						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDare.toString(), payload);
 					} else {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameCanceled.toString(), payload);
