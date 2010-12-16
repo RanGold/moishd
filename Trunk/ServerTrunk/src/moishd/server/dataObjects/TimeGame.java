@@ -3,13 +3,10 @@ package moishd.server.dataObjects;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import moishd.server.common.PMF;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -133,14 +130,7 @@ public class TimeGame extends CommonJDO implements Serializable {
 	
 	@Override
 	public void SaveChanges() {
+		this.setGameLongId(this.getGameId().getId());
 		super.SaveChanges();
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		try {
-			this.setGameLongId(this.getGameId().getId());
-			pm.makePersistent(this);
-		}
-		finally {
-			pm.close();
-		}
 	}
 }

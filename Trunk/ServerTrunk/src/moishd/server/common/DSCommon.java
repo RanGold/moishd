@@ -10,6 +10,7 @@ import javax.jdo.Query;
 
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.dataObjects.C2DMAuth;
+import moishd.server.dataObjects.CommonJDO;
 import moishd.server.dataObjects.MoishdUser;
 import moishd.server.dataObjects.TimeGame;
 
@@ -97,6 +98,18 @@ public class DSCommon {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static List<C2DMAuth> GetAllC2DMAuth() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			return (List<C2DMAuth>) 
+			(pm.detachCopyAll((List<C2DMAuth>)
+					pm.newQuery(C2DMAuth.class).execute()));
+		} finally {
+			pm.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static C2DMAuth GetC2DMAuth() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
@@ -114,7 +127,12 @@ public class DSCommon {
 	}
 	
 	public static void SetC2DMAuth(String newAuth) {
-		C2DMAuth auth = GetC2DMAuth();
+		C2DMAuth auth;
+		if (GetAllC2DMAuth().size() > 0) { 
+			auth = GetC2DMAuth();
+		} else {
+			auth = new C2DMAuth();
+		}
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
@@ -238,4 +256,16 @@ public class DSCommon {
 					field.getName(), macAddresses);
 		}
 	}
+	
+	public static void SaveChanges(CommonJDO jdoObject) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.makePersistent(jdoObject);
+		}
+		finally {
+			pm.close();
+		}
+	}
+	
+	
 }

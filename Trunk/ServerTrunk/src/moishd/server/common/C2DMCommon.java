@@ -12,7 +12,6 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
 
 import moishd.server.dataObjects.C2DMAuth;
@@ -88,65 +87,61 @@ public class C2DMCommon {
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static String getAuthToken(Boolean getCurrent) throws ServletException, IOException {
 		if (getCurrent) {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			try {
-				return (((List<C2DMAuth>) pm.newQuery(C2DMAuth.class).execute())
-						.get(0)).getAuthKey();
-			} finally {
-				pm.close();
+			List<C2DMAuth> auths = DSCommon.GetAllC2DMAuth();
+			if (auths.size() > 0) {
+				return auths.get(0).getAuthKey();
 			}
-		} else {
-			HttpURLConnection connection = null;
-			URL url = null;
-			try {
-				url = new URL("https://www.google.com/accounts/ClientLogin");
-			} catch (MalformedURLException e) {
-				throw new ServletException(e.getCause());
-			}
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-			connection.setRequestProperty("Content-Type",
-			"application/x-www-form-urlencoded");
-
-			StringBuilder sb = new StringBuilder();
-
-			addEncodedParameter(sb, "accountType", "GOOGLE");
-			addEncodedParameter(sb, "Email", "app.moishd@gmail.com");
-			addEncodedParameter(sb, "Passwd", "moishdapp123");
-			addEncodedParameter(sb, "service", "ac2dm");
-			addEncodedParameter(sb, "source", "moishdVer1");
-			String data = sb.toString();
-
-			DataOutputStream stream = new DataOutputStream(
-					connection.getOutputStream());
-			stream.writeBytes(data);
-			stream.flush();
-			stream.close();
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-
-			String line;
-			String tokenIdentifier = "Auth=";
-			String errorIdentifier = "Error=";
-			String token = null;
-			StringBuilder errors = new StringBuilder();
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith(tokenIdentifier)) {
-					token = line.substring(tokenIdentifier.length());
-				} else if (line.startsWith(errorIdentifier)) {
-					String error = line.substring(errorIdentifier.length());
-					errors.append(error + System.getProperty("line.separator"));
-				}
-			}
-			reader.close();
-
-			return token;
+		} 	
+			
+		HttpURLConnection connection = null;
+		URL url = null;
+		try {
+			url = new URL("https://www.google.com/accounts/ClientLogin");
+		} catch (MalformedURLException e) {
+			throw new ServletException(e.getCause());
 		}
+		connection = (HttpURLConnection) url.openConnection();
+		connection.setDoOutput(true);
+		connection.setUseCaches(false);
+		connection.setRequestProperty("Content-Type",
+		"application/x-www-form-urlencoded");
+
+		StringBuilder sb = new StringBuilder();
+
+		addEncodedParameter(sb, "accountType", "GOOGLE");
+		addEncodedParameter(sb, "Email", "app.moishd@gmail.com");
+		addEncodedParameter(sb, "Passwd", "moishdapp123");
+		addEncodedParameter(sb, "service", "ac2dm");
+		addEncodedParameter(sb, "source", "moishdVer1");
+		String data = sb.toString();
+
+		DataOutputStream stream = new DataOutputStream(
+				connection.getOutputStream());
+		stream.writeBytes(data);
+		stream.flush();
+		stream.close();
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				connection.getInputStream()));
+
+		String line;
+		String tokenIdentifier = "Auth=";
+		String errorIdentifier = "Error=";
+		String token = null;
+		StringBuilder errors = new StringBuilder();
+		while ((line = reader.readLine()) != null) {
+			if (line.startsWith(tokenIdentifier)) {
+				token = line.substring(tokenIdentifier.length());
+			} else if (line.startsWith(errorIdentifier)) {
+				String error = line.substring(errorIdentifier.length());
+				errors.append(error + System.getProperty("line.separator"));
+			}
+		}
+		reader.close();
+
+		return token;
 	}
 
 	private static void addEncodedParameter(StringBuilder sb, String name,
