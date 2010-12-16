@@ -43,7 +43,7 @@ public class ServerRequest  {
 	public boolean DoesHaveCookie(){
 		for(Cookie cookie : http_client.getCookieStore().getCookies()) {
 			if(cookie.getName().equals("ACSID"))
-				return (cookie.getExpiryDate().before(new Date()));
+				return (cookie.getExpiryDate().after(new Date()));
 		}
 		
 		return false;
