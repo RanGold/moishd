@@ -20,13 +20,13 @@ import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class ServerCommunication {
@@ -73,7 +73,8 @@ public class ServerCommunication {
 					ObjectInputStream ois = new ObjectInputStream(contentStream);
 					try {
 						String json = (String) ois.readObject();
-						Gson g = new Gson();
+						//Gson g = new Gson();
+						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						e1.printStackTrace();
