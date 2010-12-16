@@ -103,7 +103,8 @@ public class ServerCommunication {
 					ObjectInputStream ois = new ObjectInputStream(contentStream);
 					try {
 						String json = (String) ois.readObject();
-						Gson g = new Gson();
+						//Gson g = new Gson();
+						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						e1.printStackTrace();
@@ -151,7 +152,8 @@ public class ServerCommunication {
 					ObjectInputStream ois = new ObjectInputStream(contentStream);
 					try {
 						String json = (String) ois.readObject();
-						Gson g = new Gson();
+						//Gson g = new Gson();
+						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 						return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
 					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
@@ -254,7 +256,8 @@ public class ServerCommunication {
 			HttpPost postMethod = new HttpPost(uri);
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Gson g = new Gson();
+			//Gson g = new Gson();
+			Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 			String json = g.toJson(obj);
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(json);
