@@ -28,27 +28,7 @@ public class TruthPart extends Activity {
 			{"Is 'Was it a rat I saw' a palindrome?", "yes"}
 		};
 	
-	public void currectAnswer(){
-	
-		Toast.makeText(TruthPart.this, 
-				"please wait for result", 
-				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		ServerCommunication.sendWinToServer(gameId, authString);
-		finish();
-	}
-		
 
-	public void wrongAnswer(){
-		Toast.makeText(TruthPart.this, 
-				"please wait for result", 
-				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		ServerCommunication.sendLoseToServer(gameId, authString);
-		finish();
-	}
 
 	private void RunAnimations() {     
 		Animation a = AnimationUtils.loadAnimation(this, R.anim.animation4);     
@@ -118,5 +98,27 @@ public class TruthPart extends Activity {
 
 
 
+	}
+	
+	public void currectAnswer(){
+		
+		Toast.makeText(TruthPart.this, 
+				"please wait for result", 
+				Toast.LENGTH_LONG).show();
+		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
+		ServerCommunication.sendWinToServer(gameId, authString);
+		finish();
+	}
+		
+
+	public void wrongAnswer(){
+		Toast.makeText(TruthPart.this, 
+				"please wait for result", 
+				Toast.LENGTH_LONG).show();
+		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
+		ServerCommunication.sendLoseToServer(gameId, authString);
+		finish();
 	}
 }
