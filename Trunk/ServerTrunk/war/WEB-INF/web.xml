@@ -67,7 +67,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>UnRegisterServlet</servlet-name>
-		<url-pattern>/UnRegister</url-pattern>
+		<url-pattern>/UnregisterUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>UserLoginServlet</servlet-name>
@@ -107,7 +107,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GameTimeWinServlet</servlet-name>
-		<url-pattern>/GameTimeWin</url-pattern>
+		<url-pattern>/GameWin</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>GetFriendUsersServlet</servlet-name>
