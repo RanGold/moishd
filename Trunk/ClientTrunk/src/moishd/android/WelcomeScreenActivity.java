@@ -178,7 +178,7 @@ public class WelcomeScreenActivity extends Activity{
 		public void onLogoutBegin() {
 		}
 
-		public void onLogoutFinish() {
+		public void onLogoutFinish() {//TODO check if we can use this method... maybe to unregister C2DM
 		}
 	}
 
@@ -194,9 +194,9 @@ public class WelcomeScreenActivity extends Activity{
 
 				ClientMoishdUser newUser = new ClientMoishdUser();
 				newUser.setUserNick(userName);
-				//newUser.setFacebookID(userId);
+				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
-
+				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 
@@ -204,7 +204,7 @@ public class WelcomeScreenActivity extends Activity{
 					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);
 				}
-				//if registration fails, need to logout the user, show an error message and quit.
+				//TODO if registration fails, need to logout the user, show an error message and quit.
 
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");

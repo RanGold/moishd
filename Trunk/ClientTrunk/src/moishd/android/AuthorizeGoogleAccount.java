@@ -20,6 +20,8 @@ import android.os.Bundle;
 public class AuthorizeGoogleAccount extends Activity {
 	
 	boolean firstTime = true;
+	private AccountManagerFuture<Bundle> bundle;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,7 @@ public class AuthorizeGoogleAccount extends Activity {
 		AccountManager accountManager = AccountManager.get(getApplicationContext());
 		Account account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
 
-		accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
+		bundle = accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
 	}
 
 	protected void onResume(){
@@ -39,9 +41,23 @@ public class AuthorizeGoogleAccount extends Activity {
 			firstTime = false;
 		}
 		else{
-			Intent resultIntent = new Intent();
-			setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
-			finish();
+			try {
+				Bundle result = bundle.getResult();
+				if (result!=null){
+					String authToken = result.getString(AccountManager.KEY_AUTHTOKEN);
+					if (authToken == null){
+						Intent resultIntent = new Intent();
+						setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+						finish();
+					}
+				}
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (AuthenticatorException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
