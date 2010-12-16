@@ -3,6 +3,8 @@ package moishd.android;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,11 +44,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 	
@@ -55,6 +58,31 @@ public class AllOnlineUsersActivity extends Activity {
 	private ListView list;
 	private AsyncFacebookRunner asyncRunner;
 	private static List<ClientMoishdUser> moishdUsers;
+	
+//	private LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+//	
+//	private Timer timer;
+//
+//    public Reminder(int seconds) {
+//        timer = new Timer();
+//        timer.schedule(new RemindTask(), seconds*1000);
+//	}
+//
+//    class RemindTask extends TimerTask {
+//        public void run() {
+//            Location location = locationManager.
+//            timer.cancel(); //Terminate the timer thread
+//        }
+//    }
+//
+//    public static void main(String args[]) {
+//        new Reminder(5);
+//        System.out.format("Task scheduled.%n");
+//    }
+//	
+//	
+//	
+//	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
