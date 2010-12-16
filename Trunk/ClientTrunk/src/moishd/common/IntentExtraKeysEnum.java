@@ -6,6 +6,7 @@ public enum IntentExtraKeysEnum {
 	GoogleAuthToken("GoogleAuthToken"),
 	PushGameId("GameId"),
 	PushAction("Action"),
+	GameType("GameType"),
 	PushGameResult("Result");
 	
 	private String name;

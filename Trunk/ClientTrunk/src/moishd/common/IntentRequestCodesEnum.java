@@ -6,7 +6,8 @@ public enum IntentRequestCodesEnum {
 	
 	PickGoogleAccount(0),
 	GetGoogleAccountToken(1),
-	FacebookAuth(Facebook.DEFAULT_AUTH_ACTIVITY_CODE);
+	FacebookAuth(Facebook.DEFAULT_AUTH_ACTIVITY_CODE),
+	GetChosenGame(2);
 	
 	private int requestCode;
 
