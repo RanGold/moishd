@@ -20,15 +20,24 @@ public class DeleteUsersServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		if (UserServiceFactory.getUserService().isUserLoggedIn()
-				&& UserServiceFactory.getUserService().isUserAdmin()) {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			try {
-				pm.newQuery(MoishdUser.class).deletePersistentAll();
-			} finally {
-				pm.close();
+		if (!UserServiceFactory.getUserService().isUserLoggedIn()) {
+			response.sendRedirect("/LoginServlet");
+		} else {
+			if (!UserServiceFactory.getUserService().isUserAdmin()) {
+				response.getWriter().println("<p>" +
+	                    "You need to be admin to delete users.</p>");
+				response.getWriter().println("<p>" +
+	                    "<a href=\"/" +
+	                    "\">Return Home</a>.</p>");
+			} else {
+				PersistenceManager pm = PMF.get().getPersistenceManager();
+				try {
+					pm.newQuery(MoishdUser.class).deletePersistentAll();
+				} finally {
+					pm.close();
+				}
+				response.sendRedirect("/");
 			}
-			response.sendRedirect("/");
 		}
 	}
 }
