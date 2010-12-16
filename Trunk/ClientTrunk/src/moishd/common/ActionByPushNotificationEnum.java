@@ -4,8 +4,8 @@ public enum ActionByPushNotificationEnum {
 
 	GameInvitation("GameInvitation"),
 	GameDeclined("GameDeclined"),
-	GameStartTruth("GameStartTruth"),
-	GameStartDare("GameStartDare"),
+	StartGameTruth("StartGameTruth"),
+	StartGameDare("StartGameDare"),
 	GameResult("GameResult");
 	
 	private String name;

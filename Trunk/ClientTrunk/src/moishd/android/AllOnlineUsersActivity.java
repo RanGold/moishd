@@ -413,10 +413,10 @@ public class AllOnlineUsersActivity extends Activity {
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
-			else if (action.equals(ActionByPushNotificationEnum.GameStartTruth.toString())){
+			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
 				startGameTruth();
 			}
-			else if (action.equals(ActionByPushNotificationEnum.GameStartDare.toString())){
+			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())){
 				startGameDare();
 			}
 			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
@@ -484,9 +484,6 @@ public class AllOnlineUsersActivity extends Activity {
 				
 				Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
 				startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
-				
-					
-				/*here to add a code- tammy*/
 				dialog.cancel();
 			}
 		})

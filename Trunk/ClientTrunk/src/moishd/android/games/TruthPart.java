@@ -3,6 +3,8 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
+import moishd.android.ServerCommunication;
+import moishd.common.IntentExtraKeysEnum;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +17,9 @@ import android.widget.Toast;
 
 public class TruthPart extends Activity {
 	int i;
-
+	String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+	String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
+	
 	final String[][] questions ={{"Is tammy's last name is Dagan?","yes"}, 
 			{"Is it 2012?","no"},
 			{"Is this the first milestone?","yes"},
@@ -27,15 +31,21 @@ public class TruthPart extends Activity {
 		};
 	
 	public void currectAnswer(){
+	
 		Toast.makeText(TruthPart.this, 
-				"good job", 
+				"please wait for result", 
 				Toast.LENGTH_LONG).show();
+		ServerCommunication.sendWinToServer(gameId, authString);
+		finish();
 	}
+		
 
 	public void wrongAnswer(){
 		Toast.makeText(TruthPart.this, 
-				"wrong answer!", 
+				"please wait for result", 
 				Toast.LENGTH_LONG).show();
+		ServerCommunication.sendLoseToServer(gameId, authString);
+		finish();
 	}
 
 	private void RunAnimations() {     
