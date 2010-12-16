@@ -1,15 +1,18 @@
 package moishd.android;
 
+import java.util.List;
+
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
+import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
@@ -28,6 +31,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +48,9 @@ public class WelcomeScreenActivity extends Activity{
 	protected static Facebook facebook;
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
+	
+	private Location location;
+	final String TAG = "LOCATION";
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,6 +61,27 @@ public class WelcomeScreenActivity extends Activity{
 		if (googleAuthString == null){
 			startGoogleAuth();
 		}
+
+		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		LocationListener locationListener = new LocationListener() {
+			public void onLocationChanged(Location location) {
+				// Called when a new location is found by the network location provider.
+				Log.d(TAG, "Got Location Changed");
+			}
+
+			public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+			public void onProviderEnabled(String provider) {}
+
+			public void onProviderDisabled(String provider) {}
+		};
+
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		Criteria criteria = new Criteria();
+		String bestProvider = locationManager.getBestProvider(criteria, true);
+		location = locationManager.getLastKnownLocation(bestProvider);
+		locationManager.removeUpdates(locationListener);
 
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
@@ -162,7 +193,7 @@ public class WelcomeScreenActivity extends Activity{
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
 
-		asyncRunner.request("me", new ProfileRequestListener());
+		asyncRunner.request("me", new ProfileRequestListener(location));
 	}
 
 	public class MoishdAuthListener implements AuthListener {
@@ -185,9 +216,16 @@ public class WelcomeScreenActivity extends Activity{
 
 	//listener for incoming HttpResponse containing user's Facebook profile. Continues registration process
 	public class ProfileRequestListener extends BaseRequestListener {
+		private Location location;
+		
+		
+		public ProfileRequestListener(Location location){
+			this.location = location;
+		}
 
 		public void onComplete(final String response) {
 			try {
+
 				JSONObject json = Util.parseJson(response);
 				final String userName = json.getString("name");
 				final String userId = json.getString("id");
@@ -198,7 +236,13 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
+
+//				ClientLocation loc = new ClientLocation(location.getLongitude(),location.getLatitude()) ;
+//				newUser.setLocation(loc);
+				
+
 				newUser.setLocation(new ClientLocation(0,0));
+
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 
