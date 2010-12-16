@@ -309,9 +309,12 @@ import java.net.URL;
 import java.util.List;
 
 import moishd.android.games.SimonPro;
+import moishd.android.games.TruthOrDare;
+import moishd.android.games.TruthPart;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.IntentRequestCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -410,8 +413,11 @@ public class AllOnlineUsersActivity extends Activity {
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
-			else if (action.equals(ActionByPushNotificationEnum.GameStart.toString())){
-				startGame();
+			else if (action.equals(ActionByPushNotificationEnum.GameStartTruth.toString())){
+				startGameTruth();
+			}
+			else if (action.equals(ActionByPushNotificationEnum.GameStartDare.toString())){
+				startGameDare();
 			}
 			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
@@ -424,6 +430,19 @@ public class AllOnlineUsersActivity extends Activity {
 	protected void onDestroy (){
 		super.onDestroy();
 		unregisterC2DM();
+	}
+	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
+			if (data.getStringExtra(IntentExtraKeysEnum.GameType.toString()).compareTo("Truth") == 0 )
+				sendInvitationResponse("AcceptTruth");
+			else
+				sendInvitationResponse("AcceptDare");
+			
+		}
 	}
 
 	private void inviteUserToMoishDialog(){
@@ -460,8 +479,14 @@ public class AllOnlineUsersActivity extends Activity {
 		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
 		.setCancelable(false)
 		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+			
 			public void onClick(DialogInterface dialog, int id) {
-				sendInvitationResponse("Accept");	
+				
+				Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
+				startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
+				
+					
+				/*here to add a code- tammy*/
 				dialog.cancel();
 			}
 		})
@@ -495,9 +520,15 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 
-	private void startGame(){
-
+	private void startGameDare(){
 		Intent intent = new Intent(this, SimonPro.class);
+		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+		startActivity(intent);
+	}
+	
+	private void startGameTruth(){
+		Intent intent = new Intent(this, TruthPart.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
