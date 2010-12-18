@@ -2,6 +2,7 @@ package moishd.android.games;
 
 import moishd.android.R; 
 import moishd.android.ServerCommunication;
+import moishd.common.IntentExtraKeysEnum;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,7 +37,7 @@ public class Example extends Activity{
 		 */
 		final String gameId = getIntent().getStringExtra("game_id");
 		final String authString = getIntent().getStringExtra("auth_string");
-		
+		final String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());		
 
 		/* Should be implemented every time a button is clickable.
 		 * Defines a new click listener for the click1 button.
@@ -57,7 +58,8 @@ public class Example extends Activity{
 						Toast.LENGTH_LONG).show();
 				
 				/* Sends a winning request to the server*/
-				ServerCommunication.sendWinToServer(gameId, authString);
+
+				ServerCommunication.sendWinToServer(gameId, authString,gameType);
 
 				finish();
 			}});

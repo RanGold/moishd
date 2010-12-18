@@ -15,12 +15,13 @@
  */
 package moishd.android;
 
+import moishd.android.games.FastClick;
+import moishd.android.games.Mixing;
 import moishd.android.games.SimonPro;
 import moishd.android.games.TruthPart;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -42,7 +43,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		
+		
 
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
@@ -66,18 +68,29 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.StartGameDare.toString());
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
+			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameResult.toString());
-			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
+			
+			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); /*why do we need this?*/
+			int placeToCut = resultWithGameType.indexOf(":");
+			String result = resultWithGameType.substring(0,placeToCut);
+			String gameType = resultWithGameType.substring(placeToCut+1);
+			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
 
+			
 			if (result.equals(PushNotificationTypeEnum.Won.toString())){
 				resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			}
 			else{
-				if (gameType.compareTo("Truth")==0)
+				if (gameType.equals("TruthGame"))
 					resultIntent.setClass(this, TruthPart.class);
-				else
+				else if (gameType.equals("SimonProGame"))
 					resultIntent.setClass(this, SimonPro.class);
+				else if (gameType.equals("MixingGame"))
+					resultIntent.setClass(this, Mixing.class);
+				else if (gameType.equals("FastClickGame"))
+					resultIntent.setClass(this, FastClick.class);
 			}
 		}
 		startActivity(resultIntent);

@@ -255,7 +255,8 @@ public class SimonPro extends Activity{
 				Toast.LENGTH_LONG).show();
 		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		ServerCommunication.sendWinToServer(gameId, authString);
+		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		ServerCommunication.sendWinToServer(gameId, authString, gameType);
 		finish();
 		
 	}

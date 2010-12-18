@@ -110,7 +110,8 @@ public class TruthPart extends Activity {
 				Toast.LENGTH_LONG).show();
 		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		ServerCommunication.sendWinToServer(gameId, authString);
+		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		ServerCommunication.sendLoseToServer(gameId, authString,gameType);
 		finish();
 	}
 		
@@ -121,7 +122,8 @@ public class TruthPart extends Activity {
 				Toast.LENGTH_LONG).show();
 		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		ServerCommunication.sendLoseToServer(gameId, authString);
+		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		ServerCommunication.sendLoseToServer(gameId, authString,gameType);
 		finish();
 	}
 	

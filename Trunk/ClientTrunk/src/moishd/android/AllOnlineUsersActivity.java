@@ -279,7 +279,7 @@ public class AllOnlineUsersActivity extends Activity {
 		Intent intent = new Intent(this, SimonPro.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "Dare");
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "SimonProGame");
 		startActivity(intent);
 	}
 	
@@ -287,7 +287,7 @@ public class AllOnlineUsersActivity extends Activity {
 		Intent intent = new Intent(this, TruthPart.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "Truth");
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "TruthGame");
 		startActivity(intent);
 	}
 

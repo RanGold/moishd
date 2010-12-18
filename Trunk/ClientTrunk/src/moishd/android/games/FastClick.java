@@ -6,6 +6,7 @@ import java.util.Random;
 
 import moishd.android.R;
 import moishd.android.ServerCommunication;
+import moishd.common.IntentExtraKeysEnum;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -90,7 +91,8 @@ public class FastClick extends Activity{
 					Toast.LENGTH_LONG).show();
 			String gameId = getIntent().getStringExtra("game_id");
 			String authString = getIntent().getStringExtra("auth_string");
-			ServerCommunication.sendWinToServer(gameId, authString);
+			String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
+			ServerCommunication.sendWinToServer(gameId, authString,gameType);
 			finish();
 
 		}
