@@ -111,7 +111,7 @@ public class TruthPart extends Activity {
 		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		ServerCommunication.sendLoseToServer(gameId, authString,gameType);
+		ServerCommunication.sendWinToServer(gameId, authString,gameType);
 		finish();
 	}
 		
