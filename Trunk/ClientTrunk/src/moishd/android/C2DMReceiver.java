@@ -75,13 +75,22 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			int placeToCut = resultWithGameType.indexOf(":");
 			String result = resultWithGameType.substring(0,placeToCut);
 			String gameType = resultWithGameType.substring(placeToCut+1);
+			String resultForPush = result;
+			
+			if (result.equals("LostFirst")) 
+				result = "Lost";
+			
+			else if(result.equals("WonSecond"))
+				result="Won";
 			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
 
 			
-			if (result.equals(PushNotificationTypeEnum.Won.toString())){
+			if (resultForPush.equals(PushNotificationTypeEnum.LostFirst.toString()) ||
+					resultForPush.equals(PushNotificationTypeEnum.Won.toString())){
 				resultIntent.setClass(this, AllOnlineUsersActivity.class);			
 			}
+			
 			else{
 				if (gameType.equals("TruthGame"))
 					resultIntent.setClass(this, TruthPart.class);

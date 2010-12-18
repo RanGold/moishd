@@ -8,7 +8,9 @@ public enum PushNotificationTypeEnum {
 	StartGameDare("StartGameDare"),
 	GameResult("GameResult"),
 	Won("Won"),
-	Lost("Lost");
+	Lost("Lost"),
+	LostFirst("LostFirst"),
+	WonSecond("WonSecond");
 
 	private String name;
 
