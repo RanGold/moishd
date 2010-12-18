@@ -16,9 +16,11 @@
 package moishd.android;
 
 import moishd.android.games.SimonPro;
+import moishd.android.games.TruthPart;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		String gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
@@ -71,7 +74,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 				resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			}
 			else{
-				resultIntent.setClass(this, SimonPro.class);
+				if (gameType.compareTo("Truth")==0)
+					resultIntent.setClass(this, TruthPart.class);
+				else
+					resultIntent.setClass(this, SimonPro.class);
 			}
 		}
 		startActivity(resultIntent);
