@@ -80,7 +80,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 			
 			if (result.equals(PushNotificationTypeEnum.Won.toString())){
-				resultIntent.setClass(this, AllOnlineUsersActivity.class);
+				resultIntent.setClass(this, AllOnlineUsersActivity.class);			
 			}
 			else{
 				if (gameType.equals("TruthGame"))
