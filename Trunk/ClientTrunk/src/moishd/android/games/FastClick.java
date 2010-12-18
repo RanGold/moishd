@@ -7,7 +7,11 @@ import java.util.Random;
 import moishd.android.R;
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -158,7 +162,25 @@ public class FastClick extends Activity{
 				OnClickGeneral();
 
 			}});
-}
+	}
 
+	@Override
+	protected void onNewIntent (Intent intent){
+		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
+		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
+			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("You've " + result + "!")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			AlertDialog alert = builder.create();  
+			alert.show();
+		}
+	}
 
 }
