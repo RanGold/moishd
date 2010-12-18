@@ -38,24 +38,25 @@ public class UserLoginServlet extends HttpServlet {
 					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
 							new TypeToken<ClientMoishdUser>(){}.getType());
 				
+				MoishdUser muser;
+				
 				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
-					MoishdUser muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
+					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
 							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress());
-					muser.setLocation(new Location(newUser.getLocation().getxCoordinate(), 
-							newUser.getLocation().getyCoordinate()));
-					muser.SaveChanges();
 				} else {
-					MoishdUser curUser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
-					if (!curUser.getFacebookID().equals(newUser.getFacebookID())) {
+					muser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
+					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
 						response.addHeader("Error", "");
 						response.getWriter().println("UserLoginServlet: facebook id given " + 
 								"differes from the database version");
 						return;
 					}
-					
-					curUser.setMACAddress(newUser.getMACAddress());
-					curUser.SaveChanges();
 				}
+				
+				muser.setMACAddress(newUser.getMACAddress());
+				muser.setLocation(new Location(newUser.getLocation().getxCoordinate(), 
+						newUser.getLocation().getyCoordinate()));
+				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
 				response.getWriter().println("UserLoginServlet: " + e.getMessage());
