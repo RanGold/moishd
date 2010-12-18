@@ -10,6 +10,7 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
@@ -38,8 +39,11 @@ public class UserLoginServlet extends HttpServlet {
 							new TypeToken<ClientMoishdUser>(){}.getType());
 				
 				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
-					(new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
-							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress())).SaveChanges();
+					MoishdUser muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
+							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress());
+					muser.setLocation(new Location(newUser.getLocation().getxCoordinate(), 
+							newUser.getLocation().getyCoordinate()));
+					muser.SaveChanges();
 				} else {
 					MoishdUser curUser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
 					if (!curUser.getFacebookID().equals(newUser.getFacebookID())) {

@@ -45,7 +45,9 @@ public class GameResultServlet extends HttpServlet {
 		} else {
 			try {
 				Date endDate = new Date();
-				String gameId = request.getReader().readLine();
+				String input = request.getReader().readLine();
+				String gameId = input.split(":")[0];
+				String gameType = input.split(":")[1];
 				TimeGame tg = DSCommon.GetTimeGameById(gameId);
 				if (tg.getPlayerInitId().equals(user.getEmail())) {
 					tg.setPlayerInitEndTime(endDate);
@@ -70,11 +72,11 @@ public class GameResultServlet extends HttpServlet {
 					
 					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					winPayload.put("Result", winValue.toString());
+					winPayload.put("Result", winValue.toString() + ":" + gameType);
 					
 					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					losePayload.put("Result", loseValue.toString());
+					losePayload.put("Result", loseValue.toString() + ":" + gameType);
 					
 					tg = DSCommon.GetTimeGameById(gameId);
 					
@@ -105,3 +107,4 @@ public class GameResultServlet extends HttpServlet {
 		}
 	}
 }
+

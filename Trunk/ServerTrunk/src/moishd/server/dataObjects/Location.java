@@ -23,15 +23,15 @@ public class Location extends CommonJDO implements Serializable {
     private Key locationId;
 
     @Persistent
-    private int xCoordinate;
+    private double xCoordinate;
     
     @Persistent
-    private int yCoordinate;
+    private double yCoordinate;
     
     @Persistent(mappedBy = "location")
     private MoishdUser moishdUser;
     
-	public Location(int xCoordinate, int yCoordinate) {
+	public Location(double xCoordinate, double yCoordinate) {
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
 	}
@@ -40,19 +40,19 @@ public class Location extends CommonJDO implements Serializable {
 		return (new ClientLocation(this.getxCoordinate(),this.getyCoordinate()));
 	}
 
-	public int getxCoordinate() {
+	public double getxCoordinate() {
 		return xCoordinate;
 	}
 
-	public void setxCoordinate(int xCoordinate) {
+	public void setxCoordinate(double xCoordinate) {
 		this.xCoordinate = xCoordinate;
 	}
 
-	public int getyCoordinate() {
+	public double getyCoordinate() {
 		return yCoordinate;
 	}
 
-	public void setyCoordinate(int yCoordinate) {
+	public void setyCoordinate(double yCoordinate) {
 		this.yCoordinate = yCoordinate;
 	}
 
