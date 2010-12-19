@@ -32,11 +32,12 @@ public class Example extends Activity{
 		Button click1=(Button) findViewById(R.id.clickOnMe1);
 		Button click2=(Button) findViewById(R.id.clickOnMe2);
 
-		/*These 2 lines should be written in every activity.
+		/*These 3 lines should be written in every activity.
 		 * Will be used as the user has finished his game.
 		 */
-		final String gameId = getIntent().getStringExtra("game_id");
-		final String authString = getIntent().getStringExtra("auth_string");
+
+		final String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+		final String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		final String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());		
 
 		/* Should be implemented every time a button is clickable.
