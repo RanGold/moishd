@@ -30,7 +30,11 @@ public class C2DMCommon {
 		GameCanceled,
 		GameDeclined,
 		StartGameTruth,
-		StartGameDare
+		StartGameDareSimonPro,
+		StartGameDareMixing,
+		StartGameDareFastClick
+		
+		
 	}
 	
 	 private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());

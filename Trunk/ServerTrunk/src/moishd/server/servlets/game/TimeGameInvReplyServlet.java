@@ -57,11 +57,22 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 								C2DMCommon.Actions.StartGameTruth.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 								C2DMCommon.Actions.StartGameTruth.toString(), payload);
-					} else if (invReply.equals("AcceptDare")) {
+					} else if (invReply.equals("AcceptDareSimonPro" )) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDare.toString(), payload);
+								C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDare.toString(), payload);
+								C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
+					} else if (invReply.equals("AcceptDareMixing" )) {
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
+						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
+					} else if (invReply.equals("AcceptDareFastClick" )) {
+						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
+						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
+											
 					} else {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameCanceled.toString(), payload);
