@@ -1,6 +1,8 @@
 package moishd.android.games;
 
 
+import java.util.Random;
+
 import moishd.android.R;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
@@ -13,6 +15,7 @@ import android.widget.Button;
 
 public class TruthOrDare extends Activity{
 	String gameType;
+	int numberOfDareGames = 3;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -22,14 +25,26 @@ public class TruthOrDare extends Activity{
 		
 		truth.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				gameType = "Truth";
+				gameType = IntentExtraKeysEnum.Truth.toString();
 				returnGameTypeToCallingActivity(gameType);
 			}
 		});
 		
 		dare.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				gameType = "Dare";
+				Random random = new Random();  
+				int i = random.nextInt(100);
+				
+				i = i % numberOfDareGames;
+				if (i==0)
+					gameType = IntentExtraKeysEnum.DareSimonPro.toString();
+					
+				else if (i==1)
+					gameType = IntentExtraKeysEnum.DareMixing.toString();
+					
+				else
+					gameType = IntentExtraKeysEnum.DareFastClick.toString();
+					
 				returnGameTypeToCallingActivity(gameType);
 			}
 		});
@@ -39,12 +54,7 @@ public class TruthOrDare extends Activity{
 	
 	private void returnGameTypeToCallingActivity(String gameType){
 		Intent GameTypeIntent = new Intent();
-		if (gameType.compareTo("Truth")==0)
-			GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), "Truth");
-		
-		else
-			GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), "Dare");
-		
+		GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 		setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
 		finish();		
 	}

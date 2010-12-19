@@ -7,7 +7,11 @@ public enum IntentExtraKeysEnum {
 	PushGameId("GameId"),
 	PushAction("Action"),
 	GameType("GameType"),
-	PushGameResult("Result");
+	PushGameResult("Result"),
+	Truth("Truth"),
+	DareSimonPro("DareSimonPro"),
+	DareMixing("DareMixing"),
+	DareFastClick("DareFastClick");
 	
 	private String name;
 

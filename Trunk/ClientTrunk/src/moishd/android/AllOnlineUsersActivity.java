@@ -3,17 +3,13 @@ package moishd.android;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import moishd.android.WelcomeScreenActivity.ProfileRequestListener;
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.Util;
+import moishd.android.games.FastClick;
+import moishd.android.games.Mixing;
 import moishd.android.games.SimonPro;
 import moishd.android.games.TruthOrDare;
 import moishd.android.games.TruthPart;
@@ -22,6 +18,10 @@ import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -33,7 +33,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -44,16 +43,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 	
 	protected String authToken;
 	protected String game_id;
+	protected String gameType;
 	protected int currentClickPosition;
 	private ListView list;
 	private AsyncFacebookRunner asyncRunner;
@@ -153,6 +153,7 @@ public class AllOnlineUsersActivity extends Activity {
 		
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
+		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
@@ -165,9 +166,10 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
 				startGameTruth();
 			}
-			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())){
+			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
 				startGameDare();
 			}
+			
 			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 				gameResultDialog(result);
@@ -185,10 +187,9 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
-			if (data.getStringExtra(IntentExtraKeysEnum.GameType.toString()).compareTo("Truth") == 0 )
-				sendInvitationResponse("AcceptTruth");
-			else
-				sendInvitationResponse("AcceptDare");
+			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+			sendInvitationResponse("Accept" + gameType);
+
 			
 		}
 	}
@@ -276,10 +277,16 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void startGameDare(){
-		Intent intent = new Intent(this, SimonPro.class);
+		Intent intent;
+		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
+			 intent = new Intent(this, SimonPro.class);
+		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
+			 intent = new Intent(this, Mixing.class);
+		else //TODO right now else case is fast click.
+			intent = new Intent(this, FastClick.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "SimonProGame");
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 		startActivity(intent);
 	}
 	
@@ -287,7 +294,7 @@ public class AllOnlineUsersActivity extends Activity {
 		Intent intent = new Intent(this, TruthPart.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), "TruthGame");
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), IntentExtraKeysEnum.Truth.toString());
 		startActivity(intent);
 	}
 

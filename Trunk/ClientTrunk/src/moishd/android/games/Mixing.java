@@ -167,8 +167,8 @@ public class Mixing extends Activity{
 					Toast.makeText(Mixing.this, 
 							"please wait for result", 
 							Toast.LENGTH_LONG).show();
-					String gameId = getIntent().getStringExtra("game_id");
-					String authString = getIntent().getStringExtra("auth_string");
+					String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+					String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 					String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 					ServerCommunication.sendWinToServer(gameId, authString, gameType);
 					finish();

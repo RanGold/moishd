@@ -6,6 +6,10 @@ public enum ActionByPushNotificationEnum {
 	GameDeclined("GameDeclined"),
 	StartGameTruth("StartGameTruth"),
 	StartGameDare("StartGameDare"),
+	StartGameDareSimonPro("StartGameDareSimonPro"),
+	StartGameDareMixing("StartGameDareMixing"),
+	StartGameDareFastClick("StartGameDareFastClick"),
+
 	GameResult("GameResult");
 	
 	private String name;

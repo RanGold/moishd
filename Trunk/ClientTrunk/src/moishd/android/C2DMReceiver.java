@@ -43,6 +43,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
+
 		
 		
 
@@ -61,11 +62,16 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.StartGameTruth.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
 		}
 		
-		else if(action.equals(PushNotificationTypeEnum.StartGameDare.toString())){
+		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
+				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
+				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.StartGameDare.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
+			
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			
@@ -92,13 +98,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			}
 			
 			else{
-				if (gameType.equals("TruthGame"))
+				if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
 					resultIntent.setClass(this, TruthPart.class);
-				else if (gameType.equals("SimonProGame"))
+				else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
 					resultIntent.setClass(this, SimonPro.class);
-				else if (gameType.equals("MixingGame"))
+				else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
 					resultIntent.setClass(this, Mixing.class);
-				else if (gameType.equals("FastClickGame"))
+				else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 					resultIntent.setClass(this, FastClick.class);
 			}
 		}
