@@ -26,7 +26,7 @@ public class DeleteIrrelevantServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		if (!UserServiceFactory.getUserService().isUserLoggedIn()) {
-			response.sendRedirect("/test/LoginServlet");
+			response.sendRedirect("/test/Login");
 		} else {
 			if (!UserServiceFactory.getUserService().isUserAdmin()) {
 				response.getWriter().println("<p>" +

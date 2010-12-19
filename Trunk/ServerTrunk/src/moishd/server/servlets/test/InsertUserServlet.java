@@ -29,7 +29,7 @@ public class InsertUserServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
-			response.sendRedirect("/test/LoginServlet");
+			response.sendRedirect("/test/Login");
 		} else if (UserServiceFactory.getUserService().isUserAdmin()) {
 			MoishdUser muser = new MoishdUser(user.getNickname(), "adsasd", user.getEmail(), "1234", "5678", "9101");
 
