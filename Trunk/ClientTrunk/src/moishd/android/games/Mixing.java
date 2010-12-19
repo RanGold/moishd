@@ -170,7 +170,7 @@ public class Mixing extends Activity{
 					String gameId = getIntent().getStringExtra("game_id");
 					String authString = getIntent().getStringExtra("auth_string");
 					String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-					ServerCommunication.sendWinToServer(gameId, authString,gameType);
+					ServerCommunication.sendWinToServer(gameId, authString, gameType);
 					finish();
 				}
 				
