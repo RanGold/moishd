@@ -51,6 +51,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	@Persistent
 	private String MACAddress;
 	
+	@Persistent
+	private boolean isBusy;
+	
 	@Persistent(dependent = "true")
 	private Location location;
 
@@ -70,6 +73,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.isRegistered = false;
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
+		this.isBusy = false;
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
@@ -197,5 +201,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public boolean isRegistered() {
 		return isRegistered;
+	}
+
+	public void setBusy(boolean isBusy) {
+		this.isBusy = isBusy;
+	}
+
+	public boolean isBusy() {
+		return isBusy;
 	}
 }

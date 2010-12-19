@@ -32,9 +32,8 @@ public class C2DMCommon {
 		StartGameTruth,
 		StartGameDareSimonPro,
 		StartGameDareMixing,
-		StartGameDareFastClick
-		
-		
+		StartGameDareFastClick,
+		PlayerBusy
 	}
 	
 	 private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());

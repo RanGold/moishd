@@ -72,6 +72,11 @@ public class GameResultServlet extends HttpServlet {
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					
+					mInitUser.setBusy(false);
+					mInitUser.SaveChanges();
+					mRecUser.setBusy(false);
+					mRecUser.SaveChanges();
+					
 					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					winPayload.put("Result", winValue.toString() + ":" + gameType);

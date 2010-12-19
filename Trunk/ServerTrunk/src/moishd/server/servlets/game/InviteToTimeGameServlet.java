@@ -37,21 +37,31 @@ public class InviteToTimeGameServlet extends HttpServlet {
 			response.getWriter().println("Error: no logged in user");
 		} else {
 			try {
-				DSCommon.GetUserByGoogleId(user.getEmail());
+				MoishdUser initUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				
 				ClientMoishdUser clientUser = 
 					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
 							new TypeToken<ClientMoishdUser>(){}.getType());
 				MoishdUser invUser = DSCommon.GetUserByGoogleId(clientUser.getUserGoogleIdentifier());
+				
+				if (invUser.isBusy()) {
+					C2DMCommon.PushGenericMessage(invUser.getRegisterID(), 
+							C2DMCommon.Actions.PlayerBusy.toString(), new HashMap<String, String>());
+				} else {
+					initUser.setBusy(true);
+					initUser.SaveChanges();
+					invUser.setBusy(true);
+					invUser.SaveChanges();
+					
+					TimeGame tg = new TimeGame(user.getEmail(), clientUser.getUserGoogleIdentifier());
+					tg.SaveChanges();
+					response.getWriter().write(String.valueOf(tg.getGameLongId()));
 
-				TimeGame tg = new TimeGame(user.getEmail(), clientUser.getUserGoogleIdentifier());
-				tg.SaveChanges();
-				response.getWriter().write(String.valueOf(tg.getGameLongId()));
-
-				HashMap<String, String> payload = new HashMap<String, String>();
-				payload.put("GameId", String.valueOf(tg.getGameId().getId()));
-				C2DMCommon.PushGenericMessage(invUser.getRegisterID(), 
-						C2DMCommon.Actions.GameInvitation.toString(), payload);
+					HashMap<String, String> payload = new HashMap<String, String>();
+					payload.put("GameId", String.valueOf(tg.getGameId().getId()));
+					C2DMCommon.PushGenericMessage(invUser.getRegisterID(), 
+							C2DMCommon.Actions.GameInvitation.toString(), payload);
+				}
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
 				response.getWriter().println("InviteToTimeGameServlet: " + e.getMessage());

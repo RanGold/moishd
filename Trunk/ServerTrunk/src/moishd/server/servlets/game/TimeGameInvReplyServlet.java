@@ -52,6 +52,10 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 					if (invReply.equals("Decline")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameDeclined.toString(), payload);
+						mInitUser.setBusy(false);
+						mInitUser.SaveChanges();
+						mRecUser.setBusy(false);
+						mRecUser.SaveChanges();
 					} else if (invReply.equals("AcceptTruth")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.StartGameTruth.toString(), payload);
@@ -72,10 +76,13 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
-											
 					} else {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameCanceled.toString(), payload);
+						mInitUser.setBusy(false);
+						mInitUser.SaveChanges();
+						mRecUser.setBusy(false);
+						mRecUser.SaveChanges();
 					}
 				}
 			} catch (DataAccessException e) {
