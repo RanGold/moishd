@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 
-
 public class Game extends Activity{
 	
 	String gameId, authString, gameType;
@@ -34,6 +33,8 @@ public class Game extends Activity{
 		}
 	}
 		
+	
+	
 
 	protected void CommonForWinAndLose(){
 		Toast.makeText(Game.this, 
@@ -45,12 +46,14 @@ public class Game extends Activity{
 	}
 	
 	
+
 	
 	protected void Win(){		
 		CommonForWinAndLose();
 		ServerCommunication.sendWinToServer(gameId, authString, gameType);
 		finish();
 	}
+	
 	
 	
 	
