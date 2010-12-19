@@ -10,7 +10,6 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
-import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
@@ -54,8 +53,9 @@ public class UserLoginServlet extends HttpServlet {
 				}
 				
 				muser.setMACAddress(newUser.getMACAddress());
-				muser.setLocation(new Location(newUser.getLocation().getxCoordinate(), 
-						newUser.getLocation().getyCoordinate()));
+				muser.getLocation().setxCoordinate(newUser.getLocation().getxCoordinate());
+				muser.getLocation().setyCoordinate(newUser.getLocation().getyCoordinate());
+						
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");

@@ -38,6 +38,14 @@
 		<url-pattern>/test/Cookie</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>DeleteIrrelevantServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.test.DeleteIrrelevantServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteIrrelevantServlet</servlet-name>
+		<url-pattern>/test/DeleteIrrelevant</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>C2DMAuthServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.C2DM.C2DMAuthServlet</servlet-class>
 	</servlet>

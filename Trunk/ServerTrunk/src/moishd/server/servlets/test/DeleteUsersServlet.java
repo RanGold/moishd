@@ -21,7 +21,7 @@ public class DeleteUsersServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		if (!UserServiceFactory.getUserService().isUserLoggedIn()) {
-			response.sendRedirect("/LoginServlet");
+			response.sendRedirect("/test/LoginServlet");
 		} else {
 			if (!UserServiceFactory.getUserService().isUserAdmin()) {
 				response.getWriter().println("<p>" +
