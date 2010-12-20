@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SimonPro extends Activity{
+public class SimonPro extends GameActivity{
 
 	Random random = new Random(); 
 	String number;
@@ -235,11 +235,7 @@ public class SimonPro extends Activity{
 		if (tr > 0)
 			wrong.setText("WRONG!!!");
 		else {
-			String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-			String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-			String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			ServerCommunication.sendLoseToServer(gameId, authString, gameType);
-			finish();
+			Lose();
 	
 		}
 		wrong.startAnimation(anim);
@@ -255,14 +251,7 @@ public class SimonPro extends Activity{
 		click1.setClickable(false);
 		click2.setClickable(false);
 		click3.setClickable(false);
-		Toast.makeText(SimonPro.this, 
-				"please wait for result", 
-				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		ServerCommunication.sendWinToServer(gameId, authString, gameType);
-		finish();
+		Win();
 		
 	}
 	public void messUp(){	
@@ -300,24 +289,5 @@ public class SimonPro extends Activity{
 
 	}
 	
-	@Override
-	protected void onNewIntent (Intent intent){
-		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
-			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You've " + result + "!")
-			.setCancelable(false)
-			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-			AlertDialog alert = builder.create();  
-			alert.show();
-		}
-	}
-
 	
 }

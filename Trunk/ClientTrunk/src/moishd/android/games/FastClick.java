@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FastClick extends Activity{
+public class FastClick extends GameActivity{
 	Random random = new Random();  
 	Random randomForButton = new Random();  
 	int i = random.nextInt(20) + 1;
@@ -90,14 +90,7 @@ public class FastClick extends Activity{
 		number = Integer.toString(i);
 		word.setText(number);
 		if (i==0) {
-			Toast.makeText(FastClick.this, 
-					"please wait for result", 
-					Toast.LENGTH_LONG).show();
-			String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-			String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-			String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			ServerCommunication.sendWinToServer(gameId, authString,gameType);
-			finish();
+			Win();
 
 		}
 		else {
@@ -164,23 +157,6 @@ public class FastClick extends Activity{
 			}});
 	}
 
-	@Override
-	protected void onNewIntent (Intent intent){
-		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You've " + result + "!")
-			.setCancelable(false)
-			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-			AlertDialog alert = builder.create();  
-			alert.show();
-		}
-	}
+	
 
 }

@@ -6,7 +6,6 @@ import moishd.android.R;
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Mixing extends Activity{
+public class Mixing extends GameActivity{
 	TextView TheWordIs, word;
 
 
@@ -164,15 +163,8 @@ public class Mixing extends Activity{
 
 				String wordByUser = wordOfUser.getText().toString();
 				if (wordByUser.compareTo(currentWord)==0){
-					Toast.makeText(Mixing.this, 
-							"please wait for result", 
-							Toast.LENGTH_LONG).show();
-					String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-					String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-					String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-					ServerCommunication.sendWinToServer(gameId, authString, gameType);
-					finish();
-				}
+						Win();
+						}
 				
 				else {
 					Toast.makeText(Mixing.this, 
@@ -208,24 +200,7 @@ public class Mixing extends Activity{
 
 	
 
-	@Override
-	protected void onNewIntent (Intent intent){
-		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You've " + result + "!")
-			.setCancelable(false)
-			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-			AlertDialog alert = builder.create();  
-			alert.show();
-		}
-	}
+
 
 
 }

@@ -1,6 +1,7 @@
-package moishd.android.games;
+package moishd.android.games; /* This class is implemented in this package*/
 
-import moishd.android.R;
+import moishd.android.R; /* an auto-generated code */
+/* In order to use basic components of Android programming in java, we use these imports*/
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,6 @@ public class ExampleGame extends GameActivity{
 
 		/* Should be implemented every time a button is clickable.
 		 * Defines a new click listener for the click1 button.
-		 * This is the button that the user has to click on in order to win.
 		 */
 		click1.setOnClickListener(new OnClickListener() {
 
@@ -54,6 +54,7 @@ public class ExampleGame extends GameActivity{
 
 			/*This method decides how should the activity act when the player clicks on the button.*/
 			public void onClick(View v) {
+				
 				/* Since the user has clicked on the button, the challenge is over and now we want to send
 				 * a deciding request to Moish'd! server which makes this user the loser. 
 				 */
@@ -62,7 +63,4 @@ public class ExampleGame extends GameActivity{
 						}});
 	}
 	
-	protected void onNewIntent (Intent intent){
-		super.onNewIntent(intent);
-	}
 }

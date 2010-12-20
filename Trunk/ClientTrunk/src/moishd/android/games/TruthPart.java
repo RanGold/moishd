@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TruthPart extends Activity {
+public class TruthPart extends GameActivity {
 	int i;
 		
 	final String[][] questions ={{"Is tammy's last name is Dagan?","yes"}, 
@@ -83,9 +83,9 @@ public class TruthPart extends Activity {
 		yes.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (questions[i][1].compareTo("yes")==0)
-					currectAnswer();
+					Win();
 				else 
-					wrongAnswer();
+					Lose();
 
 			}
 		});
@@ -93,9 +93,9 @@ public class TruthPart extends Activity {
 		no.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (questions[i][1].compareTo("no")==0)
-					currectAnswer();
+					Win();
 				else 
-					wrongAnswer();
+					Lose();
 
 			}
 		});
@@ -104,46 +104,6 @@ public class TruthPart extends Activity {
 
 	}
 	
-	public void currectAnswer(){	
-		Toast.makeText(TruthPart.this, 
-				"please wait for result", 
-				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		ServerCommunication.sendWinToServer(gameId, authString,gameType);
-		finish();
-	}
-		
-
-	public void wrongAnswer(){
-		Toast.makeText(TruthPart.this, 
-				"please wait for result", 
-				Toast.LENGTH_LONG).show();
-		String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		ServerCommunication.sendLoseToServer(gameId, authString,gameType);
-		finish();
-	}
 	
-	@Override
-	protected void onNewIntent (Intent intent){
-		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
-			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You've " + result + "!")
-			.setCancelable(false)
-			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-			AlertDialog alert = builder.create();  
-			alert.show();
-		}
-	}
 	
 }
