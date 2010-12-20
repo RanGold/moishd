@@ -149,10 +149,11 @@ public class AllOnlineUsersActivity extends Activity {
 		}
 
 		public boolean onOptionsItemSelected(MenuItem item) {
+			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
+
 			switch (item.getItemId()) {
 			case R.id.RefreshList:
 				getAllUsers(1);
-				EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
 				listAdapter.notifyDataSetChanged();
 				return true;
 			case R.id.logout:
@@ -163,6 +164,7 @@ public class AllOnlineUsersActivity extends Activity {
 				return true;
 			case R.id.nearbyUsers:
 				getAllUsers(2);
+				listAdapter.notifyDataSetChanged();
 				return true;
 			case R.id.allUsers:
 				return true;
