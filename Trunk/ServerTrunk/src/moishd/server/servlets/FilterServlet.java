@@ -45,7 +45,7 @@ public class FilterServlet extends HttpServlet {
 							new TypeToken<List<String>>(){}.getType());
 				
 				List<ClientMoishdUser> users = DSCommon.GetFilteredRegisteredClientUsers(user.getEmail(), true, 
-						MoishdUser.class.getField(fieldName), filterValues);
+						fieldName, filterValues);
 				GsonCommon.WriteJsonToResponse(users, response);
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");
@@ -54,9 +54,6 @@ public class FilterServlet extends HttpServlet {
 				response.addHeader("Error", "");
 				response.getWriter().println(servletName + ": " + e.getMessage());
 			} catch (SecurityException e) {
-				response.addHeader("Error", "");
-				response.getWriter().println(servletName + ": " + e.getMessage());
-			} catch (NoSuchFieldException e) {
 				response.addHeader("Error", "");
 				response.getWriter().println(servletName + ": " + e.getMessage());
 			}

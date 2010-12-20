@@ -248,14 +248,10 @@ public class DSCommon {
 	}
 
 	public static List<ClientMoishdUser> GetFilteredRegisteredClientUsers(
-			String GoogleId, Boolean exclude, Field field, 
+			String GoogleId, Boolean exclude, String field, 
 			List<String> macAddresses) throws DataAccessException {
-		if (!field.getDeclaringClass().getName().equals("MoishdUser")) {
-			throw new DataAccessException("Field " + field.getName() + " isn't a part of MoishdUser");
-		} else {
-			return GetRegisteredClientUsers(GoogleId, exclude, -1, 
-					field.getName(), macAddresses);
-		}
+		return GetRegisteredClientUsers(GoogleId, exclude, -1, field,
+				macAddresses);
 	}
 	
 	public static void SaveChanges(CommonJDO jdoObject) {
