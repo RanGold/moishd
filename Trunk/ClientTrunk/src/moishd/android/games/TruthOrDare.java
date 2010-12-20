@@ -40,10 +40,11 @@ public class TruthOrDare extends Activity{
 					gameType = IntentExtraKeysEnum.DareSimonPro.toString();
 					
 				else if (i==1)
-					gameType = IntentExtraKeysEnum.DareMixing.toString();
+					gameType = IntentExtraKeysEnum.DareSimonPro.toString();
 					
 				else
 					gameType = IntentExtraKeysEnum.DareFastClick.toString();
+
 					
 				returnGameTypeToCallingActivity(gameType);
 			}
