@@ -6,7 +6,20 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:background="#FFFFF0">
-
+	
+	<TextView android:text="Find out what is the mixed word, type it to the text box and click the moish button." 
+	android:paddingLeft="20px"
+	android:paddingRight="20px"
+	android:paddingTop="10px"
+	android:textSize="20dip"
+	android:gravity="center_vertical|center_horizontal"
+	android:id="@+id/explain"
+	android:textColor="#9A32CD" 
+	android:textStyle="bold"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+	
 	<TextView android:text="The word is..." 
 	android:paddingLeft="70px"
 	android:paddingTop="30px"
@@ -20,12 +33,16 @@
 
 	<TextView 
 	android:id="@+id/theWord" 
+	android:visibility="invisible"
+	android:gravity="center_vertical|center_horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:textColor="#00FF00" 
 	android:textStyle="bold"
 	android:paddingTop="5px"
-	android:layout_marginLeft="10dip">
+	android:paddingLeft="5px"
+	android:paddingRight="5px"
+>
 	</TextView>
 	
 			
@@ -67,9 +84,12 @@
 	android:orientation="vertical">		
 		<Button
 		android:text="Moish!"
-		android:drawableBottom="@drawable/handcolor"
-		android:background="#FF0000"
+		android:drawableBottom="@drawable/hand"
+		android:background="#EE3B3B"
 		android:clickable="true"
+		android:paddingLeft="5dip"
+		android:textStyle="bold"
+		android:paddingRight="5dip"
 		android:soundEffectsEnabled="true"
 		android:id="@+id/MoishButton"
 		android:layout_marginLeft="30dip"

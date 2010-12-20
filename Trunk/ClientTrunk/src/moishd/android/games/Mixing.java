@@ -150,7 +150,7 @@ public class Mixing extends GameActivity{
 			mixedWord= mix1(currentWord);
 		else if (k==2)
 			mixedWord= mix2(currentWord);
-	else
+		else
 			mixedWord= mix3(currentWord);
 			
 		word.setText(mixedWord);
