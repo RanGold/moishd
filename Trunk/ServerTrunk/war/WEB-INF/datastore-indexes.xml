@@ -12,9 +12,9 @@
         <property name="MACAddress" direction="asc" />
     </datastore-index>    
 	
-	<datastore-index kind="MoishdUser" ancestor="false">
-        <property name="isRegistered" direction="asc" />
-        <property name="userGoogleIdentifier" direction="asc" />
-        <property name="facebookID" direction="asc" />
+	<datastore-index kind="MoishdUser" ancestor="false" source="manual">
+        <property name="facebookID" direction="asc"/>
+        <property name="isRegistered" direction="asc"/>
+        <property name="userGoogleIdentifier" direction="asc"/>
     </datastore-index>        
 </datastore-indexes>
