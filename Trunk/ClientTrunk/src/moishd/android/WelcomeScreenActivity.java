@@ -42,9 +42,8 @@ public class WelcomeScreenActivity extends Activity{
 	protected static Facebook facebook;
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
-	private Location location; //TODO ahh !?!??
-	
-	private Location newLocation;
+	private Location location; 
+
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,8 +59,8 @@ public class WelcomeScreenActivity extends Activity{
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		String bestProvider = locationManager.getBestProvider(criteria, true);
-		newLocation = locationManager.getLastKnownLocation(bestProvider);
-
+		location = locationManager.getLastKnownLocation(bestProvider);
+		
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
 
@@ -217,8 +216,8 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
 
 				ClientLocation loc;
-				if (newLocation != null)				 
-					loc = new ClientLocation(newLocation.getLongitude(),newLocation.getLatitude()) ; //TODO location 
+				if (location != null)				 
+					loc = new ClientLocation(location.getLongitude(),location.getLatitude()) ; //TODO location 
 				else 
 					loc = new ClientLocation(0,0);
 				newUser.setLocation(loc);
