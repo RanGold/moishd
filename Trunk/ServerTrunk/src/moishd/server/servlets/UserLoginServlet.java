@@ -53,8 +53,8 @@ public class UserLoginServlet extends HttpServlet {
 				}
 				
 				muser.setMACAddress(newUser.getMACAddress());
-				muser.getLocation().setxCoordinate(newUser.getLocation().getxCoordinate());
-				muser.getLocation().setyCoordinate(newUser.getLocation().getyCoordinate());
+				muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
+				muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
 						
 				muser.SaveChanges();
 			} catch (DataAccessException e) {

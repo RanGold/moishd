@@ -23,37 +23,22 @@ public class Location extends CommonJDO implements Serializable {
     private Key locationId;
 
     @Persistent
-    private double xCoordinate;
+    private double longitude;
     
     @Persistent
-    private double yCoordinate;
+    private double latitude;
     
     @Persistent(mappedBy = "location")
     private MoishdUser moishdUser;
-    
-	public Location(double xCoordinate, double yCoordinate) {
-		this.xCoordinate = xCoordinate;
-		this.yCoordinate = yCoordinate;
-	}
 	
+	public Location(double longitude, double latitude) {
+		super();
+		this.setLongitude(longitude);
+		this.setLatitude(latitude);
+	}
+
 	public ClientLocation toClientLocaion() {
-		return (new ClientLocation(this.getxCoordinate(),this.getyCoordinate()));
-	}
-
-	public double getxCoordinate() {
-		return xCoordinate;
-	}
-
-	public void setxCoordinate(double xCoordinate) {
-		this.xCoordinate = xCoordinate;
-	}
-
-	public double getyCoordinate() {
-		return yCoordinate;
-	}
-
-	public void setyCoordinate(double yCoordinate) {
-		this.yCoordinate = yCoordinate;
+		return (new ClientLocation(this.getLongitude(),this.getLatitude()));
 	}
 
 	public Key getLocationId() {
@@ -62,5 +47,21 @@ public class Location extends CommonJDO implements Serializable {
 
 	public MoishdUser getMoishdUser() {
 		return moishdUser;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLatitude() {
+		return latitude;
 	}
 }

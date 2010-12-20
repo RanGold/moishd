@@ -9,33 +9,33 @@ public class ClientLocation implements Serializable {
 	 */
 	private static final long serialVersionUID = 3388703558398355826L;
 
-	private double xCoordinate;
+	private double longitude;
 
-	private double yCoordinate;
+	private double latitude;
 
 	public ClientLocation() {
 		super();
 	}
 
-	public ClientLocation(double xCoordinate, double yCoordinate) {
+	public ClientLocation(double longitude, double latitude) {
 		super();
-		this.xCoordinate = xCoordinate;
-		this.yCoordinate = yCoordinate;
+		this.longitude = longitude;
+		this.latitude = latitude;
 	}
 
-	public double getxCoordinate() {
-		return xCoordinate;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
-	public void setxCoordinate(double xCoordinate) {
-		this.xCoordinate = xCoordinate;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public double getyCoordinate() {
-		return yCoordinate;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public void setyCoordinate(double yCoordinate) {
-		this.yCoordinate = yCoordinate;
+	public double getLatitude() {
+		return latitude;
 	}
 }

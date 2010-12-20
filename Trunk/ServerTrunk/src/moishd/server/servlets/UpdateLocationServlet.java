@@ -37,8 +37,8 @@ public class UpdateLocationServlet extends HttpServlet {
 				ClientLocation newLocation = 
 					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
 							new TypeToken<ClientLocation>(){}.getType());
-				muser.getLocation().setxCoordinate(newLocation.getxCoordinate());
-				muser.getLocation().setyCoordinate(newLocation.getyCoordinate());
+				muser.getLocation().setLatitude(newLocation.getLatitude());
+				muser.getLocation().setLongitude(newLocation.getLongitude());
 				muser.getLocation().SaveChanges();
 			} catch (DataAccessException e) {
 				response.addHeader("Error", "");

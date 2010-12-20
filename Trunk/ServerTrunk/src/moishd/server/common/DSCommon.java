@@ -276,8 +276,8 @@ public class DSCommon {
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
 			
 			for (Location location : locations) {
-				if (CalculateDistance(location.getxCoordinate(), location.getyCoordinate(), 
-						user.getLocation().getxCoordinate(), user.getLocation().getyCoordinate()) <= distance) {
+				if (CalculateDistance(location.getLatitude(), location.getLongitude(), 
+						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) {
 					users.add(location.getMoishdUser());
 				}
 			}
