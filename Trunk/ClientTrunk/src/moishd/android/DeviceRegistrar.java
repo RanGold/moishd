@@ -17,7 +17,6 @@ package moishd.android;
 
 import moishd.client.dataObjects.ClientMoishdUser;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 /**

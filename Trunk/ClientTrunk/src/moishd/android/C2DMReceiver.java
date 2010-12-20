@@ -44,9 +44,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 
-		
-		
-
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -79,7 +76,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			
 			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); /*why do we need this?*/
 			int placeToCut = resultWithGameType.indexOf(":");
-			String result = resultWithGameType.substring(0,placeToCut);
+			String result = resultWithGameType.substring(0,placeToCut); //TODO: hila string index out of bounds
 			String gameType = resultWithGameType.substring(placeToCut+1);
 			String resultForPush = result;
 			
@@ -117,7 +114,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.C2DMError.toString());
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		resultIntent.setClass(this, AllOnlineUsersActivity.class);
+		resultIntent.setClass(this, WelcomeScreenActivity.class);
 	}
 
 

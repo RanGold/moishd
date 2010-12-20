@@ -3,10 +3,8 @@ package moishd.common;
 public enum SharedPreferencesKeysEnum {
 
 	GoogleSharedPreferences("GoogleSharedPreferences"),
-	GoogleAuthToken("GoogleAuthToken"),
-	C2dmSharedPreferences("C2dmSharedPreferences"),
-	C2dmRegistered("C2dmRegistered");
-	
+	GoogleAuthToken("GoogleAuthToken");
+
 	private String name;
 
 	SharedPreferencesKeysEnum(String name) {

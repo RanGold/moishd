@@ -3,12 +3,6 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
-import moishd.android.ServerCommunication;
-import moishd.common.IntentExtraKeysEnum;
-import moishd.common.PushNotificationTypeEnum;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;

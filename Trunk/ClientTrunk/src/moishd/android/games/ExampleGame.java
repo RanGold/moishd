@@ -1,8 +1,6 @@
 package moishd.android.games; /* This class is implemented in this package*/
 
-import moishd.android.R; /* an auto-generated code */
-/* In order to use basic components of Android programming in java, we use these imports*/
-import android.content.Intent;
+import moishd.android.R;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

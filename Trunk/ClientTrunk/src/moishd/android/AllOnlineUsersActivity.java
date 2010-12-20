@@ -28,13 +28,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -59,21 +57,28 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
-	
-	protected String authToken;
-	protected String game_id;
-	protected String gameType;
-	protected int currentClickPosition;
-	private ListView list;
-	private AsyncFacebookRunner asyncRunner;
+
+	private static final int TWO_MINUTES = 1000 * 60 * 2;
+
 	private static List<ClientMoishdUser> moishdUsers;
 	private static List<Drawable> usersPictures;
+
+	private String authToken;
+
+	private String game_id;
+	private String gameType;
+
+	private int currentClickPosition;
+	private ListView list;
+
+	private AsyncFacebookRunner asyncRunner;
+
 	private ProgressDialog mainProgressDialog;
-	
+
 	private String TAG = "LOCATION-AllOnlineUsers";
+
 	private Handler mHandler = new Handler();
 	private Location currentBestLocation ;
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
 	private Timer timer;
 	private LocationManager locationManager ;
 	private LocationListener locationListener = new LocationListener() {
@@ -93,7 +98,7 @@ public class AllOnlineUsersActivity extends Activity {
 		public void onProviderEnabled(String provider) {}
 		public void onProviderDisabled(String provider) {}
 	};
-		
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,12 +108,7 @@ public class AllOnlineUsersActivity extends Activity {
 		//need the authToken for server requests
 		authToken = getGoogleAuthToken();
 		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
-		
-		boolean isRegistered = isC2DMRegistered();
-		if (!isRegistered){
-			registerC2DM();
-		}
-		
+
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		GetCurrentLocation(1);
 
@@ -125,7 +125,7 @@ public class AllOnlineUsersActivity extends Activity {
 				}});
 			list.setAdapter(new EfficientAdapter(this));
 		}
-		
+
 	}
 
 	@Override
@@ -157,22 +157,22 @@ public class AllOnlineUsersActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
 	protected void onNewIntent (Intent intent){
-		
+
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		
+
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
 				retrieveInvitation();
@@ -187,13 +187,10 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
 				startGameDare();
 			}
-			
+
 			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 				gameResultDialog(result);
-			}
-			else if(action.equals(ActionByPushNotificationEnum.C2DMError.toString())){
-				C2DMError();
 			}
 		}
 	}
@@ -201,10 +198,9 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	protected void onDestroy (){
 		super.onDestroy();
-		unregisterC2DM();
 		timer.cancel();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
@@ -212,64 +208,64 @@ public class AllOnlineUsersActivity extends Activity {
 			sendInvitationResponse("Accept" + gameType);
 		}
 	}
-	
+
 	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-	    if (currentBestLocation == null) {
-	        // A new location is always better than no location
-	        return true;
-	    }
+		if (currentBestLocation == null) {
+			// A new location is always better than no location
+			return true;
+		}
 
-	    // Check whether the new location fix is newer or older
-	    long timeDelta = location.getTime() - currentBestLocation.getTime();
-	    boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-	    boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
-	    boolean isNewer = timeDelta > 0;
+		// Check whether the new location fix is newer or older
+		long timeDelta = location.getTime() - currentBestLocation.getTime();
+		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+		boolean isNewer = timeDelta > 0;
 
-	    // If it's been more than two minutes since the current location, use the new location
-	    // because the user has likely moved
-	    if (isSignificantlyNewer) {
-	        return true;
-	    // If the new location is more than two minutes older, it must be worse
-	    } else if (isSignificantlyOlder) {
-	        return false;
-	    }
+		// If it's been more than two minutes since the current location, use the new location
+		// because the user has likely moved
+		if (isSignificantlyNewer) {
+			return true;
+			// If the new location is more than two minutes older, it must be worse
+		} else if (isSignificantlyOlder) {
+			return false;
+		}
 
-	    // Check whether the new location fix is more or less accurate
-	    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-	    boolean isLessAccurate = accuracyDelta > 0;
-	    boolean isMoreAccurate = accuracyDelta < 0;
-	    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+		// Check whether the new location fix is more or less accurate
+		int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+		boolean isLessAccurate = accuracyDelta > 0;
+		boolean isMoreAccurate = accuracyDelta < 0;
+		boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-	    // Check if the old and new location are from the same provider
-	    boolean isFromSameProvider = isSameProvider(location.getProvider(),
-	            currentBestLocation.getProvider());
+		// Check if the old and new location are from the same provider
+		boolean isFromSameProvider = isSameProvider(location.getProvider(),
+				currentBestLocation.getProvider());
 
-	    // Determine location quality using a combination of timeliness and accuracy
-	    if (isMoreAccurate) {
-	        return true;
-	    } else if (isNewer && !isLessAccurate) {
-	        return true;
-	    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-	        return true;
-	    }
-	    return false;
+		// Determine location quality using a combination of timeliness and accuracy
+		if (isMoreAccurate) {
+			return true;
+		} else if (isNewer && !isLessAccurate) {
+			return true;
+		} else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+			return true;
+		}
+		return false;
 	}
-	
+
 	private boolean isSameProvider(String provider1, String provider2) {
-	    if (provider1 == null) {
-	      return provider2 == null;
-	    }
-	    return provider1.equals(provider2);
+		if (provider1 == null) {
+			return provider2 == null;
+		}
+		return provider1.equals(provider2);
 	}
-	
+
 	private void GetCurrentLocation(int minutes){
 		timer = new Timer(true);
 		timer.scheduleAtFixedRate(new getCurrentLocationTask(), 0, 60*1000*minutes);
 	}
-	
+
 	private class getCurrentLocationTask extends TimerTask{
 		private Runnable run;
-		
+
 		@Override
 		public void run() {
 			run = new Runnable() {
@@ -282,13 +278,12 @@ public class AllOnlineUsersActivity extends Activity {
 			mHandler.post(run);
 		}
 	}
-	
+
 	private void doQuitActions() {
-		unregisterC2DM();
 		WelcomeScreenActivity.facebookLogout(null);
 		finish();
 	}
-	
+
 	private boolean getAllUsers(int usersType){
 
 		mainProgressDialog = new ProgressDialog(AllOnlineUsersActivity.this);
@@ -375,9 +370,9 @@ public class AllOnlineUsersActivity extends Activity {
 		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
 		.setCancelable(false)
 		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-			
+
 			public void onClick(DialogInterface dialog, int id) {
-				
+
 				Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
 				startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
 				dialog.cancel();
@@ -416,9 +411,9 @@ public class AllOnlineUsersActivity extends Activity {
 	private void startGameDare(){
 		Intent intent;
 		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
-			 intent = new Intent(this, SimonPro.class);
+			intent = new Intent(this, SimonPro.class);
 		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
-			 intent = new Intent(this, Mixing.class);
+			intent = new Intent(this, Mixing.class);
 		else //TODO right now else case is fast click.
 			intent = new Intent(this, FastClick.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
@@ -426,7 +421,7 @@ public class AllOnlineUsersActivity extends Activity {
 		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 		startActivity(intent);
 	}
-	
+
 	private void startGameTruth(){
 		Intent intent = new Intent(this, TruthPart.class);
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
@@ -459,65 +454,6 @@ public class AllOnlineUsersActivity extends Activity {
 		return authString;
 	}
 
-	private boolean isC2DMRegistered() {
-
-		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
-		boolean isRegistered = prefs.getBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), false);
-
-		return isRegistered;
-	}
-
-	private void registerC2DM() {
-		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
-		startService(registrationIntent);
-
-		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), true);
-		editor.commit();
-
-		Log.d("TEST","Resgistering...");
-
-	}
-
-	private void unregisterC2DM() {
-
-		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-		startService(unregIntent);
-		
-		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.C2dmSharedPreferences.toString(),Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putBoolean(SharedPreferencesKeysEnum.C2dmRegistered.toString(), false);
-		editor.commit();
-
-	}
-	
-	private void C2DMError(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Connection to game server failed.")
-		.setCancelable(false)
-		.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int id) {
-				registerC2DM();
-			}
-		})
-		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				doQuitActions();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();		
-	}
 	private Drawable LoadImageFromWebOperations(String url){
 
 		try{

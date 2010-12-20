@@ -145,7 +145,6 @@ public abstract class C2DMBaseReceiver extends IntentService {
 
     }
     
-    
     private void handleRegistration(final Context context, Intent intent) {
         final String registrationId = intent.getStringExtra(EXTRA_REGISTRATION_ID);
         String error = intent.getStringExtra(EXTRA_ERROR);
