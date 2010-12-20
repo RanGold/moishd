@@ -135,6 +135,36 @@ public class ServerCommunication {
 		}
 		return null;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<ClientMoishdUser> getNearbyUsers(String authString){
+
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetNearbyUsers, null, authString);
+		try {
+			InputStream contentStream = response.getEntity().getContent();
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+			}
+			else{
+				if (contentStream != null) {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
+					try {
+						String json = (String) ois.readObject();
+						//Gson g = new Gson();
+						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}			}
+		}
+		catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public static String inviteUser(ClientMoishdUser user, String authString){
 

@@ -15,7 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ExampleSimonPro extends Game{
+public class ExampleSimonPro extends GameActivity{
 
 	Random random = new Random(); 
 	String number;

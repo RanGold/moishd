@@ -112,7 +112,7 @@ public class AllOnlineUsersActivity extends Activity {
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		GetCurrentLocation(1);
 
-		boolean retrievedUsersSuccessfully = getAllUsers();
+		boolean retrievedUsersSuccessfully = getAllUsers(1);
 
 		if (retrievedUsersSuccessfully){
 			list = (ListView) findViewById(R.id.allUsersListView);
@@ -139,7 +139,7 @@ public class AllOnlineUsersActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
 			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
-			getAllUsers();
+			getAllUsers(1);
 			listAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.logout:
@@ -149,6 +149,7 @@ public class AllOnlineUsersActivity extends Activity {
 			getFriendsUsers();
 			return true;
 		case R.id.nearbyUsers:
+			getAllUsers(2);
 			return true;
 		case R.id.allUsers:
 			return true;
@@ -288,7 +289,7 @@ public class AllOnlineUsersActivity extends Activity {
 		finish();
 	}
 	
-	private boolean getAllUsers(){
+	private boolean getAllUsers(int usersType){
 
 		mainProgressDialog = new ProgressDialog(AllOnlineUsersActivity.this);
 		mainProgressDialog.setMessage("Retrieving users...");
@@ -296,9 +297,12 @@ public class AllOnlineUsersActivity extends Activity {
 		mainProgressDialog.setCancelable(false);
 		mainProgressDialog.show();
 
-		moishdUsers = ServerCommunication.getAllUsers(authToken);
-
-		moishdUsers = ServerCommunication.getAllUsers(authToken);
+		if (usersType == 1){
+			moishdUsers = ServerCommunication.getAllUsers(authToken);
+		}
+		else if(usersType == 2){
+			moishdUsers = ServerCommunication.getNearbyUsers(authToken);
+		}
 		if (moishdUsers == null){
 			mainProgressDialog.dismiss();
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -308,7 +312,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
-					getAllUsers();
+					getAllUsers(1); //TODO: change this!!
 				}
 			})
 			.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
