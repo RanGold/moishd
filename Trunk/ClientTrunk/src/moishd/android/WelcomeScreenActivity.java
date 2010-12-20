@@ -1,7 +1,5 @@
 package moishd.android;
 
-import java.util.List;
-
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.Facebook;
@@ -13,16 +11,13 @@ import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.android.facebook.SessionStore;
 import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientLocation;
-import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.IntentResultCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,7 +28,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,9 +42,9 @@ public class WelcomeScreenActivity extends Activity{
 	protected static Facebook facebook;
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
+	private Location location; //TODO ahh !?!??
 	
-	private Location location;
-	final String TAG = "LOCATION";
+	private Location newLocation;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,25 +57,10 @@ public class WelcomeScreenActivity extends Activity{
 		}
 
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		LocationListener locationListener = new LocationListener() {
-			public void onLocationChanged(Location location) {
-				// Called when a new location is found by the network location provider.
-				Log.d(TAG, "Got Location Changed");
-			}
-
-			public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-			public void onProviderEnabled(String provider) {}
-
-			public void onProviderDisabled(String provider) {}
-		};
-
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		String bestProvider = locationManager.getBestProvider(criteria, true);
-		location = locationManager.getLastKnownLocation(bestProvider);
-		locationManager.removeUpdates(locationListener);
+		newLocation = locationManager.getLastKnownLocation(bestProvider);
 
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
@@ -237,11 +216,12 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setPictureLink(pictureLink);
 				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
 
-//				ClientLocation loc = new ClientLocation(location.getLongitude(),location.getLatitude()) ;
-//				newUser.setLocation(loc);
-				
-
-				newUser.setLocation(new ClientLocation(0,0));
+				ClientLocation loc;
+				if (newLocation != null)				 
+					loc = new ClientLocation(newLocation.getLongitude(),newLocation.getLatitude()) ; //TODO location 
+				else 
+					loc = new ClientLocation(0,0);
+				newUser.setLocation(loc);
 
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);

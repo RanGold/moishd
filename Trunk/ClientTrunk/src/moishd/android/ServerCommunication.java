@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
+import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
@@ -23,6 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -50,6 +52,20 @@ public class ServerCommunication {
 
 		ServerRequest.Get().GetCookie(authString);
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		} 
+	}
+	
+	public static boolean updateLocationInServer(Location location, String authString){
+
+		ServerRequest.Get().GetCookie(authString);
+		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
+		HttpResponse response = SendObjToServer(sendLocation, ServletNamesEnum.UpdateLocation, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
