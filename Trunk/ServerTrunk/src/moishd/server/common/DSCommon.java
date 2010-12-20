@@ -1,6 +1,5 @@
 package moishd.server.common;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +58,6 @@ public class DSCommon {
 				filterParams.add(GoogleId);
 			}
 
-			// TODO Check this
 			filter += "isRegistered == :trueParam && ";
 			q.setFilter(filter);
 			filterParams.add(true);
@@ -68,7 +66,7 @@ public class DSCommon {
 			if (amount != -1) {
 				q.setRange(0, amount);
 			}
-			// TODO Check this
+			
 			if (!fieldName.equals("NULL")) {
 				filter += ":p.contains(" + fieldName + ")";
 				q.setFilter(filter);
@@ -80,13 +78,8 @@ public class DSCommon {
 				q.setFilter(filter);
 			}
 			
-			// TODO add filter implementation
 			List<MoishdUser> users = (List<MoishdUser>) q.executeWithArray(filterParams.toArray());
-//			if (exclude) {
-//				users = ((List<MoishdUser>)q.execute(GoogleId));
-//			} else {
-//				users = ((List<MoishdUser>)q.execute());
-//			}
+			users = DetachCopyRecursively(users, pm);
 			
 			return (MoishdUser.copyToClientMoishdUserList(users));
 		}
