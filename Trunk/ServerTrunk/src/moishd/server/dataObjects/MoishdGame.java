@@ -11,7 +11,7 @@ import javax.jdo.annotations.PrimaryKey;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class TimeGame extends CommonJDO implements Serializable {
+public class MoishdGame extends CommonJDO implements Serializable {
 	/**
 	 * 
 	 */
@@ -48,7 +48,10 @@ public class TimeGame extends CommonJDO implements Serializable {
 	@Persistent
 	private Date initiated;
 	
-	public TimeGame(String playerInitId, String playerRecId) {
+	@Persistent
+	private String gameType;
+	
+	public MoishdGame(String playerInitId, String playerRecId) {
 		super();
 		this.playerInitId = playerInitId;
 		this.playerRecId = playerRecId;
@@ -133,5 +136,13 @@ public class TimeGame extends CommonJDO implements Serializable {
 		super.SaveChanges();
 		this.setGameLongId(this.getGameId().getId());
 		super.SaveChanges();
+	}
+
+	public void setGameType(String gameType) {
+		this.gameType = gameType;
+	}
+
+	public String getGameType() {
+		return gameType;
 	}
 }

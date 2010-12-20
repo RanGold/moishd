@@ -86,27 +86,27 @@
 		<url-pattern>/UserLogin</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>InviteToTimeGameServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.InviteToTimeGameServlet</servlet-class>
+		<servlet-name>InviteToGameServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.InviteToGameServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>InviteToTimeGameServlet</servlet-name>
+		<servlet-name>InviteToGameServlet</servlet-name>
 		<url-pattern>/InviteUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>GetTimeGameInitiatorServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.GetTimeGameInitiatorServlet</servlet-class>
+		<servlet-name>GetGameInitiatorServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.GetGameInitiatorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>GetTimeGameInitiatorServlet</servlet-name>
-		<url-pattern>/GetTimeGameInitiator</url-pattern>
+		<servlet-name>GetGameInitiatorServlet</servlet-name>
+		<url-pattern>/GetGameInitiator</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>TimeGameInvReplyServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.TimeGameInvReplyServlet</servlet-class>
+		<servlet-name>GameInvReplyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.GameInvReplyServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>TimeGameInvReplyServlet</servlet-name>
+		<servlet-name>GameInvReplyServlet</servlet-name>
 		<url-pattern>/InvitationResponse</url-pattern>
 	</servlet-mapping>
 	<servlet>

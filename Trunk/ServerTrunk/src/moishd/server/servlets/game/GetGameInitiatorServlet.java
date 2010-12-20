@@ -9,14 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class GetTimeGameInitiatorServlet extends HttpServlet {
+public class GetGameInitiatorServlet extends HttpServlet {
 	/**
 	 * 
 	 */
@@ -35,7 +35,7 @@ public class GetTimeGameInitiatorServlet extends HttpServlet {
 				DSCommon.GetUserByGoogleId(user.getEmail());
 
 				String gameId = request.getReader().readLine();
-				TimeGame tg = DSCommon.GetTimeGameByIdRecId(gameId, user.getEmail());
+				MoishdGame tg = DSCommon.GetGameByIdRecId(gameId, user.getEmail());
 				MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 				GsonCommon.WriteJsonToResponse(muser, response);
 			} catch (DataAccessException e) {

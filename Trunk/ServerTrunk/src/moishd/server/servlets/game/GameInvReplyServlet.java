@@ -11,14 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
+import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
-public class TimeGameInvReplyServlet extends HttpServlet {
+public class GameInvReplyServlet extends HttpServlet {
 	/**
 	 * 
 	 */
@@ -43,7 +43,7 @@ public class TimeGameInvReplyServlet extends HttpServlet {
 					String gameId = paramters.split("#")[0];
 					String invReply = paramters.split("#")[1];
 
-					TimeGame tg = DSCommon.GetTimeGameById(gameId);
+					MoishdGame tg = DSCommon.GetGameById(gameId);
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();

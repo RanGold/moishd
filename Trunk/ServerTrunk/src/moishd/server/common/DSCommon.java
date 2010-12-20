@@ -12,8 +12,8 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.dataObjects.C2DMAuth;
 import moishd.server.dataObjects.CommonJDO;
 import moishd.server.dataObjects.Location;
+import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 public class DSCommon {
 	private DSCommon() {
@@ -188,15 +188,15 @@ public class DSCommon {
 		}
 	}
 	
-	public static TimeGame GetTimeGameByIdRecId(String gameId, String recId) throws DataAccessException {
+	public static MoishdGame GetGameByIdRecId(String gameId, String recId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
-			q = pm.newQuery(TimeGame.class);
+			q = pm.newQuery(MoishdGame.class);
 			q.setFilter("playerRecId == :playerId && gameLongId == :gId");
 
 			@SuppressWarnings("unchecked")
-			List<TimeGame> games = (List<TimeGame>)q.execute(recId, Long.valueOf(gameId));
+			List<MoishdGame> games = (List<MoishdGame>)q.execute(recId, Long.valueOf(gameId));
 
 			if (games.size() == 0) {
 				throw new DataAccessException("game " + gameId + 
@@ -216,15 +216,15 @@ public class DSCommon {
 		}
 	}
 	
-	public static TimeGame GetTimeGameById(String gameId) throws DataAccessException {
+	public static MoishdGame GetGameById(String gameId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
-			q = pm.newQuery(TimeGame.class);
+			q = pm.newQuery(MoishdGame.class);
 			q.setFilter("gameLongId == :gId");
 
 			@SuppressWarnings("unchecked")
-			List<TimeGame> games = (List<TimeGame>)q.execute(Long.valueOf(gameId));
+			List<MoishdGame> games = (List<MoishdGame>)q.execute(Long.valueOf(gameId));
 
 			if (games.size() == 0) {
 				throw new DataAccessException("game " + gameId + 

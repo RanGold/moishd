@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
+import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -50,7 +50,7 @@ public class GameResultServlet extends HttpServlet {
 				String input = request.getReader().readLine();
 				String gameId = input.split(":")[0];
 				String gameType = input.split(":")[1];
-				TimeGame tg = DSCommon.GetTimeGameById(gameId);
+				MoishdGame tg = DSCommon.GetGameById(gameId);
 				if (tg.getPlayerInitId().equals(user.getEmail())) {
 					tg.setPlayerInitEndTime(endDate);
 				} else if (tg.getPlayerRecId().equals(user.getEmail())) {
@@ -63,7 +63,7 @@ public class GameResultServlet extends HttpServlet {
 				}
 				tg.SaveChanges();
 				
-				tg = DSCommon.GetTimeGameById(gameId);
+				tg = DSCommon.GetGameById(gameId);
 				
 				if (!tg.getIsDecided()) {
 					tg.setIsDecided(true);
@@ -85,7 +85,7 @@ public class GameResultServlet extends HttpServlet {
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", loseValue.toString() + ":" + gameType);
 					
-					tg = DSCommon.GetTimeGameById(gameId);
+					tg = DSCommon.GetGameById(gameId);
 					
 					// TODO: Check if concurrent win is consistent
 					if ((tg.getPlayerRecEndTime() == null) ||

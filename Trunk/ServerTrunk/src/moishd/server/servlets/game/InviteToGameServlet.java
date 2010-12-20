@@ -13,15 +13,15 @@ import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.TimeGame;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.reflect.TypeToken;
 
-public class InviteToTimeGameServlet extends HttpServlet {
+public class InviteToGameServlet extends HttpServlet {
 	/**
 	 * 
 	 */
@@ -53,7 +53,7 @@ public class InviteToTimeGameServlet extends HttpServlet {
 					invUser.setBusy(true);
 					invUser.SaveChanges();
 					
-					TimeGame tg = new TimeGame(user.getEmail(), clientUser.getUserGoogleIdentifier());
+					MoishdGame tg = new MoishdGame(user.getEmail(), clientUser.getUserGoogleIdentifier());
 					tg.SaveChanges();
 					response.getWriter().write(String.valueOf(tg.getGameLongId()));
 
