@@ -98,29 +98,33 @@ public class AllOnlineUsersActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		setContentView(R.layout.all_users_layout);
+
 		//need the authToken for server requests
 		authToken = getGoogleAuthToken();
-
+		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
+		
 		boolean isRegistered = isC2DMRegistered();
 		if (!isRegistered){
 			registerC2DM();
 		}
-
-		getAllUsers();
-
-		setContentView(R.layout.all_users_layout);
-		list = (ListView) findViewById(R.id.allUsersListView);
-
-		list.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				currentClickPosition = arg2;
-				inviteUserToMoishDialog();
-			}});
-		list.setAdapter(new EfficientAdapter(this));
 		
 		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		GetCurrentLocation(1);
+
+		boolean retrievedUsersSuccessfully = getAllUsers();
+
+		if (retrievedUsersSuccessfully){
+			list = (ListView) findViewById(R.id.allUsersListView);
+
+			list.setOnItemClickListener(new OnItemClickListener() {
+
+				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+					currentClickPosition = arg2;
+					inviteUserToMoishDialog();
+				}});
+			list.setAdapter(new EfficientAdapter(this));
+		}
 		
 	}
 
@@ -533,8 +537,12 @@ public class AllOnlineUsersActivity extends Activity {
 				for (int i=0; i < friends.length(); i++){
 					friendsID.add(((JSONObject) friends.get(i)).getString("id"));
 				}
-
 				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
+				usersPictures = new ArrayList<Drawable>();
+				for (int i=0; i < moishdUsers.size(); i++){
+					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
+					usersPictures.add(userPic);
+				}
 				EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
 				listAdapter.notifyDataSetChanged();
 
