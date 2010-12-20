@@ -14,7 +14,7 @@ import android.widget.Button;
  * If the user clicked on the other button, the game is also finished 
  * A short time after the click, the winner and loser will be announced.
  */
-public class ExampleGame extends Game{
+public class ExampleGame extends GameActivity{
 
 	/* initializes the activity.*/
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class ExampleGame extends Game{
 				Lose();
 
 						}});
-
 	}
 	
 	protected void onNewIntent (Intent intent){
