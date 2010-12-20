@@ -4,10 +4,10 @@ package moishd.android.games;
 
 import java.util.Random;
 
-import moishd.android.ServerCommunication;
 import moishd.android.R;
+import moishd.android.ServerCommunication;
+import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
-import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -298,7 +298,7 @@ public class SimonPro extends Activity{
 	@Override
 	protected void onNewIntent (Intent intent){
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
+		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

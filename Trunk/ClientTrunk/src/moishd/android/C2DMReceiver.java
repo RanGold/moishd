@@ -113,8 +113,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 	@Override
 	public void onError(Context context, String errorId) {
-		Log.d("TEST", "got Error"); 
+		Log.d("TEST", "got Error");
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.C2DMError.toString());
+		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		resultIntent.setClass(this, AllOnlineUsersActivity.class);
 	}
+
 
 	@Override
 	public void onRegistrered(Context context, String registration) {

@@ -6,21 +6,24 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionEvents.AuthListener;
-import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.android.facebook.SessionStore;
 import moishd.android.facebook.Util;
+import moishd.android.facebook.SessionEvents.AuthListener;
+import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.IntentResultCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,7 +45,8 @@ public class WelcomeScreenActivity extends Activity{
 	protected static Facebook facebook;
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
-	private Location location; 
+	private Location location; //TODO ahh !?!??
+	private ProgressDialog progressDialog;
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,12 +59,8 @@ public class WelcomeScreenActivity extends Activity{
 			startGoogleAuth();
 		}
 
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		String bestProvider = locationManager.getBestProvider(criteria, true);
-		location = locationManager.getLastKnownLocation(bestProvider);
-		
+		getLocation();
+
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
 
@@ -167,11 +167,35 @@ public class WelcomeScreenActivity extends Activity{
 
 		return authString;
 	}
+	
+	private void getLocation() {
+		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		String bestProvider = locationManager.getBestProvider(criteria, true);
+		location = locationManager.getLastKnownLocation(bestProvider);
+	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
-
+		progressDialog = ProgressDialog.show(this, null, "Registering with server", true, false);
 		asyncRunner.request("me", new ProfileRequestListener(location));
+	}
+	
+	private void registrationFailed(){
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Registration failed.")
+		.setCancelable(false)
+		.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				facebookLogout(null);
+				finish();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
 	}
 
 	public class MoishdAuthListener implements AuthListener {
@@ -217,17 +241,22 @@ public class WelcomeScreenActivity extends Activity{
 
 				ClientLocation loc;
 				if (location != null)				 
-					loc = new ClientLocation(location.getLongitude(),location.getLatitude()) ; //TODO location 
-				else 
+					loc = new ClientLocation(location.getLongitude(), location.getLatitude()) ; //TODO location 
+				else{ 
 					loc = new ClientLocation(0,0);
+				}
 				newUser.setLocation(loc);
 
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 
 				if (registrationComplete){
+					progressDialog.dismiss();
 					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 					startActivity(intent);
+				}
+				else{
+					registrationFailed();
 				}
 				//TODO if registration fails, need to logout the user, show an error message and quit.
 

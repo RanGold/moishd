@@ -2,6 +2,7 @@ package moishd.android;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,12 +22,14 @@ import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.SharedPreferencesKeysEnum;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,11 +52,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 	
@@ -64,6 +67,8 @@ public class AllOnlineUsersActivity extends Activity {
 	private ListView list;
 	private AsyncFacebookRunner asyncRunner;
 	private static List<ClientMoishdUser> moishdUsers;
+	private static List<Drawable> usersPictures;
+	private ProgressDialog mainProgressDialog;
 	
 	private String TAG = "LOCATION-AllOnlineUsers";
 	private Handler mHandler = new Handler();
@@ -71,7 +76,6 @@ public class AllOnlineUsersActivity extends Activity {
 	private static final int TWO_MINUTES = 1000 * 60 * 2;
 	private Timer timer;
 	private LocationManager locationManager ;
-	
 	private LocationListener locationListener = new LocationListener() {
 		public void onLocationChanged(Location location) {
 			// Called when a new location is found by the network location provider.
@@ -89,7 +93,120 @@ public class AllOnlineUsersActivity extends Activity {
 		public void onProviderEnabled(String provider) {}
 		public void onProviderDisabled(String provider) {}
 	};
+		
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
+		//need the authToken for server requests
+		authToken = getGoogleAuthToken();
+
+		boolean isRegistered = isC2DMRegistered();
+		if (!isRegistered){
+			registerC2DM();
+		}
+
+		getAllUsers();
+
+		setContentView(R.layout.all_users_layout);
+		list = (ListView) findViewById(R.id.allUsersListView);
+
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				currentClickPosition = arg2;
+				inviteUserToMoishDialog();
+			}});
+		list.setAdapter(new EfficientAdapter(this));
+		
+		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		GetCurrentLocation(1);
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.users_screen_menu, menu);
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.RefreshList:
+			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
+			getAllUsers();
+			listAdapter.notifyDataSetChanged();
+			return true;
+		case R.id.logout:
+			doQuitActions();
+			return true;
+		case R.id.facebookFriends:
+			getFriendsUsers();
+			return true;
+		case R.id.nearbyUsers:
+			return true;
+		case R.id.allUsers:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	protected void onNewIntent (Intent intent){
+		
+		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
+		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
+		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		
+		if (action!=null){
+			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
+				retrieveInvitation();
+			}
+			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
+				userDeclinedToMoishDialog();
+				game_id = null;
+			}
+			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
+				startGameTruth();
+			}
+			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
+				startGameDare();
+			}
+			
+			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
+				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
+				gameResultDialog(result);
+			}
+			else if(action.equals(ActionByPushNotificationEnum.C2DMError.toString())){
+				C2DMError();
+			}
+		}
+	}
+
+	@Override
+	protected void onDestroy (){
+		super.onDestroy();
+		unregisterC2DM();
+		timer.cancel();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
+			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+			sendInvitationResponse("Accept" + gameType);
+		}
+	}
 	
 	protected boolean isBetterLocation(Location location, Location currentBestLocation) {
 	    if (currentBestLocation == null) {
@@ -151,7 +268,6 @@ public class AllOnlineUsersActivity extends Activity {
 		@Override
 		public void run() {
 			run = new Runnable() {
-				@Override
 				public void run() {
 					locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 50, locationListener);
 					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, locationListener);
@@ -162,129 +278,59 @@ public class AllOnlineUsersActivity extends Activity {
 		}
 	}
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		//need the authToken for server requests
-		authToken = getGoogleAuthToken();
-
-		boolean isRegistered = isC2DMRegistered();
-		if (!isRegistered){
-			registerC2DM();
-		}
-
-		getAllUsers();
-
-		setContentView(R.layout.all_users_layout);
-		list = (ListView) findViewById(R.id.allUsersListView);
-
-		list.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				currentClickPosition = arg2;
-				inviteUserToMoishDialog();
-			}});
-		list.setAdapter(new EfficientAdapter(this));
-		
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		GetCurrentLocation(1);
-		
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.users_screen_menu, menu);
-		return true;
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.RefreshList:
-			EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
-			moishdUsers = ServerCommunication.getAllUsers(authToken);
-			listAdapter.notifyDataSetChanged();
-			return true;
-		case R.id.logout:
-			unregisterC2DM();
-			WelcomeScreenActivity.facebookLogout(null);
-			finish();
-			return true;
-		case R.id.facebookFriends:
-			return true;
-		case R.id.nearbyUsers:
-			return true;
-		case R.id.allUsers:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
-	}
-	
-	@Override
-	protected void onNewIntent (Intent intent){
-		
-		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
-		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		
-		if (action!=null){
-			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
-				retrieveInvitation();
-			}
-			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
-				userDeclinedToMoishDialog();
-				game_id = null;
-			}
-			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
-				startGameTruth();
-			}
-			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
-				startGameDare();
-			}
-			
-			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
-				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-				gameResultDialog(result);
-			}
-		}
-	}
-
-	@Override
-	protected void onDestroy (){
-		super.onDestroy();
+	private void doQuitActions() {
 		unregisterC2DM();
-		timer.cancel();
+		WelcomeScreenActivity.facebookLogout(null);
+		finish();
 	}
 	
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
-			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			sendInvitationResponse("Accept" + gameType);
+	private boolean getAllUsers(){
 
-			
+		mainProgressDialog = new ProgressDialog(AllOnlineUsersActivity.this);
+		mainProgressDialog.setMessage("Retrieving users...");
+		mainProgressDialog.setIndeterminate(true);
+		mainProgressDialog.setCancelable(false);
+		mainProgressDialog.show();
+
+		moishdUsers = ServerCommunication.getAllUsers(authToken);
+
+		moishdUsers = ServerCommunication.getAllUsers(authToken);
+		if (moishdUsers == null){
+			mainProgressDialog.dismiss();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Error retrieving users from server.")
+			.setCancelable(false)
+			.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					getAllUsers();
+				}
+			})
+			.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					doQuitActions();
+				}
+			});
+			AlertDialog alert = builder.create();  
+			alert.show();
+			return false;
+		}
+		else{
+			usersPictures = new ArrayList<Drawable>();
+			for (int i=0; i < moishdUsers.size(); i++){
+				Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
+				usersPictures.add(userPic);
+			}
+			mainProgressDialog.dismiss();
+			return true;
 		}
 	}
-	
-	private void getAllUsers(){
-		moishdUsers = ServerCommunication.getAllUsers(authToken);
-	}
-	
+
 	private void getFriendsUsers(){
-		
-		asyncRunner.request("me", new ProfileRequestListener());
-		moishdUsers = ServerCommunication.getAllUsers(authToken);
+
+		asyncRunner.request("me/friends", new FriendsRequestListener());
 	}
 
 	private void inviteUserToMoishDialog(){
@@ -444,28 +490,53 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 	
-	private class ProfileRequestListener extends BaseRequestListener {
+	private void C2DMError(){
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Connection to game server failed.")
+		.setCancelable(false)
+		.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+
+			public void onClick(DialogInterface dialog, int id) {
+				registerC2DM();
+			}
+		})
+		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				doQuitActions();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();		
+	}
+	private Drawable LoadImageFromWebOperations(String url){
+
+		try{
+			InputStream is = (InputStream) new URL(url).getContent();
+			Drawable d = Drawable.createFromStream(is, "src name");
+			return d;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	private class FriendsRequestListener extends BaseRequestListener {
 
 		public void onComplete(final String response) {
 			try {
+
 				JSONObject json = Util.parseJson(response);
-				final String userName = json.getString("name");
-				final String userId = json.getString("id");
-				final String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
-
-				ClientMoishdUser newUser = new ClientMoishdUser();
-				newUser.setUserNick(userName);
-				newUser.setFacebookID(userId);
-				newUser.setPictureLink(pictureLink);
-				newUser.setMACAddress("123");//TODO need to replace this with the real mac address
-				String authString = getGoogleAuthToken();
-				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
-
-				if (registrationComplete){
-					Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
-					startActivity(intent);
+				JSONArray friends = json.getJSONArray("data");
+				List<String> friendsID = new ArrayList<String>();
+				for (int i=0; i < friends.length(); i++){
+					friendsID.add(((JSONObject) friends.get(i)).getString("id"));
 				}
-				//TODO if registration fails, need to logout the user, show an error message and quit.
+
+				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
+				EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
+				listAdapter.notifyDataSetChanged();
 
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
@@ -548,23 +619,9 @@ public class AllOnlineUsersActivity extends Activity {
 				holder.userRank.setImageBitmap(userRank3);
 			}
 
-			Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(position).getPictureLink());
-			holder.userPicture.setImageDrawable(userPic);
+			holder.userPicture.setImageDrawable(usersPictures.get(position));
 
 			return convertView;
-		}
-
-		private Drawable LoadImageFromWebOperations(String url){
-			
-			try{
-				InputStream is = (InputStream) new URL(url).getContent();
-				Drawable d = Drawable.createFromStream(is, "src name");
-				return d;
-				}
-			catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
 		}
 
 		static class ViewHolder {

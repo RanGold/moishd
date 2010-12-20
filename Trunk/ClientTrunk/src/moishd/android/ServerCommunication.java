@@ -12,6 +12,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -106,9 +107,9 @@ public class ServerCommunication {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<ClientMoishdUser> getFacebookFriends(String authString){
+	public static List<ClientMoishdUser> getFacebookFriends(List<String> friendsID, String authString){
 
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetFriendUsers, null, authString);
+		HttpResponse response = SendObjToServer(friendsID, ServletNamesEnum.GetFriendUsers, authString);
 		try {
 			InputStream contentStream = response.getEntity().getContent();
 			if (response.containsHeader("Error")){

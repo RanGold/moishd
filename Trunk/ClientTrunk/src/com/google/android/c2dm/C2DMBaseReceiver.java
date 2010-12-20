@@ -176,8 +176,7 @@ public abstract class C2DMBaseReceiver extends IntentService {
                         0 /*requestCode*/, retryIntent, 0 /*flags*/);
                 
                 AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                am.set(AlarmManager.ELAPSED_REALTIME,
-                        backoffTimeMs, retryPIntent);
+                am.set(AlarmManager.ELAPSED_REALTIME, backoffTimeMs, retryPIntent);
 
                 // Next retry should wait longer.
                 backoffTimeMs *= 2;
