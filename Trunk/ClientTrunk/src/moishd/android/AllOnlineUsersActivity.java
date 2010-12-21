@@ -159,8 +159,13 @@ public class AllOnlineUsersActivity extends Activity {
 
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
-			getUsers(currentUsersType);
-			listAdapter.notifyDataSetChanged();
+			if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
+				getUsers(currentUsersType);
+				listAdapter.notifyDataSetChanged();
+			}
+			else{
+				getFriendsUsers();
+			}
 			return true;
 		case R.id.logout:
 			doQuitActions();
@@ -221,10 +226,6 @@ public class AllOnlineUsersActivity extends Activity {
 					intentForResult.setClass(this, youHaveBeenMoishd.class);
 
 				startActivity(intentForResult);
-
-
-
-
 			}
 		}
 	}
@@ -374,7 +375,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void getFriendsUsers(){
-
+		currentUsersType = GetUsersByTypeEnum.FacebookFriends;
 		asyncRunner.request("me/friends", new FriendsRequestListener());
 	}
 

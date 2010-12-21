@@ -229,7 +229,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
-		progressDialog = ProgressDialog.show(this, null, "Registering with  Moish'd! server", true, false);
+		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);
 		asyncRunner.request("me", new ProfileRequestListener(location));
 	}
 
