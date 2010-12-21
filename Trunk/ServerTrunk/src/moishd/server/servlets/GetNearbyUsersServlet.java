@@ -11,6 +11,7 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
@@ -31,6 +32,7 @@ public class GetNearbyUsersServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
+			LoggerCommon.Get().LogError(this, "Not Logged In");
 			response.addHeader("Error", "");
 			response.getWriter().write("Not Logged In");
 		} else {
@@ -40,6 +42,7 @@ public class GetNearbyUsersServlet extends HttpServlet {
 						MoishdUser.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser, 100));
 				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("GetNearbyUsersServlet: " + e.getMessage());
 			}

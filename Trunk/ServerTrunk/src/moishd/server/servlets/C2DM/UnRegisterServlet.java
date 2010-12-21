@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
@@ -26,6 +27,7 @@ public class UnRegisterServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
+			LoggerCommon.Get().LogError(this, "Not Logged In");
 			response.addHeader("Error", "");
 			response.getWriter().println("Error: no logged in user");
 		} else {
@@ -35,6 +37,7 @@ public class UnRegisterServlet extends HttpServlet {
 				muser.setRegistered(false);
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("UnRegisterServlet: " + e.getMessage());
 			}

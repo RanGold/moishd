@@ -10,6 +10,7 @@ import moishd.client.dataObjects.ClientLocation;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
@@ -29,6 +30,7 @@ public class UpdateLocationServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
+			LoggerCommon.Get().LogError(this, "Not Logged In");
 			response.addHeader("Error", "");
 			response.getWriter().println("Error: no logged in user");
 		} else {
@@ -41,9 +43,11 @@ public class UpdateLocationServlet extends HttpServlet {
 				muser.getLocation().setLongitude(newLocation.getLongitude());
 				muser.getLocation().SaveChanges();
 			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("UserLoginServlet: " + e.getMessage());
 			} catch (ClassNotFoundException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("UserLoginServlet: " + e.getMessage());
 			}

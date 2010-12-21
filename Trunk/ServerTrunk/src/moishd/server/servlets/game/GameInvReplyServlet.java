@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
@@ -30,6 +31,7 @@ public class GameInvReplyServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
+			LoggerCommon.Get().LogError(this, "Not Logged In");
 			response.addHeader("Error", "");
 			response.getWriter().println("Error: no logged in user");
 		} else {
@@ -86,9 +88,11 @@ public class GameInvReplyServlet extends HttpServlet {
 					}
 				}
 			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("TimeGameInvReplyServlet: " + e.getMessage());
 			} catch (ServletException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("TimeGameInvReplyServlet: " + e.getMessage());
 			}

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
+import moishd.server.common.LoggerCommon;
 
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -24,10 +25,8 @@ public class C2DMAuthServlet extends HttpServlet {
 				&& UserServiceFactory.getUserService().isUserAdmin()) {
 			try {
 				DSCommon.SetC2DMAuth(C2DMCommon.getAuthToken(true));
-			} catch (IOException e) {
-				response.addHeader("Error", "");
-				response.getWriter().write("C2DMAuthServlet" + e.getMessage());
 			} catch (ServletException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().write("C2DMAuthServlet" + e.getMessage());
 			}

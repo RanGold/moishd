@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
@@ -28,6 +29,7 @@ public class GetGameInitiatorServlet extends HttpServlet {
 		User user = userService.getCurrentUser();
 
 		if (user == null) {
+			LoggerCommon.Get().LogError(this, "Not Logged In");
 			response.addHeader("Error", "");
 			response.getWriter().println("Error: no logged in user");
 		} else {
@@ -39,6 +41,7 @@ public class GetGameInitiatorServlet extends HttpServlet {
 				MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 				GsonCommon.WriteJsonToResponse(muser, response);
 			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
 				response.addHeader("Error", "");
 				response.getWriter().println("GetTimeGameInitiatorServlet: " + e.getMessage());
 			}
