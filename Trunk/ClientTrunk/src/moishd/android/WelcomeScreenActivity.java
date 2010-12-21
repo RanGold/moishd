@@ -60,20 +60,31 @@ public class WelcomeScreenActivity extends Activity{
 	private final int SHOW_FACEBOOK_ERROR_DIALOG = 0;
 	private final int SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG = 1;
 	private final int SHOW_C2DM_ERROR_DIALOG = 2;
+	private final int REGISTRATION_COMPLETE = 3;
+
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case SHOW_FACEBOOK_ERROR_DIALOG:
+				progressDialog.dismiss();
 				registrationToMoishdServerFailed();
 				break;
 
 			case SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG:
+				progressDialog.dismiss();
 				registrationToFacebookFailed();
 				break;
 
 			case SHOW_C2DM_ERROR_DIALOG:
+				progressDialog.dismiss();
 				registrationToC2dmFailed();
+				break;
+				
+			case REGISTRATION_COMPLETE:
+				progressDialog.dismiss();
+				Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
+				startActivity(intent);	
 				break;
 			}
 		}
@@ -415,34 +426,31 @@ public class WelcomeScreenActivity extends Activity{
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 				if (registrationComplete){
 					boolean c2dmRegisteredSuccessfully = registerC2DM();
-					progressDialog.dismiss();
 					if (c2dmRegisteredSuccessfully){
-						Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
-						startActivity(intent);						
+						sendMessageToHandler(REGISTRATION_COMPLETE);					
 					}
 					else{
-						Message registrationErrorMessage = Message.obtain();
-						registrationErrorMessage.setTarget(mHandler);
-						registrationErrorMessage.what = SHOW_C2DM_ERROR_DIALOG;
-						registrationErrorMessage.sendToTarget();
+						sendMessageToHandler(SHOW_C2DM_ERROR_DIALOG);
 					}
 				}
 				else{
-					Message registrationErrorMessage = Message.obtain();
-					registrationErrorMessage.setTarget(mHandler);
-					registrationErrorMessage.what = SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG;
-					registrationErrorMessage.sendToTarget();
+					sendMessageToHandler(SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG);
 				}
-
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
+				sendMessageToHandler(SHOW_FACEBOOK_ERROR_DIALOG);
 			} catch (FacebookError e) {
-				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage()); //TODO HILA : Q@##@!#@@!#
-				Message registrationErrorMessage = Message.obtain();
-				registrationErrorMessage.setTarget(mHandler);
-				registrationErrorMessage.what = SHOW_FACEBOOK_ERROR_DIALOG;
-				registrationErrorMessage.sendToTarget();
+				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage());
+				sendMessageToHandler(SHOW_FACEBOOK_ERROR_DIALOG);
 			}
 		}
+
+		private void sendMessageToHandler(final int messageType) {
+			Message registrationErrorMessage = Message.obtain();
+			registrationErrorMessage.setTarget(mHandler);
+			registrationErrorMessage.what = messageType;
+			registrationErrorMessage.sendToTarget();
+		}
 	}
+
 }
