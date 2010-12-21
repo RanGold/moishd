@@ -67,7 +67,7 @@ public class DSCommon {
 				q.setRange(0, amount);
 			}
 			
-			if (!fieldName.equals("NULL")) {
+			if (!fieldName.equals("NULL") && (filterValues.size() > 0)) {
 				filter += ":p.contains(" + fieldName + ")";
 				q.setFilter(filter);
 				filterParams.add(filterValues);
