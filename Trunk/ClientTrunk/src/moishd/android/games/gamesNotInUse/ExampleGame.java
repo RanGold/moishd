@@ -1,6 +1,7 @@
-package moishd.android.games; /* This class is implemented in this package*/
+package moishd.android.games.gamesNotInUse; /* This class is implemented in this package*/
 
 import moishd.android.R;
+import moishd.android.games.GameActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

@@ -5,8 +5,6 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
-import moishd.android.ServerCommunication;
-import moishd.common.IntentExtraKeysEnum;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -136,11 +134,7 @@ public class SimonPro extends GameActivity{
 		giveUp.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				String gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-				String authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-				String gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-				ServerCommunication.sendLoseToServer(gameId, authString, gameType);
-				finish();
+				Lose();
 			}
 		});
 		
@@ -183,44 +177,9 @@ public class SimonPro extends GameActivity{
 	}
 	
 	
-/*	public class LittleCount extends CountDownTimer {
-		public LittleCount(long millisInFuture, long countDownInterval) {
-			super(millisInFuture, countDownInterval);
-		}    
-		public void onFinish() {
-			wrong = (TextView) findViewById(R.id.wrong);
-			if (tr>0)
-				wrong.setText("try again from the start");
-			else 
-				SimonPro.this.finish();
-		}
-		
-		@Override
-		public void onTick(long arg0) {
-			counter=0;
-			wrong = (TextView) findViewById(R.id.wrong);
-			tries = (TextView) findViewById(R.id.tries);
-			Animation anim = AnimationUtils.loadAnimation(SimonPro.this, R.anim.animation3);
-			wrong.setVisibility(0);
-			tries.setText("number of tries:" + tr);
-			if (tr > 0)
-				wrong.setText("WRONG!!!");
-			else {
-				wrong.setTextSize(40);
-				wrong.setText("you lost!");
-			}
-				
-			wrong.startAnimation(anim);
-		}
-	}*/
-
-	
 	public void wrongAnswer(){
 		counter=0;
 		tr--;
-		//LittleCount c1 = new LittleCount(2000,1000);
-		//c1.start();
-		//wrong = (TextView) findViewById(R.id.wrong);
 		wrong = (TextView) findViewById(R.id.wrong);
 		tries = (TextView) findViewById(R.id.tries);
 		Animation anim = AnimationUtils.loadAnimation(SimonPro.this, R.anim.animation3);

@@ -34,8 +34,8 @@
   
     <TextView
   	android:id="@+id/clickOnHand" 
-  	android:text="Click on the hand to go back" 
-	android:paddingLeft="40dip"
+  	android:text="Click on the hand to go back to main menu" 
+	android:paddingLeft="20dip"
 	android:paddingRight="20dip"
 	android:gravity="center_vertical|center_horizontal"
 	android:textSize="17dip"

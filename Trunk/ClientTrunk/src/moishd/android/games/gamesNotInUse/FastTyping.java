@@ -1,10 +1,9 @@
-package moishd.android.games;
+package moishd.android.games.gamesNotInUse;
 
 import java.util.Random;
 
 import moishd.android.R;
-import android.app.Activity;
-import android.content.Intent;
+import moishd.android.games.GameActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 
 
 
-public class FastTyping extends Activity {
+public class FastTyping extends GameActivity {
 
 	final String[] ourDict ={"dangerous", "lovely", "believe", "addictive", "energy", "parachute"};
 	
@@ -46,17 +45,15 @@ public class FastTyping extends Activity {
 		
 		finish.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(FastTyping.this, FastTyping3.class);
-				FastTyping.this.startActivity(intent);
+					Lose();
 			}
 		});
 
 		MoishButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				String wordByUser = wordOfUser.getText().toString();
-				if (wordByUser.compareTo(currentWord)==0){
-					Intent myIntent = new Intent(FastTyping.this, FastTyping2.class);
-					FastTyping.this.startActivity(myIntent);
+				if (wordByUser.equals(currentWord)){
+					Win();
 				}
 				else {
 					Toast.makeText(FastTyping.this, 

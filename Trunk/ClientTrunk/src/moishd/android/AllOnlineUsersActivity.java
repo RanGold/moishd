@@ -16,6 +16,8 @@ import moishd.android.games.Mixing;
 import moishd.android.games.SimonPro;
 import moishd.android.games.TruthOrDare;
 import moishd.android.games.TruthPart;
+import moishd.android.games.youHaveBeenMoishd;
+import moishd.android.games.youMoishd;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
@@ -205,7 +207,18 @@ public class AllOnlineUsersActivity extends Activity {
 
 				else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 					String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-					gameResultDialog(result);
+					//gameResultDialog(result);
+					Intent intentForResult = new Intent();
+					if (result.equals("Won")) 
+						intentForResult.setClass(this, youMoishd.class);
+					else
+						intentForResult.setClass(this, youHaveBeenMoishd.class);
+						
+					startActivity(intentForResult);
+					
+						
+					
+						
 				}
 			}
 		}

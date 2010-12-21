@@ -1,12 +1,11 @@
 package moishd.android.games;
 
-
 import moishd.android.ServerCommunication;
+import moishd.android.games.youHaveBeenMoishd;
+import moishd.android.games.youMoishd;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -20,7 +19,16 @@ public class GameActivity extends Activity{
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
+			Intent intentForResult = new Intent();
+			if (result.equals("Won")) 
+				intentForResult.setClass(this, youMoishd.class);
+			else
+				intentForResult.setClass(this, youHaveBeenMoishd.class);
+				
+			startActivity(intentForResult);
+			finish();
 			
+			/*
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("You've " + result + "!")
 			.setCancelable(false)
@@ -30,7 +38,7 @@ public class GameActivity extends Activity{
 				}
 			});
 			AlertDialog alert = builder.create();  
-			alert.show();
+			alert.show();*/
 		}
 	}
 

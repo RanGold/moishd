@@ -1,8 +1,9 @@
-package moishd.android.games;
+package moishd.android.games.gamesNotInUse;
 
 import java.util.Random;
 
 import moishd.android.R;
+import moishd.android.games.Mixing;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

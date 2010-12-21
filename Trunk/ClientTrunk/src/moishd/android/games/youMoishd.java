@@ -19,9 +19,7 @@ public class youMoishd extends Activity {
 		moish.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				//here to open all users list
-				Intent intent = new Intent(youMoishd.this, SimonPro.class);
-				startActivity(intent);
-				youMoishd.this.finish();
+				finish();
 
 
 			}});

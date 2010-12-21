@@ -1,4 +1,4 @@
-package moishd.android.games;
+package moishd.android.games.gamesNotInUse;
 
 import moishd.android.R; 
 import moishd.android.ServerCommunication;
