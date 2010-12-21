@@ -436,6 +436,21 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 
+	private void userIsBusy(String invitedUser){
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(invitedUser + " is currently playing. Please try again later.")
+		.setCancelable(false)
+		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
+	}
+	
+	
 	private void userDeclinedToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -451,6 +466,17 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 
+	/* Common commands for both truth and dare games.
+	 * Preparing the intent, adding all necessary details into it.
+	 */
+	private void commonForTruthAndDare(Intent intent){
+		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
+		startActivity(intent);
+	}
+	
+	
 	private void startGameDare(){
 		Intent intent;
 		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
@@ -459,20 +485,15 @@ public class AllOnlineUsersActivity extends Activity {
 			intent = new Intent(this, Mixing.class);
 		else //TODO right now else case is fast click.
 			intent = new Intent(this, FastClick.class);
-		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
-		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
-		startActivity(intent);
+		commonForTruthAndDare(intent);
 	}
 
 	private void startGameTruth(){
 		Intent intent = new Intent(this, TruthPart.class);
-		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
-		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), IntentExtraKeysEnum.Truth.toString());
-		startActivity(intent);
+		commonForTruthAndDare(intent);
 	}
 
+	/*
 	private void gameResultDialog(String result){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -487,6 +508,7 @@ public class AllOnlineUsersActivity extends Activity {
 		alert.show();
 
 	}
+	*/
 
 	private String getGoogleAuthToken() {
 

@@ -156,7 +156,7 @@ public class Mixing extends GameActivity{
 			public void onClick(View v) {
 
 				String wordByUser = wordOfUser.getText().toString();
-				if (wordByUser.compareTo(currentWord)==0){
+				if (wordByUser.equals(currentWord)){
 						Win();
 						}
 				
