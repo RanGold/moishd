@@ -39,7 +39,7 @@ public class GetNearbyUsersServlet extends HttpServlet {
 			try {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				List<ClientMoishdUser> allUsers =  
-						MoishdUser.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser, 100));
+						MoishdUser.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser, 1));
 				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
