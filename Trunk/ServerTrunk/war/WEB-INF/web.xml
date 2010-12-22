@@ -149,6 +149,14 @@
 		<servlet-name>UpdateLocationServlet</servlet-name>
 		<url-pattern>/UpdateLocation</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>SendGameResultServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.SendGameResultServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SendGameResultServlet</servlet-name>
+		<url-pattern>/queues/SendGameResult</url-pattern>
+	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
