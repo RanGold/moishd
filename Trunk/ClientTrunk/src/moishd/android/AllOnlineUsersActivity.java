@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Collections;
 
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
@@ -253,7 +254,25 @@ public class AllOnlineUsersActivity extends Activity {
 			moishdUsers = ServerCommunication.getAllUsers(authToken);
 			break;
 		case NearbyUsers:
-			moishdUsers = ServerCommunication.getNearbyUsers(authToken);
+			{
+			//Tammmy
+				if (ServerCommunication.hasLocation() == true) 
+					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
+				else {
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage("Location wasn't settled yet. Please try again in a moment and make sure your GPS is on.")
+					.setCancelable(false)
+					.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+					AlertDialog alert = builder.create();  
+					alert.show();
+					return false;
+				}	
+			}
+			
 			break;
 		default: 
 			break;
@@ -282,7 +301,12 @@ public class AllOnlineUsersActivity extends Activity {
 			alert.show();
 			return false;
 		}
+		
+
+
 		else{
+			//TODO tammy - sort the list
+			Collections.sort(moishdUsers);
 			usersPictures = new ArrayList<Drawable>();
 			for (int i=0; i < moishdUsers.size(); i++){
 				Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
