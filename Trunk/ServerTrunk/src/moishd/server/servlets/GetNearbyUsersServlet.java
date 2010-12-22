@@ -3,7 +3,6 @@ package moishd.server.servlets;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,11 +13,7 @@ import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
-public class GetNearbyUsersServlet extends HttpServlet {
+public class GetNearbyUsersServlet extends GeneralServlet {
 
 	/**
 	 * 
@@ -28,23 +23,16 @@ public class GetNearbyUsersServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
 
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		super.doPost(request, response);
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().write("Not Logged In");
-		} else {
+		if (user != null) {
 			try {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				List<ClientMoishdUser> allUsers =  
 						MoishdUser.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser, 1));
 				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("GetNearbyUsersServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}

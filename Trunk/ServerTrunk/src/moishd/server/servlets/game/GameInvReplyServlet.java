@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,12 +13,9 @@ import moishd.server.common.DataAccessException;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
+import moishd.server.servlets.GeneralServlet;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
-public class GameInvReplyServlet extends HttpServlet {
+public class GameInvReplyServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
@@ -27,14 +23,10 @@ public class GameInvReplyServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		
+		super.doPost(request, response);
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().println("Error: no logged in user");
-		} else {
+		if (user != null) {
 			try {
 				String paramters = request.getReader().readLine();
 				
@@ -88,13 +80,9 @@ public class GameInvReplyServlet extends HttpServlet {
 					}
 				}
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("TimeGameInvReplyServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ServletException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("TimeGameInvReplyServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}
