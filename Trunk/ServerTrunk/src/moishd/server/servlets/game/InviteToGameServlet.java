@@ -47,7 +47,7 @@ public class InviteToGameServlet extends HttpServlet {
 				MoishdUser invUser = DSCommon.GetUserByGoogleId(clientUser.getUserGoogleIdentifier());
 				
 				if (invUser.isBusy()) {
-					C2DMCommon.PushGenericMessage(invUser.getRegisterID(), 
+					C2DMCommon.PushGenericMessage(initUser.getRegisterID(), 
 							C2DMCommon.Actions.PlayerBusy.toString(), new HashMap<String, String>());
 				} else {
 					initUser.setBusy(true);
