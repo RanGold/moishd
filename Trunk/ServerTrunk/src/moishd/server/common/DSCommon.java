@@ -267,7 +267,10 @@ public class DSCommon {
 			for (Location location : locations) {
 				if (CalculateDistance(location.getLatitude(), location.getLongitude(), 
 						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) {
-					users.add(location.getMoishdUser());
+					
+					if (!user.getUserGoogleIdentifier().equals(user.getUserGoogleIdentifier())) {
+						users.add(location.getMoishdUser());
+					}
 				}
 			}
 			

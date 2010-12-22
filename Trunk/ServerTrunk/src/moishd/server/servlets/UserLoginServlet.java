@@ -2,7 +2,6 @@ package moishd.server.servlets;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,12 +12,9 @@ import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.reflect.TypeToken;
 
-public class UserLoginServlet extends HttpServlet {
+public class UserLoginServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
@@ -26,14 +22,10 @@ public class UserLoginServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().println("Error: no logged in user");
-		} else {
+		super.doPost(request, response);
+
+		if (user != null) {
 			try {
 				ClientMoishdUser newUser = 
 					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
@@ -60,13 +52,9 @@ public class UserLoginServlet extends HttpServlet {
 						
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("UserLoginServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ClassNotFoundException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("UserLoginServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}

@@ -3,7 +3,6 @@ package moishd.server.servlets;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,27 +12,18 @@ import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
-public class GetAllUsersServlet extends HttpServlet {
+public class GetAllUsersServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7171012395494987373L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-	throws IOException {
+			throws IOException {
 
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		super.doPost(request, response);
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().write("Not Logged In");
-		} else {
+		if (user != null) {
 			long amount = -1;
 			try {
 				String strAmount = request.getReader().readLine();
@@ -43,14 +33,14 @@ public class GetAllUsersServlet extends HttpServlet {
 			}
 			try {
 				DSCommon.GetUserByGoogleId(user.getEmail());
-				List<ClientMoishdUser> allUsers = (amount == -1 ? 
-						DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true, amount) :
-							DSCommon.GetAllRegisteredClientUsers(user.getEmail(), true));
+				List<ClientMoishdUser> allUsers = (amount == -1 ? DSCommon
+						.GetAllRegisteredClientUsers(user.getEmail(), true,
+								amount) : DSCommon.GetAllRegisteredClientUsers(
+						user.getEmail(), true));
 				GsonCommon.WriteJsonToResponse(allUsers, response);
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("GetAllUsersServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(),
+						e.getStackTrace());
 			}
 		}
 	}
