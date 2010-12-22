@@ -11,13 +11,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
-import com.google.android.c2dm.server.C2DMRetryServlet;
-import com.google.android.c2dm.server.C2DMessaging;
 
 import moishd.server.dataObjects.C2DMAuth;
 
@@ -36,7 +31,7 @@ public class C2DMCommon {
 		PlayerBusy
 	}
 	
-	 private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
+	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
 
 	 public static final String URI = "/tasks/c2dm";
 

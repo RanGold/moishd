@@ -2,7 +2,6 @@ package moishd.server.servlets.C2DM;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,13 +11,11 @@ import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
+import moishd.server.servlets.GeneralServlet;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.reflect.TypeToken;
 
-public class RegisterServlet extends HttpServlet {
+public class RegisterServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
@@ -26,14 +23,10 @@ public class RegisterServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
+		
+		super.doPost(request, response);
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().println("Error: no logged in user");
-		} else {
+		if (user != null) {
 			try {
 				ClientMoishdUser clientUser = 
 					GsonCommon.GetObjFromJsonStream(request.getInputStream(), 
@@ -44,13 +37,9 @@ public class RegisterServlet extends HttpServlet {
 				muser.setRegistered(true);
 				muser.SaveChanges();
 			} catch (ClassNotFoundException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("RegisterServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("RegisterServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}

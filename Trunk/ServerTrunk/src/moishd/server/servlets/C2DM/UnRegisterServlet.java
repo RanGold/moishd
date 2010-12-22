@@ -2,7 +2,6 @@ package moishd.server.servlets.C2DM;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,12 +9,9 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
+import moishd.server.servlets.GeneralServlet;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
-public class UnRegisterServlet extends HttpServlet {
+public class UnRegisterServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
@@ -23,23 +19,17 @@ public class UnRegisterServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
 
-		if (user == null) {
-			LoggerCommon.Get().LogError(this, "Not Logged In");
-			response.addHeader("Error", "");
-			response.getWriter().println("Error: no logged in user");
-		} else {
+		super.doPost(request, response);
+
+		if (user != null) {
 			try {
 				MoishdUser muser = DSCommon.GetUserByGoogleId(user.getEmail());
 				muser.setRegisterID("NULL");
 				muser.setRegistered(false);
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, e.getMessage(), e.getStackTrace());
-				response.addHeader("Error", "");
-				response.getWriter().println("UnRegisterServlet: " + e.getMessage());
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}
