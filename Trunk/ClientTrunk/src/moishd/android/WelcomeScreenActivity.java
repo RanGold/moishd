@@ -8,10 +8,10 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ActionByPushNotificationEnum;
@@ -54,6 +54,7 @@ public class WelcomeScreenActivity extends Activity{
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
 
+	private LocationManagment locationManagment;
 	private Location location;
 	private ProgressDialog progressDialog;
 
@@ -111,8 +112,10 @@ public class WelcomeScreenActivity extends Activity{
 		if (googleAuthString == null){
 			startGoogleAuth();
 		}
-
-		getLocation();
+		
+		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
+		location = locationManagment.getLastKnownLocation();
+		
 		//registerC2DM();
 		boolean c2dmRegisteredSuccessfully = true;
 
@@ -217,14 +220,6 @@ public class WelcomeScreenActivity extends Activity{
 		Intent intent = new Intent(this, AuthorizeGoogleAccount.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
 		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
-	}
-
-	private void getLocation() {
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		String bestProvider = locationManager.getBestProvider(criteria, true);
-		location = locationManager.getLastKnownLocation(bestProvider);
 	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
