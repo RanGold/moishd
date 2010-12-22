@@ -73,6 +73,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private String game_id;
 	private String gameType;
+	private String last_user;
 
 	private int currentClickPosition;
 	private ListView list;
@@ -200,6 +201,7 @@ public class AllOnlineUsersActivity extends Activity {
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		
 
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
@@ -207,6 +209,10 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
+				game_id = null;
+			}
+			else if (action.equals(ActionByPushNotificationEnum.UserIsBusy.toString())){
+				userIsBusy(last_user);
 				game_id = null;
 			}
 			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
@@ -382,7 +388,8 @@ public class AllOnlineUsersActivity extends Activity {
 	private void inviteUserToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've invited  " + moishdUsers.get(currentClickPosition).getUserNick() + " to Moish. Continue?")
+		last_user = moishdUsers.get(currentClickPosition).getUserNick();
+		builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
 		.setCancelable(false)
 		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

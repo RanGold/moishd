@@ -5,6 +5,7 @@ public enum ActionByPushNotificationEnum {
 	C2DMError("C2DMError"),
 	GameInvitation("GameInvitation"),
 	GameDeclined("GameDeclined"),
+	UserIsBusy("UserIsBusy"),
 	StartGameTruth("StartGameTruth"),
 	StartGameDare("StartGameDare"),
 	StartGameDareSimonPro("StartGameDareSimonPro"),
