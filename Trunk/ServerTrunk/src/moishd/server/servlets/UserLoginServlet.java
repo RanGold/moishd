@@ -39,8 +39,7 @@ public class UserLoginServlet extends GeneralServlet {
 				} else {
 					muser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
-						response.addHeader("Error", "");
-						response.getWriter().println("UserLoginServlet: facebook id given " + 
+						LoggerCommon.Get().LogError(this, response, "facebook id given " + 
 								"differes from the database version");
 						return;
 					}
@@ -49,6 +48,7 @@ public class UserLoginServlet extends GeneralServlet {
 				muser.setMACAddress(newUser.getMACAddress());
 				muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 				muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
+				muser.setBusy(false);
 						
 				muser.SaveChanges();
 			} catch (DataAccessException e) {

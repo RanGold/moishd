@@ -15,8 +15,6 @@ import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 import moishd.server.servlets.GeneralServlet;
 
-import com.google.appengine.api.users.UserServiceFactory;
-
 public class SendGameResultServlet extends GeneralServlet {
 	/**
 	 * 
@@ -27,7 +25,8 @@ public class SendGameResultServlet extends GeneralServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		if (UserServiceFactory.getUserService().isUserAdmin()) {
+		// TODO : check if any authentication is possiable
+		//if (UserServiceFactory.getUserService().isUserAdmin()) {
 			try {
 				String gameId = request.getParameter("gameId");
 				String gameType = request.getParameter("gameType");
@@ -78,7 +77,7 @@ public class SendGameResultServlet extends GeneralServlet {
 			} catch (ServletException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
-		}
+		//}
 	}
 }
 
