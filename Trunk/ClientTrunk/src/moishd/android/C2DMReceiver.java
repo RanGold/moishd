@@ -57,9 +57,9 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameDeclined.toString());
 		}
 		
-		else if (action.equals(PushNotificationTypeEnum.UserIsBusy.toString())){
+		else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.UserIsBusy.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.PlayerBusy.toString());
 		}
 		
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){

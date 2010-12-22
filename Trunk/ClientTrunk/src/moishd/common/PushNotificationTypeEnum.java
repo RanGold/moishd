@@ -4,7 +4,7 @@ public enum PushNotificationTypeEnum {
 
 	GameInvitation("GameInvitation"),
 	GameDeclined("GameDeclined"),
-	UserIsBusy("UserIsBusy"),
+	PlayerBusy("PlayerBusy"),
 	StartGameTruth("StartGameTruth"),
 	StartGameDareSimonPro("StartGameDareSimonPro"),
 	StartGameDareMixing("StartGameDareMixing"),

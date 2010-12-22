@@ -212,7 +212,8 @@ public class AllOnlineUsersActivity extends Activity {
 				game_id = null;
 				last_user=null;
 			}
-			else if (action.equals(ActionByPushNotificationEnum.UserIsBusy.toString())){
+			//TODO - Tammy. Don't know if this case is needed
+			else if (action.equals(ActionByPushNotificationEnum.PlayerBusy.toString())){
 				userIsBusy(last_user);
 				game_id = null;
 				last_user = null;
