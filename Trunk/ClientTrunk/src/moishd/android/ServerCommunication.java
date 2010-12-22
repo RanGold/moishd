@@ -46,6 +46,14 @@ public class ServerCommunication {
 		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser);
 		return resp.getStatusLine().getStatusCode();
 	}
+	
+	public static boolean hasLocation(){
+		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation);
+		if (resp.containsHeader("HasLocation"))
+			return true;
+		else
+			return false;
+	}
 
 	
 	public static boolean enlistUser(ClientMoishdUser user, String authString){

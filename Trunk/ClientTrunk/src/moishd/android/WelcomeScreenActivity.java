@@ -253,11 +253,11 @@ public class WelcomeScreenActivity extends Activity{
 
 		Log.d("TEST","Resgistering...");
 
-		int numberOfTriesLest = 3;
+		int numberOfTriesLeft = 3;
 		long waitTime = 30000;
 		boolean wasInterrupted;
 
-		while (numberOfTriesLest > 0){
+		while (numberOfTriesLeft > 0){
 
 			LockSupport.parkNanos(waitTime);
 			if (Thread.interrupted()){
@@ -266,7 +266,7 @@ public class WelcomeScreenActivity extends Activity{
 
 			boolean isRegistered = isC2DMRegistered(); 
 			if (!isRegistered){
-				numberOfTriesLest--;
+				numberOfTriesLeft--;
 				waitTime = waitTime * 2;
 			}
 			else{
@@ -418,7 +418,7 @@ public class WelcomeScreenActivity extends Activity{
 				if (location != null)				 
 					loc = new ClientLocation(location.getLongitude(), location.getLatitude()) ;
 				else{ 
-					loc = new ClientLocation(0,0);
+					loc = new ClientLocation(200,200);
 				}
 				newUser.setLocation(loc);
 

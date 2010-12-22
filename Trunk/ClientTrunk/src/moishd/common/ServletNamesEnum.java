@@ -13,6 +13,7 @@ public enum ServletNamesEnum {
 	InvitationResponse("InvitationResponse"),
 	RegisterUser("RegisterUser"),
 	UpdateLocation("UpdateLocation"),
+	HasLocation("HasLocation"),
 	UnregisterUser("UnregisterUser");
 	
 	private String name;
