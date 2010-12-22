@@ -210,10 +210,12 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
 				game_id = null;
+				last_user=null;
 			}
 			else if (action.equals(ActionByPushNotificationEnum.UserIsBusy.toString())){
 				userIsBusy(last_user);
 				game_id = null;
+				last_user = null;
 			}
 			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
 				startGameTruth();
