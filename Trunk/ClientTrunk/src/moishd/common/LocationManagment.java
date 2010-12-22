@@ -1,7 +1,9 @@
-package moishd.android;
+package moishd.common;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import moishd.android.ServerCommunication;
 
 import android.content.Context;
 import android.location.Criteria;

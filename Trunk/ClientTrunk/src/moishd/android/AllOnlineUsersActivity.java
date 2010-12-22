@@ -23,6 +23,7 @@ import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
+import moishd.common.LocationManagment;
 import moishd.common.SharedPreferencesKeysEnum;
 
 import org.json.JSONArray;
