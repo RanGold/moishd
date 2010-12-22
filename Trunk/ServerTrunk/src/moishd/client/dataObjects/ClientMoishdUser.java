@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class ClientMoishdUser implements Serializable {
+public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUser> {
 	
     /**
 	 * 
@@ -142,4 +142,13 @@ public class ClientMoishdUser implements Serializable {
 		return MACAddress;
 	}
 
-}
+	@Override
+	public int compareTo(ClientMoishdUser user){
+		String lastNameUser1 = this.userNick.split(" ")[1];
+		String lastNameUser2 = user.userNick.split(" ")[1];
+		return lastNameUser1.compareTo(lastNameUser2);
+	}
+	
+
+
+	}
