@@ -1,11 +1,8 @@
 package moishd.android.games;
 
 import moishd.android.ServerCommunication;
-import moishd.android.games.youHaveBeenMoishd;
-import moishd.android.games.youMoishd;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
-import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;

@@ -80,10 +80,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameResult.toString());
 			
-			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); /*why do we need this?*/
+			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); 
 			int placeToCut = resultWithGameType.indexOf(":");
 			String result = resultWithGameType.substring(0,placeToCut); //TODO: hila string index out of bounds
 			String gameType = resultWithGameType.substring(placeToCut+1);
+			
 			//String resultForPush = result;
 			
 			/*
