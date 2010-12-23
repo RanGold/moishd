@@ -99,6 +99,8 @@ public class ServerCommunication {
 						String json = (String) ois.readObject();
 						//Gson g = new Gson();
 						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+						ois.close();
+						contentStream.close();
 						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						e1.printStackTrace();
@@ -129,6 +131,8 @@ public class ServerCommunication {
 						String json = (String) ois.readObject();
 						//Gson g = new Gson();
 						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+						ois.close();
+						contentStream.close();
 						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						e1.printStackTrace();
@@ -159,6 +163,8 @@ public class ServerCommunication {
 						String json = (String) ois.readObject();
 						//Gson g = new Gson();
 						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+						ois.close();
+						contentStream.close();
 						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 					} catch (ClassNotFoundException e1) {
 						e1.printStackTrace();
@@ -208,6 +214,8 @@ public class ServerCommunication {
 						String json = (String) ois.readObject();
 						//Gson g = new Gson();
 						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+						ois.close();
+						contentStream.close();
 						return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
 					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
@@ -321,6 +329,8 @@ public class ServerCommunication {
 			// associating entity with method
 			postMethod.setEntity(req_entity);
 			response = ServerRequest.Get().doPost(postMethod);
+			baos.close();
+			oos.close();
 			return response;
 
 		} catch (URISyntaxException e) {

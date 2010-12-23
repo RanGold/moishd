@@ -37,6 +37,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,11 +58,9 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 
-
-
-	private static List<ClientMoishdUser> moishdUsers;
-	private static List<Drawable> usersPictures;
-	
+	private static List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
+	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
+	private static List<String> friendsID;
 	private GetUsersByTypeEnum currentUsersType;
 
 	private String authToken;
@@ -69,6 +68,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private String game_id;
 	private String gameType;
 	private String last_user;
+	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
 	private ListView list;
@@ -79,14 +79,26 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private LocationManagment locationManagment;
 	private final int UPDATE_LIST_ADAPTER = 0;
+	private final int FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED = 1;
+	private final int HAS_NO_LOCATION_DIALOG = 2;
+	private final int ERROR_RETRIEVING_USERS_DIALOG = 3;
+
 
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case UPDATE_LIST_ADAPTER:
-				EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
-				listAdapter.notifyDataSetChanged();
+				updateList();
+				break;
+			case FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED:
+				facebookFriendsFirstRetrievalCompleted();
+				break;
+			case HAS_NO_LOCATION_DIALOG:
+				hasNoLocationDialog();
+				break;
+			case ERROR_RETRIEVING_USERS_DIALOG:
+				errorRetrievingUsersDialog();
 				break;
 			}
 		}
@@ -98,6 +110,8 @@ public class AllOnlineUsersActivity extends Activity {
 
 		setContentView(R.layout.all_users_layout);
 
+		serverHasFacebookFriends = false;
+
 		//need the authToken for server requests
 		authToken = getGoogleAuthToken();
 		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
@@ -106,19 +120,17 @@ public class AllOnlineUsersActivity extends Activity {
 		locationManagment.startUpdateLocation(1);
 
 		currentUsersType = GetUsersByTypeEnum.AllUsers;
-		boolean retrievedUsersSuccessfully = getUsers(GetUsersByTypeEnum.AllUsers);
+		getUsers(GetUsersByTypeEnum.AllUsers);
 
-		if (retrievedUsersSuccessfully){
-			list = (ListView) findViewById(R.id.allUsersListView);
+		list = (ListView) findViewById(R.id.allUsersListView);
 
-			list.setOnItemClickListener(new OnItemClickListener() {
+		list.setOnItemClickListener(new OnItemClickListener() {
 
-				public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-					currentClickPosition = arg2;
-					inviteUserToMoishDialog();
-				}});
-			list.setAdapter(new EfficientAdapter(this));
-		}
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				currentClickPosition = arg2;
+				inviteUserToMoishDialog();
+			}});
+		list.setAdapter(new EfficientAdapter(this));
 
 	}
 
@@ -130,13 +142,10 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
-
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
 			if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
 				getUsers(currentUsersType);
-				listAdapter.notifyDataSetChanged();
 			}
 			else{
 				getFriendsUsers();
@@ -150,11 +159,9 @@ public class AllOnlineUsersActivity extends Activity {
 			return true;
 		case R.id.nearbyUsers:
 			getUsers(GetUsersByTypeEnum.NearbyUsers);
-			listAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.allUsers:
 			getUsers(GetUsersByTypeEnum.AllUsers);
-			listAdapter.notifyDataSetChanged();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -175,7 +182,7 @@ public class AllOnlineUsersActivity extends Activity {
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		
+
 
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
@@ -198,7 +205,7 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
 				startGameDare();
 			}
-/*
+			/*
 			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 				//gameResultDialog(result);
@@ -210,7 +217,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 				startActivity(intentForResult);
 			}
-			*/
+			 */
 		}
 	}
 
@@ -233,87 +240,31 @@ public class AllOnlineUsersActivity extends Activity {
 		finish();
 	}
 
-	private boolean getUsers(GetUsersByTypeEnum usersType){
-
-		mainProgressDialog = new ProgressDialog(AllOnlineUsersActivity.this);
-		mainProgressDialog.setMessage("Retrieving users...");
-		mainProgressDialog.setIndeterminate(true);
-		mainProgressDialog.setCancelable(false);
-		mainProgressDialog.show();
+	private void getUsers(GetUsersByTypeEnum usersType){
 		
 		currentUsersType = usersType;
-
+		
 		switch(usersType){
 		case AllUsers:
-			moishdUsers = ServerCommunication.getAllUsers(authToken);
-			break;
 		case NearbyUsers:
-			{
-			//Tammmy
-				if (ServerCommunication.hasLocation() == true) 
-					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
-				else {
-					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setMessage("Location wasn't settled yet. Please try again in a moment and make sure your GPS is on.")
-					.setCancelable(false)
-					.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-					AlertDialog alert = builder.create();  
-					alert.show();
-					return false;
-				}	
-			}
+			new GetUsersTask().execute(usersType.toString(), authToken);
+			break;
+		case FacebookFriends:
 			
 			break;
-		default: 
-			break;
-
-		}
-
-		if (moishdUsers == null){
-			mainProgressDialog.dismiss();
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Error retrieving users from server.")
-			.setCancelable(false)
-			.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-					getUsers(currentUsersType);
-				}
-			})
-			.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-					doQuitActions();
-				}
-			});
-			AlertDialog alert = builder.create();  
-			alert.show();
-			return false;
-		}
-		
-
-
-		else{
-
-			Collections.sort(moishdUsers);
-			usersPictures = new ArrayList<Drawable>();
-			for (int i=0; i < moishdUsers.size(); i++){
-				Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
-				usersPictures.add(userPic);
-			}
-			mainProgressDialog.dismiss();
-			return true;
+			
 		}
 	}
 
-	private void getFriendsUsers(){
-		currentUsersType = GetUsersByTypeEnum.FacebookFriends;
-		asyncRunner.request("me/friends", new FriendsRequestListener());
+	private void getFriendsUsers(){ 
+
+		if (!serverHasFacebookFriends){
+			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+			asyncRunner.request("me/friends", new FriendsRequestListener());
+		}
+		else{
+			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken);
+		}
 	}
 
 	private void inviteUserToMoishDialog(){
@@ -387,8 +338,8 @@ public class AllOnlineUsersActivity extends Activity {
 		AlertDialog alert = builder.create();  
 		alert.show();
 	}
-	
-	
+
+
 	private void userDeclinedToMoishDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -413,8 +364,7 @@ public class AllOnlineUsersActivity extends Activity {
 		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 		startActivity(intent);
 	}
-	
-	
+
 	private void startGameDare(){
 		Intent intent;
 		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
@@ -431,11 +381,11 @@ public class AllOnlineUsersActivity extends Activity {
 		commonForTruthAndDare(intent);
 	}
 
-	/*
-	private void gameResultDialog(String result){
+	private void hasNoLocationDialog(){
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've " + result + "!")
+		builder.setIcon(R.id.icon);
+		builder.setMessage("Location hasn't been settled yet. Please make sure your GPS is on and try again.")
 		.setCancelable(false)
 		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
@@ -444,9 +394,32 @@ public class AllOnlineUsersActivity extends Activity {
 		});
 		AlertDialog alert = builder.create();  
 		alert.show();
+	}
+
+	private void errorRetrievingUsersDialog(){
+
+		mainProgressDialog.dismiss();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Error retrieving users from server.")
+		.setCancelable(false)
+		.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				getUsers(currentUsersType);
+				
+				
+			}
+		})
+		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+				doQuitActions();
+			}
+		});
+		AlertDialog alert = builder.create();  
+		alert.show();
 
 	}
-	*/
 
 	private String getGoogleAuthToken() {
 
@@ -470,35 +443,121 @@ public class AllOnlineUsersActivity extends Activity {
 		}
 	}
 
+	private void updateList() {
+		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
+		listAdapter.notifyDataSetChanged();
+	}
+	
+	private void facebookFriendsFirstRetrievalCompleted() {
+		mainProgressDialog.dismiss();
+		serverHasFacebookFriends = true;
+		new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken, friendsID);
+	}
+
+	private void sendMessageToHandler(final int messageType) {
+		Message registrationErrorMessage = Message.obtain();
+		registrationErrorMessage.setTarget(mHandler);
+		registrationErrorMessage.what = messageType;
+		registrationErrorMessage.sendToTarget();
+	}
+	
+	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
+
+		protected void onPreExecute() {
+			mainProgressDialog = ProgressDialog.show(AllOnlineUsersActivity.this, null, "Retrieving users...", true, false);
+		}
+
+		@SuppressWarnings("unchecked")
+		protected List<Object> doInBackground(Object... objects) {
+
+			List <Object> resultList = new ArrayList<Object>();
+			List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
+			List<Drawable> usersPictures = new ArrayList<Drawable>();
+
+			String usersType = (String) objects[0];
+			String authToken = (String) objects[1];
+
+			if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
+				moishdUsers = ServerCommunication.getAllUsers(authToken);
+			}
+			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
+				if (ServerCommunication.hasLocation() == true) {
+					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
+				}
+				else{
+					resultList.add(HAS_NO_LOCATION_DIALOG);
+					return resultList;
+				}
+			}
+			else if (usersType.equals(GetUsersByTypeEnum.FacebookFriends.toString())){
+				List<String> friendsID;
+				if (objects.length == 3){
+					friendsID = (List<String>) objects[2];
+				}
+				else{
+					friendsID = new ArrayList<String>();
+				}
+				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
+			}
+
+			if (moishdUsers == null){
+				resultList.add(ERROR_RETRIEVING_USERS_DIALOG);
+				return resultList;
+			}
+			else{
+				Collections.sort(moishdUsers);
+				for (int i=0; i < moishdUsers.size(); i++){
+					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
+					usersPictures.add(userPic);
+					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
+				}
+				resultList.add(moishdUsers);
+				resultList.add(usersPictures);
+				return resultList;
+			}
+		}
+
+		protected void onProgressUpdate(Integer... progress) {
+			onProgressUpdate(progress[0]);
+		}
+
+		@SuppressWarnings("unchecked")
+		protected void onPostExecute(List<Object> resultList) {
+			if (resultList.size() == 2){
+				moishdUsers = (List<ClientMoishdUser>) resultList.get(0);
+				usersPictures = (List<Drawable>) resultList.get(1);
+				sendMessageToHandler(UPDATE_LIST_ADAPTER);
+			}
+			else{
+				Integer messageCode = (Integer) resultList.get(0);
+				final int messageCodeInt = messageCode.intValue();
+				sendMessageToHandler(messageCodeInt);
+			}
+			mainProgressDialog.dismiss();
+		}
+	}
+
 	private class FriendsRequestListener extends BaseRequestListener {
 
 		public void onComplete(final String response) {
 			try {
-
 				JSONObject json = Util.parseJson(response);
 				JSONArray friends = json.getJSONArray("data");
-				List<String> friendsID = new ArrayList<String>();
+				friendsID = new ArrayList<String>();
 				for (int i=0; i < friends.length(); i++){
 					friendsID.add(((JSONObject) friends.get(i)).getString("id"));
 				}
-				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
-				usersPictures = new ArrayList<Drawable>();
-				for (int i=0; i < moishdUsers.size(); i++){
-					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
-					usersPictures.add(userPic);
-				}
-
-				Message registrationErrorMessage = Message.obtain();
-				registrationErrorMessage.setTarget(mHandler);
-				registrationErrorMessage.what = UPDATE_LIST_ADAPTER;
-				registrationErrorMessage.sendToTarget();
-
+				sendMessageToHandler(FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED);
+				
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
+				sendMessageToHandler(ERROR_RETRIEVING_USERS_DIALOG);
 			} catch (FacebookError e) {
 				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage());
+				sendMessageToHandler(ERROR_RETRIEVING_USERS_DIALOG);
 			}
 		}
+
 	}
 
 	private static class EfficientAdapter extends BaseAdapter {
@@ -518,7 +577,6 @@ public class AllOnlineUsersActivity extends Activity {
 			mInflater = LayoutInflater.from(context);
 
 			// Icons bound to the rows.
-
 			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
@@ -552,7 +610,6 @@ public class AllOnlineUsersActivity extends Activity {
 				holder.userName = (TextView) convertView.findViewById(R.id.text);
 				holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
 				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
-				//holder.moishdButton = (ImageButton) convertView.findViewById(R.id.moishdButton);
 
 				convertView.setTag(holder);
 			} else {
