@@ -22,13 +22,31 @@ public class DSCommon {
 		List<MoishdUser> dUsers = new LinkedList<MoishdUser>();
 		
 		for (MoishdUser user : users) {
-			MoishdUser tempUser = pm.detachCopy(user);
-			tempUser.setLocation(pm.detachCopy(user.getLocation()));
-			tempUser.setStats(pm.detachCopy(user.getStats()));
-			dUsers.add(tempUser);
+			dUsers.add(DetachCopyUser(user, pm));
 		}
 		
 		return (dUsers);
+	}
+	
+	private static MoishdUser DetachCopyUser(MoishdUser user, PersistenceManager pm) {
+		MoishdUser tempUser = pm.detachCopy(user);
+		tempUser.setLocation(pm.detachCopy(user.getLocation()));
+		tempUser.setStats(pm.detachCopy(user.getStats()));
+		return tempUser;
+	}
+	
+	private static List<Location> DetachCopyLocations(List<Location> locations, PersistenceManager pm) {
+		List<Location> dLocations = new LinkedList<Location>();
+		
+		dLocations = (List<Location>) pm.detachCopyAll(locations);
+		
+//		for (Location loc : locations) {
+//			Location tempLoc = pm.detachCopy(loc);
+//			//tempLoc.setMoishdUser(pm.detachCopy(loc.getMoishdUser()));
+//			dLocations.add(tempLoc);
+//		}
+		
+		return (dLocations);
 	}
 	
 	public static List<ClientMoishdUser> GetAllRegisteredClientUsers(String GoogleId, 
@@ -260,12 +278,17 @@ public class DSCommon {
 	public static List<MoishdUser> GetNearbyUsers(MoishdUser user, double distance) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
+			Query q = pm.newQuery("SELECT FROM " + Location.class.getName() + " WHERE " +
+					"moishdUser.isRegistered = true");
+			
 			@SuppressWarnings("unchecked")
-			List<Location> locations = (List<Location>) pm.newQuery(Location.class).execute();
+			List<Location> locations = (List<Location>) q.execute();
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
 			
+			locations = DetachCopyLocations(locations, pm);
+			
 			for (Location location : locations) {
-				if (CalculateDistance(location.getLatitude(), location.getLongitude(), 
+				if (location.isInitialized() && CalculateDistance(location.getLatitude(), location.getLongitude(), 
 						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) {
 					
 					if (!user.getUserGoogleIdentifier().equals(user.getUserGoogleIdentifier())) {

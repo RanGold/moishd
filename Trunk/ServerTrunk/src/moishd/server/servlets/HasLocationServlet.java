@@ -1,24 +1,20 @@
 package moishd.server.servlets;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
-import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdUser;
 
-public class GetNearbyUsersServlet extends GeneralServlet {
-
+public class HasLocationServlet extends GeneralServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1688665969608951036L;
+	private static final long serialVersionUID = -8007187587366249474L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
@@ -29,9 +25,7 @@ public class GetNearbyUsersServlet extends GeneralServlet {
 			try {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				
-				List<ClientMoishdUser> allUsers =  
-						MoishdUser.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser, 1));
-				GsonCommon.WriteJsonToResponse(allUsers, response);
+				response.getWriter().write(String.valueOf(mUser.getLocation().isInitialized()));
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
