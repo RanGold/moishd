@@ -67,8 +67,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private UserGameStatistics stats;
 
 	public MoishdUser(String userNick, String pictureLink,
-			String userGoogleIdentifier, String registerID, String facebookID, String MACAddress,
-			List<String> friendsFacebookIds) {
+			String userGoogleIdentifier, String registerID, String facebookID, String MACAddress) {
 		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
@@ -78,7 +77,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
 		this.isBusy = false;
-		this.friendsFacebookIds = friendsFacebookIds;
+		this.friendsFacebookIds = new LinkedList<String>();
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
@@ -89,7 +88,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
 				this.getRegisterID(), this.getFacebookID(), this.getMACAddress(), 
-				this.getFriendsFacebookIds(), this.getLocation().toClientLocaion(),
+				this.getLocation().toClientLocaion(),
 				Trophy.copyToClientTrophyList(this.getTrophies()), this
 						.getStats().toClientUserGameStatistics()));
 	}

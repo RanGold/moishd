@@ -24,8 +24,9 @@ public class HasLocationServlet extends GeneralServlet {
 		if (user != null) {
 			try {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(user.getEmail());
-				
-				response.getWriter().write(String.valueOf(mUser.getLocation().isInitialized()));
+				if (mUser.getLocation().isInitialized()) {
+					response.addHeader("HasLocation", "");
+				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
