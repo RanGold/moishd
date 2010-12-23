@@ -41,6 +41,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.AndroidCharacter;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -62,6 +63,8 @@ public class AllOnlineUsersActivity extends Activity {
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
 	private static List<String> friendsID;
 	private GetUsersByTypeEnum currentUsersType;
+	private GetUsersByTypeEnum previousClickPosition;
+
 
 	private String authToken;
 
@@ -71,6 +74,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
+	
 	private TextView header;
 	private ListView list;
 
@@ -83,8 +87,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private final int FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED = 1;
 	private final int HAS_NO_LOCATION_DIALOG = 2;
 	private final int ERROR_RETRIEVING_USERS_DIALOG = 3;
-
-
+	private final int START_LOCATION_SETTINGS = 4;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -100,6 +103,9 @@ public class AllOnlineUsersActivity extends Activity {
 				break;
 			case ERROR_RETRIEVING_USERS_DIALOG:
 				errorRetrievingUsersDialog();
+				break;
+			case START_LOCATION_SETTINGS:
+				openLocationSettings();
 				break;
 			}
 		}
@@ -244,7 +250,8 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void getUsers(GetUsersByTypeEnum usersType){
-
+		
+		previousClickPosition = currentUsersType;
 		currentUsersType = usersType;
 
 		switch(usersType){
@@ -387,15 +394,27 @@ public class AllOnlineUsersActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setIcon(R.id.icon);
-		builder.setMessage("Location hasn't been settled yet. Please make sure your GPS is on and try again.")
+		builder.setMessage("Location hasn't been settled yet. Would you like to configure Location Settings?")
 		.setCancelable(false)
-		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				sendMessageToHandler(START_LOCATION_SETTINGS);
+				dialog.cancel();
+			}
+		})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});
 		AlertDialog alert = builder.create();  
 		alert.show();
+		currentUsersType = previousClickPosition;
+	}
+	
+	private void openLocationSettings(){
+		Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+		startActivity(intent);
 	}
 
 	private void errorRetrievingUsersDialog(){
@@ -408,19 +427,16 @@ public class AllOnlineUsersActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 				getUsers(currentUsersType);
-
-
 			}
 		})
-		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				doQuitActions();
-			}
+				dialog.cancel();		
+				currentUsersType = previousClickPosition;
+				}
 		});
 		AlertDialog alert = builder.create();  
 		alert.show();
-
 	}
 
 	private String getGoogleAuthToken() {
