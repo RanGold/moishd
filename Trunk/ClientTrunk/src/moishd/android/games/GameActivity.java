@@ -3,6 +3,7 @@ package moishd.android.games;
 import moishd.android.ServerCommunication;
 import moishd.android.games.youHaveBeenMoishd;
 import moishd.android.games.youMoishd;
+import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
@@ -11,24 +12,33 @@ import android.widget.Toast;
 
 
 public class GameActivity extends Activity{
-	
+
 	String gameId, authString, gameType;
-	
+
 	protected void onNewIntent (Intent intent){
-		
+
+
+		gameId = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
+		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+
+		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
+			//gameResultDialog(result);
 			Intent intentForResult = new Intent();
 			if (result.equals("Won")) 
 				intentForResult.setClass(this, youMoishd.class);
 			else
 				intentForResult.setClass(this, youHaveBeenMoishd.class);
-				
+
 			startActivity(intentForResult);
 			finish();
-			
-			/*
+
+		}
+	}
+
+
+	/*
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("You've " + result + "!")
 			.setCancelable(false)
@@ -39,8 +49,8 @@ public class GameActivity extends Activity{
 			});
 			AlertDialog alert = builder.create();  
 			alert.show();*/
-		}
-	}
+
+
 
 	protected void CommonForWinAndLose(){
 		Toast.makeText(GameActivity.this, "Please wait for result", Toast.LENGTH_LONG).show();
@@ -48,17 +58,15 @@ public class GameActivity extends Activity{
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 	}
-	
+
 	protected void Win(){		
 		CommonForWinAndLose();
 		ServerCommunication.sendWinToServer(gameId, authString, gameType);
-		finish();
 	}
-	
+
 	protected void Lose(){		
 		CommonForWinAndLose();
 		ServerCommunication.sendLoseToServer(gameId, authString, gameType);
-		finish();
 	}
-	
+
 }
