@@ -71,6 +71,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
+	private TextView header;
 	private ListView list;
 
 	private AsyncFacebookRunner asyncRunner;
@@ -109,6 +110,8 @@ public class AllOnlineUsersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.all_users_layout);
+		header = (TextView) findViewById(R.id.usersTypeHeader);
+		header.setText("All online users");
 
 		serverHasFacebookFriends = false;
 
@@ -241,9 +244,9 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void getUsers(GetUsersByTypeEnum usersType){
-		
+
 		currentUsersType = usersType;
-		
+
 		switch(usersType){
 		case AllUsers:
 		case NearbyUsers:
@@ -405,8 +408,8 @@ public class AllOnlineUsersActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 				getUsers(currentUsersType);
-				
-				
+
+
 			}
 		})
 		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
@@ -429,24 +432,22 @@ public class AllOnlineUsersActivity extends Activity {
 		return authString;
 	}
 
-	private Drawable LoadImageFromWebOperations(String url){
-
-		try{
-			InputStream is = (InputStream) new URL(url).getContent();
-			Drawable d = Drawable.createFromStream(is, "src name");
-			return d;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	private void updateList() {
+		switch(currentUsersType){
+			case AllUsers:
+				header.setText("All online users");
+				break;
+			case NearbyUsers:
+				header.setText("Nearby users");
+				break;
+			case FacebookFriends:
+				header.setText("Online Facebook friends");
+				break;
+		}
 		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
 		listAdapter.notifyDataSetChanged();
 	}
-	
+
 	private void facebookFriendsFirstRetrievalCompleted() {
 		mainProgressDialog.dismiss();
 		serverHasFacebookFriends = true;
@@ -459,7 +460,7 @@ public class AllOnlineUsersActivity extends Activity {
 		registrationErrorMessage.what = messageType;
 		registrationErrorMessage.sendToTarget();
 	}
-	
+
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
@@ -480,7 +481,7 @@ public class AllOnlineUsersActivity extends Activity {
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
 			}
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
-				if (ServerCommunication.hasLocation() == true) {
+				if (ServerCommunication.hasLocation(authToken) == true) {
 					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
 				}
 				else{
@@ -534,6 +535,19 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			mainProgressDialog.dismiss();
 		}
+		
+		private Drawable LoadImageFromWebOperations(String url){
+
+			try{
+				InputStream is = (InputStream) new URL(url).getContent();
+				Drawable d = Drawable.createFromStream(is, "src name");
+				return d;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 
 	private class FriendsRequestListener extends BaseRequestListener {
@@ -547,7 +561,7 @@ public class AllOnlineUsersActivity extends Activity {
 					friendsID.add(((JSONObject) friends.get(i)).getString("id"));
 				}
 				sendMessageToHandler(FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED);
-				
+
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
 				sendMessageToHandler(ERROR_RETRIEVING_USERS_DIALOG);
