@@ -279,7 +279,7 @@ public class DSCommon {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			Query q = pm.newQuery("SELECT FROM " + Location.class.getName() + " WHERE " +
-					"moishdUser.isRegistered = true");
+					"longitude != 200");
 			
 			@SuppressWarnings("unchecked")
 			List<Location> locations = (List<Location>) q.execute();
