@@ -32,10 +32,11 @@ public class UserLoginServlet extends GeneralServlet {
 							new TypeToken<ClientMoishdUser>(){}.getType());
 				
 				MoishdUser muser;
-				
+				// TODO : check when friends are sent
 				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
 					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
-							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress());
+							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress(),
+							null);
 				} else {
 					muser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {

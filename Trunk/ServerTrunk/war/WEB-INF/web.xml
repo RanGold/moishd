@@ -142,6 +142,14 @@
 		<url-pattern>/GetNearbyUsers</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>HasLocationServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.HasLocationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HasLocationServlet</servlet-name>
+		<url-pattern>/HasLocation</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UpdateLocationServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.UpdateLocationServlet</servlet-class>
 	</servlet>
