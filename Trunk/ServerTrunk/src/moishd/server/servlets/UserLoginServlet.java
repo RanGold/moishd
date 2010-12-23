@@ -35,8 +35,7 @@ public class UserLoginServlet extends GeneralServlet {
 				// TODO : check when friends are sent
 				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
 					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
-							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress(),
-							null);
+							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress());
 				} else {
 					muser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
