@@ -30,7 +30,7 @@ public class Location extends CommonJDO implements Serializable {
     
     @Persistent(mappedBy = "location")
     private MoishdUser moishdUser;
-	
+
 	public Location(double longitude, double latitude) {
 		super();
 		this.setLongitude(longitude);
@@ -63,5 +63,9 @@ public class Location extends CommonJDO implements Serializable {
 
 	public double getLatitude() {
 		return latitude;
+	}
+	
+	public boolean isInitialized() {
+		return ((this.getLatitude() != 200) && (this.getLongitude() != 200));
 	}
 }

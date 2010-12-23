@@ -27,6 +27,9 @@ public class UnRegisterServlet extends GeneralServlet {
 				MoishdUser muser = DSCommon.GetUserByGoogleId(user.getEmail());
 				muser.setRegisterID("NULL");
 				muser.setRegistered(false);
+				muser.setBusy(false);
+				muser.getLocation().setLatitude(200);
+				muser.getLocation().setLongitude(200);
 				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
