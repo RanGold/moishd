@@ -84,23 +84,26 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			int placeToCut = resultWithGameType.indexOf(":");
 			String result = resultWithGameType.substring(0,placeToCut); //TODO: hila string index out of bounds
 			String gameType = resultWithGameType.substring(placeToCut+1);
-			String resultForPush = result;
+			//String resultForPush = result;
 			
+			/*
 			if (result.equals("LostFirst")) 
 				result = "Lost";
 			
 			else if(result.equals("WonSecond"))
 				result="Won";
+				*/
 			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
-
+		
 			
-			if (resultForPush.equals(PushNotificationTypeEnum.LostFirst.toString()) ||
+/*			if (resultForPush.equals(PushNotificationTypeEnum.LostFirst.toString()) ||
 					resultForPush.equals(PushNotificationTypeEnum.Won.toString())){
 				resultIntent.setClass(this, AllOnlineUsersActivity.class);			
 			}
 			
-			else{
+			else{*/
+			
 				if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
 					resultIntent.setClass(this, TruthPart.class);
 				else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
@@ -109,7 +112,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 					resultIntent.setClass(this, Mixing.class);
 				else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 					resultIntent.setClass(this, FastClick.class);
-			}
+			
 		}
 		startActivity(resultIntent);
 	}
