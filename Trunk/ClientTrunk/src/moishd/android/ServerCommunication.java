@@ -175,7 +175,7 @@ public class ServerCommunication {
 
 	public static String inviteUser(ClientMoishdUser user, String authString){
 
-		HttpResponse response = SendObjToServer(user, ServletNamesEnum.InviteUser, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user.getUserGoogleIdentifier(), authString);
 		try {
 			String content = convertStreamToString(response.getEntity().getContent());
 			if (response.containsHeader("Error")){
