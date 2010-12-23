@@ -5,12 +5,23 @@ import java.net.HttpURLConnection;
 import java.util.Date;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 
 public class ServerRequest  {
 	private final String appDomain = "http://moish-d.appspot.com"; //"http://10.0.2.2:8888/"
@@ -23,7 +34,22 @@ public class ServerRequest  {
 	private static ServerRequest instance;
 
 	private ServerRequest() {
-		http_client = new DefaultHttpClient();
+		HttpParams params = new BasicHttpParams();
+		//HttpConnectionManagerParams.setMaxTotalConnections(params, 100);
+		HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+
+		// Create and initialize scheme registry 
+		SchemeRegistry schemeRegistry = new SchemeRegistry();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+		schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+
+		// Create an HttpClient with the ThreadSafeClientConnManager.
+		// This connection manager must be used if more than one thread will
+		// be using the HttpClient.
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+
+		http_client = new DefaultHttpClient(cm, params);
 	}
 
 	public boolean GetCookie(String auth_token) {
