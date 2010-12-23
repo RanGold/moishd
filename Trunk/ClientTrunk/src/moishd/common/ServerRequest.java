@@ -35,6 +35,8 @@ public class ServerRequest  {
 
 	private ServerRequest() {
 		HttpParams params = new BasicHttpParams();
+		params.setIntParameter("MaxTotalConnections", 100);
+		
 		//HttpConnectionManagerParams.setMaxTotalConnections(params, 100);
 		HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -47,7 +49,7 @@ public class ServerRequest  {
 		// Create an HttpClient with the ThreadSafeClientConnManager.
 		// This connection manager must be used if more than one thread will
 		// be using the HttpClient.
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
+		ClientConnectionManager cm = (new ThreadSafeClientConnManager(params, schemeRegistry));
 
 		http_client = new DefaultHttpClient(cm, params);
 	}
