@@ -299,7 +299,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 
 		else{
-			//TODO tammy - sort the list
+
 			Collections.sort(moishdUsers);
 			usersPictures = new ArrayList<Drawable>();
 			for (int i=0; i < moishdUsers.size(); i++){
