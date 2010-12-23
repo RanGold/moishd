@@ -48,6 +48,10 @@ public class Location extends CommonJDO implements Serializable {
 	public MoishdUser getMoishdUser() {
 		return moishdUser;
 	}
+	
+	public void setMoishdUser(MoishdUser moishdUser) {
+		this.moishdUser = moishdUser;
+	}
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
@@ -66,6 +70,6 @@ public class Location extends CommonJDO implements Serializable {
 	}
 	
 	public boolean isInitialized() {
-		return ((this.getLatitude() != 200) && (this.getLongitude() != 200));
+		return ((this.getLatitude() < 200.0) && (this.getLongitude() < 200.0));
 	}
 }

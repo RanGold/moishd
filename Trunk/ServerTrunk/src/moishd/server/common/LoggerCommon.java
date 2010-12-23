@@ -78,5 +78,7 @@ public class LoggerCommon {
 		this.getLog(servlet.getServletName()).log(Level.WARNING, message);
 	}
 	
-	
+	public void LogInfo(String source, String message) {
+		this.getLog(source).log(Level.WARNING, message);
+	}
 }

@@ -38,13 +38,14 @@ public class DSCommon {
 	private static List<Location> DetachCopyLocations(List<Location> locations, PersistenceManager pm) {
 		List<Location> dLocations = new LinkedList<Location>();
 		
-		dLocations = (List<Location>) pm.detachCopyAll(locations);
+		//dLocations = (List<Location>) pm.detachCopyAll(locations);
 		
-//		for (Location loc : locations) {
-//			Location tempLoc = pm.detachCopy(loc);
-//			//tempLoc.setMoishdUser(pm.detachCopy(loc.getMoishdUser()));
-//			dLocations.add(tempLoc);
-//		}
+		// TODO : delete if not needed
+		for (Location loc : locations) {
+			Location tempLoc = pm.detachCopy(loc);
+			tempLoc.setMoishdUser(DetachCopyUser(loc.getMoishdUser(),pm));
+			dLocations.add(tempLoc);
+		}
 		
 		return (dLocations);
 	}
@@ -279,7 +280,7 @@ public class DSCommon {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			Query q = pm.newQuery("SELECT FROM " + Location.class.getName() + " WHERE " +
-					"longitude != 200");
+					"longitude < 200.0");
 			
 			@SuppressWarnings("unchecked")
 			List<Location> locations = (List<Location>) q.execute();
@@ -288,16 +289,15 @@ public class DSCommon {
 			locations = DetachCopyLocations(locations, pm);
 			
 			for (Location location : locations) {
-				if (location.isInitialized() && CalculateDistance(location.getLatitude(), location.getLongitude(), 
-						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) {
-					
-					if (!user.getUserGoogleIdentifier().equals(user.getUserGoogleIdentifier())) {
+				if (CalculateDistance(location.getLatitude(), location.getLongitude(), 
+						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) { 
+					if (!user.getUserGoogleIdentifier().equals(location.getMoishdUser().getUserGoogleIdentifier())) {
 						users.add(location.getMoishdUser());
 					}
 				}
 			}
 			
-			return DetachCopyRecursively(users, pm);
+			return users;
 		}
 		finally {
 			pm.close();
