@@ -41,6 +41,7 @@ public class GsonCommon {
 		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 		@SuppressWarnings("unchecked")
 		T obj = (T)g.fromJson(json, t);
+		ois.close();
 		return obj;
 	}
 }

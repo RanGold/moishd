@@ -22,7 +22,9 @@ public class UserLoginServlet extends GeneralServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-
+		
+		doesExist = false;
+		
 		super.doPost(request, response);
 
 		if (user != null) {

@@ -10,7 +10,6 @@ import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdGame;
-import moishd.server.dataObjects.MoishdUser;
 import moishd.server.servlets.GeneralServlet;
 
 public class GetGameInitiatorServlet extends GeneralServlet {
@@ -26,12 +25,9 @@ public class GetGameInitiatorServlet extends GeneralServlet {
 
 		if (user != null) {
 			try {
-				DSCommon.GetUserByGoogleId(user.getEmail());
-
 				String gameId = request.getReader().readLine();
 				MoishdGame tg = DSCommon.GetGameByIdRecId(gameId, user.getEmail());
-				MoishdUser muser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
-				GsonCommon.WriteJsonToResponse(muser, response);
+				GsonCommon.WriteJsonToResponse(DSCommon.GetUserByGoogleId(tg.getPlayerInitId()), response);
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
