@@ -5,8 +5,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	
-	<TextView android:id="@+id/clickToStartMoishText" 
-		android:text="Choose your opponent"
+	<TextView android:id="@+id/usersTypeHeader" 
 		android:layout_height="wrap_content"
 		android:textStyle="normal|bold" 
 		android:gravity="center_vertical|center_horizontal"

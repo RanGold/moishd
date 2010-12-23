@@ -47,8 +47,8 @@ public class ServerCommunication {
 		return resp.getStatusLine().getStatusCode();
 	}
 	
-	public static boolean hasLocation(){
-		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation);
+	public static boolean hasLocation(String authString){
+		HttpResponse resp = SendReqToServer(ServletNamesEnum.HasLocation, null, authString);
 		if (resp.containsHeader("HasLocation"))
 			return true;
 		else
