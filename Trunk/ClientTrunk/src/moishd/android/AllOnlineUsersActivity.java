@@ -155,7 +155,7 @@ public class AllOnlineUsersActivity extends Activity {
 			doQuitActions();
 			return true;
 		case R.id.facebookFriends:
-			getFriendsUsers();
+			getUsers(GetUsersByTypeEnum.FacebookFriends);
 			return true;
 		case R.id.nearbyUsers:
 			getUsers(GetUsersByTypeEnum.NearbyUsers);
@@ -250,9 +250,8 @@ public class AllOnlineUsersActivity extends Activity {
 			new GetUsersTask().execute(usersType.toString(), authToken);
 			break;
 		case FacebookFriends:
-			
+			getFriendsUsers();
 			break;
-			
 		}
 	}
 
