@@ -14,8 +14,8 @@ public class GameLoseServlet extends GameResultServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		servletName = "GameLoseServlet";
-		winValue = Result.LostFirst;
-		loseValue = Result.WonSecond;
+		winValue = Result.Lost;
+		loseValue = Result.Won;
 		super.doPost(request, response);
 	}
 }
