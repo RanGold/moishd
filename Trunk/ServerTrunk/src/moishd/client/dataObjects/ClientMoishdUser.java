@@ -25,6 +25,8 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 	
 	private String MACAddress;
     
+	private List<String> friendsFacebookIds;
+	
     private ClientLocation location;
     
     private List<ClientTrophy> trophies;
@@ -40,6 +42,7 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.registerID = "";
 		this.facebookID = "";
 		this.MACAddress = "";
+		this.friendsFacebookIds = null;
 		this.location = null;
 		this.trophies = null;
 		this.stats = null;
@@ -47,7 +50,8 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 
 	public ClientMoishdUser(String userNick, String pictureLink,
 			Date dateRegistered, String userGoogleIdentifier,
-			String registerID, String facebookID, String MACAddress, ClientLocation location,
+			String registerID, String facebookID, String MACAddress, 
+			List<String> friendsFacebookIds, ClientLocation location,
 			List<ClientTrophy> trophies, ClientUserGameStatistics stats) {
 		super();
 		this.userNick = userNick;
@@ -57,6 +61,7 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.registerID = registerID;
 		this.facebookID = facebookID;
 		this.MACAddress = MACAddress;
+		this.friendsFacebookIds = friendsFacebookIds;
 		this.location = location;
 		this.trophies = trophies;
 		this.stats = stats;
@@ -153,6 +158,14 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 
 		
 		return lastNameUser1.compareTo(lastNameUser2);
+	}
+
+	public void setFriendsFacebookIds(List<String> friendsFacebookIds) {
+		this.friendsFacebookIds = friendsFacebookIds;
+	}
+
+	public List<String> getFriendsFacebookIds() {
+		return friendsFacebookIds;
 	}
 	
 

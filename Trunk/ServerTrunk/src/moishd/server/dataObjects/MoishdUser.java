@@ -54,6 +54,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	@Persistent
 	private boolean isBusy;
 	
+	@Persistent
+	private List<String> friendsFacebookIds;
+	
 	@Persistent(dependent = "true")
 	private Location location;
 
@@ -64,7 +67,8 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private UserGameStatistics stats;
 
 	public MoishdUser(String userNick, String pictureLink,
-			String userGoogleIdentifier, String registerID, String facebookID, String MACAddress) {
+			String userGoogleIdentifier, String registerID, String facebookID, String MACAddress,
+			List<String> friendsFacebookIds) {
 		super();
 		this.userNick = userNick;
 		this.pictureLink = pictureLink;
@@ -74,17 +78,18 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
 		this.isBusy = false;
+		this.friendsFacebookIds = friendsFacebookIds;
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
 		this.stats = new UserGameStatistics();
-		this.location = new Location(-1, -1);
+		this.location = new Location(200, 200);
 	}
 
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
 				this.getRegisterID(), this.getFacebookID(), this.getMACAddress(), 
-				this.getLocation().toClientLocaion(),
+				this.getFriendsFacebookIds(), this.getLocation().toClientLocaion(),
 				Trophy.copyToClientTrophyList(this.getTrophies()), this
 						.getStats().toClientUserGameStatistics()));
 	}
@@ -209,5 +214,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public boolean isBusy() {
 		return isBusy;
+	}
+
+	public void setFriendsFacebookIds(List<String> friendsFacebookIds) {
+		this.friendsFacebookIds = friendsFacebookIds;
+	}
+
+	public List<String> getFriendsFacebookIds() {
+		return friendsFacebookIds;
 	}
 }
