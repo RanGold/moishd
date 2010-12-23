@@ -103,6 +103,16 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		return cmuList;
 	}
 
+	public void InitUser() {
+		this.setRegisterID("NULL");
+		this.setRegistered(false);
+		this.setBusy(false);
+		this.getLocation().setLatitude(200);
+		this.getLocation().setLongitude(200);
+		this.getFriendsFacebookIds().clear();
+		this.SaveChanges();
+	}
+	
 	public String getUserNick() {
 		return userNick;
 	}

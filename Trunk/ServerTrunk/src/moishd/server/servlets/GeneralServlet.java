@@ -6,7 +6,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.DSCommon;
+import moishd.server.common.DataAccessException;
 import moishd.server.common.LoggerCommon;
+import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -20,6 +23,8 @@ public class GeneralServlet extends HttpServlet {
 
 	protected UserService userService;
 	protected User user;
+	protected MoishdUser mUser;
+	protected boolean doesExist = true;
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
@@ -28,6 +33,21 @@ public class GeneralServlet extends HttpServlet {
 
 		if (user == null) {
 			LoggerCommon.Get().LogError(this, response, "Not Logged In");
+		} else {
+			try {
+				if (doesExist) {
+					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
+					if (!mUser.isRegistered()) {
+						LoggerCommon.Get().LogError(this, response,
+								"Tried to do an action with unregistered user");
+						mUser.InitUser();
+						user = null;
+					}
+				}
+			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, response, e.getMessage(),
+						e.getStackTrace());
+			}
 		}
 	}
 }

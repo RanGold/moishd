@@ -11,7 +11,6 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
-import moishd.server.dataObjects.MoishdUser;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -31,21 +30,10 @@ public class FilterServlet extends GeneralServlet {
 
 		if (user != null) {
 			try {
-				MoishdUser userById = DSCommon.GetUserByGoogleId(user.getEmail());
-
 				List<String> filterValues = GsonCommon.GetObjFromJsonStream(
 						request.getInputStream(),
 						new TypeToken<List<String>>() {
 						}.getType());
-				
-				if (filterValues.size() == 0){
-					filterValues = userById.getFriendsFacebookIds();
-				}
-				else {
-					userById.setFriendsFacebookIds(filterValues);
-					userById.SaveChanges();
-				}
-					
 
 				List<ClientMoishdUser> users = DSCommon
 						.GetFilteredRegisteredClientUsers(user.getEmail(),

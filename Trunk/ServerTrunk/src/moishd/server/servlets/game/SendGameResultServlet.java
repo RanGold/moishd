@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,9 +14,8 @@ import moishd.server.common.DataAccessException;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.servlets.GeneralServlet;
 
-public class SendGameResultServlet extends GeneralServlet {
+public class SendGameResultServlet extends HttpServlet {
 	/**
 	 * 
 	 */

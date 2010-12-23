@@ -24,8 +24,6 @@ public class GameResultServlet extends GeneralServlet {
 	private static final long serialVersionUID = -530008367358724317L;
 	
 	public enum Result {
-	/*	LostFirst,
-		WonSecond,*/
 		Won,
 		Lost
 	}

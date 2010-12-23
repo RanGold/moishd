@@ -32,7 +32,6 @@ public class GetAllUsersServlet extends GeneralServlet {
 				// Ignoring
 			}
 			try {
-				DSCommon.GetUserByGoogleId(user.getEmail());
 				List<ClientMoishdUser> allUsers = (amount == -1 ? DSCommon
 						.GetAllRegisteredClientUsers(user.getEmail(), true,
 								amount) : DSCommon.GetAllRegisteredClientUsers(
@@ -41,6 +40,7 @@ public class GetAllUsersServlet extends GeneralServlet {
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),
 						e.getStackTrace());
+				user = null;
 			}
 		}
 	}
