@@ -99,26 +99,5 @@ public class DeviceRegistrar {
         
         }).start();
     }
-/*
-    private static HttpResponse makeRequest(Context context, String deviceRegistrationID, String urlPath) throws Exception {
-    	
-    	ClientMoishdUser user = new ClientMoishdUser();
-    	user.setRegisterID(deviceRegistrationID);
-    	
-		URI uri = new URI("http://moish-d.appspot.com/RegisterUser"); 
-		HttpPost postMethod = new HttpPost(uri);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Gson g = new Gson();
-		String json = g.toJson(user);
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(json);
-		ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
-		req_entity.setContentType("application/json");
 
-		// associating entity with method
-		postMethod.setEntity(req_entity);
-
-
-		return ServerRequest.Get().doPost(postMethod);
-    }*/
 }
