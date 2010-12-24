@@ -33,32 +33,28 @@ import com.google.gson.reflect.TypeToken;
 
 public class ServerCommunication {
 
-	private  static final String serverPath = "http://moish-d.appspot.com"; // ""http://10.0.2.2:8888/"
-	//to be replaced with http://moish-d.appspot.com/
-	//when change - change also in ServerRequest
-
+	private static final String serverPath = "http://moish-d.appspot.com";
+	private static Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+	
 	public static int registerC2DMToServer(ClientMoishdUser user){
 		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, null);
 		return resp.getStatusLine().getStatusCode();
 	}
 	
 	public static int unregisterC2DMToServer(){
-		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser);
+		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser, null);
 		return resp.getStatusLine().getStatusCode();
 	}
 	
 	public static boolean hasLocation(String authString){
-		HttpResponse resp = SendReqToServer(ServletNamesEnum.HasLocation, null, authString);
+		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation,authString);
 		if (resp.containsHeader("HasLocation"))
 			return true;
 		else
 			return false;
 	}
-
 	
 	public static boolean enlistUser(ClientMoishdUser user, String authString){
-
-		ServerRequest.Get().GetCookie(authString);
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
@@ -70,8 +66,6 @@ public class ServerCommunication {
 	}
 	
 	public static boolean updateLocationInServer(Location location, String authString){
-
-		ServerRequest.Get().GetCookie(authString);
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
 		HttpResponse response = SendObjToServer(sendLocation, ServletNamesEnum.UpdateLocation, authString);
 		if (response.containsHeader("Error")){
@@ -83,104 +77,22 @@ public class ServerCommunication {
 		} 
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<ClientMoishdUser> getAllUsers(String authString){
-
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetAllUsers, null, authString);
-		try {
-			InputStream contentStream = response.getEntity().getContent();
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-			}
-			else{
-				if (contentStream != null) {
-					ObjectInputStream ois = new ObjectInputStream(contentStream);
-					try {
-						String json = (String) ois.readObject();
-						//Gson g = new Gson();
-						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-						ois.close();
-						contentStream.close();
-						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}			}
-		}
-		catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return getUserListFromResponse(response);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static List<ClientMoishdUser> getFacebookFriends(List<String> friendsID, String authString){
-
 		HttpResponse response = SendObjToServer(friendsID, ServletNamesEnum.GetFriendUsers, authString);
-		try {
-			InputStream contentStream = response.getEntity().getContent();
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-			}
-			else{
-				if (contentStream != null) {
-					ObjectInputStream ois = new ObjectInputStream(contentStream);
-					try {
-						String json = (String) ois.readObject();
-						//Gson g = new Gson();
-						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-						ois.close();
-						contentStream.close();
-						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}			}
-		}
-		catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return getUserListFromResponse(response);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static List<ClientMoishdUser> getNearbyUsers(String authString){
-
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetNearbyUsers, null, authString);
-		try {
-			InputStream contentStream = response.getEntity().getContent();
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-			}
-			else{
-				if (contentStream != null) {
-					ObjectInputStream ois = new ObjectInputStream(contentStream);
-					try {
-						String json = (String) ois.readObject();
-						//Gson g = new Gson();
-						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-						ois.close();
-						contentStream.close();
-						return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-				}			}
-		}
-		catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return getUserListFromResponse(response);
 	}
 
 	public static String inviteUser(ClientMoishdUser user, String authString){
-
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user.getUserGoogleIdentifier(), authString);
 		try {
 			String content = convertStreamToString(response.getEntity().getContent());
@@ -200,37 +112,8 @@ public class ServerCommunication {
 	}
 
 	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
-
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTimeGameInitiator, gameId, authString);
-		try {
-			InputStream contentStream = response.getEntity().getContent();
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-			}
-			else{
-				if (contentStream != null) {
-					ObjectInputStream ois = new ObjectInputStream(contentStream);
-					try {
-						String json = (String) ois.readObject();
-						//Gson g = new Gson();
-						Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-						ois.close();
-						contentStream.close();
-						return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}			}
-		}
-		catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return getUserFromResponse(response);
 	}
 	
 	public static boolean sendInvitationResponse(String gameId, String responseString, String authString) {
@@ -268,115 +151,103 @@ public class ServerCommunication {
 		}			
 	}
 	
-	private static HttpResponse activateServlet(ServletNamesEnum servletName){
-		HttpResponse response ;
-		URI uri;
-		String uriPath = serverPath + "/" + servletName.toString();
-		
-		ServerRequest.Get().GetCookie();
-		
-		try {
-			uri = new URI(uriPath);
-			HttpPost postMethod = new HttpPost(uri);
-			
-			response = ServerRequest.Get().doPost(postMethod);
-			return response;
+	private static HttpResponse activateServlet(ServletNamesEnum servletName, String authString){
+		return SendToServer(servletName, null, null, authString);
+	}
 	
-		} catch (URISyntaxException e) {
+	private static HttpResponse SendObjToServer(Object obj, ServletNamesEnum servletName, String authString){
+		return SendToServer(servletName, obj, null, authString);
+	}
+
+	private static HttpResponse SendReqToServer(ServletNamesEnum servletName, String content, String authString){
+		return SendToServer(servletName, null, content, authString);
+	}
+	
+	private static String getJsonFromResponse(HttpResponse response){
+		InputStream contentStream;
+		String json = null;
+		try {
+			contentStream = response.getEntity().getContent();
+			if (response.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+			}
+			else if (contentStream != null) {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
+					json = (String) ois.readObject();
+					ois.close();
+					contentStream.close();
+				}
+		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		return null;
+		return json;
 	}
 	
-	private static HttpResponse SendObjToServer(Object obj, ServletNamesEnum servletName, String authString){
-
-		final int DURATION = 10000;
-		//to be replaced with http://moish-d.appspot.com/
-		//when change - change also in ServerRequest
-		/*
-		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, DURATION);
-		HttpConnectionParams.setSoTimeout(params, DURATION);
-
-		DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
-		HttpResponse response ;
+	@SuppressWarnings("unchecked")
+	private static List<ClientMoishdUser> getUserListFromResponse(HttpResponse response){
+		String json = getJsonFromResponse(response);
+		return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
+	}
+	
+	private static ClientMoishdUser getUserFromResponse(HttpResponse response){
+		String json = getJsonFromResponse(response);
+		return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
+	}
+	
+	private static HttpResponse SendToServer(ServletNamesEnum servletName, Object obj, String content, String authString){
+		HttpResponse response = null;
 		URI uri;
 		String uriPath = serverPath + "/" + servletName.toString();
+		ByteArrayEntity req_entity;
 		if (authString == null)
 			ServerRequest.Get().GetCookie();
 		else
 			ServerRequest.Get().GetCookie(authString);
 		try {
 			uri = new URI(uriPath);
-
 			HttpPost postMethod = new HttpPost(uri);
-
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			//Gson g = new Gson();
-			Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-			String json = g.toJson(obj);
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(json);
-			ByteArrayEntity req_entity = new ByteArrayEntity(baos.toByteArray());
-			req_entity.setContentType("application/json");
-
-			// associating entity with method
-			postMethod.setEntity(req_entity);
-			response = ServerRequest.Get().doPost(postMethod);
-			baos.close();
-			oos.close();
-			return response;
-
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-
-		return null;	
-
-	}
-
-	private static HttpResponse SendReqToServer(ServletNamesEnum servletName, String content, String authString){
-
-		final int DURATION = 10000;
-
-		/*HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setStaleCheckingEnabled(params, false);
-		HttpConnectionParams.setConnectionTimeout(params, DURATION);
-		HttpConnectionParams.setSoTimeout(params, DURATION);
-
-		//DefaultHttpClient httpClient = new DefaultHttpClient(params);*/
-		URI uri;
-		String uriPath = serverPath + "/" + servletName.toString();
-		ServerRequest.Get().GetCookie(authString);
-		try {
-			uri = new URI(uriPath);
-			HttpPost postMethod = new HttpPost(uri);
-
-			if (content!=null){
-				ByteArrayEntity entity = new ByteArrayEntity(content.getBytes());
-				entity.setContentEncoding("UTF-8");
-				postMethod.setEntity(entity);
+			
+			if (obj==null && content!=null){ //SendReq
+				req_entity = new ByteArrayEntity(content.getBytes());
+				req_entity.setContentEncoding("UTF-8");
+				postMethod.setEntity(req_entity);
+			} else if (obj!=null && content==null){ //SendObj
+				req_entity = byteArrayEntityFromObj(obj);
+				req_entity.setContentType("application/json");
+				postMethod.setEntity(req_entity);
 			}
-			return ServerRequest.Get().doPost(postMethod);
-
+			//	if (obj==null && content==null) than activateServlet so only ServerRequest.Get().doPost(postMethod)
+			response =  ServerRequest.Get().doPost(postMethod);		
+		
 		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
-
-		return null;	
-
+		
+		return response;
 	}
-
+	
+	private static ByteArrayEntity byteArrayEntityFromObj(Object obj) throws IOException{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		String json = g.toJson(obj);
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(json);
+		ByteArrayEntity result = new ByteArrayEntity(baos.toByteArray());
+		oos.close();
+		baos.close();
+		return result;
+	}
+	
 	private static String convertStreamToString(InputStream is) throws IOException {
 		/*
 		 * To convert the InputStream to String we use the
