@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -35,11 +36,13 @@ public class ServerRequest  {
 
 	private ServerRequest() {
 		HttpParams params = new BasicHttpParams();
-		params.setIntParameter("MaxTotalConnections", 100);
+		ConnManagerParams.setMaxTotalConnections(params, 200);
+		ConnManagerParams.setTimeout(params, 20*1000);
+		//params.setIntParameter("MaxTotalConnections", 100);
 		
 		//HttpConnectionManagerParams.setMaxTotalConnections(params, 100);
-		HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		//HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
+	//	HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
 		// Create and initialize scheme registry 
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
