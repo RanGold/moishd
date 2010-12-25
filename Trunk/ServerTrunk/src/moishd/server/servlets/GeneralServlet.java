@@ -25,6 +25,7 @@ public class GeneralServlet extends HttpServlet {
 	protected User user;
 	protected MoishdUser mUser;
 	protected boolean doesExist = true;
+	protected boolean checkRegister = true;
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
@@ -37,7 +38,7 @@ public class GeneralServlet extends HttpServlet {
 			try {
 				if (doesExist) {
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
-					if (!mUser.isRegistered()) {
+					if (checkRegister && !mUser.isRegistered()) {
 						LoggerCommon.Get().LogError(this, response,
 								"Tried to do an action with unregistered user");
 						mUser.InitUser();

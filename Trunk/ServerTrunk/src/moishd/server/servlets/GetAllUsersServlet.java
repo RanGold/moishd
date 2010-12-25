@@ -21,6 +21,8 @@ public class GetAllUsersServlet extends GeneralServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
+		checkRegister = false;
+		
 		super.doPost(request, response);
 
 		if (user != null) {
