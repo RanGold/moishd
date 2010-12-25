@@ -5,11 +5,13 @@ import java.net.HttpURLConnection;
 import java.util.Date;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -20,6 +22,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+
+import android.util.Log;
 
 public class ServerRequest  {
 	private final String appDomain = "http://moish-d.appspot.com"; //"http://10.0.2.2:8888/"
@@ -34,12 +39,12 @@ public class ServerRequest  {
 	private ServerRequest() {
 		HttpParams params = new BasicHttpParams();
 		ConnManagerParams.setMaxTotalConnections(params, 200);
-		ConnManagerParams.setTimeout(params, 20*1000);
+		ConnManagerParams.setTimeout(params, 15*1000);
 		//params.setIntParameter("MaxTotalConnections", 100);
 		
 		//HttpConnectionManagerParams.setMaxTotalConnections(params, 100);
 		//HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-	//	HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
 		// Create and initialize scheme registry 
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -117,13 +122,21 @@ public class ServerRequest  {
 		if (!this.GetCookie()) {
 			throw new ClientProtocolException("Error getting cookie");
 		}
-		return http_client.execute(post);
+		http_client.getConnectionManager().closeExpiredConnections();
+		HttpResponse response=null;
+		try{
+		response = http_client.execute(post);
+		} catch (ConnectionPoolTimeoutException e){
+			Log.d("loc","exception");
+		}
+		return response;
 	}
 	
-	public HttpResponse doGet(HttpGet get) throws ClientProtocolException, IOException {
-		if (!this.GetCookie()) {
-			throw new ClientProtocolException("Error getting cookie");
-		}
-		return http_client.execute(get);
-	}
+//	public HttpResponse doGet(HttpGet get) throws ClientProtocolException, IOException {
+//		if (!this.GetCookie()) {
+//			throw new ClientProtocolException("Error getting cookie");
+//		}
+//		http_client.getConnectionManager().closeExpiredConnections();
+//		return http_client.execute(get);
+//	}
 }
