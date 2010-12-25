@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.util.Date;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -13,6 +12,7 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -22,7 +22,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 
 import android.util.Log;
 
@@ -40,11 +39,12 @@ public class ServerRequest  {
 		HttpParams params = new BasicHttpParams();
 		ConnManagerParams.setMaxTotalConnections(params, 200);
 		ConnManagerParams.setTimeout(params, 15*1000);
-		//params.setIntParameter("MaxTotalConnections", 100);
+		params.setIntParameter(ConnManagerParams.MAX_TOTAL_CONNECTIONS, 200);
+		params.setParameter(ConnManagerParams.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean(100));
 		
 		//HttpConnectionManagerParams.setMaxTotalConnections(params, 100);
 		//HttpConnectionParams.setConnectionTimeout(params, 20 * 1000);
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		//HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
 		// Create and initialize scheme registry 
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
