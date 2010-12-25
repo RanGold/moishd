@@ -25,8 +25,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -57,30 +59,31 @@ public class WelcomeScreenActivity extends Activity{
 	private Location location;
 	private ProgressDialog progressDialog;
 
-	private final int SHOW_FACEBOOK_ERROR_DIALOG = 0;
-	private final int SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG = 1;
-	private final int SHOW_C2DM_ERROR_DIALOG = 2;
-	private final int REGISTRATION_COMPLETE = 3;
+	private final int DIALOG_ACCOUNTS = 10;
+	private final int DIALOG_AUTH_TOKEN_DECLINED = 11;
+	private final int DIALOG_FACEBOOK_ERROR = 12;
+	private final int DIALOG_MOISHD_SERVER_REGISTRATION_ERROR = 13;
+	private final int DIALOG_C2DM_ERROR = 14;
+	private final int REGISTRATION_COMPLETE = 15;
 
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case SHOW_FACEBOOK_ERROR_DIALOG:
+			case DIALOG_FACEBOOK_ERROR:
 				progressDialog.dismiss();
-				registrationToMoishdServerFailed();
+				showDialog(DIALOG_FACEBOOK_ERROR);
 				break;
 
-			case SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG:
+			case DIALOG_MOISHD_SERVER_REGISTRATION_ERROR:
 				progressDialog.dismiss();
-				registrationToFacebookFailed();
+				showDialog(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
 				break;
 
-			case SHOW_C2DM_ERROR_DIALOG:
-				progressDialog.dismiss();
-				registrationToC2dmFailed();
+			case DIALOG_C2DM_ERROR:
+				showDialog(DIALOG_C2DM_ERROR);
 				break;
-				
+
 			case REGISTRATION_COMPLETE:
 				progressDialog.dismiss();
 				Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
@@ -89,6 +92,7 @@ public class WelcomeScreenActivity extends Activity{
 			}
 		}
 	};
+
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -111,24 +115,14 @@ public class WelcomeScreenActivity extends Activity{
 		if (googleAuthString == null){
 			startGoogleAuth();
 		}
-		
-		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
-		location = locationManagment.getLastKnownLocation();
-		
-		//registerC2DM();
-		boolean c2dmRegisteredSuccessfully = true;
 
-		if (c2dmRegisteredSuccessfully){
-			if (isSessionValid){
-				doAuthSucceed();
-			}
+		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
+		location = locationManagment.getLastKnownLocation();
+
+		if (isSessionValid){
+			doAuthSucceed();
 		}
-		else{
-			Message registrationErrorMessage = Message.obtain();
-			registrationErrorMessage.setTarget(mHandler);
-			registrationErrorMessage.what = SHOW_C2DM_ERROR_DIALOG;
-			registrationErrorMessage.sendToTarget();
-		}
+
 	}
 
 	@Override
@@ -143,26 +137,7 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		if (requestCode == IntentRequestCodesEnum.PickGoogleAccount.getCode()){
-			if (resultCode == IntentResultCodesEnum.Failed.getCode()){
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
-				"Please create one under Settings/Accounts & Sync.")
-				.setCancelable(false)
-				.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						finish();
-					}
-				});
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
-			else{
-				userGoogleAccount = (Account) data.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
-				authorizeGoogleAccount(userGoogleAccount);
-			}
-		}
-		else if(requestCode == IntentRequestCodesEnum.GetGoogleAccountToken.getCode()){
+		if (requestCode == IntentRequestCodesEnum.GetGoogleAccountToken.getCode()){
 
 			if (resultCode == IntentResultCodesEnum.OK.getCode()){
 				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
@@ -210,12 +185,12 @@ public class WelcomeScreenActivity extends Activity{
 
 	//retrieve user's Google account
 	private void startGoogleAuth(){
-		Intent intent = new Intent(this, AccountList.class);
-		startActivityForResult(intent, IntentRequestCodesEnum.PickGoogleAccount.getCode());
+		showDialog(DIALOG_ACCOUNTS);
 	}
 
 	//authorize user's Google account
 	private void authorizeGoogleAccount(Account account){
+
 		Intent intent = new Intent(this, AuthorizeGoogleAccount.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
 		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
@@ -223,8 +198,21 @@ public class WelcomeScreenActivity extends Activity{
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
+
+		Log.d("Facebook", "doAuthSucceed");
 		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);
-		asyncRunner.request("me", new ProfileRequestListener(location));
+		boolean c2dmRegisteredSuccessfully = registerC2DM();
+
+		if (c2dmRegisteredSuccessfully){
+			asyncRunner.request("me", new ProfileRequestListener(location));
+		}
+		else{
+			progressDialog.dismiss();
+			Message registrationErrorMessage = Message.obtain();
+			registrationErrorMessage.setTarget(mHandler);
+			registrationErrorMessage.what = DIALOG_C2DM_ERROR;
+			registrationErrorMessage.sendToTarget();
+		}		
 	}
 
 	private boolean isC2DMRegistered() {
@@ -298,6 +286,26 @@ public class WelcomeScreenActivity extends Activity{
 		alert.show();		
 	}
 
+	//save user's Google account name in SharedPrefernces
+	private void saveGoogleAccount(String accountName) {
+
+		Context context = getApplicationContext();
+		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putString(SharedPreferencesKeysEnum.GoogleAccountName.toString(), accountName);
+		editor.commit();
+	}
+
+	//retrieve user's Google account name from SharedPrefernces
+	private String getGoogleAccount() {
+
+		Context context = getApplicationContext();
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
+		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAccountName.toString(), null);
+
+		return authString;
+	}
+
 	//save user's GoogleAuthToken in SharedPrefernces
 	private void saveGoogleAuthToken(String authToken) {
 
@@ -318,54 +326,6 @@ public class WelcomeScreenActivity extends Activity{
 		return authString;
 	}
 
-	private void registrationToMoishdServerFailed(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Registration to Moish'd! server failed.")
-		.setCancelable(false)
-		.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				facebookLogout(null);
-				finish();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
-	}
-
-	private void registrationToC2dmFailed(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Registration to Moish'd! server failed.")
-		.setCancelable(false)
-		.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				facebookLogout(null);
-				finish();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
-	}
-
-	private void registrationToFacebookFailed(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Registration to Facebook server failed.")
-		.setCancelable(false)
-		.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				facebookLogout(null);
-				finish();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
-	}
-
 	public class MoishdAuthListener implements AuthListener {
 
 		public void onAuthSucceed() {
@@ -383,6 +343,108 @@ public class WelcomeScreenActivity extends Activity{
 		public void onLogoutFinish() {
 			unregisterC2DM();
 		}
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		switch (id) {
+		case DIALOG_ACCOUNTS:
+
+			builder.setTitle("Select a Google account");
+
+			final AccountManager manager = AccountManager.get(this);
+			final Account[] accounts = manager.getAccountsByType("com.google");
+			final int size = accounts.length;
+
+			if (size==0){
+				builder.setTitle("Error");
+				builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
+				"Please create one under Settings/Accounts & Sync.")
+				.setCancelable(false)
+				.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						finish();
+					}
+				});
+			}
+			else{
+				String[] names = new String[size];
+				for (int i = 0; i < size; i++) {
+					names[i] = accounts[i].name;
+				}
+				builder.setItems(names, new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						if (which == size) {
+							//showDialog(DIALOG_NO_GOOGLE_ACCOUNT);
+						} else {
+							userGoogleAccount = accounts[which]; 
+							saveGoogleAccount(userGoogleAccount.name);
+							authorizeGoogleAccount(userGoogleAccount);
+						}				
+					}
+				});
+			}
+
+			return builder.create();
+
+		case DIALOG_AUTH_TOKEN_DECLINED:
+			builder.setTitle("Error");
+			builder.setMessage("Moish'd! cannot start as it requires your permission to access your Google account for registration needs. " +
+			"Retry?")
+			.setCancelable(false)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					showDialog(DIALOG_ACCOUNTS);
+				}
+			})
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			return builder.create();
+
+		case DIALOG_FACEBOOK_ERROR:
+			builder.setTitle("Error");
+			builder.setMessage("Registration to Facebook server failed.")
+			.setCancelable(false)
+			.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					facebookLogout(null);
+					finish();
+				}
+			});
+			return builder.create();  
+
+		case DIALOG_MOISHD_SERVER_REGISTRATION_ERROR:
+			builder.setTitle("Error");
+			builder.setMessage("Registration to Moish'd! server failed.")
+			.setCancelable(false)
+			.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					facebookLogout(null);
+					finish();
+				}
+			});
+			return builder.create();  			
+		case DIALOG_C2DM_ERROR:
+			builder.setTitle("Error");
+			builder.setMessage("Registration to Push server failed.")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					facebookLogout(null);
+				}
+			});
+			return builder.create();  
+		}
+		return null;
 	}
 
 	//listener for incoming HttpResponse containing user's Facebook profile. Continues registration process
@@ -419,23 +481,17 @@ public class WelcomeScreenActivity extends Activity{
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 				if (registrationComplete){
-					boolean c2dmRegisteredSuccessfully = registerC2DM();
-					if (c2dmRegisteredSuccessfully){
-						sendMessageToHandler(REGISTRATION_COMPLETE);					
-					}
-					else{
-						sendMessageToHandler(SHOW_C2DM_ERROR_DIALOG);
-					}
+					sendMessageToHandler(REGISTRATION_COMPLETE);					
 				}
 				else{
-					sendMessageToHandler(SHOW_MOISHD_SERVER_REGISTRATION_ERROR_DIALOG);
+					sendMessageToHandler(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
 				}
 			} catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
-				sendMessageToHandler(SHOW_FACEBOOK_ERROR_DIALOG);
+				sendMessageToHandler(DIALOG_FACEBOOK_ERROR);
 			} catch (FacebookError e) {
 				Log.w("Moishd-FacebookError", "Facebook Error: " + e.getMessage());
-				sendMessageToHandler(SHOW_FACEBOOK_ERROR_DIALOG);
+				sendMessageToHandler(DIALOG_FACEBOOK_ERROR);
 			}
 		}
 
