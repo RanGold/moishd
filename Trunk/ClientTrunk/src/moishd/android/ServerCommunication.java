@@ -47,9 +47,14 @@ public class ServerCommunication {
 	}
 	
 	public static boolean hasLocation(String authString){
+		Log.d("loc","started HasLocation");
 		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation,authString);
-		if (resp.containsHeader("HasLocation"))
+		if (resp==null)
+			return false;
+		if (resp.containsHeader("HasLocation")){
+			Log.d("loc","ended HasLocation");
 			return true;
+		}
 		else
 			return false;
 	}
@@ -68,7 +73,7 @@ public class ServerCommunication {
 	public static boolean updateLocationInServer(Location location, String authString){
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
 		HttpResponse response = SendObjToServer(sendLocation, ServletNamesEnum.UpdateLocation, authString);
-		if (response.containsHeader("Error")){
+		if (response ==null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -88,7 +93,9 @@ public class ServerCommunication {
 	}
 	
 	public static List<ClientMoishdUser> getNearbyUsers(String authString){
+		Log.d("loc","started getNearBy");
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetNearbyUsers, null, authString);
+		Log.d("loc","ended getNearBy");
 		return getUserListFromResponse(response);
 	}
 
@@ -193,11 +200,15 @@ public class ServerCommunication {
 	
 	@SuppressWarnings("unchecked")
 	private static List<ClientMoishdUser> getUserListFromResponse(HttpResponse response){
+		if (response==null)
+			return null;
 		String json = getJsonFromResponse(response);
 		return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 	}
 	
 	private static ClientMoishdUser getUserFromResponse(HttpResponse response){
+		if (response==null)
+			return null;
 		String json = getJsonFromResponse(response);
 		return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
 	}
@@ -257,10 +268,10 @@ public class ServerCommunication {
 		 */
 		if (is != null) {
 			Writer writer = new StringWriter();
-
+			Reader reader = null;
 			char[] buffer = new char[1024];
 			try {
-				Reader reader = new BufferedReader(
+				reader = new BufferedReader(
 						new InputStreamReader(is, "UTF-8"));
 				int n;
 				while ((n = reader.read(buffer)) != -1) {
@@ -268,6 +279,8 @@ public class ServerCommunication {
 				}
 			} finally {
 				is.close();
+				if (reader !=null)
+					reader.close();
 			}
 			return writer.toString();
 		} else {        
