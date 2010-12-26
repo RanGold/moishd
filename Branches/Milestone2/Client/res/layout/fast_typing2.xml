@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/LinearLayoutScreen2" 
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	
+	<Button
+		android:text="Play Again"
+		android:clickable="true"
+		android:id="@+id/PlayAgain"
+		android:drawableRight="@drawable/handcolor"
+		android:layout_margin="12dip"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		</Button>
+		
+</LinearLayout>
