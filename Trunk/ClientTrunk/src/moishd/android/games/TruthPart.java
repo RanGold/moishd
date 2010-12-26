@@ -14,9 +14,9 @@ import android.widget.TextView;
 public class TruthPart extends GameActivity {
 	int i;
 		
-	final String[][] questions ={{"Is tammy's last name is Dagan?","yes"}, 
+	final String[][] questions ={{"Is Tammy's last name is Dagan?","yes"}, 
 			{"Is it 2012?","no"},
-			{"Is this the first milestone?","yes"},
+			{"Is this the first milestone?","no"},
 			{"Is the spoken language in France is hebrew?","no"},
 			{"Do dogs have color sight?","no"},
 			{"Is Bariloche the capital city of Argentina?", "no"},
