@@ -60,7 +60,7 @@ public class LocationManagment {
 		if (timer!=null)
 			stopUpdateLocation();
 		timer = new Timer(true);
-		timer.scheduleAtFixedRate(new getCurrentLocationTask(), 0, 60*1000*minutes);
+		timer.scheduleAtFixedRate(new getCurrentLocationTask(), 5*1000, 60*1000*minutes);
 	}
 	
 	public void stopUpdateLocation(){
