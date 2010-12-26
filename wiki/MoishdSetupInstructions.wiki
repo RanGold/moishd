@@ -1,2 +1,2 @@
 #labels Featured
-http://moishd.googlecode.com/files/Moishd%20setup%20instructions.pdf
+http://moishd.googlecode.com/files/Moishd%20Installation%20instructions.pdf
