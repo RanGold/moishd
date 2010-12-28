@@ -36,6 +36,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,12 +59,18 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 
+	//tammy
+	//AssetManager font_try;
+	
 	private static List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
+	private static List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>();//tammy
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
+	private static int[] moishdFaceUsers;//tammy
 	private static List<String> friendsID;
 	private GetUsersByTypeEnum currentUsersType;
 	private GetUsersByTypeEnum previousClickPosition;
-
+	
+	private static Typeface fontName, fontHeader;
 
 	private String authToken;
 
@@ -113,11 +120,18 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+   
 		setContentView(R.layout.all_users_layout);
 		header = (TextView) findViewById(R.id.usersTypeHeader);
 		header.setText("All online users");
-
+		header.setTextSize(20);
+		
+		
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/CURLZ.ttf"); //tammy
+		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); //tammy
+		
+		header.setTypeface(fontHeader); //tammy
+		
 		serverHasFacebookFriends = false;
 
 		//need the authToken for server requests
@@ -138,8 +152,11 @@ public class AllOnlineUsersActivity extends Activity {
 				currentClickPosition = arg2;
 				inviteUserToMoishDialog();
 			}});
+		
+		
 		list.setAdapter(new EfficientAdapter(this));
-
+		
+	
 	}
 
 	@Override
@@ -459,6 +476,7 @@ public class AllOnlineUsersActivity extends Activity {
 				header.setText("Online Facebook friends");
 				break;
 		}
+		header.setTypeface(fontHeader); //tammy
 		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
 		listAdapter.notifyDataSetChanged();
 	}
@@ -487,6 +505,9 @@ public class AllOnlineUsersActivity extends Activity {
 
 			List <Object> resultList = new ArrayList<Object>();
 			List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
+		
+			List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>(); //tammy
+			
 			List<Drawable> usersPictures = new ArrayList<Drawable>();
 
 			String usersType = (String) objects[0];
@@ -494,6 +515,17 @@ public class AllOnlineUsersActivity extends Activity {
 
 			if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
+				
+				List<String> friendsID;
+				if (objects.length == 3){
+					friendsID = (List<String>) objects[2];
+				}
+				else{
+					friendsID = new ArrayList<String>();
+				}
+				moishdFacebookUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
+				
+				
 			}
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
 				if (ServerCommunication.hasLocation(authToken) == true) {
@@ -521,11 +553,33 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			else{
 				Collections.sort(moishdUsers);
+
+				Collections.sort(moishdFacebookUsers);  //tammy
+				
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
 					usersPictures.add(userPic);
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
+					
 				}
+				//tammy
+				
+				moishdFaceUsers = new int[moishdUsers.size()];
+
+				for (int i=0,j=0; i < moishdUsers.size() ; i++,j++){
+					String moishUser = moishdUsers.get(i).getUserNick();
+					String moishFacebookUser = moishdFacebookUsers.get(j).getUserNick();
+					if (moishUser.equals(moishFacebookUser))
+							moishdFaceUsers[i]=1;
+						else  {
+							j--;
+							moishdFaceUsers[j]=0;
+						}
+					
+				}
+				
+				
+				
 				resultList.add(moishdUsers);
 				resultList.add(usersPictures);
 				return resultList;
@@ -595,6 +649,11 @@ public class AllOnlineUsersActivity extends Activity {
 		private Bitmap userRank1;
 		private Bitmap userRank2;
 		private Bitmap userRank3;
+		
+		//tammy
+		private Bitmap facebookPic;
+		private Bitmap nearByUsers;
+		
 		//private Bitmap userRank4;
 		//private Bitmap userRank5;
 
@@ -609,6 +668,8 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
+			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
+			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.nearbyusers2);
 			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
 			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
 
@@ -638,6 +699,8 @@ public class AllOnlineUsersActivity extends Activity {
 				holder.userName = (TextView) convertView.findViewById(R.id.text);
 				holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
 				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
+				holder.nearBy = (ImageView) convertView.findViewById(R.id.nearByUsers);
+				holder.facebookPic = (ImageView) convertView.findViewById(R.id.facebookPic);
 
 				convertView.setTag(holder);
 			} else {
@@ -645,7 +708,13 @@ public class AllOnlineUsersActivity extends Activity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			holder.userName.setText(moishdUsers.get(position).getUserNick());
+
+
+			holder.userName.setText(moishdUsers.get(position).getUserNick());	
+			holder.userName.setTypeface(fontName,1);
+			holder.userName.setTextSize(20);
+		
+
 			if (position % 4 == 0){
 				holder.userRank.setImageBitmap(userRank0);
 			}
@@ -660,7 +729,14 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 
 			holder.userPicture.setImageDrawable(usersPictures.get(position));
-
+			
+			//tammy
+			holder.nearBy.setImageBitmap(nearByUsers);
+			if (moishdFaceUsers[position]==1)
+				holder.facebookPic.setImageBitmap(facebookPic);
+			else 
+				holder.facebookPic.setImageBitmap(nearByUsers);
+			
 			return convertView;
 		}
 
@@ -668,6 +744,8 @@ public class AllOnlineUsersActivity extends Activity {
 			TextView userName;
 			ImageView userPicture;
 			ImageView userRank;
+			ImageView nearBy;
+			ImageView facebookPic;
 		}
 	}
 }
