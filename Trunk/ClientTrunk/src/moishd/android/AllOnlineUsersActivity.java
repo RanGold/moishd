@@ -506,7 +506,7 @@ public class AllOnlineUsersActivity extends Activity {
 			List <Object> resultList = new ArrayList<Object>();
 			List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
 		
-			List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>(); //tammy
+		//	List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>(); //tammy
 			
 			List<Drawable> usersPictures = new ArrayList<Drawable>();
 
@@ -515,17 +515,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 			if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
-				
-				List<String> friendsID;
-				if (objects.length == 3){
-					friendsID = (List<String>) objects[2];
-				}
-				else{
-					friendsID = new ArrayList<String>();
-				}
-				moishdFacebookUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
-				
-				
+			 		
 			}
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
 				if (ServerCommunication.hasLocation(authToken) == true) {
@@ -554,7 +544,7 @@ public class AllOnlineUsersActivity extends Activity {
 			else{
 				Collections.sort(moishdUsers);
 
-				Collections.sort(moishdFacebookUsers);  //tammy
+				//Collections.sort(moishdFacebookUsers);  //tammy
 				
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
@@ -562,7 +552,7 @@ public class AllOnlineUsersActivity extends Activity {
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
 					
 				}
-				//tammy
+				/* //tammy
 				
 				moishdFaceUsers = new int[moishdUsers.size()];
 
@@ -576,7 +566,7 @@ public class AllOnlineUsersActivity extends Activity {
 							moishdFaceUsers[j]=0;
 						}
 					
-				}
+				}*/
 				
 				
 				
