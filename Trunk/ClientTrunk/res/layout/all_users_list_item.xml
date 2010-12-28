@@ -14,9 +14,25 @@
         android:paddingLeft="5dip"
         android:layout_width="0dip"
         android:layout_weight="1.0"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+         />
      
-     <ImageView android:id="@+id/userRank"
+
+        
+     <ImageView android:id="@+id/facebookPic"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:paddingTop="5dip"
+        android:paddingRight="5dip"
+        android:paddingLeft="5dip"/>
+        
+     <ImageView android:id="@+id/nearByUsers"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:paddingRight="5dip"
+        android:paddingLeft="5dip"/>
+        
+      <ImageView android:id="@+id/userRank"
         android:layout_width="48dip"
         android:layout_height="48dip"
         android:paddingRight="5dip"/>
