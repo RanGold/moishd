@@ -722,10 +722,10 @@ public class AllOnlineUsersActivity extends Activity {
 			
 			//tammy
 			holder.nearBy.setImageBitmap(nearByUsers);
-			if (moishdFaceUsers[position]==1)
+		//	if (moishdFaceUsers[position]==1)
 				holder.facebookPic.setImageBitmap(facebookPic);
-			else 
-				holder.facebookPic.setImageBitmap(nearByUsers);
+		//	else 
+			//	holder.facebookPic.setImageBitmap(nearByUsers);
 			
 			return convertView;
 		}
