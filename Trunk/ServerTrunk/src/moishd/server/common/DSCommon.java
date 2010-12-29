@@ -38,9 +38,6 @@ public class DSCommon {
 	private static List<Location> DetachCopyLocations(List<Location> locations, PersistenceManager pm) {
 		List<Location> dLocations = new LinkedList<Location>();
 		
-		//dLocations = (List<Location>) pm.detachCopyAll(locations);
-		
-		// TODO : delete if not needed
 		for (Location loc : locations) {
 			Location tempLoc = pm.detachCopy(loc);
 			tempLoc.setMoishdUser(DetachCopyUser(loc.getMoishdUser(),pm));
@@ -162,7 +159,7 @@ public class DSCommon {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<MoishdUser> GetUsersByGoogleId(String GoogleId) throws DataAccessException {
+	public static List<MoishdUser> GetUsersByGoogleId(String GoogleId) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
@@ -178,17 +175,7 @@ public class DSCommon {
 			pm.close();
 		}
 	}
-	
-	public static Boolean DoesUserByGoogleIdExist(String GoogleId) throws DataAccessException {
-		List<MoishdUser> users = GetUsersByGoogleId(GoogleId);
-		
-		if (users.size() > 1) {
-			throw new DataAccessException("user " + GoogleId + " more than 1 result");
-		} else {
-			return (users.size() != 0);
-		}
-	}
-	
+
 	public static MoishdUser GetUserByGoogleId(String GoogleId) throws DataAccessException {
 		List<MoishdUser> users = GetUsersByGoogleId(GoogleId);
 		if (users.size() == 0) {
@@ -304,7 +291,7 @@ public class DSCommon {
 		}
 	}
 	
-	public static double CalculateDistance(double lat1, double long1, double lat2, double long2)
+	private static double CalculateDistance(double lat1, double long1, double lat2, double long2)
 	{
 		double d2r = (Math.PI / 180.0);
 		
@@ -319,5 +306,112 @@ public class DSCommon {
 	    return d;
 	}
 	
+	public static List<String> GetExistingFacebookIds(List<String> facebookIds) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(MoishdUser.class);
+
+			String filter = ":p.contains(facebookID)";
+			q.setFilter(filter);
+			
+			@SuppressWarnings("unchecked")
+			List<MoishdUser> users = (List<MoishdUser>) q.execute(facebookIds);
+			users = (List<MoishdUser>) pm.detachCopyAll(users);
+			
+			List<String> existingFacebookIds = new LinkedList<String>();
+			for (MoishdUser user : users) {
+				existingFacebookIds.add(user.getFacebookID());
+			}
+			
+			return (existingFacebookIds);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
 	
+	public static List<String> GetCheckAliveRegisterIds() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(MoishdUser.class);
+
+			q.setFilter("isAlive == :1");
+			
+			@SuppressWarnings("unchecked")
+			List<MoishdUser> users = (List<MoishdUser>) q.execute(1);
+			users = (List<MoishdUser>) pm.detachCopyAll(users);
+			
+			List<String> checkAliveRegisterIds = new LinkedList<String>();
+			for (MoishdUser user : users) {
+				user.setIsAlive(2);
+				checkAliveRegisterIds.add(user.getRegisterID());
+			}
+			pm.makePersistentAll(users);
+			
+			return (checkAliveRegisterIds);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
+	
+	public static void SetCheckAliveRegisterIds() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(MoishdUser.class);
+
+			q.setFilter("isAlive == :1");
+			
+			@SuppressWarnings("unchecked")
+			List<MoishdUser> users = (List<MoishdUser>) q.execute(0);
+			LoggerCommon.Get().LogInfo("DSCommon", String.valueOf(users.size()));
+			users = (List<MoishdUser>) pm.detachCopyAll(users);
+			
+			for (MoishdUser user : users) {
+				user.setIsAlive(1);
+			}
+			pm.makePersistentAll(users);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
+	
+	public static void UnregisterDisconnectedUsers() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(MoishdUser.class);
+
+			q.setFilter("isAlive == :1");
+			
+			@SuppressWarnings("unchecked")
+			List<MoishdUser> users = (List<MoishdUser>) q.execute(2);
+			users = DSCommon.DetachCopyRecursively(users, pm);
+			
+			for (MoishdUser user : users) {
+				user.InitUser();
+				user.setIsAlive(2);
+			}
+			pm.makePersistentAll(users);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
 }

@@ -36,7 +36,7 @@ public class GetFriendUsersServlet extends GeneralServlet {
 					filterValues = mUser.getFriendsFacebookIds();
 				}
 				else {
-					mUser.setFriendsFacebookIds(filterValues);
+					mUser.setFriendsFacebookIds(DSCommon.GetExistingFacebookIds(filterValues));
 					mUser.SaveChanges();
 				}
 
