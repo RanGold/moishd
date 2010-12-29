@@ -1,6 +1,7 @@
 package moishd.server.servlets;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,12 +35,15 @@ public class UserLoginServlet extends GeneralServlet {
 							new TypeToken<ClientMoishdUser>(){}.getType());
 				
 				MoishdUser muser;
-				// TODO : check how to minimize DS access
-				if (!DSCommon.DoesUserByGoogleIdExist(user.getEmail())) {	
+
+				List<MoishdUser> users = DSCommon.GetUsersByGoogleId(user.getEmail());
+				if (users.size() > 1) {
+					throw new DataAccessException("user " + user.getEmail() + " more than 1 result");
+				} else if (users.size() == 0) {	
 					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
 							user.getEmail(), "NULL", newUser.getFacebookID(), newUser.getMACAddress());
 				} else {
-					muser = DSCommon.GetUserByGoogleId(user.getEmail()) ;
+					muser = users.get(0);
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
 						LoggerCommon.Get().LogError(this, response, "facebook id given " + 
 								"differes from the database version");

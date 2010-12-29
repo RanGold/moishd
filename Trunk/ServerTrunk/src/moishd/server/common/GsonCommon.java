@@ -35,7 +35,6 @@ public class GsonCommon {
 	}
 	public static <T> T GetObjFromJsonStream(InputStream s, Type t) 
 	throws IOException,ClassNotFoundException {
-		// TODO : make this work
 		ObjectInputStream ois = new ObjectInputStream(s);
 		String json = (String) ois.readObject();
 		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();

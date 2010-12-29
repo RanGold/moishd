@@ -3,6 +3,11 @@
   <cron>
     <url>/cron/C2DMAuth</url>
     <description>Getting new c2dm auth token</description>
-    <schedule>every day 11:00</schedule>
+    <schedule>every day 12:00</schedule>
+  </cron>
+  <cron>
+    <url>/cron/CheckAlive</url>
+    <description>Clearing Datastore from disconnected users</description>
+    <schedule>every 15 minutes</schedule>
   </cron>
 </cronentries>

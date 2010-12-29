@@ -54,6 +54,14 @@
 		<url-pattern>/cron/C2DMAuth</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>CheckAliveServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.CheckAliveServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CheckAliveServlet</servlet-name>
+		<url-pattern>/cron/CheckAlive</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>RegisterServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.C2DM.RegisterServlet</servlet-class>
 	</servlet>

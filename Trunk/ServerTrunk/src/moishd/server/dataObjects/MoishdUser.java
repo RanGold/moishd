@@ -55,6 +55,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private boolean isBusy;
 	
 	@Persistent
+	private int isAlive;
+	
+	@Persistent
 	private List<String> friendsFacebookIds;
 	
 	@Persistent(dependent = "true")
@@ -77,6 +80,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
 		this.isBusy = false;
+		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
 		this.dateRegistered = new Date();
 		this.trophies = new HashSet<Key>();
@@ -231,5 +235,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public List<String> getFriendsFacebookIds() {
 		return friendsFacebookIds;
+	}
+
+	public void setIsAlive(int isAlive) {
+		this.isAlive = isAlive;
+	}
+
+	public int getIsAlive() {
+		return isAlive;
 	}
 }
