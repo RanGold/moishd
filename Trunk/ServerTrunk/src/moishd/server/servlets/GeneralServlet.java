@@ -50,6 +50,7 @@ public class GeneralServlet extends HttpServlet {
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),
 						e.getStackTrace());
+				user = null;
 			}
 		}
 	}

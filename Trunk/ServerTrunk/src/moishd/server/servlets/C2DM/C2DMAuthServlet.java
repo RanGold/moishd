@@ -1,6 +1,7 @@
 package moishd.server.servlets.C2DM;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,8 +22,18 @@ public class C2DMAuthServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-		if (UserServiceFactory.getUserService().isUserLoggedIn()
-				&& UserServiceFactory.getUserService().isUserAdmin()) {
+		LoggerCommon.Get().LogInfo("adsd", "check1");
+		String headername = ""; 
+		for(@SuppressWarnings("rawtypes")
+		Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
+			headername = (String)e.nextElement();
+			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
+		}
+		LoggerCommon.Get().LogInfo("adsd", "check2");
+		if ((request.getHeader("X-AppEngine-Cron").equals("true") &&
+				request.getHeader("User-Agent").equals("AppEngine-Google; (+http://code.google.com/appengine)")) ||
+				(UserServiceFactory.getUserService().isUserLoggedIn()
+				&& UserServiceFactory.getUserService().isUserAdmin())) {
 			try {
 				DSCommon.SetC2DMAuth(C2DMCommon.getAuthToken(true));
 			} catch (ServletException e) {

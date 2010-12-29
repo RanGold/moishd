@@ -23,10 +23,10 @@ public class CheckAliveServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-		LoggerCommon.Get().LogInfo("adsd", "ad123ads");
-		if (UserServiceFactory.getUserService().isUserLoggedIn()
-				&& UserServiceFactory.getUserService().isUserAdmin()) {
-			LoggerCommon.Get().LogInfo("adsd", "adads");
+		if ((request.getHeader("X-AppEngine-Cron").equals("true") &&
+				request.getHeader("User-Agent").equals("AppEngine-Google; (+http://code.google.com/appengine)")) ||
+				(UserServiceFactory.getUserService().isUserLoggedIn()
+				&& UserServiceFactory.getUserService().isUserAdmin())) {
 			DSCommon.UnregisterDisconnectedUsers();
 			List<String> registerIds = DSCommon.GetCheckAliveRegisterIds();
 			HashMap<String, String> payload = new HashMap<String, String>();

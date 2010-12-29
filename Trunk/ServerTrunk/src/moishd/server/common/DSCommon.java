@@ -30,7 +30,7 @@ public class DSCommon {
 	
 	private static MoishdUser DetachCopyUser(MoishdUser user, PersistenceManager pm) {
 		MoishdUser tempUser = pm.detachCopy(user);
-		tempUser.setLocation(pm.detachCopy(user.getLocation()));
+		//tempUser.setLocation(pm.detachCopy(user.getLocation()));
 		tempUser.setStats(pm.detachCopy(user.getStats()));
 		return tempUser;
 	}
@@ -373,7 +373,6 @@ public class DSCommon {
 			
 			@SuppressWarnings("unchecked")
 			List<MoishdUser> users = (List<MoishdUser>) q.execute(0);
-			LoggerCommon.Get().LogInfo("DSCommon", String.valueOf(users.size()));
 			users = (List<MoishdUser>) pm.detachCopyAll(users);
 			
 			for (MoishdUser user : users) {
