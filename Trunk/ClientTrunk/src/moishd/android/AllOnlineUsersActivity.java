@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -94,6 +95,13 @@ public class AllOnlineUsersActivity extends Activity {
 	private final int HAS_NO_LOCATION_DIALOG = 2;
 	private final int ERROR_RETRIEVING_USERS_DIALOG = 3;
 	private final int START_LOCATION_SETTINGS = 4;
+	
+	private final int DIALOG_INVITE_USER_TO_MOISHD = 10;
+	private final int DIALOG_RETRIEVE_USER_INVITATION = 11;
+	private final int DIALOG_USER_IS_BUSY = 12;
+	private final int DIALOG_USER_DECLINED = 13;
+	private final int DIALOG_HAS_NO_LOCATION = 14;
+	private final int DIALOG_ERROR_RETRIEVING_USERS = 15;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -156,7 +164,6 @@ public class AllOnlineUsersActivity extends Activity {
 		
 		list.setAdapter(new EfficientAdapter(this));
 		
-	
 	}
 
 	@Override
@@ -293,24 +300,8 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void inviteUserToMoishDialog(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		last_user = moishdUsers.get(currentClickPosition).getUserNick();
-		builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
-		.setCancelable(false)
-		.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				inviteUserToMoish(moishdUsers.get(currentClickPosition));
-			}
-		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		
+		showDialog(DIALOG_INVITE_USER_TO_MOISHD);
 	}
 
 	private void inviteUserToMoish(ClientMoishdUser user){
@@ -322,61 +313,31 @@ public class AllOnlineUsersActivity extends Activity {
 	private void retrieveInvitation(){
 
 		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authToken);
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("You've been invited by " + user.getUserNick() + " to Moish.")
-		.setCancelable(false)
-		.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int id) {
-
-				Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
-				startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
-				dialog.cancel();
-			}
-		})
-		.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				sendInvitationResponse("Decline");	
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		if (user != null){
+			Bundle bundle = new Bundle();
+			bundle.putString("userName", user.getUserNick());
+			showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
+		}
+		else{
+			
+		}
 	}
 
 	private boolean sendInvitationResponse(String response){
+		
 		return ServerCommunication.sendInvitationResponse(game_id, response, authToken);
-
 	}
 
 	private void userIsBusy(String invitedUser){
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(invitedUser + " is currently playing. Please try again later.")
-		.setCancelable(false)
-		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		Bundle bundle = new Bundle();
+		bundle.putString("userName", invitedUser);
+		showDialog(DIALOG_USER_IS_BUSY, bundle);
 	}
 
 
 	private void userDeclinedToMoishDialog(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Your invitation has been declined")
-		.setCancelable(false)
-		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		showDialog(DIALOG_USER_DECLINED);
 
 	}
 
@@ -407,24 +368,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void hasNoLocationDialog(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setIcon(R.id.icon);
-		builder.setMessage("Location hasn't been settled yet. Would you like to configure Location Settings?")
-		.setCancelable(false)
-		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				sendMessageToHandler(START_LOCATION_SETTINGS);
-				dialog.cancel();
-			}
-		})
-		.setNegativeButton("No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		showDialog(DIALOG_HAS_NO_LOCATION);
 		currentUsersType = previousClickPosition;
 	}
 	
@@ -436,23 +380,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private void errorRetrievingUsersDialog(){
 
 		mainProgressDialog.dismiss();
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Error retrieving users from server.")
-		.setCancelable(false)
-		.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				getUsers(currentUsersType);
-			}
-		})
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();		
-				currentUsersType = previousClickPosition;
-				}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();
+		showDialog(DIALOG_ERROR_RETRIEVING_USERS);
 	}
 
 	private String getGoogleAuthToken() {
@@ -494,6 +422,108 @@ public class AllOnlineUsersActivity extends Activity {
 		registrationErrorMessage.sendToTarget();
 	}
 
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		switch (id) {
+
+		case DIALOG_INVITE_USER_TO_MOISHD:
+			last_user = moishdUsers.get(currentClickPosition).getUserNick();
+			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
+			.setCancelable(false)
+			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					inviteUserToMoish(moishdUsers.get(currentClickPosition));
+				}
+			})
+			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create();  
+			
+		case DIALOG_RETRIEVE_USER_INVITATION:
+			builder.setMessage("You've been invited by " + args.getString("userName") + " to Moish.")
+			.setCancelable(false)
+			.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int id) {
+
+					Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
+					startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
+					dialog.cancel();
+				}
+			})
+			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					sendInvitationResponse("Decline");	
+					dialog.cancel();
+				}
+			});
+			return builder.create();  
+
+		case DIALOG_USER_IS_BUSY:
+			builder.setMessage(args.getString("userName") + " is currently playing. Please try again later.")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create();  
+			
+		case DIALOG_USER_DECLINED:
+			builder.setMessage("Your invitation has been declined")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create();  
+			
+		case DIALOG_HAS_NO_LOCATION:
+
+			builder.setIcon(R.id.icon);
+			builder.setMessage("Location hasn't been settled yet. Would you like to configure Location Settings?")
+			.setCancelable(false)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					sendMessageToHandler(START_LOCATION_SETTINGS);
+					dialog.cancel();
+				}
+			})
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create();  
+
+		case DIALOG_ERROR_RETRIEVING_USERS:
+			builder.setMessage("Error retrieving users from server.")
+			.setCancelable(false)
+			.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					getUsers(currentUsersType);
+				}
+			})
+			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();		
+					currentUsersType = previousClickPosition;
+					}
+			});
+			return builder.create(); 
+			default:
+				return null;
+	}
+	}
+	
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {

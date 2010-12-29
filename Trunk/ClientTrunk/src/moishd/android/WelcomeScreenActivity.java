@@ -174,7 +174,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		if (action!=null){
 			if (action.equals(ActionByPushNotificationEnum.C2DMError.toString())){
-				C2DMError();
+				showDialog(DIALOG_C2DM_ERROR);
 			}
 		}
 	}
@@ -218,7 +218,7 @@ public class WelcomeScreenActivity extends Activity{
 	private boolean isC2DMRegistered() {
 
 		String registrationId = C2DMessaging.getRegistrationId(this);
-		if (registrationId == null){
+		if (registrationId.equals("")){
 			return false;
 		}
 		else{
@@ -263,27 +263,6 @@ public class WelcomeScreenActivity extends Activity{
 		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
 		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
 		startService(unregIntent);
-	}
-
-	private void C2DMError(){
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Connection to game server failed.")
-		.setCancelable(false)
-		.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-
-			public void onClick(DialogInterface dialog, int id) {
-				registerC2DM();
-			}
-		})
-		.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-				//doQuitActions();
-			}
-		});
-		AlertDialog alert = builder.create();  
-		alert.show();		
 	}
 
 	//save user's Google account name in SharedPrefernces
@@ -434,9 +413,9 @@ public class WelcomeScreenActivity extends Activity{
 			return builder.create();  			
 		case DIALOG_C2DM_ERROR:
 			builder.setTitle("Error");
-			builder.setMessage("Registration to Push server failed.")
+			builder.setMessage("Registration to Moish'd! server failed.")
 			.setCancelable(false)
-			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 					facebookLogout(null);

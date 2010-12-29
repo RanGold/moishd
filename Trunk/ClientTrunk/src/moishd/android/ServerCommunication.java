@@ -61,6 +61,8 @@ public class ServerCommunication {
 	
 	public static boolean enlistUser(ClientMoishdUser user, String authString){
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
+		if (response == null)
+			return false;
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
