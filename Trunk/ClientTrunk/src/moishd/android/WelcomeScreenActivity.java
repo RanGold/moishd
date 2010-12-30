@@ -1,5 +1,8 @@
 package moishd.android;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.Facebook;
@@ -64,6 +67,10 @@ public class WelcomeScreenActivity extends Activity{
 	private final int DIALOG_MOISHD_SERVER_REGISTRATION_ERROR = 13;
 	private final int DIALOG_C2DM_ERROR = 14;
 	private final int REGISTRATION_COMPLETE = 15;
+	
+	int numberOfTriesLeft = 3;
+	Timer timer;
+	Handler timerHandler = new Handler();
 
 
 	private Handler mHandler = new Handler() {
@@ -114,12 +121,6 @@ public class WelcomeScreenActivity extends Activity{
 		if (googleAuthString == null){
 			startGoogleAuth();
 		}
-
-		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
-		startService(registrationIntent);
-		Log.d("TEST","Resgistering...");
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 		location = locationManagment.getLastKnownLocation();
@@ -205,19 +206,52 @@ public class WelcomeScreenActivity extends Activity{
 	private void doAuthSucceed(){
 
 		Log.d("Facebook", "doAuthSucceed");
+		
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+		startService(registrationIntent);
+		Log.d("TEST","Resgistering...");
+		
+		
+		
 		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);
-		boolean c2dmRegisteredSuccessfully = registerC2DM();
+		
+		timer=new Timer(true);
+		timer.schedule(new ifRegisteredThanLoginTask(), 0, 3000);
+	}
+	
+	private class ifRegisteredThanLoginTask extends TimerTask{
+		private Runnable run;
 
-		if (c2dmRegisteredSuccessfully){
-			asyncRunner.request("me", new ProfileRequestListener(location));
+		@Override
+		public void run() {
+			run = new Runnable() {
+				public void run() {
+						if (isC2DMRegistered()){
+							asyncRunner.request("me", new ProfileRequestListener(location));
+							timer.cancel();
+						}
+						else{
+							if (numberOfTriesLeft == 1) {
+								numberOfTriesLeft =3;
+								timer.cancel();
+								
+								progressDialog.dismiss();
+								Message registrationErrorMessage = Message.obtain();
+								registrationErrorMessage.setTarget(mHandler);
+								registrationErrorMessage.what = DIALOG_C2DM_ERROR;
+								registrationErrorMessage.sendToTarget();
+							}
+							else
+								numberOfTriesLeft--;
+						}
+				}
+			}; 
+			Log.d("TEST", "in TimerTask");
+			timerHandler.post(run);
 		}
-		else{
-			progressDialog.dismiss();
-			Message registrationErrorMessage = Message.obtain();
-			registrationErrorMessage.setTarget(mHandler);
-			registrationErrorMessage.what = DIALOG_C2DM_ERROR;
-			registrationErrorMessage.sendToTarget();
-		}		
+		
 	}
 
 	private boolean isC2DMRegistered() {
@@ -233,7 +267,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	private boolean registerC2DM() {
 		
-		int numberOfTriesLeft = 10;
+
 		long secondInNanosecond = 1000*1000000;
 		long waitTime = 1*secondInNanosecond;
 		boolean wasInterrupted;
@@ -241,8 +275,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		while (numberOfTriesLeft > 0){
 
-			//LockSupport.parkNanos(waitTime);
-			SystemClock.sleep(3000);
+			SystemClock.sleep(1000);
 			if (Thread.interrupted()){
 				wasInterrupted  = true;
 			}
