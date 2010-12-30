@@ -95,6 +95,11 @@ public class ServerCommunication {
 		return getUserListFromResponse(response);
 	}
 	
+	public static List<ClientMoishdUser> getMergedUsers(List<String> friendsID, String authString){
+		HttpResponse response = SendObjToServer(friendsID,ServletNamesEnum.GetMergedUsers, authString);
+		return getUserListFromResponse(response);
+	}
+	
 	public static List<ClientMoishdUser> getFacebookFriends(List<String> friendsID, String authString){
 		HttpResponse response = SendObjToServer(friendsID, ServletNamesEnum.GetFriendUsers, authString);
 		return getUserListFromResponse(response);

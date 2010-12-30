@@ -135,7 +135,7 @@ public class AllOnlineUsersActivity extends Activity {
 		header.setTextSize(20);
 		
 		
-		fontName = Typeface.createFromAsset(getAssets(), "fonts/CURLZ.ttf"); //tammy
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf"); //tammy
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); //tammy
 		
 		header.setTypeface(fontHeader); //tammy
@@ -149,9 +149,13 @@ public class AllOnlineUsersActivity extends Activity {
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
 		locationManagment.startUpdateLocation(1);
 
+		
+		/*tammy
 		currentUsersType = GetUsersByTypeEnum.AllUsers;
 		getUsers(GetUsersByTypeEnum.AllUsers);
-
+*/
+		currentUsersType = GetUsersByTypeEnum.MergedUsers;
+		getUsers(GetUsersByTypeEnum.MergedUsers);
 		list = (ListView) findViewById(R.id.allUsersListView);
 
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -193,7 +197,9 @@ public class AllOnlineUsersActivity extends Activity {
 			getUsers(GetUsersByTypeEnum.NearbyUsers);
 			return true;
 		case R.id.allUsers:
-			getUsers(GetUsersByTypeEnum.AllUsers);
+			/*tammy
+			getUsers(GetUsersByTypeEnum.AllUsers);*/
+			getUsers(GetUsersByTypeEnum.MergedUsers);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -285,9 +291,22 @@ public class AllOnlineUsersActivity extends Activity {
 		case FacebookFriends:
 			getFriendsUsers();
 			break;
+		case MergedUsers:
+			getMergedUsers();
+			break;
 		}
 	}
+	private void getMergedUsers(){ 
 
+		if (!serverHasFacebookFriends){
+			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+			asyncRunner.request("me/friends", new FriendsRequestListener());
+		}
+		else{
+			new GetUsersTask().execute(GetUsersByTypeEnum.MergedUsers.toString(), authToken);
+		}
+	}
+	
 	private void getFriendsUsers(){ 
 
 		if (!serverHasFacebookFriends){
@@ -543,12 +562,24 @@ public class AllOnlineUsersActivity extends Activity {
 			String usersType = (String) objects[0];
 			String authToken = (String) objects[1];
 
-			if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
+			/*if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
 			 		
-			}
+			}*/ // tammy tammy tammy - Hila - na na banana
+			if (usersType.equals(GetUsersByTypeEnum.MergedUsers.toString())){
+				List<String> friendsID;
+				if (objects.length == 3){
+					friendsID = (List<String>) objects[2];
+				}
+				else{
+					friendsID = new ArrayList<String>();
+				}
+				moishdUsers = ServerCommunication.getMergedUsers(friendsID, authToken);
+		 		}
+		
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
 				if (ServerCommunication.hasLocation(authToken) == true) {
+					
 					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
 				}
 				else{
@@ -689,7 +720,7 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
-			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.near_by_users);
+			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.nbu);
 			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
 			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
 
@@ -731,8 +762,8 @@ public class AllOnlineUsersActivity extends Activity {
 
 
 			holder.userName.setText(moishdUsers.get(position).getUserNick());	
-			holder.userName.setTypeface(fontName,1);
-			holder.userName.setTextSize(20);
+			holder.userName.setTypeface(fontName);
+			holder.userName.setTextSize(17);
 		
 
 			if (position % 4 == 0){
@@ -751,11 +782,12 @@ public class AllOnlineUsersActivity extends Activity {
 			holder.userPicture.setImageDrawable(usersPictures.get(position));
 			
 			//tammy
-			holder.nearBy.setImageBitmap(nearByUsers);
-		//	if (moishdFaceUsers[position]==1)
+
+			if (moishdUsers.get(position).isFacebookFriend())
 				holder.facebookPic.setImageBitmap(facebookPic);
-		//	else 
-			//	holder.facebookPic.setImageBitmap(nearByUsers);
+			if (moishdUsers.get(position).isNearByUser())			
+				holder.nearBy.setImageBitmap(nearByUsers);
+				
 			
 			return convertView;
 		}
