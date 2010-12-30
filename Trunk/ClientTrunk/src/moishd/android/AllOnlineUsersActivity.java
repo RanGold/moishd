@@ -689,7 +689,7 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
-			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.nearbyusers2);
+			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.near_by_users);
 			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
 			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
 
