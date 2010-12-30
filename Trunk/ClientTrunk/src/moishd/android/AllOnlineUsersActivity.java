@@ -413,6 +413,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private void updateList() {
 		switch(currentUsersType){
+			case MergedUsers:
 			case AllUsers:
 				header.setText("All online users");
 				break;
