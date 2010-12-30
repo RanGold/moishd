@@ -40,7 +40,7 @@ public class GeneralServlet extends HttpServlet {
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					mUser.setIsAlive(0);
 					mUser.SaveChanges();
-					// TODO minimize this
+					// TODO minimize this, done because multiple users when update location
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					if (checkRegister && !mUser.isRegistered()) {
 						LoggerCommon.Get().LogError(this, response,
