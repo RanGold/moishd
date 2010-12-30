@@ -14,7 +14,8 @@ public enum ServletNamesEnum {
 	RegisterUser("RegisterUser"),
 	UpdateLocation("UpdateLocation"),
 	HasLocation("HasLocation"),
-	UnregisterUser("UnregisterUser");
+	UnregisterUser("UnregisterUser"),
+	Alive("Alive");
 	
 	private String name;
 
