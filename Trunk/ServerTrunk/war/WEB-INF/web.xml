@@ -166,6 +166,14 @@
 		<url-pattern>/HasLocation</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>GetMergedUsersServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.GetMergedUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetMergedUsersServlet</servlet-name>
+		<url-pattern>/GetMergedUsers</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UpdateLocationServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.UpdateLocationServlet</servlet-class>
 	</servlet>
