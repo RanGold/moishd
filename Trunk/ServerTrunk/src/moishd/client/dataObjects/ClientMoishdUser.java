@@ -31,6 +31,10 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
     
     private ClientUserGameStatistics stats;
     
+    private boolean facebookFriend;
+    
+    private boolean nearByUser;
+    
 	public ClientMoishdUser() {
 		super();
 		this.userNick = "";
@@ -43,6 +47,8 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.location = null;
 		this.trophies = null;
 		this.stats = null;
+		this.setFacebookFriend(false);
+		this.setNearByUser(false);
 	}
 
 	public ClientMoishdUser(String userNick, String pictureLink,
@@ -61,8 +67,14 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.location = location;
 		this.trophies = trophies;
 		this.stats = stats;
+		this.setFacebookFriend(false);
+		this.setNearByUser(false);
 	}
-
+	@Override
+	public boolean equals(Object obj){
+		return (this.getUserGoogleIdentifier().equals(((ClientMoishdUser) obj).getUserGoogleIdentifier()));
+		
+	}
 	public String getUserNick() {
 		return userNick;
 	}
@@ -153,5 +165,21 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		String lastNameUser2 = user.userNick.substring(place2);
 
 		return lastNameUser1.compareTo(lastNameUser2);
+	}
+
+	public void setFacebookFriend(boolean facebookFriend) {
+		this.facebookFriend = facebookFriend;
+	}
+
+	public boolean isFacebookFriend() {
+		return facebookFriend;
+	}
+
+	public void setNearByUser(boolean nearByUser) {
+		this.nearByUser = nearByUser;
+	}
+
+	public boolean isNearByUser() {
+		return nearByUser;
 	}
 }
