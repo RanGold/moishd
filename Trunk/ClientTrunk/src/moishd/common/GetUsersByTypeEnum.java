@@ -4,5 +4,6 @@ package moishd.common;
 public enum GetUsersByTypeEnum {
 	AllUsers,
 	FacebookFriends,
-	NearbyUsers;
+	NearbyUsers,
+	MergedUsers;
 }

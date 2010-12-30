@@ -4,8 +4,9 @@ public enum ServletNamesEnum {
 
 	UserLogin("UserLogin"),
 	GetAllUsers("GetAllUsers"),
-	GetFriendUsers("GetFriendUsers"),
+	GetFriendUsers("GetMergedUsers"),
 	GetNearbyUsers("GetNearbyUsers"),
+	GetMergedUsers("GetMergedUsers"),
 	InviteUser("InviteUser"),
 	GetTimeGameInitiator("GetGameInitiator"),
 	GameWin("GameWin"),
