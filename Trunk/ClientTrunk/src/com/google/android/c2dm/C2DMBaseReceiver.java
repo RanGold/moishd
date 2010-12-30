@@ -102,6 +102,7 @@ public abstract class C2DMBaseReceiver extends IntentService {
         try {
             Context context = getApplicationContext();
             if (intent.getAction().equals(REGISTRATION_CALLBACK_INTENT)) {
+            	Log.d("Thread","in thread: "+Thread.currentThread().toString());
                 handleRegistration(context, intent);
             } else if (intent.getAction().equals(C2DM_INTENT)) {
                 onMessage(context, intent);

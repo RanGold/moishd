@@ -21,6 +21,7 @@ import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AUTH;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 
@@ -36,13 +37,13 @@ public class ServerCommunication {
 	private static final String serverPath = "http://moish-d.appspot.com";
 	private static Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 	
-	public static int registerC2DMToServer(ClientMoishdUser user){
-		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, null);
+	public static int registerC2DMToServer(ClientMoishdUser user, String authString){
+		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, authString);
 		return resp.getStatusLine().getStatusCode();
 	}
 	
-	public static int unregisterC2DMToServer(){
-		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser, null);
+	public static int unregisterC2DMToServer(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser, authString);
 		return resp.getStatusLine().getStatusCode();
 	}
 	

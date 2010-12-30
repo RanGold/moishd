@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
+import com.google.android.c2dm.C2DMessaging;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
@@ -131,7 +132,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	@Override
 	public void onRegistrered(Context context, String registration) {
 		Log.d("TEST", "got RegistrationIntent"); 
-		DeviceRegistrar.registerWithServer(context, registration);
+		//DeviceRegistrar.registerWithServer(context, registration);
 	}
 	
 	@Override
