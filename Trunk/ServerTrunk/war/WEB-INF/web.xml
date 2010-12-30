@@ -62,6 +62,14 @@
 		<url-pattern>/cron/CheckAlive</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>AliveServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.AliveServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AliveServlet</servlet-name>
+		<url-pattern>/Alive</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>RegisterServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.C2DM.RegisterServlet</servlet-class>
 	</servlet>

@@ -111,6 +111,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.setRegisterID("NULL");
 		this.setRegistered(false);
 		this.setBusy(false);
+		this.setIsAlive(2);
 		this.getLocation().setLatitude(200);
 		this.getLocation().setLongitude(200);
 		this.getFriendsFacebookIds().clear();
