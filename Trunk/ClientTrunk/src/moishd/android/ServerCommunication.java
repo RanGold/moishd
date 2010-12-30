@@ -47,6 +47,11 @@ public class ServerCommunication {
 		return resp.getStatusLine().getStatusCode();
 	}
 	
+	public static int sendAlive(){
+		HttpResponse resp = activateServlet(ServletNamesEnum.Alive, null);
+		return resp.getStatusLine().getStatusCode();
+	}
+	
 	public static boolean hasLocation(String authString){
 		Log.d("loc","started HasLocation");
 		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation,authString);
