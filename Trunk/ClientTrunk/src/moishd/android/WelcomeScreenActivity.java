@@ -1,17 +1,15 @@
 package moishd.android;
 
-import java.util.concurrent.locks.LockSupport;
-
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ActionByPushNotificationEnum;
@@ -40,6 +38,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 
@@ -115,6 +114,12 @@ public class WelcomeScreenActivity extends Activity{
 		if (googleAuthString == null){
 			startGoogleAuth();
 		}
+
+		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+		startService(registrationIntent);
+		Log.d("TEST","Resgistering...");
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 		location = locationManagment.getLastKnownLocation();
@@ -227,21 +232,17 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	private boolean registerC2DM() {
-
-		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
-		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
-		startService(registrationIntent);
-
-		Log.d("TEST","Resgistering...");
-
-		int numberOfTriesLeft = 3;
-		long waitTime = 30000;
+		
+		int numberOfTriesLeft = 10;
+		long secondInNanosecond = 1000*1000000;
+		long waitTime = 1*secondInNanosecond;
 		boolean wasInterrupted;
+		Log.d("Thread","in thread: "+Thread.currentThread().toString());
 
 		while (numberOfTriesLeft > 0){
 
-			LockSupport.parkNanos(waitTime);
+			//LockSupport.parkNanos(waitTime);
+			SystemClock.sleep(3000);
 			if (Thread.interrupted()){
 				wasInterrupted  = true;
 			}
@@ -249,7 +250,6 @@ public class WelcomeScreenActivity extends Activity{
 			boolean isRegistered = isC2DMRegistered(); 
 			if (!isRegistered){
 				numberOfTriesLeft--;
-				waitTime = waitTime * 2;
 			}
 			else{
 				return true;
@@ -448,7 +448,8 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				newUser.setMACAddress("123");
-
+				newUser.setRegisterID(C2DMessaging.getRegistrationId(getApplicationContext()));
+				
 				ClientLocation loc;
 				if (location != null)				 
 					loc = new ClientLocation(location.getLongitude(), location.getLatitude()) ;
@@ -480,6 +481,7 @@ public class WelcomeScreenActivity extends Activity{
 			registrationErrorMessage.what = messageType;
 			registrationErrorMessage.sendToTarget();
 		}
+		
 	}
 
 }

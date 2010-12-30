@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
 /**
  * Utilities for device registration.
@@ -126,6 +127,7 @@ public class C2DMessaging {
         Editor editor = prefs.edit();
         editor.putString("dm_registration", registrationId);
         editor.commit();
+        Log.d("TEST","entered registrationID to context: "+context.toString()+" with "+registrationId);
 
     }
 }

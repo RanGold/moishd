@@ -16,7 +16,9 @@
 package moishd.android;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.common.SharedPreferencesKeysEnum;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
@@ -41,8 +43,9 @@ public class DeviceRegistrar {
                     
                 	ClientMoishdUser user = new ClientMoishdUser();
                 	user.setRegisterID(deviceRegistrationID);
+                	String authString = getGoogleAuthToken(context);
                 	
-                	int statusCode = ServerCommunication.registerC2DMToServer(user); 
+                	int statusCode = ServerCommunication.registerC2DMToServer(user, authString); 
                     if (statusCode == 200) {
                     	Log.d("TEST","Registration Successful");
                       /*  SharedPreferences settings = Prefs.get(context);
@@ -74,8 +77,8 @@ public class DeviceRegistrar {
             public void run() {
               //  Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
                 try {
-                    
-                	int statusCode = ServerCommunication.unregisterC2DMToServer();
+                    String authString = getGoogleAuthToken(context);
+                	int statusCode = ServerCommunication.unregisterC2DMToServer(authString);
                 	
                     if (statusCode == 200) {
                     	Log.d("TEST","Unregistration Successful");
@@ -99,5 +102,13 @@ public class DeviceRegistrar {
         
         }).start();
     }
+    
+	private static String getGoogleAuthToken(Context context) {
+
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
+		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), "");
+
+		return authString;
+	}
 
 }
