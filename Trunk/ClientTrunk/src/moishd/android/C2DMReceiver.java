@@ -49,7 +49,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
+		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
+			ServerCommunication.sendAlive();
+		}
+		
+		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameInvitation.toString());
 		}

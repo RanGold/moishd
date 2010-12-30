@@ -13,7 +13,8 @@ public enum PushNotificationTypeEnum {
 	Won("Won"),
 	Lost("Lost"),
 	LostFirst("LostFirst"),
-	WonSecond("WonSecond");
+	WonSecond("WonSecond"),
+	CheckAlive("CheckAlive");
 
 	private String name;
 
