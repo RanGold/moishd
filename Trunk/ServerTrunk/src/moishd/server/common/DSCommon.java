@@ -30,7 +30,7 @@ public class DSCommon {
 	
 	private static MoishdUser DetachCopyUser(MoishdUser user, PersistenceManager pm) {
 		MoishdUser tempUser = pm.detachCopy(user);
-		//tempUser.setLocation(pm.detachCopy(user.getLocation()));
+		tempUser.setLocation(pm.detachCopy(user.getLocation()));
 		tempUser.setStats(pm.detachCopy(user.getStats()));
 		return tempUser;
 	}
