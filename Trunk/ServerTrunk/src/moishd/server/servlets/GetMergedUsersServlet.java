@@ -35,7 +35,7 @@ public class GetMergedUsersServlet extends GeneralServlet {
 				cUser.setFacebookFriend(false);
 			}
 			if (nearbyUsers.contains(cUser)) {
-				cUser.setFacebookFriend(true);
+				cUser.setNearByUser(true);
 			}
 		}
 		
