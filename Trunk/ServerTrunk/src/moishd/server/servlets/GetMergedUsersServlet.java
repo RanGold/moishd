@@ -72,9 +72,6 @@ throws IOException {
 			List<ClientMoishdUser> nearByUsers = MoishdUser
 			.copyToClientMoishdUserList(DSCommon.GetNearbyUsers(mUser,1));
 
-			Collections.sort(allUsers);
-			Collections.sort(facebookUsers);
-			Collections.sort(nearByUsers);
 
 			mergeLists(allUsers, facebookUsers, nearByUsers);
 
