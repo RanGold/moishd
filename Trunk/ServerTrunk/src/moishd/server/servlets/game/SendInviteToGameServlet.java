@@ -34,7 +34,7 @@ public class SendInviteToGameServlet extends HttpServlet {
 		LoggerCommon.Get().LogInfo("adsd", "check2");
 	
 		// TODO : check if any authentication is possiable
-		if (request.getHeader("X-AppEngine-QueueName").equals("resultQueue")) {
+		if (request.getHeader("X-AppEngine-QueueName").equals("inviteQueue")) {
 			try {
 				String initID = request.getParameter("initID");
 				String recID = request.getParameter("recID");
