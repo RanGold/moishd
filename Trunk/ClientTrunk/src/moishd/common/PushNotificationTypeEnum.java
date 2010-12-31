@@ -14,7 +14,8 @@ public enum PushNotificationTypeEnum {
 	Lost("Lost"),
 	LostFirst("LostFirst"),
 	WonSecond("WonSecond"),
-	CheckAlive("CheckAlive");
+	CheckAlive("CheckAlive"),
+	GameOffer("GameOffer");
 
 	private String name;
 
