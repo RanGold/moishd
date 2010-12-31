@@ -21,7 +21,6 @@ import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AUTH;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 
