@@ -37,9 +37,6 @@ public class GeneralServlet extends HttpServlet {
 		} else {
 			try {
 				if (doesExist) {
-					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
-					mUser.setIsAlive(0);
-					mUser.SaveChanges();
 					// TODO minimize this, done because multiple users when update location
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					if (checkRegister && !mUser.isRegistered()) {
@@ -48,7 +45,11 @@ public class GeneralServlet extends HttpServlet {
 						mUser.InitUser();
 						mUser.SaveChanges();
 						user = null;
+						return;
 					}
+					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
+					mUser.setIsAlive(0);
+					mUser.SaveChanges();
 				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),

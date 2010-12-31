@@ -6,4 +6,8 @@ public class CommonJDO {
 	public void SaveChanges() {
 		DSCommon.SaveChanges(this);
 	}
+	
+	public CommonJDO Detach() {
+		return (DSCommon.DetachThis(this));
+	}
 }
