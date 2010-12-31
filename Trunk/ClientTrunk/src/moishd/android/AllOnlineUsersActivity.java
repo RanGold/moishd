@@ -97,6 +97,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private final int DIALOG_USER_DECLINED = 13;
 	private final int DIALOG_HAS_NO_LOCATION = 14;
 	private final int DIALOG_ERROR_RETRIEVING_USERS = 15;
+	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 16;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -151,6 +152,7 @@ public class AllOnlineUsersActivity extends Activity {
 		getUsers(GetUsersByTypeEnum.AllUsers);
 */
 		//tammy - changing the name of the main list to merged list.
+		
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 		
@@ -166,6 +168,8 @@ public class AllOnlineUsersActivity extends Activity {
 		
 		list.setAdapter(new EfficientAdapter(this));
 		
+		if(!ServerCommunication.hasLocation(authToken))
+			showDialog(DIALOG_HAS_NO_LOCATION_BEGINNING);
 	}
 
 	@Override
@@ -543,6 +547,18 @@ public class AllOnlineUsersActivity extends Activity {
 					}
 			});
 			return builder.create(); 
+			
+		case DIALOG_HAS_NO_LOCATION_BEGINNING:
+			builder.setIcon(R.id.icon);
+			builder.setMessage("Location hasn't been settled yet. Hence, all users will appear as not in your range.")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+				});
+			return builder.create();  
+			
 			default:
 				return null;
 	}

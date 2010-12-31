@@ -18,7 +18,7 @@ public class SimonPro extends GameActivity{
 
 	Random random = new Random(); 
 	String number;
-	int arr[] = new int[5],counter=0,i,lastInt=-1,i1=0,i2=0,i3=0, indentify[] = {1,2,3},tr=100;
+	int arr[] = new int[5],counter=0,i,lastInt=-1,i1=0,i2=0,i3=0, indentify[] = {1,2,3},tr=3;
 	TextView word, wrong, explain,tries; 
 	Button click1, click2, click3, giveUp;
 
