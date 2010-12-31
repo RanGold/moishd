@@ -2,7 +2,6 @@ package moishd.server.servlets;
 
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,8 +28,12 @@ public class GetMergedUsersServlet extends GeneralServlet {
 		for (ClientMoishdUser cUser : allUsers){
 			if (facebookUsers.contains(cUser)) {
 				cUser.setFacebookFriend(true);
+				LoggerCommon.Get().LogInfo("Tammy", cUser.getUserNick().toString() + " true");
 			}
-
+			else {
+				LoggerCommon.Get().LogInfo("Tammy", cUser.getUserNick().toString() + " false");
+				cUser.setFacebookFriend(false);
+			}
 			if (nearbyUsers.contains(cUser)) {
 				cUser.setFacebookFriend(true);
 			}
