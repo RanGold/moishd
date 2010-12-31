@@ -19,7 +19,6 @@ public class GsonCommon {
 	throws IOException {
 		response.setContentType("application/json");
 
-		//Gson g = new Gson();
 		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
 		String json = g.toJson(obj);
 		ObjectOutputStream oos = null;

@@ -413,4 +413,17 @@ public class DSCommon {
 			pm.close();
 		}
 	}
+
+	public static CommonJDO DetachThis(CommonJDO jdoObject) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			// TODO : fix this
+			//if (new TypeToken<MoishdUser>(){}.getType().)
+			return (pm.detachCopy(jdoObject));
+		}
+		finally {
+			pm.close();
+		}
+		
+	}
 }
