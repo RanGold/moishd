@@ -60,13 +60,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity {
 
-	//tammy
-	//AssetManager font_try;
-	
 	private static List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
-	private static List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>();//tammy
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
-	private static int[] moishdFaceUsers;//tammy
 	private static List<String> friendsID;
 	private GetUsersByTypeEnum currentUsersType;
 	private GetUsersByTypeEnum previousClickPosition;
@@ -110,7 +105,7 @@ public class AllOnlineUsersActivity extends Activity {
 				updateList();
 				break;
 			case FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED:
-				facebookFriendsFirstRetrievalCompleted();
+				facebookFriendsFirstRetrievalCompleted(); 
 				break;
 			case HAS_NO_LOCATION_DIALOG:
 				hasNoLocationDialog();
@@ -134,11 +129,12 @@ public class AllOnlineUsersActivity extends Activity {
 		header.setText("All online users");
 		header.setTextSize(20);
 		
-		
-		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf"); //tammy
-		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); //tammy
-		
-		header.setTypeface(fontHeader); //tammy
+		//tammy - adding 2 fonts to use
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf"); 
+		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
+
+		//tammy - setting the font of the header line
+		header.setTypeface(fontHeader);
 		
 		serverHasFacebookFriends = false;
 
@@ -154,8 +150,10 @@ public class AllOnlineUsersActivity extends Activity {
 		currentUsersType = GetUsersByTypeEnum.AllUsers;
 		getUsers(GetUsersByTypeEnum.AllUsers);
 */
+		//tammy - changing the name of the main list to merged list.
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
+		
 		list = (ListView) findViewById(R.id.allUsersListView);
 
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -179,13 +177,23 @@ public class AllOnlineUsersActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.RefreshList:
-			if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
+		case R.id.RefreshList: //tammy
+			
+			/*if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
 				getUsers(currentUsersType);
-			}
+			
 			else{
 				getFriendsUsers();
-			}
+			}*/
+			
+			//tammy - merged list also needs the facebook friends' list
+			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
+				getFriendsUsers();
+			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
+				getMergedUsers();
+			else
+				getUsers(currentUsersType);
+			
 			return true;
 		case R.id.logout:
 			doQuitActions();
@@ -243,19 +251,10 @@ public class AllOnlineUsersActivity extends Activity {
 			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
 				startGameDare();
 			}
-			/*
-			else if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
-				String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-				//gameResultDialog(result);
-				Intent intentForResult = new Intent();
-				if (result.equals("Won")) 
-					intentForResult.setClass(this, youMoishd.class);
-				else
-					intentForResult.setClass(this, youHaveBeenMoishd.class);
-
-				startActivity(intentForResult);
+			else if(action.equals(ActionByPushNotificationEnum.GameOffer.toString())){
+//				TODO open a current dialog according to the user's id
 			}
-			 */
+
 		}
 	}
 
@@ -284,18 +283,20 @@ public class AllOnlineUsersActivity extends Activity {
 		currentUsersType = usersType;
 
 		switch(usersType){
-		case AllUsers:
+		//case AllUsers://tammy
 		case NearbyUsers:
 			new GetUsersTask().execute(usersType.toString(), authToken);
 			break;
 		case FacebookFriends:
 			getFriendsUsers();
 			break;
+			//tammy - add case of merged list
 		case MergedUsers:
 			getMergedUsers();
 			break;
 		}
 	}
+	//tammy - exactly like the following method
 	private void getMergedUsers(){ 
 
 		if (!serverHasFacebookFriends){
@@ -429,10 +430,13 @@ public class AllOnlineUsersActivity extends Activity {
 		listAdapter.notifyDataSetChanged();
 	}
 
-	private void facebookFriendsFirstRetrievalCompleted() {
+	private void facebookFriendsFirstRetrievalCompleted() { 
 		mainProgressDialog.dismiss();
 		serverHasFacebookFriends = true;
-		new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken, friendsID);
+		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends)) //tammy
+			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken, friendsID);
+		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)) //tammy
+			new GetUsersTask().execute(GetUsersByTypeEnum.MergedUsers.toString(), authToken, friendsID);			
 	}
 
 	private void sendMessageToHandler(final int messageType) {
@@ -554,10 +558,7 @@ public class AllOnlineUsersActivity extends Activity {
 		protected List<Object> doInBackground(Object... objects) {
 
 			List <Object> resultList = new ArrayList<Object>();
-			List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
-		
-		//	List<ClientMoishdUser> moishdFacebookUsers = new ArrayList<ClientMoishdUser>(); //tammy
-			
+			List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();	
 			List<Drawable> usersPictures = new ArrayList<Drawable>();
 
 			String usersType = (String) objects[0];
@@ -566,7 +567,8 @@ public class AllOnlineUsersActivity extends Activity {
 			/*if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
 			 		
-			}*/ // tammy tammy tammy - Hila - na na banana
+			}*/ 
+			// tammy - merged list has got to have also the facebook friends' list
 			if (usersType.equals(GetUsersByTypeEnum.MergedUsers.toString())){
 				List<String> friendsID;
 				if (objects.length == 3){
@@ -605,8 +607,6 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			else{
 				Collections.sort(moishdUsers);
-
-				//Collections.sort(moishdFacebookUsers);  //tammy
 				
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
@@ -614,23 +614,6 @@ public class AllOnlineUsersActivity extends Activity {
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
 					
 				}
-				/* //tammy
-				
-				moishdFaceUsers = new int[moishdUsers.size()];
-
-				for (int i=0,j=0; i < moishdUsers.size() ; i++,j++){
-					String moishUser = moishdUsers.get(i).getUserNick();
-					String moishFacebookUser = moishdFacebookUsers.get(j).getUserNick();
-					if (moishUser.equals(moishFacebookUser))
-							moishdFaceUsers[i]=1;
-						else  {
-							j--;
-							moishdFaceUsers[j]=0;
-						}
-					
-				}*/
-				
-				
 				
 				resultList.add(moishdUsers);
 				resultList.add(usersPictures);

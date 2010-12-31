@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.android.c2dm.C2DMBaseReceiver;
-import com.google.android.c2dm.C2DMessaging;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
@@ -51,6 +50,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
 			ServerCommunication.sendAlive();
+		}
+		
+		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameOffer.toString());
+			//resultIntent.putExtra(ActionByPushNotificationEnum.GameOffer.toString(), );
 		}
 		
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
