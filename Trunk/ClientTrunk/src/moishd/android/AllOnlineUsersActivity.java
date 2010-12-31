@@ -611,6 +611,14 @@ public class AllOnlineUsersActivity extends Activity {
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
 					usersPictures.add(userPic);
+					boolean friend = moishdUsers.get(i).isFacebookFriend();
+					String isfriend="";
+					if (friend)
+						isfriend="True";
+					else
+						isfriend="False";
+					
+					Log.d("AllOnlineUsersActivity", isfriend);
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
 					
 				}
@@ -687,6 +695,7 @@ public class AllOnlineUsersActivity extends Activity {
 		
 		//tammy
 		private Bitmap facebookPic;
+		private Bitmap noFacebookPic;
 		private Bitmap nearByUsers;
 		
 		//private Bitmap userRank4;
@@ -705,6 +714,8 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.nbu);
+			noFacebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
+			
 			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
 			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
 
@@ -767,8 +778,21 @@ public class AllOnlineUsersActivity extends Activity {
 			
 			//tammy
 
-			if (moishdUsers.get(position).isFacebookFriend())
+		/*	boolean friend = moishdUsers.get(position).isFacebookFriend();
+			String isfriend="";
+			if (friend)
+				isfriend="True moment before show";
+			else
+				isfriend="False moment before show";
+			
+			Log.d("AllOnlineUsersActivity", isfriend);*/
+			
+			if (moishdUsers.get(position).isFacebookFriend()){
 				holder.facebookPic.setImageBitmap(facebookPic);
+			}
+			else
+				holder.facebookPic.setImageBitmap(noFacebookPic);
+		
 			if (moishdUsers.get(position).isNearByUser())			
 				holder.nearBy.setImageBitmap(nearByUsers);
 				
