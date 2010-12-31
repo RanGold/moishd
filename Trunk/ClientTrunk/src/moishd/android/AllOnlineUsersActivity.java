@@ -63,7 +63,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private static List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
 	private static List<String> friendsID;
-	private GetUsersByTypeEnum currentUsersType;
+	private static GetUsersByTypeEnum currentUsersType;
 	private GetUsersByTypeEnum previousClickPosition;
 	
 	private static Typeface fontName, fontHeader;
@@ -130,7 +130,7 @@ public class AllOnlineUsersActivity extends Activity {
 		header.setTextSize(20);
 		
 		//tammy - adding 2 fonts to use
-		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf"); 
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf"); 
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
 
 		//tammy - setting the font of the header line
@@ -577,6 +577,7 @@ public class AllOnlineUsersActivity extends Activity {
 				else{
 					friendsID = new ArrayList<String>();
 				}
+			
 				moishdUsers = ServerCommunication.getMergedUsers(friendsID, authToken);
 		 		}
 		
@@ -598,6 +599,7 @@ public class AllOnlineUsersActivity extends Activity {
 				else{
 					friendsID = new ArrayList<String>();
 				}
+				
 				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
 			}
 
@@ -611,14 +613,14 @@ public class AllOnlineUsersActivity extends Activity {
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
 					usersPictures.add(userPic);
-					boolean friend = moishdUsers.get(i).isFacebookFriend();
+					/*boolean friend = moishdUsers.get(i).isFacebookFriend();
 					String isfriend="";
 					if (friend)
 						isfriend="True";
 					else
-						isfriend="False";
+						isfriend="False"
 					
-					Log.d("AllOnlineUsersActivity", isfriend);
+					Log.d("AllOnlineUsersActivity", isfriend);*/
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
 					
 				}
@@ -695,8 +697,9 @@ public class AllOnlineUsersActivity extends Activity {
 		
 		//tammy
 		private Bitmap facebookPic;
-		private Bitmap noFacebookPic;
+		private Bitmap noPic;
 		private Bitmap nearByUsers;
+		private Bitmap noNearBy;
 		
 		//private Bitmap userRank4;
 		//private Bitmap userRank5;
@@ -713,8 +716,9 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
-			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.nbu);
-			noFacebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
+			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
+			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.not_facebook_friend);
+			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
 			
 			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
 			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
@@ -787,13 +791,23 @@ public class AllOnlineUsersActivity extends Activity {
 			
 			Log.d("AllOnlineUsersActivity", isfriend);*/
 			
-			if (moishdUsers.get(position).isFacebookFriend()){
+			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 				holder.facebookPic.setImageBitmap(facebookPic);
+			
+			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)){
+				if (moishdUsers.get(position).isFacebookFriend()){
+					holder.facebookPic.setImageBitmap(facebookPic);
+				}
+				else
+					holder.facebookPic.setImageBitmap(noPic);
+			
+				if (moishdUsers.get(position).isNearByUser())			
+					holder.nearBy.setImageBitmap(nearByUsers);
+				else
+					holder.nearBy.setImageBitmap(noNearBy);
 			}
-			else
-				holder.facebookPic.setImageBitmap(noFacebookPic);
-		
-			if (moishdUsers.get(position).isNearByUser())			
+			
+			else if (currentUsersType.equals(GetUsersByTypeEnum.NearbyUsers))
 				holder.nearBy.setImageBitmap(nearByUsers);
 				
 			
