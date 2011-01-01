@@ -43,7 +43,7 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	public UserGameStatistics() {
 		this.gamesPlayed = 0;
 		this.gamesWon = 0;
-		this.rank = -1;
+		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
 	}
