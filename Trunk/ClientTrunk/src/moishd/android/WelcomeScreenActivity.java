@@ -212,13 +212,11 @@ public class WelcomeScreenActivity extends Activity{
 		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
 		startService(registrationIntent);
 		Log.d("TEST","Resgistering...");
-		
-		
-		
+				
 		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);
 		
-		timer=new Timer(true);
-		timer.schedule(new ifRegisteredThanLoginTask(), 0, 3000);
+		timer=new Timer();
+		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 3000);
 	}
 	
 	private class ifRegisteredThanLoginTask extends TimerTask{
