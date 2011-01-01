@@ -47,9 +47,9 @@ public class GeneralServlet extends HttpServlet {
 						user = null;
 						return;
 					}
-					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					mUser.setIsAlive(0);
 					mUser.SaveChanges();
+					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),
