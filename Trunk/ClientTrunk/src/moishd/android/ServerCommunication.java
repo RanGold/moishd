@@ -212,9 +212,13 @@ public class ServerCommunication {
 	
 	@SuppressWarnings("unchecked")
 	private static List<ClientMoishdUser> getUserListFromResponse(HttpResponse response){
-		if (response==null)
+		if (response==null){
 			return null;
+		}
 		String json = getJsonFromResponse(response);
+		if (json == null){
+			return null;
+		}
 		return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 	}
 	
