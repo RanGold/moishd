@@ -51,8 +51,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -65,7 +67,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private static List<String> friendsID;
 	private static GetUsersByTypeEnum currentUsersType;
 	private GetUsersByTypeEnum previousClickPosition;
-	
+
 	private static Typeface fontName, fontHeader;
 
 	private String authToken;
@@ -76,7 +78,7 @@ public class AllOnlineUsersActivity extends Activity {
 	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
-	
+
 	private TextView header;
 	private ListView list;
 
@@ -90,14 +92,15 @@ public class AllOnlineUsersActivity extends Activity {
 	private final int HAS_NO_LOCATION_DIALOG = 2;
 	private final int ERROR_RETRIEVING_USERS_DIALOG = 3;
 	private final int START_LOCATION_SETTINGS = 4;
-	
+
 	private final int DIALOG_INVITE_USER_TO_MOISHD = 10;
 	private final int DIALOG_RETRIEVE_USER_INVITATION = 11;
 	private final int DIALOG_USER_IS_BUSY = 12;
-	private final int DIALOG_USER_DECLINED = 13;
-	private final int DIALOG_HAS_NO_LOCATION = 14;
-	private final int DIALOG_ERROR_RETRIEVING_USERS = 15;
-	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 16;
+	private final int DIALOG_USER_IS_OFFLINE = 13;
+	private final int DIALOG_USER_DECLINED = 14;
+	private final int DIALOG_HAS_NO_LOCATION = 15;
+	private final int DIALOG_ERROR_RETRIEVING_USERS = 16;
+	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 17;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -124,19 +127,19 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-   
+
 		setContentView(R.layout.all_users_layout);
 		header = (TextView) findViewById(R.id.usersTypeHeader);
 		header.setText("All online users");
 		header.setTextSize(20);
-		
+
 		//tammy - adding 2 fonts to use
 		fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf"); 
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
 
 		//tammy - setting the font of the header line
 		header.setTypeface(fontHeader);
-		
+
 		serverHasFacebookFriends = false;
 
 		//need the authToken for server requests
@@ -146,16 +149,16 @@ public class AllOnlineUsersActivity extends Activity {
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
 		locationManagment.startUpdateLocation(1);
 
-		
+
 		/*tammy
 		currentUsersType = GetUsersByTypeEnum.AllUsers;
 		getUsers(GetUsersByTypeEnum.AllUsers);
-*/
+		 */
 		//tammy - changing the name of the main list to merged list.
-		
+
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
-		
+
 		list = (ListView) findViewById(R.id.allUsersListView);
 
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -164,10 +167,10 @@ public class AllOnlineUsersActivity extends Activity {
 				currentClickPosition = arg2;
 				inviteUserToMoishDialog();
 			}});
-		
-		
+
+
 		list.setAdapter(new EfficientAdapter(this));
-		
+
 		if(!ServerCommunication.hasLocation(authToken))
 			showDialog(DIALOG_HAS_NO_LOCATION_BEGINNING);
 	}
@@ -182,14 +185,14 @@ public class AllOnlineUsersActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.RefreshList: //tammy
-			
+
 			/*if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
 				getUsers(currentUsersType);
-			
+
 			else{
 				getFriendsUsers();
 			}*/
-			
+
 			//tammy - merged list also needs the facebook friends' list
 			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 				getFriendsUsers();
@@ -197,7 +200,7 @@ public class AllOnlineUsersActivity extends Activity {
 				getMergedUsers();
 			else
 				getUsers(currentUsersType);
-			
+
 			return true;
 		case R.id.logout:
 			doQuitActions();
@@ -249,6 +252,11 @@ public class AllOnlineUsersActivity extends Activity {
 				game_id = null;
 				last_user = null;
 			}
+			else if (action.equals(ActionByPushNotificationEnum.PlayerOffline.toString())){
+				userIsOffline(last_user);
+				game_id = null;
+				last_user = null;
+			}
 			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
 				startGameTruth();
 			}
@@ -256,7 +264,7 @@ public class AllOnlineUsersActivity extends Activity {
 				startGameDare();
 			}
 			else if(action.equals(ActionByPushNotificationEnum.GameOffer.toString())){
-//				TODO open a current dialog according to the user's id
+				//				TODO open a current dialog according to the user's id
 			}
 
 		}
@@ -282,7 +290,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void getUsers(GetUsersByTypeEnum usersType){
-		
+
 		previousClickPosition = currentUsersType;
 		currentUsersType = usersType;
 
@@ -311,7 +319,7 @@ public class AllOnlineUsersActivity extends Activity {
 			new GetUsersTask().execute(GetUsersByTypeEnum.MergedUsers.toString(), authToken);
 		}
 	}
-	
+
 	private void getFriendsUsers(){ 
 
 		if (!serverHasFacebookFriends){
@@ -324,7 +332,7 @@ public class AllOnlineUsersActivity extends Activity {
 	}
 
 	private void inviteUserToMoishDialog(){
-		
+
 		showDialog(DIALOG_INVITE_USER_TO_MOISHD);
 	}
 
@@ -343,16 +351,23 @@ public class AllOnlineUsersActivity extends Activity {
 			showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
 		}
 		else{
-			
+
 		}
 	}
 
 	private boolean sendInvitationResponse(String response){
-		
+
 		return ServerCommunication.sendInvitationResponse(game_id, response, authToken);
 	}
 
 	private void userIsBusy(String invitedUser){
+
+		Bundle bundle = new Bundle();
+		bundle.putString("userName", invitedUser);
+		showDialog(DIALOG_USER_IS_BUSY, bundle);
+	}
+
+	private void userIsOffline(String invitedUser){
 
 		Bundle bundle = new Bundle();
 		bundle.putString("userName", invitedUser);
@@ -395,7 +410,7 @@ public class AllOnlineUsersActivity extends Activity {
 		showDialog(DIALOG_HAS_NO_LOCATION);
 		currentUsersType = previousClickPosition;
 	}
-	
+
 	private void openLocationSettings(){
 		Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		startActivity(intent);
@@ -418,16 +433,16 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private void updateList() {
 		switch(currentUsersType){
-			case MergedUsers:
-			case AllUsers:
-				header.setText("All online users");
-				break;
-			case NearbyUsers:
-				header.setText("Nearby users");
-				break;
-			case FacebookFriends:
-				header.setText("Online Facebook friends");
-				break;
+		case MergedUsers:
+		case AllUsers:
+			header.setText("All online users");
+			break;
+		case NearbyUsers:
+			header.setText("Nearby users");
+			break;
+		case FacebookFriends:
+			header.setText("Online Facebook friends");
+			break;
 		}
 		header.setTypeface(fontHeader); //tammy
 		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
@@ -453,7 +468,7 @@ public class AllOnlineUsersActivity extends Activity {
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		
+
 		switch (id) {
 
 		case DIALOG_INVITE_USER_TO_MOISHD:
@@ -472,7 +487,7 @@ public class AllOnlineUsersActivity extends Activity {
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_RETRIEVE_USER_INVITATION:
 			builder.setMessage("You've been invited by " + args.getString("userName") + " to Moish.")
 			.setCancelable(false)
@@ -501,8 +516,18 @@ public class AllOnlineUsersActivity extends Activity {
 					dialog.cancel();
 				}
 			});
+			return builder.create(); 
+
+		case DIALOG_USER_IS_OFFLINE:
+			builder.setMessage(args.getString("userName") + " is offline. Please refresh your list.")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
 			return builder.create();  
-			
+
 		case DIALOG_USER_DECLINED:
 			builder.setMessage("Your invitation has been declined")
 			.setCancelable(false)
@@ -512,7 +537,7 @@ public class AllOnlineUsersActivity extends Activity {
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_HAS_NO_LOCATION:
 
 			builder.setIcon(R.id.icon);
@@ -544,10 +569,10 @@ public class AllOnlineUsersActivity extends Activity {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();		
 					currentUsersType = previousClickPosition;
-					}
+				}
 			});
 			return builder.create(); 
-			
+
 		case DIALOG_HAS_NO_LOCATION_BEGINNING:
 			builder.setIcon(R.id.icon);
 			builder.setMessage("Location hasn't been settled yet. Hence, all users will appear as not in your range.")
@@ -556,14 +581,14 @@ public class AllOnlineUsersActivity extends Activity {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 				}
-				});
+			});
 			return builder.create();  
-			
-			default:
-				return null;
+
+		default:
+			return null;
+		}
 	}
-	}
-	
+
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
@@ -582,7 +607,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 			/*if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
 				moishdUsers = ServerCommunication.getAllUsers(authToken);
-			 		
+
 			}*/ 
 			// tammy - merged list has got to have also the facebook friends' list
 			if (usersType.equals(GetUsersByTypeEnum.MergedUsers.toString())){
@@ -593,13 +618,13 @@ public class AllOnlineUsersActivity extends Activity {
 				else{
 					friendsID = new ArrayList<String>();
 				}
-			
+
 				moishdUsers = ServerCommunication.getMergedUsers(friendsID, authToken);
-		 		}
-		
+			}
+
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
 				if (ServerCommunication.hasLocation(authToken) == true) {
-					
+
 					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
 				}
 				else{
@@ -615,7 +640,7 @@ public class AllOnlineUsersActivity extends Activity {
 				else{
 					friendsID = new ArrayList<String>();
 				}
-				
+
 				moishdUsers = ServerCommunication.getFacebookFriends(friendsID, authToken);
 			}
 
@@ -625,7 +650,7 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			else{
 				Collections.sort(moishdUsers);
-				
+
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
 					usersPictures.add(userPic);
@@ -635,12 +660,12 @@ public class AllOnlineUsersActivity extends Activity {
 						isfriend="True";
 					else
 						isfriend="False"
-					
+
 					Log.d("AllOnlineUsersActivity", isfriend);*/
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
-					
+
 				}
-				
+
 				resultList.add(moishdUsers);
 				resultList.add(usersPictures);
 				return resultList;
@@ -665,7 +690,7 @@ public class AllOnlineUsersActivity extends Activity {
 			}
 			mainProgressDialog.dismiss();
 		}
-		
+
 		private Drawable LoadImageFromWebOperations(String url){
 
 			try{
@@ -710,13 +735,13 @@ public class AllOnlineUsersActivity extends Activity {
 		private Bitmap userRank1;
 		private Bitmap userRank2;
 		private Bitmap userRank3;
-		
+
 		//tammy
 		private Bitmap facebookPic;
 		private Bitmap noPic;
 		private Bitmap nearByUsers;
 		private Bitmap noNearBy;
-		
+
 		//private Bitmap userRank4;
 		//private Bitmap userRank5;
 
@@ -727,19 +752,11 @@ public class AllOnlineUsersActivity extends Activity {
 			mInflater = LayoutInflater.from(context);
 
 			// Icons bound to the rows.
-			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
-			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
-			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
-			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
 			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.not_facebook_friend);
 			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
 			
-			//userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
-			//userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
-
-			//moishd_logo = BitmapFactory.decodeResource(context.getResources(), R.drawable.moishd_logo);
 		}
 
 		public int getCount() {
@@ -754,7 +771,7 @@ public class AllOnlineUsersActivity extends Activity {
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 
 			ViewHolder holder;
 
@@ -764,7 +781,7 @@ public class AllOnlineUsersActivity extends Activity {
 				holder = new ViewHolder();
 				holder.userName = (TextView) convertView.findViewById(R.id.text);
 				holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
-				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
+				holder.userRank = (Button) convertView.findViewById(R.id.userRank);
 				holder.nearBy = (ImageView) convertView.findViewById(R.id.nearByUsers);
 				holder.facebookPic = (ImageView) convertView.findViewById(R.id.facebookPic);
 
@@ -774,66 +791,82 @@ public class AllOnlineUsersActivity extends Activity {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-
-
 			holder.userName.setText(moishdUsers.get(position).getUserNick());	
 			holder.userName.setTypeface(fontName);
 			holder.userName.setTextSize(17);
-		
 
-			if (position % 4 == 0){
-				holder.userRank.setImageBitmap(userRank0);
-			}
-			else if (position % 4 == 1){
-				holder.userRank.setImageBitmap(userRank1);
-			}
-			else if (position % 4 == 2){
-				holder.userRank.setImageBitmap(userRank2);
-			}
-			else{
-				holder.userRank.setImageBitmap(userRank3);
+
+			switch(moishdUsers.get(position).getStats().getRank()){
+			case 0:
+				holder.userRank.setBackgroundResource(R.drawable.rank_0);
+				break;
+			case 1:
+				holder.userRank.setBackgroundResource(R.drawable.rank_1);
+				break;
+			case 2:
+				holder.userRank.setBackgroundResource(R.drawable.rank_2);
+				break;
+			case 3:
+				holder.userRank.setBackgroundResource(R.drawable.rank_3);
+				break;
+			case 4:
+				holder.userRank.setBackgroundResource(R.drawable.rank_4);
+				break;
+			case 5:
+				holder.userRank.setBackgroundResource(R.drawable.rank_5);
+				break;
 			}
 
+			holder.userRank.setTag(position);
+			holder.userRank.setClickable(true);
+			holder.userRank.setOnClickListener(new OnClickListener() {
+				public void onClick(View view) {
+					int position = (Integer) view.getTag();
+					Intent intent = new Intent(view.getContext(), UserStatisticsActivity.class);
+					intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), moishdUsers.get(position));
+					view.getContext().startActivity(intent);
+				}
+			});
 			holder.userPicture.setImageDrawable(usersPictures.get(position));
-			
+
 			//tammy
 
-		/*	boolean friend = moishdUsers.get(position).isFacebookFriend();
+			/*	boolean friend = moishdUsers.get(position).isFacebookFriend();
 			String isfriend="";
 			if (friend)
 				isfriend="True moment before show";
 			else
 				isfriend="False moment before show";
-			
+
 			Log.d("AllOnlineUsersActivity", isfriend);*/
-			
+
 			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 				holder.facebookPic.setImageBitmap(facebookPic);
-			
+
 			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)){
 				if (moishdUsers.get(position).isFacebookFriend()){
 					holder.facebookPic.setImageBitmap(facebookPic);
 				}
 				else
 					holder.facebookPic.setImageBitmap(noPic);
-			
+
 				if (moishdUsers.get(position).isNearByUser())			
 					holder.nearBy.setImageBitmap(nearByUsers);
 				else
 					holder.nearBy.setImageBitmap(noNearBy);
 			}
-			
+
 			else if (currentUsersType.equals(GetUsersByTypeEnum.NearbyUsers))
 				holder.nearBy.setImageBitmap(nearByUsers);
-				
-			
+
+
 			return convertView;
 		}
 
 		static class ViewHolder {
 			TextView userName;
 			ImageView userPicture;
-			ImageView userRank;
+			Button userRank;
 			ImageView nearBy;
 			ImageView facebookPic;
 		}
