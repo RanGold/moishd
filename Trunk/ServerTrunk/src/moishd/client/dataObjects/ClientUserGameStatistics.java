@@ -16,6 +16,8 @@ public class ClientUserGameStatistics implements Serializable {
 	private int rank;
 
 	private int points;
+	
+	private int gamesWonInARow;
 
 	public ClientUserGameStatistics() {
 		super();
@@ -23,15 +25,17 @@ public class ClientUserGameStatistics implements Serializable {
 		this.gamesWon = 0;
 		this.rank = 0;
 		this.points = 0;
+		this.gamesWonInARow = 0;
 	}
 
 	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,
-			int rank, int points) {
+			int rank, int points, int gamesWonInARow) {
 		super();
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
+		this.gamesWonInARow = gamesWonInARow;
 	}
 
 	public int getGamesPlayed() {
@@ -64,6 +68,14 @@ public class ClientUserGameStatistics implements Serializable {
 
 	public void setPoints(int points) {
 		this.points = points;
+	}
+
+	public int getGamesWonInARow() {
+		return gamesWonInARow;
+	}
+
+	public void setGamesWonInARow(int gamesWonInARow) {
+		this.gamesWonInARow = gamesWonInARow;
 	}
 
 }

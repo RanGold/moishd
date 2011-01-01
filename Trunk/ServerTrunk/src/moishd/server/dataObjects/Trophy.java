@@ -26,17 +26,14 @@ public class Trophy extends CommonJDO implements Serializable {
 
     @Persistent
     private String name;
+
     
-	@Persistent
-    private int points;
-    
-    public Trophy(String name, int points) {
+    public Trophy(String name) {
     	this.name = name;
-    	this.points = points;
     }
     
     public ClientTrophy toClientTrophy() {
-    	return (new ClientTrophy(this.getName(), this.getPoints()));
+    	return (new ClientTrophy(this.getName()));
     }
     
     static public List<ClientTrophy> copyToClientTrophyList(List<Trophy> tList) {
@@ -58,14 +55,6 @@ public class Trophy extends CommonJDO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public void setPoints(int points) {
-		this.points = points;
 	}
 
 }

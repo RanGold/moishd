@@ -67,13 +67,17 @@ public class SendGameResultServlet extends HttpServlet {
 									(tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {
 							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 									C2DMCommon.Actions.GameResult.toString(), winPayload);
+							
 							C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 									C2DMCommon.Actions.GameResult.toString(), losePayload);
+
+							updateGameStatistics(tg, mInitUser, mRecUser);
 					} else {
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 								C2DMCommon.Actions.GameResult.toString(), winPayload);
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameResult.toString(), losePayload);
+						updateGameStatistics(tg, mRecUser, mInitUser);
 					}
 					
 					mInitUser.setBusy(false);
@@ -87,6 +91,50 @@ public class SendGameResultServlet extends HttpServlet {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
+	}
+	
+	private void updateGameStatistics(MoishdGame moishdGame, MoishdUser winner, MoishdUser loser){
+		
+		//Increment number of games played for both users
+		int winnerGamesPlayed = winner.getStats().getGamesPlayed();
+		winner.getStats().setGamesPlayed(winnerGamesPlayed + 1);
+				
+		int loserGamesPlayed= loser.getStats().getGamesPlayed();
+		loser.getStats().setGamesPlayed(loserGamesPlayed + 1);
+		
+		//Update winner's won games statistics
+		int winnerGamesWon = winner.getStats().getGamesWon();
+		winner.getStats().setGamesWon(winnerGamesWon+1);
+		
+		int winnerGamesWonInARow = winner.getStats().getGamesWonInARow();
+		winner.getStats().setGamesWonInARow(winnerGamesWonInARow+1);
+		
+		//Update loser's won games statistics
+		loser.getStats().setGamesWonInARow(0);
+		
+		int winnerPoints = winner.getStats().getPoints();
+		int loserPoints = loser.getStats().getPoints();
+
+		//Do points logic
+		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.toString())){
+			winner.getStats().setPoints(winnerPoints + 1);
+		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.toString())){
+			winner.getStats().setPoints(winnerPoints + 3);
+			loser.getStats().setPoints(loserPoints + 1);
+		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.toString())){
+			winner.getStats().setPoints(winnerPoints + 3);
+			loser.getStats().setPoints(loserPoints + 1);
+		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.toString())){
+			winner.getStats().setPoints(winnerPoints + 3);
+			loser.getStats().setPoints(loserPoints + 1);
+		}
+		else{
+			
+		}
+		
+		winner.SaveChanges();
+		loser.SaveChanges();
+
 	}
 }
 

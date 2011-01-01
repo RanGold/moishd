@@ -33,6 +33,9 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 
 	@Persistent
 	private int points;
+	
+	@Persistent
+	private int gamesWonInARow;
 
 	@Persistent(mappedBy = "stats")
 	private MoishdUser moishdUser;
@@ -42,19 +45,21 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		this.gamesWon = 0;
 		this.rank = -1;
 		this.points = 0;
+		this.gamesWonInARow = 0;
 	}
 
 	public UserGameStatistics(int gamesPlayed, int gamesWon,
-			int rank, int points) {
+			int rank, int points, int gamesWonInARow) {
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
+		this.gamesWonInARow = gamesWonInARow;
 	}
 
 	public ClientUserGameStatistics toClientUserGameStatistics() {
 		return (new ClientUserGameStatistics(this.getGamesPlayed(),
-				this.getGamesWon(), this.getRank(), this.getPoints()));
+				this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow()));
 	}
 
 	public Integer getGamesPlayed() {
@@ -87,6 +92,14 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 
 	public void setPoints(int points) {
 		this.points = points;
+	}
+
+	public int getGamesWonInARow() {
+		return gamesWonInARow;
+	}
+
+	public void setGamesWonInARow(int gamesWonInARow) {
+		this.gamesWonInARow = gamesWonInARow;
 	}
 
 	public Key getStatsId() {
