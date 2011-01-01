@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import moishd.server.common.DSCommon;
 import moishd.server.dataObjects.C2DMAuth;
 
 public class C2DMCommon {
@@ -28,7 +29,8 @@ public class C2DMCommon {
 		StartGameDareSimonPro,
 		StartGameDareMixing,
 		StartGameDareFastClick,
-		PlayerBusy
+		PlayerBusy, 
+		PlayerOffline;
 	}
 	
 	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
