@@ -11,7 +11,8 @@ public enum IntentExtraKeysEnum {
 	Truth("Truth"),
 	DareSimonPro("DareSimonPro"),
 	DareMixing("DareMixing"),
-	DareFastClick("DareFastClick");
+	DareFastClick("DareFastClick"),
+	MoishdUser("MoishdUser");
 	
 	private String name;
 

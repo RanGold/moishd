@@ -290,10 +290,12 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	private void unregisterC2DM() {
-
-		Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
-		unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
-		startService(unregIntent);
+		
+		if (isC2DMRegistered()){
+			Intent unregIntent = new Intent("com.google.android.c2dm.intent.UNREGISTER");
+			unregIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0));
+			startService(unregIntent);
+		}
 	}
 
 	//save user's Google account name in SharedPrefernces

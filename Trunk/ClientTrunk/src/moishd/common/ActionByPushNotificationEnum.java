@@ -6,6 +6,7 @@ public enum ActionByPushNotificationEnum {
 	GameInvitation("GameInvitation"),
 	GameDeclined("GameDeclined"),
 	PlayerBusy("PlayerBusy"),
+	PlayerOffline("PlayerOffline"),
 	StartGameTruth("StartGameTruth"),
 	StartGameDare("StartGameDare"),
 	StartGameDareSimonPro("StartGameDareSimonPro"),
