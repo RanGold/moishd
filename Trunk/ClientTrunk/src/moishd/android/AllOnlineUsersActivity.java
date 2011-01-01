@@ -735,6 +735,8 @@ public class AllOnlineUsersActivity extends Activity {
 		private Bitmap userRank1;
 		private Bitmap userRank2;
 		private Bitmap userRank3;
+		private Bitmap userRank4;
+		private Bitmap userRank5;
 
 		//tammy
 		private Bitmap facebookPic;
@@ -756,6 +758,13 @@ public class AllOnlineUsersActivity extends Activity {
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
 			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.not_facebook_friend);
 			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
+			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
+			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
+			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
+			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
+			userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
+			userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
+
 			
 		}
 
@@ -781,10 +790,10 @@ public class AllOnlineUsersActivity extends Activity {
 				holder = new ViewHolder();
 				holder.userName = (TextView) convertView.findViewById(R.id.text);
 				holder.userPicture = (ImageView) convertView.findViewById(R.id.userPicture);
-				holder.userRank = (Button) convertView.findViewById(R.id.userRank);
+				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
 				holder.nearBy = (ImageView) convertView.findViewById(R.id.nearByUsers);
 				holder.facebookPic = (ImageView) convertView.findViewById(R.id.facebookPic);
-
+				
 				convertView.setTag(holder);
 			} else {
 
@@ -798,22 +807,22 @@ public class AllOnlineUsersActivity extends Activity {
 
 			switch(moishdUsers.get(position).getStats().getRank()){
 			case 0:
-				holder.userRank.setBackgroundResource(R.drawable.rank_0);
+				holder.userRank.setImageBitmap(userRank0);
 				break;
 			case 1:
-				holder.userRank.setBackgroundResource(R.drawable.rank_1);
+				holder.userRank.setImageBitmap(userRank1);
 				break;
 			case 2:
-				holder.userRank.setBackgroundResource(R.drawable.rank_2);
+				holder.userRank.setImageBitmap(userRank2);
 				break;
 			case 3:
-				holder.userRank.setBackgroundResource(R.drawable.rank_3);
+				holder.userRank.setImageBitmap(userRank3);
 				break;
 			case 4:
-				holder.userRank.setBackgroundResource(R.drawable.rank_4);
+				holder.userRank.setImageBitmap(userRank4);
 				break;
 			case 5:
-				holder.userRank.setBackgroundResource(R.drawable.rank_5);
+				holder.userRank.setImageBitmap(userRank5);
 				break;
 			}
 
@@ -866,7 +875,7 @@ public class AllOnlineUsersActivity extends Activity {
 		static class ViewHolder {
 			TextView userName;
 			ImageView userPicture;
-			Button userRank;
+			ImageView userRank;
 			ImageView nearBy;
 			ImageView facebookPic;
 		}
