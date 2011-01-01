@@ -27,12 +27,12 @@ public class SendInviteToGameServlet extends HttpServlet {
 		LoggerCommon.Get().LogInfo("adsd", "check1");
 		String headername = ""; 
 		for(@SuppressWarnings("rawtypes")
-		Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
+				Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
 			headername = (String)e.nextElement();
 			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
 		}
 		LoggerCommon.Get().LogInfo("adsd", "check2");
-	
+
 		// TODO : check if any authentication is possiable
 		if (request.getHeader("X-AppEngine-QueueName").equals("inviteQueue")) {
 			try {
@@ -46,7 +46,11 @@ public class SendInviteToGameServlet extends HttpServlet {
 					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
 							C2DMCommon.Actions.PlayerBusy.toString(),
 							new HashMap<String, String>());
-				} else {
+				} else if (!recUser.isRegistered()){
+					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
+							C2DMCommon.Actions.PlayerOffline.toString(),
+							new HashMap<String, String>());
+				}else {
 					initUser.setBusy(true);
 					initUser.SaveChanges();
 					recUser.setBusy(true);

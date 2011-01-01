@@ -8,6 +8,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.server.common.DataAccessException;
+import moishd.server.common.PMF;
 import moishd.server.dataObjects.C2DMAuth;
 import moishd.server.dataObjects.CommonJDO;
 import moishd.server.dataObjects.Location;
