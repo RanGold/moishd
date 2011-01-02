@@ -8,8 +8,8 @@ import java.util.TreeMap;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.client.dataObjects.ClientTrophy;
 import moishd.client.dataObjects.ClientUserGameStatistics;
+import moishd.client.dataObjects.TrophiesEnum;
 import moishd.common.IntentExtraKeysEnum;
-import moishd.common.TrophiesEnum;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -60,9 +60,12 @@ public class UserStatisticsActivity extends Activity {
 
 		//Just until we have a real trophies list sent from the server
 		userTrophies = new ArrayList<ClientTrophy>();
-		userTrophies.add(new ClientTrophy(TrophiesEnum.TinyMoisher.toString()));
-		userTrophies.add(new ClientTrophy(TrophiesEnum.BestFriends.toString()));
-		userTrophies.add(new ClientTrophy(TrophiesEnum.TenInARow.toString()));
+		userTrophies.add(new ClientTrophy(TrophiesEnum.TinyMoisher.toString(), 
+				TrophiesEnum.TinyMoisher.getTrophyPoints()));
+		userTrophies.add(new ClientTrophy(TrophiesEnum.BestFriends.toString(), 
+				TrophiesEnum.BestFriends.getTrophyPoints()));
+		userTrophies.add(new ClientTrophy(TrophiesEnum.TenInARow.toString(),
+				TrophiesEnum.TenInARow.getTrophyPoints()));
 
 		populateNeedToAchieveTrophiesMap();
 
