@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/RefreshList"
-          android:icon="@drawable/refresh_button"
+          android:icon="@drawable/menu_refresh"
           android:title="@string/refresh" />
     
     <item android:id="@+id/allUsers"
-          android:title="@string/get_all_users"/>
+          android:title="@string/get_all_users"
+    	  android:icon="@drawable/menu_all_users"/>
     
     <item android:id="@+id/facebookFriends"
-          android:title="@string/get_all_facebook_friends"/>
+          android:title="@string/get_all_facebook_friends"
+          android:icon="@drawable/menu_facebook" />
     
     <item android:id="@+id/nearbyUsers"
-          android:title="@string/get_all_nearby_users"/>
+          android:title="@string/get_all_nearby_users"
+          android:icon="@drawable/menu_world"/>
                  
     <item android:id="@+id/logout"
+    	  android:title="@string/logout"
           android:icon="@drawable/logout"/>
 </menu>

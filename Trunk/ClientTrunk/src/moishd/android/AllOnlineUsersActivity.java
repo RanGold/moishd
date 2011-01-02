@@ -54,7 +54,6 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -539,8 +538,6 @@ public class AllOnlineUsersActivity extends Activity {
 			return builder.create();  
 
 		case DIALOG_HAS_NO_LOCATION:
-
-			builder.setIcon(R.id.icon);
 			builder.setMessage("Location hasn't been settled yet. Would you like to configure Location Settings?")
 			.setCancelable(false)
 			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -574,7 +571,6 @@ public class AllOnlineUsersActivity extends Activity {
 			return builder.create(); 
 
 		case DIALOG_HAS_NO_LOCATION_BEGINNING:
-			builder.setIcon(R.id.icon);
 			builder.setMessage("Location hasn't been settled yet. Hence, all users will appear as not in your range.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -744,10 +740,6 @@ public class AllOnlineUsersActivity extends Activity {
 		private Bitmap nearByUsers;
 		private Bitmap noNearBy;
 
-		//private Bitmap userRank4;
-		//private Bitmap userRank5;
-
-		//private Bitmap moishd_logo;
 
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
@@ -763,9 +755,7 @@ public class AllOnlineUsersActivity extends Activity {
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
 			userRank3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_3);
 			userRank4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_4);
-			userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);
-
-			
+			userRank5 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_5);		
 		}
 
 		public int getCount() {
@@ -803,7 +793,6 @@ public class AllOnlineUsersActivity extends Activity {
 			holder.userName.setText(moishdUsers.get(position).getUserNick());	
 			holder.userName.setTypeface(fontName);
 			holder.userName.setTextSize(17);
-
 
 			switch(moishdUsers.get(position).getStats().getRank()){
 			case 0:
