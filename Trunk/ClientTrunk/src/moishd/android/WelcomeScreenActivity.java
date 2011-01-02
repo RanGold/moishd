@@ -41,7 +41,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 
@@ -263,32 +262,6 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
-	private boolean registerC2DM() {
-		
-
-		long secondInNanosecond = 1000*1000000;
-		long waitTime = 1*secondInNanosecond;
-		boolean wasInterrupted;
-		Log.d("Thread","in thread: "+Thread.currentThread().toString());
-
-		while (numberOfTriesLeft > 0){
-
-			SystemClock.sleep(1000);
-			if (Thread.interrupted()){
-				wasInterrupted  = true;
-			}
-
-			boolean isRegistered = isC2DMRegistered(); 
-			if (!isRegistered){
-				numberOfTriesLeft--;
-			}
-			else{
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private void unregisterC2DM() {
 		
 		if (isC2DMRegistered()){
@@ -421,7 +394,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		case DIALOG_FACEBOOK_ERROR:
 			builder.setTitle("Error");
-			builder.setMessage("Registration to Facebook server failed.")
+			builder.setMessage("Registration to Facebook server failed. Please retry in a few seconds.")
 			.setCancelable(false)
 			.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -446,7 +419,7 @@ public class WelcomeScreenActivity extends Activity{
 			return builder.create();  			
 		case DIALOG_C2DM_ERROR:
 			builder.setTitle("Error");
-			builder.setMessage("Registration to Moish'd! server failed.")
+			builder.setMessage("Registration to Moish'd! server failed. Please retry in a few seconds.")
 			.setCancelable(false)
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {

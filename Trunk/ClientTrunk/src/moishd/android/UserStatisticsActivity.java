@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 public class UserStatisticsActivity extends Activity {
 
-	private ClientMoishdUser user;
 	private List<ClientTrophy> userTrophies;
 	private ClientUserGameStatistics userGameStatistics;
 	private Map<String, Boolean> allTrophiesMap;
