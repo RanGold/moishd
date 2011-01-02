@@ -7,6 +7,7 @@ import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.PMF;
@@ -278,8 +279,7 @@ public class DSCommon {
 			locations = DetachCopyLocations(locations, pm);
 			
 			for (Location location : locations) {
-				if (CalculateDistance(location.getLatitude(), location.getLongitude(), 
-						user.getLocation().getLatitude(), user.getLocation().getLongitude()) <= distance) { 
+				if (CalculateDistance(location, user.getLocation()) <= distance) {
 					if (!user.getUserGoogleIdentifier().equals(location.getMoishdUser().getUserGoogleIdentifier())) {
 						users.add(location.getMoishdUser());
 					}
@@ -291,6 +291,15 @@ public class DSCommon {
 		finally {
 			pm.close();
 		}
+	}
+	
+	public static double CalculateDistance(Location location1, Location location2) {
+		return CalculateDistance(location1.toClientLocaion(), location2.toClientLocaion());
+	}
+	
+	public static double CalculateDistance(ClientLocation location1, ClientLocation location2) {
+		return CalculateDistance(location1.getLatitude(), location1.getLongitude(), 
+				location2.getLatitude(), location2.getLongitude());
 	}
 	
 	private static double CalculateDistance(double lat1, double long1, double lat2, double long2)
