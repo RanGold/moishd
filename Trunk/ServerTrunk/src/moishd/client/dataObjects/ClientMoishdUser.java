@@ -155,6 +155,7 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		return MACAddress;
 	}
 
+	@Override
 	public int compareTo(ClientMoishdUser user){
 		/*String lastNameUser1 = this.userNick.split(" ")[1];
 		String lastNameUser2 = user.userNick.split(" ")[1];*/
