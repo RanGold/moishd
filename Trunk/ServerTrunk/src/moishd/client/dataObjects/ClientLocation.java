@@ -38,4 +38,8 @@ public class ClientLocation implements Serializable {
 	public double getLatitude() {
 		return latitude;
 	}
+	
+	public boolean isInitialized() {
+		return ((this.getLatitude() < 200.0) && (this.getLongitude() < 200.0));
+	}
 }

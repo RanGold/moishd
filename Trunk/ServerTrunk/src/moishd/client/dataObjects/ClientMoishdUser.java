@@ -23,11 +23,9 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 	
 	private String facebookID;
 	
-	private String MACAddress;
-	
     private ClientLocation location;
     
-    private List<ClientTrophy> trophies;
+    private List<TrophiesEnum> trophies;
     
     private ClientUserGameStatistics stats;
     
@@ -43,7 +41,6 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.userGoogleIdentifier = "";
 		this.registerID = "";
 		this.facebookID = "";
-		this.MACAddress = "";
 		this.location = null;
 		this.trophies = null;
 		this.stats = null;
@@ -53,8 +50,8 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 
 	public ClientMoishdUser(String userNick, String pictureLink,
 			Date dateRegistered, String userGoogleIdentifier,
-			String registerID, String facebookID, String MACAddress, 
-			ClientLocation location, List<ClientTrophy> trophies, 
+			String registerID, String facebookID, 
+			ClientLocation location, List<TrophiesEnum> trophies, 
 			ClientUserGameStatistics stats) {
 		super();
 		this.userNick = userNick;
@@ -63,13 +60,13 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.userGoogleIdentifier = userGoogleIdentifier;
 		this.registerID = registerID;
 		this.facebookID = facebookID;
-		this.MACAddress = MACAddress;
 		this.location = location;
 		this.trophies = trophies;
 		this.stats = stats;
 		this.setFacebookFriend(false);
 		this.setNearByUser(false);
 	}
+	
 	@Override
 	public boolean equals(Object obj){
 		return (this.getUserGoogleIdentifier().equals(((ClientMoishdUser) obj).getUserGoogleIdentifier()));
@@ -131,28 +128,12 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 		this.location = location;
 	}
 
-	public List<ClientTrophy> getTrophies() {
-		return trophies;
-	}
-
-	public void setTrophies(List<ClientTrophy> trophies) {
-		this.trophies = trophies;
-	}
-
 	public ClientUserGameStatistics getStats() {
 		return stats;
 	}
 
 	public void setStats(ClientUserGameStatistics stats) {
 		this.stats = stats;
-	}
-
-	public void setMACAddress(String mACAddress) {
-		MACAddress = mACAddress;
-	}
-
-	public String getMACAddress() {
-		return MACAddress;
 	}
 
 	@Override
@@ -181,5 +162,13 @@ public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUs
 
 	public boolean isNearByUser() {
 		return nearByUser;
+	}
+
+	public void setTrophies(List<TrophiesEnum> trophies) {
+		this.trophies = trophies;
+	}
+
+	public List<TrophiesEnum> getTrophies() {
+		return trophies;
 	}
 }

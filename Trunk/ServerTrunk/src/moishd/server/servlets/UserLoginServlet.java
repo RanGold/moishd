@@ -41,7 +41,7 @@ public class UserLoginServlet extends GeneralServlet {
 					throw new DataAccessException("user " + user.getEmail() + " more than 1 result");
 				} else if (users.size() == 0) {	
 					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
-							user.getEmail(), newUser.getRegisterID(), newUser.getFacebookID(), newUser.getMACAddress());
+							user.getEmail(), newUser.getRegisterID(), newUser.getFacebookID(), "MAC");
 				} else {
 					muser = users.get(0);
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
@@ -51,7 +51,6 @@ public class UserLoginServlet extends GeneralServlet {
 					}
 				}
 				
-				muser.setMACAddress(newUser.getMACAddress());
 				muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 				muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
 				muser.setBusy(false);
