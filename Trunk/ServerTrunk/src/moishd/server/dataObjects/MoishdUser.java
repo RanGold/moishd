@@ -2,10 +2,8 @@ package moishd.server.dataObjects;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,6 +11,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.client.dataObjects.TrophiesEnum;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -64,7 +63,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private Location location;
 
 	@Persistent
-	private Set<Key> trophies;
+	private List<TrophiesEnum> trophies;
 
 	@Persistent(dependent = "true")
 	private UserGameStatistics stats;
@@ -83,7 +82,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
 		this.dateRegistered = new Date();
-		this.trophies = new HashSet<Key>();
+		this.trophies = new LinkedList<TrophiesEnum>();
 		this.stats = new UserGameStatistics();
 		this.location = new Location(200, 200);
 	}
@@ -91,10 +90,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
-				this.getRegisterID(), this.getFacebookID(), this.getMACAddress(), 
-				this.getLocation().toClientLocaion(),
-				Trophy.copyToClientTrophyList(this.getTrophies()), this
-						.getStats().toClientUserGameStatistics()));
+				"", this.getFacebookID(), null,
+				this.getTrophies(), 
+				this.getStats().toClientUserGameStatistics()));
 	}
 
 	public static List<ClientMoishdUser> copyToClientMoishdUserList(
@@ -152,31 +150,6 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public Key getUserId() {
 		return userId;
-	}
-
-	public void setTrophies(Set<Key> trophies) {
-		this.trophies = trophies;
-	}
-
-	public Set<Key> getTrophyKeys() {
-		return trophies;
-	}
-
-	//@SuppressWarnings("unchecked")
-	public List<Trophy> getTrophies() {
-		// TODO: fix this
-		List<Trophy> tList = new LinkedList<Trophy>();
-		/*if (this.getTrophyKeys().size() > 0) {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			
-			tList = (List<Trophy>) pm.newQuery(Trophy.class,
-					":keys.contains(trophyId)").execute(this.getTrophyKeys());
-		}*/
-		return tList;
-	}
-
-	public void addTrophy(Trophy trophy) {
-		getTrophyKeys().add(trophy.getTrophyId());
 	}
 
 	public void setStats(UserGameStatistics stats) {
@@ -244,5 +217,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public int getIsAlive() {
 		return isAlive;
+	}
+
+	public void setTrophies(List<TrophiesEnum> trophies) {
+		this.trophies = trophies;
+	}
+
+	public List<TrophiesEnum> getTrophies() {
+		return trophies;
 	}
 }
