@@ -9,10 +9,10 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ActionByPushNotificationEnum;
@@ -453,7 +453,6 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setUserNick(userName);
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
-				newUser.setMACAddress("123");
 				newUser.setRegisterID(C2DMessaging.getRegistrationId(getApplicationContext()));
 				
 				ClientLocation loc;
