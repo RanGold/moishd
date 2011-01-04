@@ -405,10 +405,10 @@ public class DSCommon {
 		try {
 			q = pm.newQuery(MoishdUser.class);
 
-			q.setFilter("isAlive == :1");
+			q.setFilter("isAlive == :1 && isRegistered == :trueParam");
 			
 			@SuppressWarnings("unchecked")
-			List<MoishdUser> users = (List<MoishdUser>) q.execute(2);
+			List<MoishdUser> users = (List<MoishdUser>) q.execute(2, true);
 			users = DSCommon.DetachCopyRecursively(users, pm);
 			
 			for (MoishdUser user : users) {
