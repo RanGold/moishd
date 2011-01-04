@@ -3,6 +3,7 @@ package moishd.android.games;
 import moishd.android.ServerCommunication;
 import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ public class GameActivity extends Activity{
 	protected void onNewIntent (Intent intent){
 		action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		
-		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
+		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			int points = intent.getIntExtra(IntentExtraKeysEnum.Points.toString(), -1);
 
