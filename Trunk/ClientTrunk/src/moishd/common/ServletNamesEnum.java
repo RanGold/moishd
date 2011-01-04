@@ -16,6 +16,8 @@ public enum ServletNamesEnum {
 	UpdateLocation("UpdateLocation"),
 	HasLocation("HasLocation"),
 	UnregisterUser("UnregisterUser"),
+	FirstTimePlayed("FirstTimePlayed"),
+	RankGame("RankGame"),
 	Alive("Alive");
 	
 	private String name;

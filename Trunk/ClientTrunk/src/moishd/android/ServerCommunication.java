@@ -134,6 +134,29 @@ public class ServerCommunication {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTimeGameInitiator, gameId, authString);
 		return getUserFromResponse(response);
 	}
+	//TODO check if there's a need in the game_id
+	public static boolean sendRankToServer(String gameType,int rank, String authString) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.RankGame,gameType+":"+rank, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public static boolean isFirstTimePlayed(String gameType, String authString) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.FirstTimePlayed,gameType, authString);
+		if (response==null)
+			return false;
+		if (response.containsHeader("FirstTimePlayed")){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	
 	public static boolean sendInvitationResponse(String gameId, String responseString, String authString) {
 		
