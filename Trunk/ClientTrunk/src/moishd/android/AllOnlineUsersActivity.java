@@ -26,6 +26,11 @@ import moishd.common.IntentRequestCodesEnum;
 import moishd.common.LocationManagment;
 import moishd.common.PushNotificationTypeEnum;
 import moishd.common.SharedPreferencesKeysEnum;
+import moishd.common.AvailablePreferences;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,14 +59,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity{
 
@@ -107,14 +112,16 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 17;
 	private final int DIALOG_RANK_UPDATED = 18;
 	private final int DIALOG_TROPHIES_UPDATED = 19;
-
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
+
+	private Handler autoRefreshHandler = new Handler();
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case UPDATE_LIST_ADAPTER:
 				updateList();
+				needRefresh = false;
 				break;
 			case FACEBOOK_FRIENDS_FIRST_RETRIEVAL_COMPLETED:
 				facebookFriendsFirstRetrievalCompleted(); 
@@ -131,7 +138,38 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 		}
 	};
+	private boolean needRefresh = false;
+	Timer refreshTimer;
+	int SECOND = 1000;
+	int REFRESH_INTERVAL = 60*SECOND;
+	
 
+	
+
+	private class autoRefreshTask extends TimerTask {
+		private Runnable run;
+		
+		@Override
+		public void run() {
+			run = new Runnable() {
+				public void run() {
+					executeRefresh();					
+				}
+			};
+			autoRefreshHandler.post(run);
+		}
+	}
+
+	private void activateTimer(){
+		refreshTimer = new Timer();
+		refreshTimer.schedule(new autoRefreshTask(), 60*1000, REFRESH_INTERVAL);
+	}
+	
+	private void restartTimer(){
+		refreshTimer.cancel();
+		activateTimer();
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -172,6 +210,10 @@ public class AllOnlineUsersActivity extends Activity{
 
 		if(!ServerCommunication.hasLocation(authToken))
 			showDialog(DIALOG_HAS_NO_LOCATION_BEGINNING);
+		
+		activateTimer();
+		
+		
 	}
 
 	@Override
@@ -181,28 +223,36 @@ public class AllOnlineUsersActivity extends Activity{
 		return true;
 	}
 
+	private void executeRefresh(){
+		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
+			getFriendsUsers();
+		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
+			getMergedUsers();
+		else
+			getUsers(currentUsersType);		
+	}
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
-			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
-				getFriendsUsers();
-			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
-				getMergedUsers();
-			else
-				getUsers(currentUsersType);
-
+			executeRefresh();
+			restartTimer();
 			return true;
 		case R.id.logout:
 			doQuitActions();
+			restartTimer();
 			return true;
 		case R.id.facebookFriends:
 			getUsers(GetUsersByTypeEnum.FacebookFriends);
+			restartTimer();
 			return true;
 		case R.id.nearbyUsers:
 			getUsers(GetUsersByTypeEnum.NearbyUsers);
+			restartTimer();
 			return true;
 		case R.id.allUsers:
 			getUsers(GetUsersByTypeEnum.MergedUsers);
+			restartTimer();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -270,6 +320,21 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onDestroy (){
 		super.onDestroy();
 		locationManagment.stopUpdateLocation();
+		refreshTimer.cancel();
+	}
+	@Override
+	protected void onResume(){
+		super.onResume();
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		if (needRefresh)
+			sendMessageToHandler(UPDATE_LIST_ADAPTER);		
+	}
+	
+	protected void onPause(){
+		super.onPause();
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
+		
+		
 	}
 
 	@Override
@@ -308,7 +373,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getMergedUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
 			asyncRunner.request("me/friends", new FriendsRequestListener());
 		}
 		else{
@@ -319,7 +385,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getFriendsUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
 			asyncRunner.request("me/friends", new FriendsRequestListener());
 		}
 		else{
@@ -677,7 +744,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
-			mainProgressDialog = ProgressDialog.show(AllOnlineUsersActivity.this, null, "Retrieving users...", true, false);
+			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+				mainProgressDialog = ProgressDialog.show(AllOnlineUsersActivity.this, null, "Retrieving users...", true, false);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -766,12 +834,18 @@ public class AllOnlineUsersActivity extends Activity{
 			if (resultList.size() == 2){
 				moishdUsers = (List<ClientMoishdUser>) resultList.get(0);
 				usersPictures = (List<Drawable>) resultList.get(1);
-				sendMessageToHandler(UPDATE_LIST_ADAPTER);
+				
+				if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+					sendMessageToHandler(UPDATE_LIST_ADAPTER);
+				else 
+					needRefresh = true;
 			}
 			else{
-				Integer messageCode = (Integer) resultList.get(0);
-				final int messageCodeInt = messageCode.intValue();
-				sendMessageToHandler(messageCodeInt);
+				if (!AvailablePreferences.userIsAvailable(getApplicationContext())){
+					Integer messageCode = (Integer) resultList.get(0);
+					final int messageCodeInt = messageCode.intValue();
+					sendMessageToHandler(messageCodeInt);
+				}
 			}
 			mainProgressDialog.dismiss();
 		}
