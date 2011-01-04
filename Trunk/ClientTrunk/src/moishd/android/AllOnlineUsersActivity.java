@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
@@ -497,14 +498,19 @@ public class AllOnlineUsersActivity extends Activity {
 			.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int id) {
-
-				//	Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
-				//	startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
-					Intent chooseGame = new Intent(AllOnlineUsersActivity.this, ChooseGameActivity.class); //opens the screen of truth and dare for the user to choose
-					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
-						
+					Intent chooseGame = new Intent();
+					Random random = new Random();  
+					int i = random.nextInt(100);
+					i = i % 4;
+					if (i==0 || i==1) {
+						chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDare.class); 
+					}
+					else {
+						chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
+					}
 					
-
+					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());						
+					
 					dialog.cancel();
 				}
 			})
