@@ -10,6 +10,7 @@ import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseRequestListener;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.Util;
+import moishd.android.games.ChooseGameActivity;
 import moishd.android.games.FastClick;
 import moishd.android.games.Mixing;
 import moishd.android.games.SimonPro;
@@ -497,8 +498,13 @@ public class AllOnlineUsersActivity extends Activity {
 
 				public void onClick(DialogInterface dialog, int id) {
 
-					Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
-					startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
+				//	Intent TruthOrDareIntent = new Intent(AllOnlineUsersActivity.this, TruthOrDare.class); //opens the screen of truth and dare for the user to choose
+				//	startActivityForResult(TruthOrDareIntent, IntentRequestCodesEnum.GetChosenGame.getCode());
+					Intent chooseGame = new Intent(AllOnlineUsersActivity.this, ChooseGameActivity.class); //opens the screen of truth and dare for the user to choose
+					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+						
+					
+
 					dialog.cancel();
 				}
 			})
