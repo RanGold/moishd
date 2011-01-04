@@ -90,7 +90,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public ClientMoishdUser toClientMoishdUser() {
 		return (new ClientMoishdUser(this.getUserNick(), this.getPictureLink(),
 				this.getDateRegistered(), this.getUserGoogleIdentifier(),
-				"", this.getFacebookID(), null,
+				"", this.getFacebookID(), this.getLocation().toClientLocaion(),
 				this.getTrophies(), 
 				this.getStats().toClientUserGameStatistics()));
 	}
