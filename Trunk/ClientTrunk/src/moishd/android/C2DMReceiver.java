@@ -15,11 +15,10 @@
  */
 package moishd.android;
 
-import moishd.android.games.FastClick;
-import moishd.android.games.Mixing;
-import moishd.android.games.SimonPro;
-import moishd.android.games.TruthPart;
-import moishd.common.ActionByPushNotificationEnum;
+import moishd.android.games.FastClickGameActivity;
+import moishd.android.games.MixingGameActivity;
+import moishd.android.games.SimonProGameActivity;
+import moishd.android.games.TruthPartGameActivity;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.content.Context;
@@ -51,68 +50,83 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
 			ServerCommunication.sendAlive();
 		}
-		
+
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameOffer.toString());
-			//resultIntent.putExtra(ActionByPushNotificationEnum.GameOffer.toString(), );
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameOffer.toString());
 		}
-		
+
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameInvitation.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameInvitation.toString());
 		}
 		else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameDeclined.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameDeclined.toString());
 		}
-		
 		else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.PlayerBusy.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerBusy.toString());
 		}
 		else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.PlayerOffline.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerOffline.toString());
 		}
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.StartGameTruth.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameTruth.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
 		}
-		
+
 		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.StartGameDare.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameDare.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
-			
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.GameResult.toString());
+
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameResult.toString());
 			Log.d("C2DM", resultIntent.getStringExtra(IntentExtraKeysEnum.PushAction.toString()));
-			
+			int points = Integer.valueOf((intent.getStringExtra(IntentExtraKeysEnum.Points.toString())));
+
 			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); 
 			int placeToCut = resultWithGameType.indexOf(":");
 			String result = resultWithGameType.substring(0,placeToCut); //TODO: hila string index out of bounds
 			String gameType = resultWithGameType.substring(placeToCut+1);
-			
-			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
-			Log.d("C2DM", result);	
-		
 
-				if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
-					resultIntent.setClass(this, TruthPart.class);
-				else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
-					resultIntent.setClass(this, SimonPro.class);
-				else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
-					resultIntent.setClass(this, Mixing.class);
-				else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
-					resultIntent.setClass(this, FastClick.class);
-			
+			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
+			Log.d("C2DM", result);
+			resultIntent.putExtra(IntentExtraKeysEnum.Points.toString(), points);
+
+			if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
+				resultIntent.setClass(this, TruthPartGameActivity.class);
+			else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
+				resultIntent.setClass(this, SimonProGameActivity.class);
+			else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
+				resultIntent.setClass(this, MixingGameActivity.class);
+			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
+				resultIntent.setClass(this, FastClickGameActivity.class);
 		}
+		else if (action.equals(PushNotificationTypeEnum.RankUpdated.toString())){
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.RankUpdated.toString());
+			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), 0);
+			resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
+		}
+		else if (action.equals(PushNotificationTypeEnum.TrophiesUpdated.toString())){
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+
+			int numberOfTropies = Integer.valueOf(intent.getStringExtra(IntentExtraKeysEnum.NumberOfTrophies.toString()));
+			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.TrophiesUpdated.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
+			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);
+
+		}
+		Log.d("TEST", resultIntent.getClass().toString());
 		startActivity(resultIntent);
 	}
 
@@ -120,7 +134,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	public void onError(Context context, String errorId) {
 		Log.d("TEST", "got Error");
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), ActionByPushNotificationEnum.C2DMError.toString());
+		resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), IntentExtraKeysEnum.C2DMError.toString());
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		resultIntent.setClass(this, WelcomeScreenActivity.class);
 	}
@@ -131,7 +145,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Log.d("TEST", "got RegistrationIntent"); 
 		//DeviceRegistrar.registerWithServer(context, registration);
 	}
-	
+
 	@Override
 	public void onUnregistered(Context context) {
 		Log.d("TEST", "got UnRegistrationIntent");

@@ -3,7 +3,7 @@ package moishd.android.games.gamesNotInUse;
 import java.util.Random;
 
 import moishd.android.R;
-import moishd.android.games.Mixing;
+import moishd.android.games.MixingGameActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +62,7 @@ public class Click extends Activity{
 						word.setText(number);
 					}
 					else {
-						Intent intent = new Intent(Click.this, Mixing.class);
+						Intent intent = new Intent(Click.this, MixingGameActivity.class);
 						startActivity(intent);
 					}
 				}
@@ -83,7 +83,7 @@ public class Click extends Activity{
 						word.setText(number);
 					}
 					else {
-						Intent intent = new Intent(Click.this, Mixing.class);
+						Intent intent = new Intent(Click.this, MixingGameActivity.class);
 						startActivity(intent);
 					}
 				}
@@ -104,7 +104,7 @@ public class Click extends Activity{
 						word.setText(number);
 					}
 					else {
-						Intent intent = new Intent(Click.this, Mixing.class);
+						Intent intent = new Intent(Click.this, MixingGameActivity.class);
 						startActivity(intent);
 						}
 					}

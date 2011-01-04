@@ -131,7 +131,7 @@ public class ServerCommunication {
 	}
 
 	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTimeGameInitiator, gameId, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetGameInitiator, gameId, authString);
 		return getUserFromResponse(response);
 	}
 	//TODO check if there's a need in the game_id

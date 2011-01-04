@@ -2,30 +2,24 @@ package moishd.common;
 
 public enum PushNotificationTypeEnum {
 
-	GameInvitation("GameInvitation"),
-	GameDeclined("GameDeclined"),
-	PlayerBusy("PlayerBusy"),
-	PlayerOffline("PlayerOffline"),
-	StartGameTruth("StartGameTruth"),
-	StartGameDareSimonPro("StartGameDareSimonPro"),
-	StartGameDareMixing("StartGameDareMixing"),
-	StartGameDareFastClick("StartGameDareFastClick"),
-	GameResult("GameResult"),
-	Won("Won"),
-	Lost("Lost"),
-	LostFirst("LostFirst"),
-	WonSecond("WonSecond"),
-	CheckAlive("CheckAlive"),
-	GameOffer("GameOffer");
-
-	private String name;
-
-	PushNotificationTypeEnum(String name) {
-		this.name = name;
-	}
-
-	public String toString() {
-		return this.name;
-	}
+	CheckAlive,
+	GameOffer,
+	GameInvitation,
+	GameDeclined,
+	PlayerBusy,
+	PlayerOffline,
+	StartGameTruth,
+	StartGameDare,
+	StartGameDareSimonPro,
+	StartGameDareMixing,
+	StartGameDareFastClick,
+	GameResult,
+	Won,
+	Lost,
+	LostFirst,
+	WonSecond,
+	RankUpdated,
+	TrophiesUpdated,
+	RankAndTrophiesUpdated;
 
 }

@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 
-public class AuthorizeGoogleAccount extends Activity {
+public class AuthorizeGoogleAccountActivity extends Activity {
 	
 	boolean firstTime = true;
 	private AccountManagerFuture<Bundle> bundle;

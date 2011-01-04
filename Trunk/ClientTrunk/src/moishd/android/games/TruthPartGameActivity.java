@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TruthPart extends GameActivity {
+public class TruthPartGameActivity extends GameActivity {
 	int i;
 		
 	final String[][] questions ={{"Is Tammy's last name Dagan?","yes"}, 
