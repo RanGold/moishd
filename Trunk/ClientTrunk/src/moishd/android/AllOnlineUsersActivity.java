@@ -8,21 +8,23 @@ import java.util.List;
 import java.util.Random;
 
 import moishd.android.facebook.AsyncFacebookRunner;
+import moishd.android.facebook.BaseDialogListener;
 import moishd.android.facebook.BaseRequestListener;
+import moishd.android.facebook.DialogError;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.Util;
 import moishd.android.games.ChooseGameActivity;
-import moishd.android.games.FastClick;
-import moishd.android.games.Mixing;
-import moishd.android.games.SimonPro;
-import moishd.android.games.TruthOrDare;
-import moishd.android.games.TruthPart;
+import moishd.android.games.FastClickGameActivity;
+import moishd.android.games.MixingGameActivity;
+import moishd.android.games.SimonProGameActivity;
+import moishd.android.games.TruthOrDareActivity;
+import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.LocationManagment;
+import moishd.common.PushNotificationTypeEnum;
 import moishd.common.SharedPreferencesKeysEnum;
 
 import org.json.JSONArray;
@@ -61,7 +63,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class AllOnlineUsersActivity extends Activity {
+public class AllOnlineUsersActivity extends Activity{
 
 	private static List<ClientMoishdUser> moishdUsers = new ArrayList<ClientMoishdUser>();
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
@@ -71,6 +73,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	private static Typeface fontName, fontHeader;
 
+	private String firstName;
 	private String authToken;
 
 	private String game_id;
@@ -102,6 +105,10 @@ public class AllOnlineUsersActivity extends Activity {
 	private final int DIALOG_HAS_NO_LOCATION = 15;
 	private final int DIALOG_ERROR_RETRIEVING_USERS = 16;
 	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 17;
+	private final int DIALOG_RANK_UPDATED = 18;
+	private final int DIALOG_TROPHIES_UPDATED = 19;
+
+	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -130,38 +137,29 @@ public class AllOnlineUsersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.all_users_layout);
-		header = (TextView) findViewById(R.id.usersTypeHeader);
-		header.setText("All online users");
-		header.setTextSize(20);
 
-		//tammy - adding 2 fonts to use
 		fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf"); 
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
 
-		//tammy - setting the font of the header line
+		header = (TextView) findViewById(R.id.usersTypeHeader);
+		header.setText("All online users");
+		header.setTextSize(20);
 		header.setTypeface(fontHeader);
-
-		serverHasFacebookFriends = false;
 
 		//need the authToken for server requests
 		authToken = getGoogleAuthToken();
+		firstName = getFacebookUserName(false);
+
 		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
 		locationManagment.startUpdateLocation(1);
 
-
-		/*tammy
-		currentUsersType = GetUsersByTypeEnum.AllUsers;
-		getUsers(GetUsersByTypeEnum.AllUsers);
-		 */
-		//tammy - changing the name of the main list to merged list.
-
+		serverHasFacebookFriends = false;
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 
 		list = (ListView) findViewById(R.id.allUsersListView);
-
 		list.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -185,16 +183,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.RefreshList: //tammy
-
-			/*if (currentUsersType != GetUsersByTypeEnum.FacebookFriends){
-				getUsers(currentUsersType);
-
-			else{
-				getFriendsUsers();
-			}*/
-
-			//tammy - merged list also needs the facebook friends' list
+		case R.id.RefreshList:
 			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 				getFriendsUsers();
 			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
@@ -213,8 +202,6 @@ public class AllOnlineUsersActivity extends Activity {
 			getUsers(GetUsersByTypeEnum.NearbyUsers);
 			return true;
 		case R.id.allUsers:
-			/*tammy
-			getUsers(GetUsersByTypeEnum.AllUsers);*/
 			getUsers(GetUsersByTypeEnum.MergedUsers);
 			return true;
 		default:
@@ -238,38 +225,44 @@ public class AllOnlineUsersActivity extends Activity {
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		//String gameTypeNoRank = gameType.substring(0, gameType.length() - 1);
 
-
 		if (action!=null){
-			if (action.equals(ActionByPushNotificationEnum.GameInvitation.toString())){
+			if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 				retrieveInvitation();
 			}
-			else if (action.equals(ActionByPushNotificationEnum.GameDeclined.toString())){
+			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
 				game_id = null;
 				last_user=null;
 			}
 
-			else if (action.equals(ActionByPushNotificationEnum.PlayerBusy.toString())){
+			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
 				userIsBusy(last_user);
 				game_id = null;
 				last_user = null;
 			}
-			
-			else if (action.equals(ActionByPushNotificationEnum.PlayerOffline.toString())){
+			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 				userIsOffline(last_user);
 				game_id = null;
 				last_user = null;
 			}
-			else if (action.equals(ActionByPushNotificationEnum.StartGameTruth.toString())){
+			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 				startGameTruth();
 			}
-			else if (action.equals(ActionByPushNotificationEnum.StartGameDare.toString())) {
+			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
 				startGameDare();
 			}
-			else if(action.equals(ActionByPushNotificationEnum.GameOffer.toString())){
+			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 				//				TODO open a current dialog according to the user's id
 			}
-
+			else if (action.equals(PushNotificationTypeEnum.RankUpdated.toString())){
+				int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), 0);	
+				rankUpdated(newRank);
+			}
+			else if (action.equals(PushNotificationTypeEnum.TrophiesUpdated.toString())){
+				int numberOfTropies = intent.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), 0);
+				String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+				trophiesUpdate(numberOfTropies, trophiesString);
+			}
 		}
 	}
 
@@ -374,7 +367,7 @@ public class AllOnlineUsersActivity extends Activity {
 
 		Bundle bundle = new Bundle();
 		bundle.putString("userName", invitedUser);
-		showDialog(DIALOG_USER_IS_BUSY, bundle);
+		showDialog(DIALOG_USER_IS_OFFLINE, bundle);
 	}
 
 
@@ -396,23 +389,35 @@ public class AllOnlineUsersActivity extends Activity {
 	private void startGameDare(){
 		Intent intent;
 		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
-			intent = new Intent(this, SimonPro.class);
-			
+			intent = new Intent(this, SimonProGameActivity.class);
 		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
-			intent = new Intent(this, Mixing.class);
+			intent = new Intent(this, MixingGameActivity.class);
 		else //TODO right now else case is fast click.
-			intent = new Intent(this, FastClick.class);
+			intent = new Intent(this, FastClickGameActivity.class);
 		commonForTruthAndDare(intent);
 	}
-/*test*/
+
 	private void startGameTruth(){
-		Intent intent = new Intent(this, TruthPart.class);
+		Intent intent = new Intent(this, TruthPartGameActivity.class);
 		commonForTruthAndDare(intent);
 	}
 
 	private void hasNoLocationDialog(){
 		showDialog(DIALOG_HAS_NO_LOCATION);
 		currentUsersType = previousClickPosition;
+	}
+
+	private void rankUpdated(int newRank) {
+		Bundle bundle = new Bundle();
+		bundle.putInt("Rank", newRank);
+		showDialog(DIALOG_RANK_UPDATED, bundle);		
+	}
+
+	private void trophiesUpdate(int numberOfTropies, String trophiesString) {
+
+		String[] trophiesList = trophiesString.split("#");
+		assert(numberOfTropies == trophiesList.length);
+
 	}
 
 	private void openLocationSettings(){
@@ -434,6 +439,20 @@ public class AllOnlineUsersActivity extends Activity {
 
 		return authString;
 	}
+
+	private String getFacebookUserName(boolean fullName) {
+
+		Context context = getApplicationContext();
+		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.FacebookDetails.toString(),Context.MODE_PRIVATE);
+
+		if (fullName){
+			return prefs.getString(SharedPreferencesKeysEnum.FacebookUserName.toString(), null);
+		}
+		else{
+			return prefs.getString(SharedPreferencesKeysEnum.FacebookFirstName.toString(), null);
+		}
+	}
+
 
 	private void updateList() {
 		switch(currentUsersType){
@@ -467,6 +486,23 @@ public class AllOnlineUsersActivity extends Activity {
 		registrationErrorMessage.setTarget(mHandler);
 		registrationErrorMessage.what = messageType;
 		registrationErrorMessage.sendToTarget();
+	}
+
+	protected void postOnFacebookWall(int code, Bundle bundle) {
+		Bundle parameters = new Bundle();
+		String message;
+
+		switch(code){
+		case FACEBOOK_POST_RANK_UPDATED:
+			message = firstName +"'s Moish'd! rank has just been updated!";
+			parameters.putString("description", message);
+			parameters.putString("name", "Moish'd! rank updated");
+
+		}	
+		parameters.putString("link", "http://www.facebook.com/apps/application.php?id=108614622540129");
+		parameters.putString("picture", "http://moishd.googlecode.com/files/moishd");
+		WelcomeScreenActivity.facebook.dialog(this,"stream.publish", parameters, new PostDialogListener());
+
 	}
 
 	@Override
@@ -503,25 +539,63 @@ public class AllOnlineUsersActivity extends Activity {
 					int i = random.nextInt(100);
 					i = i % 4;
 					if (i==0 || i==1) {
-						chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDare.class); 
+						chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDareActivity.class); 
 					}
 					else {
 						chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
 					}
-					
-					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());						
-					
+
+					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());                                             
+
 					dialog.cancel();
 				}
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					sendInvitationResponse("Decline");	
+					sendInvitationResponse("Decline");      
 					dialog.cancel();
 				}
 			});
 			return builder.create();  
 
+		case DIALOG_RANK_UPDATED:
+			final int newRank = args.getInt("Rank");
+			builder.setMessage("Congratulationsm, your rank has been updated! Your new rank is " + newRank)
+			.setCancelable(false)
+			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int id) {
+					Bundle bundle = new Bundle();
+					bundle.putInt("rank", newRank);
+					postOnFacebookWall(FACEBOOK_POST_RANK_UPDATED, bundle);
+				}
+			})
+			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create(); 
+
+		case DIALOG_TROPHIES_UPDATED:
+			String [] trophiesList = args.getStringArray("TrophiesList");
+			builder.setMessage("Congratulationsm, you've earned the following trophies: " + trophiesList)
+			.setCancelable(false)
+			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int id) {
+					//					Bundle bundle = new Bundle();
+					//					bundle.putInt("rank", newRank);
+					//					postOnFacebookWall(FACEBOOK_POST_RANK_UPDATED, bundle);
+					dialog.cancel();
+				}
+			})
+			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create(); 
 		case DIALOG_USER_IS_BUSY:
 			builder.setMessage(args.getString("userName") + " is currently playing. Please try again later.")
 			.setCancelable(false)
@@ -739,6 +813,28 @@ public class AllOnlineUsersActivity extends Activity {
 
 	}
 
+	private class PostDialogListener extends BaseDialogListener {
+
+		public void onComplete(Bundle values) {
+
+			final String postId = values.getString("post_id");
+
+			if (postId != null) {
+
+				// "Wall post made..."
+
+			} else {
+				// "No wall post made..."
+			}
+
+		}
+
+		public void onFacebookError(FacebookError e) {}
+		public void onCancel() {}
+		public void onError(DialogError e) {}
+
+	}
+
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
@@ -749,7 +845,6 @@ public class AllOnlineUsersActivity extends Activity {
 		private Bitmap userRank4;
 		private Bitmap userRank5;
 
-		//tammy
 		private Bitmap facebookPic;
 		private Bitmap noPic;
 		private Bitmap nearByUsers;
@@ -798,7 +893,7 @@ public class AllOnlineUsersActivity extends Activity {
 				holder.userRank = (ImageView) convertView.findViewById(R.id.userRank);
 				holder.nearBy = (ImageView) convertView.findViewById(R.id.nearByUsers);
 				holder.facebookPic = (ImageView) convertView.findViewById(R.id.facebookPic);
-				
+
 				convertView.setTag(holder);
 			} else {
 
