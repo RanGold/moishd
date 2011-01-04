@@ -197,6 +197,18 @@
 		<servlet-name>SendInviteToGameServlet</servlet-name>
 		<url-pattern>/queues/SendInviteToGame</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-class>moishd.server.servlets.game.IsFirstTimePlayedServlet</servlet-class>
+		<servlet-name>FirstTimePlayed</servlet-name></servlet>
+	<servlet-mapping>
+		<servlet-name>FirstTimePlayed</servlet-name>
+		<url-pattern>/FirstTimePlayed</url-pattern></servlet-mapping>
+	<servlet>
+		<servlet-class>moishd.server.servlets.game.RankGameServlet</servlet-class>
+		<servlet-name>RankGame</servlet-name></servlet>
+	<servlet-mapping>
+		<servlet-name>RankGame</servlet-name>
+		<url-pattern>/RankGame</url-pattern></servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
