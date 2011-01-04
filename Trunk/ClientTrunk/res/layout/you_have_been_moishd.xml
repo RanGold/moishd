@@ -8,13 +8,12 @@
   	android:background="#FFFFFF">
   
     <TextView
-  	android:id="@+id/youHaveBeenMoishd"
-  	android:layout_marginTop="40dip" 
-  	android:text="Oh no! You have been Moish'd!" 
-	android:layout_marginLeft="20px"
+  	android:id="@+id/youHaveBeenMoishdText"
+  	android:layout_marginTop="30dip" 
+	android:layout_marginLeft="10px"
 	android:gravity="center_vertical|center_horizontal"
-	android:layout_marginRight="20px"
-	android:textSize="30dip"
+	android:layout_marginRight="10px"
+	android:textSize="25dip"
 	android:textColor="#BA55D3" 
 	android:textStyle="bold"
 	android:layout_width="wrap_content" 

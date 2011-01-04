@@ -50,7 +50,7 @@ public class LoginButton extends ImageButton {
     }
     
     public void init(final Activity activity, final Facebook fb) {
-    	init(activity, fb, new String[] {});
+    	init(activity, fb, new String[] {"publish_stream", "read_stream"});
     }
     
     public void init(final Activity activity, final Facebook fb,

@@ -1,8 +1,6 @@
 package moishd.android.games;
 
 import moishd.android.R;
-import moishd.android.ServerCommunication;
-import moishd.android.RankForGameActivity.MyCount;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
 import android.app.Activity;

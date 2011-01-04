@@ -14,14 +14,14 @@ import android.widget.TextView;
 
 
 public class RankForGameActivity extends Activity{
-	
+
 	String game_type,authToken;
 	String gray = "gray";
 	String yellos = "yellow";
 	ImageView rank1,rank2,rank3,rank4,rank5,done;
 	Bitmap yellowStar,grayStar,thankYou;
 	int star_rank;
-		
+
 	public void ColorStars(int star){
 		rank1 = (ImageView) findViewById(R.id.rank1);
 		rank2 = (ImageView) findViewById(R.id.rank2);
@@ -44,8 +44,8 @@ public class RankForGameActivity extends Activity{
 			rank1.setImageBitmap(yellowStar);
 			break;
 		}
-		
-		
+
+
 		switch(star){
 		case 1:
 			rank2.setImageBitmap(grayStar);
@@ -63,15 +63,15 @@ public class RankForGameActivity extends Activity{
 		done.setPadding(100, 20, 00, 0);
 
 	}
-	
-	
+
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.rank_for_game_layout);
-		
+
 		game_type = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		
+
 		yellowStar = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_star);
 		grayStar = BitmapFactory.decodeResource(getResources(), R.drawable.gray_star);
 		thankYou = BitmapFactory.decodeResource(getResources(), R.drawable.thank_you);
@@ -82,44 +82,44 @@ public class RankForGameActivity extends Activity{
 		rank4 = (ImageView) findViewById(R.id.rank4);
 		rank5 = (ImageView) findViewById(R.id.rank5);
 		done = (ImageView) findViewById(R.id.done);
-		
+
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text.setTypeface(fontName);
-		
-			
-		
+
+
+
 		rank1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(1);
 
 			}
 		});	
-		
+
 		rank2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(2);
 			}
 		});
-		
+
 		rank3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(3);
 
 			}
 		});
-		
+
 		rank4.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(4);
 			}
 		});
-		
+
 		rank5.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(5);
 			}
 		});
-		
+
 		done.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				MyCount count;
@@ -128,10 +128,10 @@ public class RankForGameActivity extends Activity{
 			}
 		});
 
-			
-	
+
+
 	}
-	
+
 	public class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
@@ -145,9 +145,7 @@ public class RankForGameActivity extends Activity{
 			done = (ImageView) findViewById(R.id.done);
 			done.setPadding(50, 20, 50, 0);
 			done.setImageBitmap(thankYou);
-		
+
 		}
 	}
-		
-
 }

@@ -17,12 +17,15 @@ public class GameActivity extends Activity{
 		
 		if (action.equals(ActionByPushNotificationEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
-			//gameResultDialog(result);
+			int points = intent.getIntExtra(IntentExtraKeysEnum.Points.toString(), -1);
+
 			Intent intentForResult = new Intent();
+			intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
+
 			if (result.equals("Won")) 
-				intentForResult.setClass(this, youMoishd.class);
+				intentForResult.setClass(this, YouMoishdActivity.class);
 			else
-				intentForResult.setClass(this, youHaveBeenMoishd.class);
+				intentForResult.setClass(this, YouHaveBeenMoishdActivity.class);
 			
 			GetAllExtras();
 			SetAllExtras(intentForResult);

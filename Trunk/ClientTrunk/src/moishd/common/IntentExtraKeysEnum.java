@@ -2,6 +2,7 @@ package moishd.common;
 
 public enum IntentExtraKeysEnum {
 
+	C2DMError("C2DMError"),
 	GoogleAccount("GoogleAccount"),
 	GoogleAuthToken("GoogleAuthToken"),
 	PushGameId("GameId"),
@@ -12,7 +13,11 @@ public enum IntentExtraKeysEnum {
 	DareSimonPro("DareSimonPro"),
 	DareMixing("DareMixing"),
 	DareFastClick("DareFastClick"),
-	MoishdUser("MoishdUser");
+	MoishdUser("MoishdUser"),
+	Points("Points"),
+	Rank("Rank"),
+	Trophies("Trophies"),
+	NumberOfTrophies("NumberOfTrophies");
 	
 	private String name;
 

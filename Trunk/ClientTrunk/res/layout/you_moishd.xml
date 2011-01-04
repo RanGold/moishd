@@ -8,9 +8,8 @@
   	android:background="#FFFFFF">
   
     <TextView
-  	android:id="@+id/youoishd"
+  	android:id="@+id/youMoishdText"
   	android:layout_marginTop="30dip" 
-  	android:text="Great job! You've Moish'd the opponent" 
 	android:layout_marginLeft="10px"
 	android:gravity="center_vertical|center_horizontal"
 	android:layout_marginRight="10px"

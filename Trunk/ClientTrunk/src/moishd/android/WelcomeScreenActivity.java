@@ -9,13 +9,12 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionEvents.AuthListener;
-import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.android.facebook.SessionStore;
 import moishd.android.facebook.Util;
+import moishd.android.facebook.SessionEvents.AuthListener;
+import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.IntentResultCodesEnum;
@@ -177,7 +176,7 @@ public class WelcomeScreenActivity extends Activity{
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 
 		if (action!=null){
-			if (action.equals(ActionByPushNotificationEnum.C2DMError.toString())){
+			if (action.equals(IntentExtraKeysEnum.C2DMError.toString())){
 				showDialog(DIALOG_C2DM_ERROR);
 			}
 		}
@@ -195,7 +194,7 @@ public class WelcomeScreenActivity extends Activity{
 	//authorize user's Google account
 	private void authorizeGoogleAccount(Account account){
 
-		Intent intent = new Intent(this, AuthorizeGoogleAccount.class);
+		Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
 		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
 	}
@@ -281,6 +280,7 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	//retrieve user's Google account name from SharedPrefernces
+	@SuppressWarnings("unused")
 	private String getGoogleAccount() {
 
 		Context context = getApplicationContext();
@@ -308,6 +308,17 @@ public class WelcomeScreenActivity extends Activity{
 		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), null);
 
 		return authString;
+	}
+	
+	private void saveUserName(String userName, String firstName) {
+
+		Context context = getApplicationContext();
+		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.FacebookDetails.toString(),Context.MODE_PRIVATE);
+		Editor editor = prefs.edit();
+		editor.putString(SharedPreferencesKeysEnum.FacebookUserName.toString(), userName);
+		editor.putString(SharedPreferencesKeysEnum.FacebookFirstName.toString(), firstName);
+
+		editor.commit();
 	}
 
 	public class MoishdAuthListener implements AuthListener {
@@ -444,6 +455,7 @@ public class WelcomeScreenActivity extends Activity{
 			try {
 
 				JSONObject json = Util.parseJson(response);
+				final String firstName = json.getString("first_name");
 				final String userName = json.getString("name");
 				final String userId = json.getString("id");
 				final String pictureLink = "http://graph.facebook.com/" + userId + "/picture";
@@ -468,6 +480,7 @@ public class WelcomeScreenActivity extends Activity{
 				String authString = getGoogleAuthToken();
 				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
 				if (registrationComplete){
+					saveUserName(userName, firstName);
 					sendMessageToHandler(REGISTRATION_COMPLETE);					
 				}
 				else{
