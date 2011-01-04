@@ -43,6 +43,10 @@ public class GetFriendUsersServlet extends GeneralServlet {
 				List<ClientMoishdUser> users = DSCommon
 						.GetFilteredRegisteredClientUsers(user.getEmail(),
 								true, "facebookID", filterValues);
+				
+				for (ClientMoishdUser cUser : users){
+					LoggerCommon.Get().LogInfo("Tammy", cUser.getUserNick().toString() );
+					}
 				GsonCommon.WriteJsonToResponse(users, response);
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),
