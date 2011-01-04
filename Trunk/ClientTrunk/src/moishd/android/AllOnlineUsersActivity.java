@@ -234,6 +234,7 @@ public class AllOnlineUsersActivity extends Activity {
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		//String gameTypeNoRank = gameType.substring(0, gameType.length() - 1);
 
 
 		if (action!=null){
@@ -251,6 +252,7 @@ public class AllOnlineUsersActivity extends Activity {
 				game_id = null;
 				last_user = null;
 			}
+			
 			else if (action.equals(ActionByPushNotificationEnum.PlayerOffline.toString())){
 				userIsOffline(last_user);
 				game_id = null;
@@ -393,13 +395,14 @@ public class AllOnlineUsersActivity extends Activity {
 		Intent intent;
 		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
 			intent = new Intent(this, SimonPro.class);
+			
 		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
 			intent = new Intent(this, Mixing.class);
 		else //TODO right now else case is fast click.
 			intent = new Intent(this, FastClick.class);
 		commonForTruthAndDare(intent);
 	}
-
+/*test*/
 	private void startGameTruth(){
 		Intent intent = new Intent(this, TruthPart.class);
 		commonForTruthAndDare(intent);
