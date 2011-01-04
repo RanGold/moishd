@@ -30,7 +30,11 @@ public class C2DMCommon {
 		StartGameDareMixing,
 		StartGameDareFastClick,
 		PlayerBusy, 
-		PlayerOffline;
+		PlayerOffline,
+		RankUpdated,
+		TrophiesUpdated,
+		RankAndTrophiesUpdated;
+
 	}
 	
 	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
