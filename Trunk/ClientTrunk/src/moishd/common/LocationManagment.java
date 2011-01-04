@@ -4,7 +4,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import moishd.android.ServerCommunication;
-
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -52,8 +51,14 @@ public class LocationManagment {
 	}
 	
 	public Location getLastKnownLocation(){
-		String bestProvider = locationManager.getBestProvider(criteria, true);
-		return locationManager.getLastKnownLocation(bestProvider);
+		//String bestProvider = locationManager.getBestProvider(criteria, true);
+		Location locFromGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location locFromNetwork =locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		if (locFromGPS!=null)
+			return locFromGPS;
+		else
+			return locFromNetwork;
+		//return locationManager.getLastKnownLocation(bestProvider);
 	}
 	
 	public void startUpdateLocation(int minutes){

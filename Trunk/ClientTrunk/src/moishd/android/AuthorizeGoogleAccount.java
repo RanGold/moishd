@@ -13,11 +13,15 @@ import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 
 public class AuthorizeGoogleAccount extends Activity {
 	
 	boolean firstTime = true;
 	private AccountManagerFuture<Bundle> bundle;
+	Account account = null;
+	AccountManager accountManager = null;
 	
 
 	@Override
@@ -25,8 +29,8 @@ public class AuthorizeGoogleAccount extends Activity {
 
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
-		AccountManager accountManager = AccountManager.get(getApplicationContext());
-		Account account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
+		accountManager = AccountManager.get(this);
+		account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
 
 		bundle = accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
 	}
@@ -39,13 +43,26 @@ public class AuthorizeGoogleAccount extends Activity {
 		}
 		else{
 			try {
-				Bundle result = bundle.getResult();
-				if (result!=null){
-					String authToken = result.getString(AccountManager.KEY_AUTHTOKEN);
-					if (authToken == null){
-						Intent resultIntent = new Intent();
-						setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
-						finish();
+				bundle = accountManager.getAuthToken(account, "ah", false, null, null);
+				int i=5;
+				while (!bundle.isDone() && i>0){
+					SystemClock.sleep(1000);
+					i--;
+				}
+				
+				if (i==0){
+					onError();
+				}
+				else{
+					Bundle result = bundle.getResult();
+					if (result!=null){
+						String authToken = result.getString(AccountManager.KEY_AUTHTOKEN);
+						if (authToken == null){
+							onError();
+						}
+						else{
+							onGetAuthToken(result);
+						}
 					}
 				}
 			} catch (OperationCanceledException e) {
@@ -63,6 +80,7 @@ public class AuthorizeGoogleAccount extends Activity {
 		public void run(AccountManagerFuture<Bundle> result) {
 			Bundle bundle;
 			try {
+				Log.d("auth","in callback");
 				bundle = result.getResult();
 				Intent intent = (Intent)bundle.get(AccountManager.KEY_INTENT);
 				if(intent != null) {
@@ -87,6 +105,12 @@ public class AuthorizeGoogleAccount extends Activity {
 		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
 		setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 		finish();
+	}
+	
+	protected void onError(){
+		Intent resultIntent = new Intent();
+		setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+		finish();		
 	}
 
 }

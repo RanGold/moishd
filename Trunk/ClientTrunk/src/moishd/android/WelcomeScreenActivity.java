@@ -122,7 +122,6 @@ public class WelcomeScreenActivity extends Activity{
 		}
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
-		location = locationManagment.getLastKnownLocation();
 
 		if (isSessionValid){
 			doAuthSucceed();
@@ -454,6 +453,9 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				newUser.setRegisterID(C2DMessaging.getRegistrationId(getApplicationContext()));
+				
+
+				location = locationManagment.getLastKnownLocation();
 				
 				ClientLocation loc;
 				if (location != null)				 
