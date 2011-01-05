@@ -2,6 +2,7 @@ package moishd.common;
 
 public enum ServletNamesEnum {
 
+
 	UserLogin,
 	GetAllUsers,
 	GetFriendUsers,
@@ -18,6 +19,8 @@ public enum ServletNamesEnum {
 	HasLocation,
 	FirstTimePlayed,
 	RankGame,
-	Alive;
+	Alive,	
+	GamePlayed,
+	GetMostPopularGame;
 	
 }
