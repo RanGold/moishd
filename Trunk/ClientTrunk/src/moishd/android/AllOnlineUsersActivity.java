@@ -327,7 +327,7 @@ public class AllOnlineUsersActivity extends Activity{
 				trophiesUpdate(numberOfTropies, trophiesString);
 			}
 		}
-		last_user = null;
+
 	}
 
 	@Override
