@@ -198,29 +198,48 @@
 		<url-pattern>/queues/SendInviteToGame</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-class>moishd.server.servlets.game.IsFirstTimePlayedServlet</servlet-class>
-		<servlet-name>FirstTimePlayed</servlet-name></servlet>
+		<servlet-name>UpdateGameRankingServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.UpdateGameRankingServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
-		<servlet-name>FirstTimePlayed</servlet-name>
-		<url-pattern>/FirstTimePlayed</url-pattern></servlet-mapping>
+		<servlet-name>UpdateGameRankingServlet</servlet-name>
+		<url-pattern>/queues/UpdateGameRanking</url-pattern>
+	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>IsFirstTimePlayedServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.IsFirstTimePlayedServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>IsFirstTimePlayedServlet</servlet-name>
+		<url-pattern>/IsFirstTimePlayed</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>RankGameServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.game.RankGameServlet</servlet-class>
-		<servlet-name>RankGame</servlet-name></servlet><servlet-mapping>
-		<servlet-name>RankGame</servlet-name>
-		<url-pattern>/RankGame</url-pattern></servlet-mapping>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>RankGameServlet</servlet-name>
+		<url-pattern>/RankGame</url-pattern>
+	</servlet-mapping>
 	<servlet>
+		<servlet-name>GetMostPopularGameServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.game.GetMostPopularGameServlet</servlet-class>
-		<servlet-name>GetMostPopularGame</servlet-name></servlet>
+	</servlet>
 	<servlet-mapping>
-		<servlet-name>GetMostPopularGame</servlet-name>
-		<url-pattern>/GetMostPopularGame</url-pattern></servlet-mapping>
+		<servlet-name>GetMostPopularGameServlet</servlet-name>
+		<url-pattern>/GetMostPopularGame</url-pattern>
+	</servlet-mapping>
 	<servlet>
-		<servlet-class>moishd.server.servlets.game.GamePlayedServlet</servlet-class>
-		<servlet-name>GamePlayed</servlet-name></servlet>
+		<servlet-name>AddGamePlayedServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.AddGamePlayedServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
-		<servlet-name>GamePlayed</servlet-name>
-		<url-pattern>/GamePlayed</url-pattern></servlet-mapping><welcome-file-list>
+		<servlet-name>AddGamePlayedServlet</servlet-name>
+		<url-pattern>/AddGamePlayed</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	

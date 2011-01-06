@@ -1,10 +1,13 @@
 package moishd.server.servlets.game;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.DSCommon;
+import moishd.server.dataObjects.GameStatistics;
 import moishd.server.servlets.GeneralServlet;
 
 public class GetMostPopularGameServlet extends GeneralServlet{
@@ -20,10 +23,16 @@ public class GetMostPopularGameServlet extends GeneralServlet{
 		super.doPost(request, response);
 
 		if (user != null) {
-			if (mUser.getLocation().isInitialized()) {
-				//TODO - get most popular game
-				response.addHeader("DareSimonPro", "");
+			List<GameStatistics> stats = DSCommon.GetMostPopularGame();
+			String gameType;
+			if (stats.size() == 0) {
+				gameType = "DareSimonPro";
+			} else {
+				gameType = stats.get(0).getGameType();
 			}
+			
+			response.addHeader("PopularGame", gameType);
+			
 		}
 	}
 

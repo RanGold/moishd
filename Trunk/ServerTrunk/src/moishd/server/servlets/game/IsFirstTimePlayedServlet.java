@@ -8,19 +8,21 @@ import javax.servlet.http.HttpServletResponse;
 import moishd.server.servlets.GeneralServlet;
 
 public class IsFirstTimePlayedServlet extends GeneralServlet{
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2789807610738481493L;
-	
+	private static final long serialVersionUID = 7089082547031169899L;
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
 	
 		super.doPost(request, response);
 		
 		if (user != null) {
-			if (true) { //TODO - mock up, for now it is ALWAYS the first time played
+			String gameType = request.getReader().readLine();
+			if (!mUser.getGameTypesPlayed().contains(gameType)) {
+				mUser.getGameTypesPlayed().add(gameType);
+				mUser.SaveChanges();
 				response.addHeader("FirstTimePlayed", "");
 			}
 		}

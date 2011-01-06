@@ -9,13 +9,14 @@ import javax.jdo.Query;
 
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.server.common.DataAccessException;
-import moishd.server.common.PMF;
 import moishd.server.dataObjects.C2DMAuth;
 import moishd.server.dataObjects.CommonJDO;
+import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
+
+import com.google.gson.reflect.TypeToken;
 
 public class DSCommon {
 	private DSCommon() {
@@ -428,13 +429,52 @@ public class DSCommon {
 	public static CommonJDO DetachThis(CommonJDO jdoObject) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
-			// TODO : fix this
-			//if (new TypeToken<MoishdUser>(){}.getType().)
-			return (pm.detachCopy(jdoObject));
+			if (new TypeToken<MoishdUser>(){}.getType().toString().split(" ")[1].equals(jdoObject.getClass().getName())) {
+				return DetachCopyUser((MoishdUser)jdoObject, pm);
+			} else {
+				return (pm.detachCopy(jdoObject));
+			}
 		}
 		finally {
 			pm.close();
 		}
 		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<GameStatistics> GetGameStatsByType(String gameType) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(GameStatistics.class);
+			q.setFilter("gameType == :typeParam");
+
+			return ((List<GameStatistics>)q.execute(gameType));
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<GameStatistics> GetMostPopularGame() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(GameStatistics.class);
+			q.setOrdering("gameRank descending");
+			q.setRange(0, 0);
+
+			return ((List<GameStatistics>)q.execute());
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
 	}
 }

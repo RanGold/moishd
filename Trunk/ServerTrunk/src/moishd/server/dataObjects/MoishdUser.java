@@ -59,6 +59,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	@Persistent
 	private List<String> friendsFacebookIds;
 	
+	@Persistent
+	private List<String> gameTypesPlayed;
+	
 	@Persistent(dependent = "true")
 	private Location location;
 
@@ -81,6 +84,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.isBusy = false;
 		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
+		this.gameTypesPlayed = new LinkedList<String>();
 		this.dateRegistered = new Date();
 		this.trophies = new LinkedList<TrophiesEnum>();
 		this.stats = new UserGameStatistics();
@@ -225,5 +229,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public List<TrophiesEnum> getTrophies() {
 		return trophies;
+	}
+
+	public void setGameTypesPlayed(List<String> gameTypesPlayed) {
+		this.gameTypesPlayed = gameTypesPlayed;
+	}
+
+	public List<String> getGameTypesPlayed() {
+		return gameTypesPlayed;
 	}
 }

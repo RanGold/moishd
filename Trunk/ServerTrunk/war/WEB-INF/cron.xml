@@ -8,6 +8,6 @@
   <cron>
     <url>/cron/CheckAlive</url>
     <description>Clearing Datastore from disconnected users</description>
-    <schedule>every 5 minutes synchronized</schedule>
+    <schedule>every 1 minutes synchronized</schedule>
   </cron>
 </cronentries>
