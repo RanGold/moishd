@@ -104,7 +104,7 @@ public class SendGameResultServlet extends HttpServlet {
 					mRecUser.setBusy(false);
 					mRecUser.SaveChanges();
 
-					//updateRankAndTrophiesAndNotifyUser(winner, loser);
+					updateRankAndTrophiesAndNotifyUser(winner, loser);
 				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
