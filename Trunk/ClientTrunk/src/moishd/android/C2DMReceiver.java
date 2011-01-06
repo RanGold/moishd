@@ -48,10 +48,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+		boolean startIntent = true;
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
+			startIntent = false;
 			ServerCommunication.sendAlive();
 		}
-
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 			String authTokenOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString());
 			String UserNickNameOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
@@ -139,8 +140,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);
 
 		}
-		Log.d("TEST", resultIntent.getClass().toString());
-		startActivity(resultIntent);
+		Log.d("TEST", "action is " + action);
+		
+		if (startIntent){
+			startActivity(resultIntent);
+		}
 	}
 
 	@Override
