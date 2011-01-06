@@ -80,6 +80,7 @@ public class SendGameResultServlet extends HttpServlet {
 					HashMap<String, String> losePayload = updateRankAndTrophies(loser);
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", loseValue.toString() + ":" + gameType);
+					
 
 					if (winValue.toString().equals("Won")){
 						int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
@@ -92,13 +93,13 @@ public class SendGameResultServlet extends HttpServlet {
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));	
 					}
 
-					
+/*					
 					C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), winPayload);
 					
 					C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), losePayload);
-					
+	*/				
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), winPayload);
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
