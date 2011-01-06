@@ -348,7 +348,7 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
 			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			sendInvitationResponse("Accept" + gameType);
+			sendInvitationResponse("Accept" + gameType, "");
 		}
 	}
 
@@ -425,9 +425,9 @@ public class AllOnlineUsersActivity extends Activity{
 		}
 	}
 
-	private boolean sendInvitationResponse(String response){
+	private boolean sendInvitationResponse(String response, String isPopular){
 
-		return ServerCommunication.sendInvitationResponse(game_id, response, authToken);
+		return ServerCommunication.sendInvitationResponse(game_id, response, authToken, isPopular);
 	}
 
 	private void userIsBusy(String invitedUser){
@@ -630,7 +630,7 @@ public class AllOnlineUsersActivity extends Activity{
 					}
 					else {
 						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
-						sendInvitationResponse("PopularAccept" + mostPopular);
+						sendInvitationResponse("Accept" + mostPopular, "Popular");
 					}
 
 					dialog.cancel();
@@ -638,7 +638,7 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					sendInvitationResponse("Decline");      
+					sendInvitationResponse("Decline", "");      
 					dialog.cancel();
 				}
 			});
