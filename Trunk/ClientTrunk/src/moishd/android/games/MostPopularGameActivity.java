@@ -1,7 +1,7 @@
 package moishd.android.games;
 
 import moishd.android.R;
-import moishd.common.IntentExtraKeysEnum;
+import moishd.common.IntentResultCodesEnum;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,7 +31,7 @@ public class MostPopularGameActivity extends Activity{
 		text2.setTypeface(fontName);
 		
 		MyCount count;
-		count= new MyCount(13000,1000);
+		count= new MyCount(5000,1000);
 		count.start();
 		
 	}
@@ -43,7 +43,9 @@ public class MostPopularGameActivity extends Activity{
 			super(millisInFuture, countDownInterval);
 		}    
 		public void onFinish() {
-			finish();
+			Intent GameTypeIntent = new Intent();
+			setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
+			finish();		
 		}
 		public void onTick(long millisUntilFinished) {
 			SetTexts();

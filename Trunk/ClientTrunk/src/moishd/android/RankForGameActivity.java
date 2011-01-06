@@ -139,7 +139,7 @@ public class RankForGameActivity extends Activity{
 			super(millisInFuture, countDownInterval);
 		}    
 		public void onFinish() {
-			boolean result = ServerCommunication.sendRankToServer(game_type,star_rank,authToken);
+			ServerCommunication.sendRankToServer(game_type,star_rank,authToken);
 			//TODO check if the result is not an error
 			finish();
 		}    
