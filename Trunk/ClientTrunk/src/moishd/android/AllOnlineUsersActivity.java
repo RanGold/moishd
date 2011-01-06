@@ -318,15 +318,6 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				GetGameOfferDialog();
 			}
-			else if (action.equals(PushNotificationTypeEnum.RankUpdated.toString())){
-				int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), 0);	
-				rankUpdated(newRank);
-			}
-			else if (action.equals(PushNotificationTypeEnum.TrophiesUpdated.toString())){
-				int numberOfTropies = intent.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), 0);
-				String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
-				trophiesUpdate(numberOfTropies, trophiesString);
-			}
 		}
 
 	}
@@ -359,7 +350,25 @@ public class AllOnlineUsersActivity extends Activity{
 			Log.d("Tammy",gameType);
 			sendInvitationResponse("Accept" + gameType, "");
 		}
+		else if (requestCode == IntentRequestCodesEnum.GameRequestCode.getCode()){
+			int newRank = data.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
+			int numOfTrophies = data.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), -1);
+			
+			String trophiesString;
+			if (numOfTrophies != -1){
+				trophiesString = data.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+			}
+			else{
+				trophiesString = null;
+			}
+
+			if (newRank != -1){
+				rankUpdated(newRank);
+			}
+			
+		}
 	}
+
 
 	private void doQuitActions() {
 		WelcomeScreenActivity.facebookLogout(null);
