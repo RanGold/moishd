@@ -1,7 +1,6 @@
 package moishd.android.games;
 
 import moishd.android.ServerCommunication;
-import moishd.common.ActionByPushNotificationEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;

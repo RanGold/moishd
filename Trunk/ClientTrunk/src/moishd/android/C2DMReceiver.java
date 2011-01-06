@@ -19,8 +19,8 @@ import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthPartGameActivity;
-import moishd.common.IntentExtraKeysEnum;
 import moishd.common.AvailablePreferences;
+import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.content.Context;
 import android.content.Intent;
@@ -72,6 +72,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerOffline.toString());
+		}
+		else if (action.substring(0,7).equals("Popular")){
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PopularGame.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(16));
 		}
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 			AvailablePreferences.setAvailableStatus(context, true);

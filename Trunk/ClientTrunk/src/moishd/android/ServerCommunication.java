@@ -111,6 +111,25 @@ public class ServerCommunication {
 		return getUserListFromResponse(response);
 	}
 
+	//TODO add all cases
+	public static String getMostPopularGame(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.GetMostPopularGame,authString);
+		try {
+			if (resp.containsHeader("Error")){
+				Log.d("GAE ERROR", "an Error occured");
+				return null;
+			}
+			else if(resp.containsHeader("DareSimonPro")){
+				return "DareSimonPro";
+			}
+			else
+				return null;
+		}catch (IllegalStateException e) {
+		e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static String inviteUser(ClientMoishdUser user, String authString){
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user.getUserGoogleIdentifier(), authString);
 		try {
@@ -137,6 +156,17 @@ public class ServerCommunication {
 	//TODO check if there's a need in the game_id
 	public static boolean sendRankToServer(String gameType,int rank, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.RankGame,gameType+":"+rank, authString);
+		if (response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+	
+	public static boolean sendGamePlayedToServer(String gameType,String authString) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GamePlayed,gameType, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import moishd.android.ServerCommunication;
 
 public class ChooseGameActivity extends Activity{
 	
@@ -106,6 +107,7 @@ public class ChooseGameActivity extends Activity{
 	
 	private void returnGameTypeToCallingActivity(String gameType){
 		Intent GameTypeIntent = new Intent();
+		ServerCommunication.sendGamePlayedToServer(gameType,getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString()));
 		GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 		setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
 		finish();		
