@@ -53,8 +53,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		}
 
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
+			String authTokenOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString());
+			String UserNickNameOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+			
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameOffer.toString());
+			
+			resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString(), authTokenOfOpponent);
+			resultIntent.putExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString(), UserNickNameOfOpponent);
 		}
 
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){

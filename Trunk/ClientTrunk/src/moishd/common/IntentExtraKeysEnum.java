@@ -5,6 +5,8 @@ public enum IntentExtraKeysEnum {
 	C2DMError("C2DMError"),
 	GoogleAccount("GoogleAccount"),
 	GoogleAuthToken("GoogleAuthToken"),
+	GoogleAuthTokenOfOpponent("GoogleAuthTokenOfOpponent"),
+	UserNickNameOfOpponent("UserNickNameOfOpponent"),
 	PushGameId("GameId"),
 	PushAction("Action"),
 	GameType("GameType"),

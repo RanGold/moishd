@@ -17,6 +17,7 @@ import java.util.List;
 
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.common.GameTypeEnum;
 import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
@@ -119,9 +120,19 @@ public class ServerCommunication {
 				Log.d("GAE ERROR", "an Error occured");
 				return null;
 			}
-			else if(resp.containsHeader("DareSimonPro")){
-				return "DareSimonPro";
+			else if(resp.containsHeader(GameTypeEnum.DareSimonPro.toString())){
+				return GameTypeEnum.DareSimonPro.toString();
 			}
+			else if(resp.containsHeader(GameTypeEnum.DareMixing.toString())){
+					return GameTypeEnum.DareMixing.toString();
+			}
+			else if(resp.containsHeader(GameTypeEnum.DareFastClick.toString())){
+				return GameTypeEnum.DareFastClick.toString();
+		}
+			else if(resp.containsHeader(GameTypeEnum.Truth.toString())){
+				return GameTypeEnum.Truth.toString();
+			}			
+			
 			else
 				return null;
 		}catch (IllegalStateException e) {
@@ -131,7 +142,11 @@ public class ServerCommunication {
 	}
 	
 	public static String inviteUser(ClientMoishdUser user, String authString){
-		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user.getUserGoogleIdentifier(), authString);
+		return inviteUser(user.getUserGoogleIdentifier(), authString);
+	}
+		
+	public static String inviteUser(String user, String authString){
+		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user, authString);
 		try {
 			String content = convertStreamToString(response.getEntity().getContent());
 			if (response.containsHeader("Error")){

@@ -85,6 +85,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private String game_id;
 	private String gameType;
 	private String last_user;
+	private String opponent_auth_token;
+	private String opponent_nick_name;
 	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
@@ -113,6 +115,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 17;
 	private final int DIALOG_RANK_UPDATED = 18;
 	private final int DIALOG_TROPHIES_UPDATED = 19;
+	private final int DIALOG_GET_GAME_OFFER = 20;
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 
 	private Handler autoRefreshHandler = new Handler();
@@ -274,6 +277,7 @@ public class AllOnlineUsersActivity extends Activity{
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+		
 		//String gameTypeNoRank = gameType.substring(0, gameType.length() - 1);
 
 		if (action!=null){
@@ -309,7 +313,9 @@ public class AllOnlineUsersActivity extends Activity{
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
-				//				TODO open a current dialog according to the user's id
+				opponent_auth_token =  intent.getStringExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString());
+				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+				GetGameOfferDialog();
 			}
 			else if (action.equals(PushNotificationTypeEnum.RankUpdated.toString())){
 				int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), 0);	
@@ -405,18 +411,31 @@ public class AllOnlineUsersActivity extends Activity{
 
 		showDialog(DIALOG_INVITE_USER_TO_MOISHD);
 	}
+	
+	private void GetGameOfferDialog(){
+
+		showDialog(DIALOG_GET_GAME_OFFER);
+	}
 
 	private void inviteUserToMoish(ClientMoishdUser user){
 
 		game_id = ServerCommunication.inviteUser(user, authToken);
 
 	}
+	
+	private void inviteUserOfferedByServerToMoish(String authTokenOfOpponent){
+
+		game_id = ServerCommunication.inviteUser(authTokenOfOpponent, authToken);
+
+	}
+	
 
 	private void retrieveInvitation(){
 
 		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authToken);
 		if (user != null){
 			Bundle bundle = new Bundle();
+			Log.d("Tammy",user.getUserNick());
 			bundle.putString("userName", user.getUserNick());
 			showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
 		}
@@ -593,6 +612,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_INVITE_USER_TO_MOISHD:
 			last_user = moishdUsers.get(currentClickPosition).getUserNick();
+			Log.d("Tammy", last_user);
 			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -607,6 +627,25 @@ public class AllOnlineUsersActivity extends Activity{
 				}
 			});
 			return builder.create();  
+			
+		case DIALOG_GET_GAME_OFFER:
+			
+			
+			builder.setMessage("Hey! " + opponent_nick_name + " has a higher rank than you! Would you like to show him/her what you've got?!")
+			.setCancelable(false)
+			.setPositiveButton("Oh yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					inviteUserOfferedByServerToMoish(opponent_auth_token);
+				}
+			})
+			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			return builder.create();
+			
 
 		case DIALOG_RETRIEVE_USER_INVITATION:
 			builder.setMessage("You've been invited by " + args.getString("userName") + " to Moish.")
