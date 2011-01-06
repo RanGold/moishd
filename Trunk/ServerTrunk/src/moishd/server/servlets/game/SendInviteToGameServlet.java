@@ -55,6 +55,7 @@ public class SendInviteToGameServlet extends HttpServlet {
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId",
 							String.valueOf(tg.getGameId().getId()));
+					payload.put("InviterName", initID);
 					C2DMCommon.PushGenericMessage(recUser.getRegisterID(),
 							C2DMCommon.Actions.GameInvitation.toString(),
 							payload);

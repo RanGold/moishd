@@ -31,9 +31,7 @@ public class GetMostPopularGameServlet extends GeneralServlet{
 				gameType = stats.get(0).getGameType();
 			}
 			
-			response.addHeader("PopularGame", gameType);
-			
+			response.getWriter().print(gameType);
 		}
 	}
-
 }
