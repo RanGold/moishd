@@ -47,8 +47,9 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+		
 		boolean startIntent = true;
+
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
 			startIntent = false;
 			ServerCommunication.sendAlive();

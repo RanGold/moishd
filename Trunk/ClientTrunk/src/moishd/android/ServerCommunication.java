@@ -17,7 +17,7 @@ import java.util.List;
 
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.GameTypeEnum;
+import moishd.common.IntentExtraKeysEnum;
 import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
@@ -120,17 +120,17 @@ public class ServerCommunication {
 				Log.d("GAE ERROR", "an Error occured");
 				return null;
 			}
-			else if(resp.containsHeader(GameTypeEnum.DareSimonPro.toString())){
-				return GameTypeEnum.DareSimonPro.toString();
+			else if(resp.containsHeader(IntentExtraKeysEnum.DareSimonPro.toString())){
+				return IntentExtraKeysEnum.DareSimonPro.toString();
 			}
-			else if(resp.containsHeader(GameTypeEnum.DareMixing.toString())){
-					return GameTypeEnum.DareMixing.toString();
+			else if(resp.containsHeader(IntentExtraKeysEnum.DareMixing.toString())){
+					return IntentExtraKeysEnum.DareMixing.toString();
 			}
-			else if(resp.containsHeader(GameTypeEnum.DareFastClick.toString())){
-				return GameTypeEnum.DareFastClick.toString();
+			else if(resp.containsHeader(IntentExtraKeysEnum.DareFastClick.toString())){
+				return IntentExtraKeysEnum.DareFastClick.toString();
 		}
-			else if(resp.containsHeader(GameTypeEnum.Truth.toString())){
-				return GameTypeEnum.Truth.toString();
+			else if(resp.containsHeader(IntentExtraKeysEnum.Truth.toString())){
+				return IntentExtraKeysEnum.Truth.toString();
 			}			
 			
 			else
@@ -177,7 +177,7 @@ public class ServerCommunication {
 	}
 	
 	public static boolean sendGamePlayedToServer(String gameType,String authString) {
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GamePlayed,gameType, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.AddGamePlayed,gameType, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
@@ -188,7 +188,7 @@ public class ServerCommunication {
 	}
 	
 	public static boolean isFirstTimePlayed(String gameType, String authString) {
-		HttpResponse response = SendReqToServer(ServletNamesEnum.FirstTimePlayed,gameType, authString);
+		HttpResponse response = SendReqToServer(ServletNamesEnum.IsFirstTimePlayed,gameType, authString);
 		if (response==null)
 			return false;
 		if (response.containsHeader("FirstTimePlayed")){
@@ -202,6 +202,7 @@ public class ServerCommunication {
 	public static boolean sendInvitationResponse(String gameId, String responseString, String authString, String isPopular) {
 		
 		String invitationResponse = gameId + "#" + responseString + "#" + isPopular;
+		Log.d("Tammy", invitationResponse);
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InvitationResponse, invitationResponse, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
