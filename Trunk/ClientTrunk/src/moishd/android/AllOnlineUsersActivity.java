@@ -365,6 +365,16 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			
 		}
+		else if (requestCode == IntentRequestCodesEnum.StartPopularGame.getCode()){
+			Intent intent = new Intent();
+			if (gameType.equals(IntentExtraKeysEnum.Truth.toString())){
+				intent.setClass(this, TruthPartGameActivity.class);
+			}
+			else{
+				setGameDare(intent);
+			}
+			commonForTruthAndDare(intent);
+		}
 		
 	}
 
@@ -512,17 +522,9 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 	
 	private void StartGamePopular(){
-		Intent popularScreen = new Intent(this, MostPopularGameActivity.class);
-		startActivity(popularScreen);
-		
-		Intent startPopular = new Intent();
-		if (gameType.equals(IntentExtraKeysEnum.Truth.toString())){
-			startPopular.setClass(this, TruthPartGameActivity.class);
-			}
-		else {
-			setGameDare(startPopular);
-		}
-		commonForTruthAndDare(startPopular);
+		Intent popularScreen = new Intent(AllOnlineUsersActivity.this, MostPopularGameActivity.class);
+		startActivityForResult(popularScreen, IntentRequestCodesEnum.StartPopularGame.getCode());
+
 	
 	}
 
