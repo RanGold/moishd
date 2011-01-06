@@ -19,7 +19,7 @@ public class UpdateGameStatsServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		if (request.getHeader("X-AppEngine-QueueName").equals("rankQueue")) {
+		if (request.getHeader("X-AppEngine-QueueName").equals("gameStatsQueue")) {
 			String gameType = request.getParameter("gameType");
 			int rank = Integer.parseInt(request.getParameter("rank"));
 			int isRank = Integer.parseInt(request.getParameter("isRank"));
@@ -38,11 +38,13 @@ public class UpdateGameStatsServlet extends HttpServlet {
 			} else {
 				newGame = stats.get(0);
 			}
-			newGame.addGamePlayed();
 			
 			if (isRank == 1) {
 				newGame.addRank(rank);
+			} else {
+				newGame.addGamePlayed();
 			}
+			
 			newGame.SaveChanges();
 		}
 	}

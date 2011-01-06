@@ -449,7 +449,7 @@ public class DSCommon {
 			q = pm.newQuery(GameStatistics.class);
 			q.setFilter("gameType == :typeParam");
 
-			return ((List<GameStatistics>)q.execute(gameType));
+			return ((List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute(gameType)));
 		}
 		finally {
 			if (q != null) {
@@ -466,9 +466,9 @@ public class DSCommon {
 		try {
 			q = pm.newQuery(GameStatistics.class);
 			q.setOrdering("gameRank descending");
-			q.setRange(0, 0);
+			q.setRange(0, 1);
 
-			return ((List<GameStatistics>)q.execute());
+			return ((List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute()));
 		}
 		finally {
 			if (q != null) {
