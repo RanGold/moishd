@@ -166,6 +166,14 @@
 		<url-pattern>/GameLose</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>UnbusyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.UnbusyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UnbusyServlet</servlet-name>
+		<url-pattern>/Unbusy</url-pattern>
+	</servlet-mapping>	
+	<servlet>
 		<servlet-name>GetFriendUsersServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.GetFriendUsersServlet</servlet-class>
 	</servlet>
