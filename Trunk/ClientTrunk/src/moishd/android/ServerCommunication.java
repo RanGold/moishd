@@ -17,7 +17,6 @@ import java.util.List;
 
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.IntentExtraKeysEnum;
 import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
@@ -116,27 +115,18 @@ public class ServerCommunication {
 	public static String getMostPopularGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.GetMostPopularGame,authString);
 		try {
+			String popularGame = convertStreamToString(resp.getEntity().getContent());
 			if (resp.containsHeader("Error")){
 				Log.d("GAE ERROR", "an Error occured");
 				return null;
 			}
-			else if(resp.containsHeader(IntentExtraKeysEnum.DareSimonPro.toString())){
-				return IntentExtraKeysEnum.DareSimonPro.toString();
+			else{
+				return popularGame;
 			}
-			else if(resp.containsHeader(IntentExtraKeysEnum.DareMixing.toString())){
-					return IntentExtraKeysEnum.DareMixing.toString();
-			}
-			else if(resp.containsHeader(IntentExtraKeysEnum.DareFastClick.toString())){
-				return IntentExtraKeysEnum.DareFastClick.toString();
-		}
-			else if(resp.containsHeader(IntentExtraKeysEnum.Truth.toString())){
-				return IntentExtraKeysEnum.Truth.toString();
-			}			
-			
-			else
-				return null;
-		}catch (IllegalStateException e) {
-		e.printStackTrace();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
