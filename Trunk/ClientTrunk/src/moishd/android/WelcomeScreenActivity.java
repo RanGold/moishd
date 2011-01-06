@@ -57,7 +57,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	private LocationManagment locationManagment;
 	private Location location;
-	private ProgressDialog progressDialog;
+	private ProgressDialog progressDialog = null;
 
 	private final int DIALOG_ACCOUNTS = 10;
 	private final int DIALOG_AUTH_TOKEN_DECLINED = 11;
@@ -75,21 +75,25 @@ public class WelcomeScreenActivity extends Activity{
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case DIALOG_FACEBOOK_ERROR:
-				progressDialog.dismiss();
+				if (progressDialog != null)
+					progressDialog.dismiss();
 				showDialog(DIALOG_FACEBOOK_ERROR);
 				break;
 
 			case DIALOG_MOISHD_SERVER_REGISTRATION_ERROR:
-				progressDialog.dismiss();
+				if (progressDialog != null)
+					progressDialog.dismiss();
 				showDialog(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
 				break;
 
 			case DIALOG_C2DM_ERROR:
-				showDialog(DIALOG_C2DM_ERROR);
+				if (progressDialog != null)
+					progressDialog.dismiss();
 				break;
 
 			case REGISTRATION_COMPLETE:
-				progressDialog.dismiss();
+				if (progressDialog != null)
+					progressDialog.dismiss();
 				Intent intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 				startActivity(intent);	
 				break;
@@ -121,7 +125,8 @@ public class WelcomeScreenActivity extends Activity{
 		}
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
-
+		if (isFinishing())
+			Log.d("Amico","after locatin managment activity is finishing - wtf !???");
 		if (isSessionValid){
 			doAuthSucceed();
 		}
@@ -201,6 +206,8 @@ public class WelcomeScreenActivity extends Activity{
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
+		if (isFinishing())
+			Log.d("Amico","after doAuth activity is finishing - wtf !???  thread is - "+Thread.currentThread().toString()+" Activity is - "+this.toString());
 
 		Log.d("Facebook", "doAuthSucceed");
 		
@@ -209,8 +216,8 @@ public class WelcomeScreenActivity extends Activity{
 		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
 		startService(registrationIntent);
 		Log.d("TEST","Resgistering...");
-				
-		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);
+
+		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);		
 		
 		timer=new Timer();
 		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 3000);
