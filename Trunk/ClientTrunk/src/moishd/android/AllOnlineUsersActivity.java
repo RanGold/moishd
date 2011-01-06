@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseDialogListener;
@@ -16,21 +18,18 @@ import moishd.android.facebook.Util;
 import moishd.android.games.ChooseGameActivity;
 import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
+import moishd.android.games.MostPopularGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.common.AvailablePreferences;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.LocationManagment;
 import moishd.common.PushNotificationTypeEnum;
 import moishd.common.SharedPreferencesKeysEnum;
-import moishd.common.AvailablePreferences;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,15 +58,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import moishd.android.games.MostPopularGameActivity;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity{
 
@@ -367,6 +365,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			
 		}
+		
 	}
 
 
@@ -492,13 +491,8 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 
 	private void startGameDare(){
-		Intent intent;
-		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
-			intent = new Intent(this, SimonProGameActivity.class);
-		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
-			intent = new Intent(this, MixingGameActivity.class);
-		else //TODO right now else case is fast click.
-			intent = new Intent(this, FastClickGameActivity.class);
+		Intent intent = new Intent();
+		setGameDare(intent);
 		commonForTruthAndDare(intent);
 	}
 
@@ -507,10 +501,30 @@ public class AllOnlineUsersActivity extends Activity{
 		commonForTruthAndDare(intent);
 	}
 	
-	private void StartGamePopular(){
-		Intent intent = new Intent(this, MostPopularGameActivity.class);
-		commonForTruthAndDare(intent);
+	private void setGameDare(Intent intent){
+		if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
+			intent.setClass(this, SimonProGameActivity.class);
+		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
+			intent.setClass(this, MixingGameActivity.class);
+		else //TODO right now else case is fast click.
+			intent.setClass(this, FastClickGameActivity.class);
 		
+	}
+	
+	private void StartGamePopular(){
+		Intent popularScreen = new Intent(this, MostPopularGameActivity.class);
+		startActivity(popularScreen);
+		
+		Intent startPopular = new Intent();
+		if (gameType.equals(IntentExtraKeysEnum.Truth.toString())){
+			startPopular.setClass(this, TruthPartGameActivity.class);
+			}
+		else {
+			setGameDare(startPopular);
+		}
+		commonForTruthAndDare(startPopular);
+		
+	
 	}
 
 	private void hasNoLocationDialog(){
@@ -679,8 +693,8 @@ public class AllOnlineUsersActivity extends Activity{
 						startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
 					}
 					else {
-						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
-						Log.d("Tammy",mostPopular);
+					String mostPopular = ServerCommunication.getMostPopularGame(authToken);
+					
 						sendInvitationResponse("Accept" + mostPopular, "Popular");
 					}
 					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
@@ -1007,7 +1021,7 @@ public class AllOnlineUsersActivity extends Activity{
 			// Icons bound to the rows.
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
-			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.not_facebook_friend);
+			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
 			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
 			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
@@ -1110,7 +1124,7 @@ public class AllOnlineUsersActivity extends Activity{
 				if (moishdUsers.get(position).isNearByUser())			
 					holder.nearBy.setImageBitmap(nearByUsers);
 				else
-					holder.nearBy.setImageBitmap(noNearBy);
+					holder.nearBy.setImageBitmap(noPic);
 			}
 
 			else if (currentUsersType.equals(GetUsersByTypeEnum.NearbyUsers))

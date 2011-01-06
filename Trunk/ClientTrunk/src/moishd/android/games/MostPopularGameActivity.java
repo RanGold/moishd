@@ -30,10 +30,6 @@ public class MostPopularGameActivity extends Activity{
 		text1.setTypeface(fontName);
 		text2.setTypeface(fontName);
 		
-		gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		gameType = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
-		
 		MyCount count;
 		count= new MyCount(13000,1000);
 		count.start();
@@ -47,19 +43,6 @@ public class MostPopularGameActivity extends Activity{
 			super(millisInFuture, countDownInterval);
 		}    
 		public void onFinish() {
-			Intent intent = new Intent();
-			intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authString);
-			intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
-			intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), gameId);
-			if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
-				intent.setClass(MostPopularGameActivity.this, SimonProGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
-				intent.setClass(MostPopularGameActivity.this, MixingGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
-				intent.setClass(MostPopularGameActivity.this, FastClickGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
-				intent.setClass(MostPopularGameActivity.this, TruthPartGameActivity.class);
-			startActivity(intent);	
 			finish();
 		}
 		public void onTick(long millisUntilFinished) {

@@ -126,7 +126,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			String gameType = resultWithGameType.substring(placeToCut+1);
 
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
-			Log.d("C2DM", result);
+		
 			
 			if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
 				resultIntent.setClass(this, TruthPartGameActivity.class);
