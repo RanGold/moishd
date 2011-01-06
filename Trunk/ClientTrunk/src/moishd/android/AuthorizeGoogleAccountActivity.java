@@ -19,9 +19,10 @@ import android.util.Log;
 public class AuthorizeGoogleAccountActivity extends Activity {
 	
 	boolean firstTime = true;
-	private AccountManagerFuture<Bundle> bundle;
+	private AccountManagerFuture<Bundle> bundleToken;
 	Account account = null;
 	AccountManager accountManager = null;
+	boolean needInvalidate = true;
 	
 
 	@Override
@@ -31,8 +32,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 		Intent intent = getIntent();
 		accountManager = AccountManager.get(this);
 		account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
-
-		bundle = accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
+		bundleToken = accountManager.getAuthToken(account, "ah", false, new GetAuthTokenCallback(), null);
 	}
 
 	protected void onResume(){
@@ -43,9 +43,9 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 		}
 		else{
 			try {
-				bundle = accountManager.getAuthToken(account, "ah", false, null, null);
+				bundleToken = accountManager.getAuthToken(account, "ah", false, null, null);
 				int i=5;
-				while (!bundle.isDone() && i>0){
+				while (!bundleToken.isDone() && i>0){
 					SystemClock.sleep(1000);
 					i--;
 				}
@@ -54,7 +54,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 					onError();
 				}
 				else{
-					Bundle result = bundle.getResult();
+					Bundle result = bundleToken.getResult();
 					if (result!=null){
 						String authToken = result.getString(AccountManager.KEY_AUTHTOKEN);
 						if (authToken == null){
@@ -87,6 +87,12 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 					// User input required
 					startActivity(intent);
 				} else {
+					String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+					if (needInvalidate){
+						needInvalidate=false;
+						accountManager.invalidateAuthToken(account.type, authToken);
+						onResume();
+					}
 					onGetAuthToken(bundle);
 				}
 			} catch (OperationCanceledException e) {
