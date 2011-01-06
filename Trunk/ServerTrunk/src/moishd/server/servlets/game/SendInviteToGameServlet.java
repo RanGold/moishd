@@ -31,15 +31,22 @@ public class SendInviteToGameServlet extends HttpServlet {
 				MoishdUser initUser = DSCommon.GetUserByGoogleId(initID);
 				MoishdUser recUser = DSCommon.GetUserByGoogleId(recID);
 
-				if (recUser.isBusy() || initUser.isBusy()) {
-					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
-							C2DMCommon.Actions.PlayerBusy.toString(),
-							new HashMap<String, String>());
-				} else if (!recUser.isRegistered()){
+				if (!recUser.isRegistered()){
 					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
 							C2DMCommon.Actions.PlayerOffline.toString(),
 							new HashMap<String, String>());
-				} else {
+				} else if (recUser.isBusy() && !recUser.getBusyWith().equals(initID)) {
+					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
+							C2DMCommon.Actions.PlayerBusy.toString(),
+							new HashMap<String, String>());
+				} else if (!recUser.isBusy()) {
+					
+					if (initUser.isBusy()) {
+						MoishdUser oldRecUser = DSCommon.GetUserByGoogleId(initUser.getBusyWith());
+						oldRecUser.setNotBusy();
+						oldRecUser.SaveChanges();
+					}
+					
 					initUser.setPartner(recID);
 					initUser.SaveChanges();
 					recUser.setPartner(initID);
