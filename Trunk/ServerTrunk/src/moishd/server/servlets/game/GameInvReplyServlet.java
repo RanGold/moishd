@@ -36,13 +36,19 @@ public class GameInvReplyServlet extends GeneralServlet {
 				} else {
 					String gameId = paramters.split("#")[0];
 					String invReply = paramters.split("#")[1];
-
+					
+					String popular = "";
+					
 					MoishdGame tg = DSCommon.GetGameById(gameId);
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId", String.valueOf(tg.getGameLongId()));
 					
+					if(invReply.substring(0,7).equals("Popular")){
+						invReply=invReply.substring(7);
+						popular="Popular";
+					}
 					if (invReply.equals("Decline")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameDeclined.toString(), payload);
@@ -50,32 +56,34 @@ public class GameInvReplyServlet extends GeneralServlet {
 						mInitUser.SaveChanges();
 						mRecUser.setBusy(false);
 						mRecUser.SaveChanges();
+					
+					
 					} else if (invReply.equals("AcceptTruth")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameTruth.toString(), payload);
+								popular+	C2DMCommon.Actions.StartGameTruth.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameTruth.toString(), payload);
+								popular +C2DMCommon.Actions.StartGameTruth.toString(), payload);
 						tg.setGameType(C2DMCommon.Actions.StartGameTruth.toString());
 						tg.SaveChanges();
 					} else if (invReply.equals("AcceptDareSimonPro" )) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
+								popular +C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
+								popular+ C2DMCommon.Actions.StartGameDareSimonPro.toString(), payload);
 						tg.setGameType(C2DMCommon.Actions.StartGameDareSimonPro.toString());
 						tg.SaveChanges();
 					} else if (invReply.equals("AcceptDareMixing" )) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
+								popular+ C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
+								popular + C2DMCommon.Actions.StartGameDareMixing.toString(), payload);
 						tg.setGameType(C2DMCommon.Actions.StartGameDareMixing.toString());
 						tg.SaveChanges();
 					} else if (invReply.equals("AcceptDareFastClick" )) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
+								popular + C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
 						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
+								popular + C2DMCommon.Actions.StartGameDareFastClick.toString(), payload);
 						tg.setGameType(C2DMCommon.Actions.StartGameDareFastClick.toString());
 						tg.SaveChanges();
 					} else {
