@@ -50,6 +50,8 @@ public class SendInviteToGameServlet extends HttpServlet {
 					response.getWriter().write(
 							String.valueOf(tg.getGameLongId()));
 
+					LoggerCommon.Get().LogInfo(this, initID + " invited " + recID);
+					
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId",
 							String.valueOf(tg.getGameId().getId()));

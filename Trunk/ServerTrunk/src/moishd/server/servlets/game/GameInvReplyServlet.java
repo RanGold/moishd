@@ -30,23 +30,18 @@ public class GameInvReplyServlet extends GeneralServlet {
 			try {
 				String paramters = request.getReader().readLine();
 				
-				if (paramters.split("#").length != 3) {
-					response.addHeader("Error", "");
-					response.getWriter().println("TimeGameInvReplyServlet: invalid parameters " + paramters);
+				if (!paramters.endsWith("#") && paramters.split("#").length != 3) {
+					LoggerCommon.Get().LogError(this, response, "TimeGameInvReplyServlet: invalid parameters " + paramters);
 				} else {
 					String gameId = paramters.split("#")[0];
 					String invReply = paramters.split("#")[1];
-					String popular = paramters.split("#")[2];
+					String popular = (paramters.endsWith("#") ? "" : paramters.split("#")[2]);
 					
 					MoishdGame tg = DSCommon.GetGameById(gameId);
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId", String.valueOf(tg.getGameLongId()));
-					
-					// TODO : delete
-					LoggerCommon.Get().LogInfo("bla", invReply);
-					LoggerCommon.Get().LogInfo("bla", popular);
 					
 					if (invReply.equals("Decline")) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
