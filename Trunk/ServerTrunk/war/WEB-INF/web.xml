@@ -6,6 +6,14 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
+		<servlet-name>UnBusyUsersServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.test.UnBusyUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UnBusyUsersServlet</servlet-name>
+		<url-pattern>/test/UnBusyUsers</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.test.LoginServlet</servlet-class>
 	</servlet>
@@ -198,12 +206,12 @@
 		<url-pattern>/queues/SendInviteToGame</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>UpdateGameRankingServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.UpdateGameRankingServlet</servlet-class>
+		<servlet-name>UpdateGameStatsServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.UpdateGameStatsServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>UpdateGameRankingServlet</servlet-name>
-		<url-pattern>/queues/UpdateGameRanking</url-pattern>
+		<servlet-name>UpdateGameStatsServlet</servlet-name>
+		<url-pattern>/queues/UpdateGameStats</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

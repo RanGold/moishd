@@ -11,17 +11,18 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.GameStatistics;
 
-public class UpdateGameRankingServlet extends HttpServlet {
+public class UpdateGameStatsServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6100912194997060648L;
+	private static final long serialVersionUID = -741149291956359903L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		if (request.getHeader("X-AppEngine-QueueName").equals("rankQueue")) {
 			String gameType = request.getParameter("gameType");
 			int rank = Integer.parseInt(request.getParameter("rank"));
+			int isRank = Integer.parseInt(request.getParameter("isRank"));
 
 			List<GameStatistics> stats = DSCommon.GetGameStatsByType(gameType);
 
@@ -38,7 +39,10 @@ public class UpdateGameRankingServlet extends HttpServlet {
 				newGame = stats.get(0);
 			}
 			newGame.addGamePlayed();
-			newGame.addRank(rank);
+			
+			if (isRank == 1) {
+				newGame.addRank(rank);
+			}
 			newGame.SaveChanges();
 		}
 	}

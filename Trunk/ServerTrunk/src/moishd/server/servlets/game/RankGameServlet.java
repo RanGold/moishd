@@ -29,9 +29,9 @@ public class RankGameServlet extends GeneralServlet{
 			String gameType = input.split(":")[0];
 			String rank = input.split(":")[1];
 			
-			Queue queue = QueueFactory.getQueue("rankQueue");
-			queue.add (TaskOptions.Builder.url("/queues/UpdateGameRanking").method(Method.POST).
-					param("gameType", gameType).param("rank", rank));
+			Queue queue = QueueFactory.getQueue("gameStatsQueue");
+			queue.add (TaskOptions.Builder.url("/queues/UpdateGameStats").method(Method.POST).
+					param("gameType", gameType).param("rank", rank).param("isRank", "1"));
 		}
 	}
 

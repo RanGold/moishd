@@ -8,7 +8,7 @@
     <rate>50/s</rate>
   </queue>
   <queue>
-    <name>rankQueue</name>
+    <name>gameStatsQueue</name>
     <rate>50/s</rate>
   </queue>
 </queue-entries>
