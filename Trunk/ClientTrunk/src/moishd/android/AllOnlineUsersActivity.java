@@ -198,6 +198,7 @@ public class AllOnlineUsersActivity extends Activity{
 		locationManagment.startUpdateLocation(1);
 
 		serverHasFacebookFriends = false;
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 
