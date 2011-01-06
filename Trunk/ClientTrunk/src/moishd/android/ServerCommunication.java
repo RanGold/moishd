@@ -188,9 +188,9 @@ public class ServerCommunication {
 		}
 	}
 	
-	public static boolean sendInvitationResponse(String gameId, String responseString, String authString) {
+	public static boolean sendInvitationResponse(String gameId, String responseString, String authString, String isPopular) {
 		
-		String invitationResponse = gameId + "#" + responseString;
+		String invitationResponse = gameId + "#" + responseString + "#" + isPopular;
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InvitationResponse, invitationResponse, authString);
 		if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
