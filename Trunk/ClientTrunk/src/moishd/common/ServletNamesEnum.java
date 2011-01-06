@@ -17,10 +17,10 @@ public enum ServletNamesEnum {
 	UnregisterUser,
 	UpdateLocation,
 	HasLocation,
-	FirstTimePlayed,
+	IsFirstTimePlayed,
 	RankGame,
 	Alive,	
-	GamePlayed,
+	AddGamePlayed,
 	GetMostPopularGame;
 	
 }
