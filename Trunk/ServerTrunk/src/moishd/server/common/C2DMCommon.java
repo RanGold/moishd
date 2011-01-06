@@ -34,7 +34,10 @@ public class C2DMCommon {
 		RankUpdated,
 		TrophiesUpdated,
 		RankAndTrophiesUpdated;
-
+		
+		public String getPopular(String popular) {
+			return popular + this.toString();
+		}
 	}
 	
 	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());

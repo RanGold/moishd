@@ -7,6 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import moishd.server.servlets.GeneralServlet;
 
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
+
 public class RankGameServlet extends GeneralServlet{
 
 	/**
@@ -22,7 +27,11 @@ public class RankGameServlet extends GeneralServlet{
 		if (user != null) {
 			String input = request.getReader().readLine();				
 			String gameType = input.split(":")[0];
-			int rank = Integer.parseInt(input.split(":")[1]);
+			String rank = input.split(":")[1];
+			
+			Queue queue = QueueFactory.getQueue("rankQueue");
+			queue.add (TaskOptions.Builder.url("/queues/UpdateGameRanking").method(Method.POST).
+					param("gameType", gameType).param("rank", rank));
 		}
 	}
 

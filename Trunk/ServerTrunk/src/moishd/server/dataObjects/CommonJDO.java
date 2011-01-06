@@ -7,7 +7,7 @@ public class CommonJDO {
 		DSCommon.SaveChanges(this);
 	}
 	
-	public CommonJDO Detach() {
+	public CommonJDO DetachCopy() {
 		return (DSCommon.DetachThis(this));
 	}
 }
