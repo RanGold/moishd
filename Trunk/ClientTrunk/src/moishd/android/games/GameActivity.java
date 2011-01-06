@@ -2,6 +2,7 @@ package moishd.android.games;
 
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.IntentResultCodesEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +19,10 @@ public class GameActivity extends Activity{
 		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			int points = intent.getIntExtra(IntentExtraKeysEnum.Points.toString(), -1);
-
+			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
+			int numOfTrophies = intent.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), -1);
+			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+			
 			Intent intentForResult = new Intent();
 			intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
 
@@ -30,6 +34,12 @@ public class GameActivity extends Activity{
 			GetAllExtras();
 			SetAllExtras(intentForResult);
 			startActivity(intentForResult);
+			
+			Intent resultIntent = new Intent();
+			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
+			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numOfTrophies);
+			resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
+			setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 			finish();
 
 		}

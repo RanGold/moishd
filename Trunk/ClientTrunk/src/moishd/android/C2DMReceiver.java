@@ -102,9 +102,23 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			AvailablePreferences.setAvailableStatus(context, false);
+			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameResult.toString());
 			Log.d("C2DM", resultIntent.getStringExtra(IntentExtraKeysEnum.PushAction.toString()));
+			
 			int points = Integer.valueOf((intent.getStringExtra(IntentExtraKeysEnum.Points.toString())));
+			resultIntent.putExtra(IntentExtraKeysEnum.Points.toString(), points);
+
+			String newRankString = intent.getStringExtra(IntentExtraKeysEnum.Rank.toString());
+			if (newRankString != null){
+				int newRank = Integer.valueOf(newRankString);
+				resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
+			}
+			
+			int numberOfTropies = Integer.valueOf(intent.getStringExtra(IntentExtraKeysEnum.NumberOfTrophies.toString()));	
+			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());	
+			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);				
+			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);	
 
 			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); 
 			int placeToCut = resultWithGameType.indexOf(":");
@@ -113,8 +127,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
 			Log.d("C2DM", result);
-			resultIntent.putExtra(IntentExtraKeysEnum.Points.toString(), points);
-
+			
 			if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
 				resultIntent.setClass(this, TruthPartGameActivity.class);
 			else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
@@ -123,23 +136,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 				resultIntent.setClass(this, MixingGameActivity.class);
 			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 				resultIntent.setClass(this, FastClickGameActivity.class);
-		}
-		else if (action.equals(PushNotificationTypeEnum.RankUpdated.toString())){
-			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.RankUpdated.toString());
-			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), 0);
-			resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
-		}
-		else if (action.equals(PushNotificationTypeEnum.TrophiesUpdated.toString())){
-			resultIntent.setClass(this, AllOnlineUsersActivity.class);
-
-			int numberOfTropies = Integer.valueOf(intent.getStringExtra(IntentExtraKeysEnum.NumberOfTrophies.toString()));
-			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
-
-			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.TrophiesUpdated.toString());
-			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
-			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);
-
 		}
 		Log.d("TEST", "action is " + action);
 		
