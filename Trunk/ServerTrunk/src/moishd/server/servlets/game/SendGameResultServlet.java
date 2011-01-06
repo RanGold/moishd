@@ -59,17 +59,13 @@ public class SendGameResultServlet extends HttpServlet {
 						loser = mInitUser;
 					}
 					
-
-					
 					HashMap<String, String> winPayload = updateRankAndTrophies(winner);
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					winPayload.put("Result", winValue.toString() + ":" + gameType);
 					
-					
 					HashMap<String, String> losePayload = updateRankAndTrophies(loser);
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", loseValue.toString() + ":" + gameType);
-					
 
 					if (winValue.toString().equals("Won")){
 						int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
@@ -81,14 +77,7 @@ public class SendGameResultServlet extends HttpServlet {
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));	
 					}
-
-/*					
-					C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-												  C2DMCommon.Actions.GameResult.toString(), winPayload);
-					
-					C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-												  C2DMCommon.Actions.GameResult.toString(), losePayload);
-	*/				
+				
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), winPayload);
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
@@ -231,6 +220,7 @@ public class SendGameResultServlet extends HttpServlet {
 	private HashMap<String, String> updateRank(MoishdUser user){
 		
 		int userUpdatedPoints = user.getStats().getPoints();
+		LoggerCommon.Get().LogInfo(this, "currentPoints " + userUpdatedPoints);
 		HashMap<String, String> rankPayload = new HashMap<String, String>();
 		
 		int currentRank = user.getStats().getRank();

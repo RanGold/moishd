@@ -13,6 +13,14 @@
 		<servlet-name>NoPlayedGamesServlet</servlet-name>
 		<url-pattern>/test/NoPlayedGames</url-pattern>
 	</servlet-mapping>
+		<servlet>
+	<servlet-name>NoTrophiesListServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.test.NoTrophiesListServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NoTrophiesListServlet</servlet-name>
+		<url-pattern>/test/NoTrophiesList</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>UnBusyUsersServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.test.UnBusyUsersServlet</servlet-class>
