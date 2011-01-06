@@ -80,9 +80,9 @@ public class GameInvReplyServlet extends GeneralServlet {
 						tg.SaveChanges();
 					} else {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), C2DMCommon.Actions.GameCanceled.toString(), payload);
-						mInitUser.setBusy(false);
+						mInitUser.setNotBusy();
 						mInitUser.SaveChanges();
-						mRecUser.setBusy(false);
+						mRecUser.setNotBusy();
 						mRecUser.SaveChanges();
 					}
 				}

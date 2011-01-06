@@ -1,7 +1,6 @@
 package moishd.server.servlets.game;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,16 +26,6 @@ public class SendGameResultServlet extends HttpServlet {
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
-		LoggerCommon.Get().LogInfo("adsd", "check1");
-		String headername = ""; 
-		for(@SuppressWarnings("rawtypes")
-			Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
-			headername = (String)e.nextElement();
-			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
-		}
-		LoggerCommon.Get().LogInfo("adsd", "check2");
-		
-		// TODO : check if any authentication is possiable
 		if (request.getHeader("X-AppEngine-QueueName").equals("resultQueue")) {
 			try {
 				String gameId = request.getParameter("gameId");

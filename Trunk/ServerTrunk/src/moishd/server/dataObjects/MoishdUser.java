@@ -54,6 +54,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private boolean isBusy;
 	
 	@Persistent
+	private String busyWith;
+	
+	@Persistent
 	private int isAlive;
 	
 	@Persistent
@@ -82,6 +85,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.facebookID = facebookID;
 		this.setMACAddress(MACAddress);
 		this.isBusy = false;
+		this.busyWith = "";
 		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
 		this.gameTypesPlayed = new LinkedList<String>();
@@ -113,6 +117,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.setRegisterID("NULL");
 		this.setRegistered(false);
 		this.setBusy(false);
+		this.setBusyWith("");
 		this.setIsAlive(2);
 		this.getLocation().setLatitude(200);
 		this.getLocation().setLongitude(200);
@@ -237,5 +242,23 @@ public class MoishdUser extends CommonJDO implements Serializable {
 
 	public List<String> getGameTypesPlayed() {
 		return gameTypesPlayed;
+	}
+
+	public void setBusyWith(String busyWith) {
+		this.busyWith = busyWith;
+	}
+
+	public String getBusyWith() {
+		return busyWith;
+	}
+	
+	public void setNotBusy() {
+		this.setBusy(false);
+		this.setBusyWith("");
+	}
+	
+	public void setPartner(String partner) {
+		this.setBusy(true);
+		this.setBusyWith(partner);
 	}
 }

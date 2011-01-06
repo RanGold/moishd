@@ -39,10 +39,10 @@ public class SendInviteToGameServlet extends HttpServlet {
 					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
 							C2DMCommon.Actions.PlayerOffline.toString(),
 							new HashMap<String, String>());
-				}else {
-					initUser.setBusy(true);
+				} else {
+					initUser.setPartner(recID);
 					initUser.SaveChanges();
-					recUser.setBusy(true);
+					recUser.setPartner(initID);
 					recUser.SaveChanges();
 
 					MoishdGame tg = new MoishdGame(initID, recID);
