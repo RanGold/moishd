@@ -144,8 +144,8 @@ public class AllOnlineUsersActivity extends Activity{
 	};
 	private boolean needRefresh = false;
 	Timer refreshTimer;
-	int SECOND = 1000;
-	int REFRESH_INTERVAL = 60*SECOND;
+	int MINUTE = 1000*60;
+	int REFRESH_INTERVAL = 5*MINUTE;
 	
 
 	

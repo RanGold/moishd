@@ -120,6 +120,7 @@ public class ServerRequest  {
 
 	public HttpResponse doPost(HttpPost post) throws ClientProtocolException, IOException {
 		if (!this.GetCookie()) {
+			Log.d("COOKIE","Error getting cookie");
 			throw new ClientProtocolException("Error getting cookie");
 		}
 		http_client.getConnectionManager().closeExpiredConnections();
