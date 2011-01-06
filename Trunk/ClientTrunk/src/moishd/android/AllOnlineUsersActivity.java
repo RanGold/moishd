@@ -615,6 +615,7 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 
 	protected void postOnFacebookWall(int code, Bundle bundle) {
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
 		Bundle parameters = new Bundle();
 		String message;
 
@@ -629,11 +630,19 @@ public class AllOnlineUsersActivity extends Activity{
 		parameters.putString("picture", "http://moishd.googlecode.com/files/moishd");
 		WelcomeScreenActivity.facebook.dialog(this,"stream.publish", parameters, new PostDialogListener());
 
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+
+	}
+	
+	private void cancelDialog (DialogInterface dialog){
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		dialog.cancel();		
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
 
 		switch (id) {
 
@@ -645,12 +654,13 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					cancelDialog(dialog);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
 				}
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD);
 				}
 			});
@@ -704,7 +714,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					sendInvitationResponse("Decline", "");  
-					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);
 					}
 			});
 			return builder.create();  
@@ -773,7 +783,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					cancelDialog(dialog);
 				}
 			});
 			return builder.create();  
@@ -784,12 +794,12 @@ public class AllOnlineUsersActivity extends Activity{
 			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					sendMessageToHandler(START_LOCATION_SETTINGS);
-					dialog.cancel();
+					cancelDialog(dialog);
 				}
 			})
 			.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					cancelDialog(dialog);
 				}
 			});
 			return builder.create();  
@@ -799,13 +809,13 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					cancelDialog(dialog);
 					getUsers(currentUsersType);
 				}
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();		
+					cancelDialog(dialog);		
 					currentUsersType = previousClickPosition;
 				}
 			});
@@ -816,7 +826,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					cancelDialog(dialog);
 				}
 			});
 			return builder.create();  
@@ -829,6 +839,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private void dismissAndRemoveDialog(int code){
 		dismissDialog(code);
 		removeDialog(code);	
+		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
 	}
 
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
@@ -981,6 +992,8 @@ public class AllOnlineUsersActivity extends Activity{
 
 		public void onComplete(Bundle values) {
 
+			AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
+
 			final String postId = values.getString("post_id");
 
 			if (postId != null) {
@@ -990,6 +1003,8 @@ public class AllOnlineUsersActivity extends Activity{
 			} else {
 				// "No wall post made..."
 			}
+
+			AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
 
 		}
 
