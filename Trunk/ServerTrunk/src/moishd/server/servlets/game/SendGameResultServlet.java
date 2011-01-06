@@ -1,6 +1,7 @@
 package moishd.server.servlets.game;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,78 +23,83 @@ public class SendGameResultServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -530008367358724317L;
-
-
+	
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
+		LoggerCommon.Get().LogInfo("adsd", "check1");
+		String headername = ""; 
+		for(@SuppressWarnings("rawtypes")
+			Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
+			headername = (String)e.nextElement();
+			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
+		}
+		LoggerCommon.Get().LogInfo("adsd", "check2");
+		
+		// TODO : check if any authentication is possiable
 		if (request.getHeader("X-AppEngine-QueueName").equals("resultQueue")) {
 			try {
 				String gameId = request.getParameter("gameId");
 				String gameType = request.getParameter("gameType");
 				String winValue = request.getParameter("winValue");
 				String loseValue = request.getParameter("loseValue");
-
+				
 				MoishdGame tg = DSCommon.GetGameById(gameId);
-
+				
 				if (!tg.getIsDecided()) {
 					tg.setIsDecided(true);
 					tg.SaveChanges();
-
+					
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
-
+					
 					MoishdUser winner;
 					MoishdUser loser;
-
-					HashMap<String, String> winPayload = new HashMap<String, String>();
-					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					winPayload.put("Result", winValue.toString() + ":" + gameType);
-
-					HashMap<String, String> losePayload = new HashMap<String, String>();
-					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
-					losePayload.put("Result", loseValue.toString() + ":" + gameType);
-
+					
 					tg = DSCommon.GetGameById(gameId);
-					int [] pointsAddedToBothSides;
 					// TODO: Check if concurrent win is consistent
 					if ((tg.getPlayerRecEndTime() == null) ||
-							((tg.getPlayerInitEndTime() != null) && 
-									(tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {
-
+						((tg.getPlayerInitEndTime() != null) && 
+						 (tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {
+						
 						winner = mInitUser;
 						loser = mRecUser;
-						pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
-						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
-						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
-
-						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), winPayload);
-
-						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), losePayload);
-
-					} else {
-
+					}
+					else{
 						winner = mRecUser;
 						loser = mInitUser;
-						pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
-						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
-						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
-
-						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), winPayload);
-						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-								C2DMCommon.Actions.GameResult.toString(), losePayload);
-
 					}
-
+					
+					int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
+					
+					HashMap<String, String> winPayload = updateRankAndTrophies(winner);
+					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
+					winPayload.put("Result", winValue.toString() + ":" + gameType);
+					winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
+					
+					HashMap<String, String> losePayload = updateRankAndTrophies(loser);
+					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
+					losePayload.put("Result", loseValue.toString() + ":" + gameType);
+					winPayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
+					
+					C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+												  C2DMCommon.Actions.GameResult.toString(), winPayload);
+					
+					C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+												  C2DMCommon.Actions.GameResult.toString(), losePayload);
+					
+					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
+												  C2DMCommon.Actions.GameResult.toString(), winPayload);
+					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
+												  C2DMCommon.Actions.GameResult.toString(), losePayload);
+					
 					mInitUser.setBusy(false);
 					mInitUser.SaveChanges();
 					mRecUser.setBusy(false);
 					mRecUser.SaveChanges();
-
-					updateRankAndTrophiesAndNotifyUser(winner, loser);
+					
 				}
+				
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ServletException e) {
@@ -101,29 +107,29 @@ public class SendGameResultServlet extends HttpServlet {
 			}
 		}
 	}
-
+	
 	private int [] UpdateGameStatistics(MoishdGame moishdGame, MoishdUser winner, MoishdUser loser){
-
+		
 		//Increment number of games played for both users
 		int winnerGamesPlayed = winner.getStats().getGamesPlayed();
 		winner.getStats().setGamesPlayed(winnerGamesPlayed + 1);
-
+		
 		int loserGamesPlayed= loser.getStats().getGamesPlayed();
 		loser.getStats().setGamesPlayed(loserGamesPlayed + 1);
-
+		
 		//Update winner's won games statistics
 		int winnerGamesWon = winner.getStats().getGamesWon();
 		winner.getStats().setGamesWon(winnerGamesWon+1);
-
+		
 		int winnerGamesWonInARow = winner.getStats().getGamesWonInARow();
 		winner.getStats().setGamesWonInARow(winnerGamesWonInARow+1);
-
+		
 		//Update loser's won games statistics
 		loser.getStats().setGamesWonInARow(0);
-
+		
 		int winnerPoints = winner.getStats().getPoints();
 		int loserPoints = loser.getStats().getPoints();
-
+		
 		int [] addedPoints = new int[2];
 		//Do points logic
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.toString())){
@@ -147,41 +153,29 @@ public class SendGameResultServlet extends HttpServlet {
 			addedPoints[1] = 1;
 		}
 		else{
-
+			
 		}
-
+		
 		winner.SaveChanges();
 		loser.SaveChanges();
-
+		
 		return addedPoints;
 	}
-
-	private void updateRankAndTrophiesAndNotifyUser(MoishdUser winner, MoishdUser loser){
-
-		updateRank(loser, true);
-		updateRankAndTrophies(winner);
-	}
-
-	private void updateRankAndTrophies(MoishdUser winner) {
-
-		boolean rankUpdated;
-
-		HashMap<String, String> rankAndTrophiesPayload = updateRank(winner, false);
-
+	
+	private HashMap<String, String> updateRankAndTrophies(MoishdUser user) {
+		
+		HashMap<String, String> rankAndTrophiesPayload = updateRank(user);
+		
 		if (rankAndTrophiesPayload == null){
 			rankAndTrophiesPayload = new HashMap<String, String>();
-			rankUpdated = false;
 		}
-		else{
-			rankUpdated = true;
-		}
-
-		List<TrophiesEnum> trophies = winner.getTrophies();
+		
+		List<TrophiesEnum> trophies = user.getTrophies();
 		String tropiesAchieved = "";
 		int numOfTrophiesObtained = 0;
-
-		int numOfWinsInARow = winner.getStats().getGamesWonInARow();
-
+		
+		int numOfWinsInARow = user.getStats().getGamesWonInARow();
+		
 		if (numOfWinsInARow == 10 && !trophies.contains(TrophiesEnum.TenInARow)){
 			trophies.add(TrophiesEnum.TenInARow);
 			numOfTrophiesObtained++;
@@ -192,9 +186,9 @@ public class SendGameResultServlet extends HttpServlet {
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.TwentyInARow.toString();
 		}
-
-		int numOfWins = winner.getStats().getGamesWon();
-
+		
+		int numOfWins = user.getStats().getGamesWon();
+		
 		if  (numOfWins == 1 && !trophies.contains(TrophiesEnum.FirstTime)){
 			trophies.add(TrophiesEnum.FirstTime);
 			numOfTrophiesObtained++;
@@ -225,90 +219,42 @@ public class SendGameResultServlet extends HttpServlet {
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.MegaMoisher.toString();
 		}
-
-		rankAndTrophiesPayload.put("Trophies", tropiesAchieved);	
-
-		if (numOfTrophiesObtained > 0){
-			winner.SaveChanges();
-			rankAndTrophiesPayload.put("NumberOfTrophies", String.valueOf(numOfTrophiesObtained));
-		}
-
-		String action;
-
-		if (rankUpdated){
-			if (numOfTrophiesObtained > 0){
-				action = C2DMCommon.Actions.RankAndTrophiesUpdated.toString();
-			}
-			else{
-				action = C2DMCommon.Actions.RankUpdated.toString();
-			}
-		}
-		else{
-			if (numOfTrophiesObtained > 0){
-				action = C2DMCommon.Actions.TrophiesUpdated.toString();
-			}
-			else{
-				action = null;
-			}
-		}
-
-		if (action != null){
-			try {
-				C2DMCommon.PushGenericMessage(winner.getRegisterID(), action, rankAndTrophiesPayload);
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		user.SaveChanges();
+		
+		rankAndTrophiesPayload.put("Trophies", tropiesAchieved);
+		rankAndTrophiesPayload.put("NumberOfTrophies", String.valueOf(numOfTrophiesObtained));
+		
+		return rankAndTrophiesPayload;
 	}
-
-	private HashMap<String, String> updateRank(MoishdUser user, boolean sendToUser){
-
+	
+	private HashMap<String, String> updateRank(MoishdUser user){
+		
 		int userUpdatedPoints = user.getStats().getPoints();
-
 		HashMap<String, String> rankPayload = new HashMap<String, String>();
-		switch(userUpdatedPoints){
-		case 50:
+		
+		int currentRank = user.getStats().getRank();
+		if (100 > userUpdatedPoints && userUpdatedPoints >= 50 && currentRank == 0){
 			user.getStats().setRank(1);
 			rankPayload.put("Rank", "1");
-			break;
-		case 150:
+		}
+		else if (300 > userUpdatedPoints && userUpdatedPoints >= 150 && currentRank == 1){
 			user.getStats().setRank(2);
 			rankPayload.put("Rank", "2");
-			break;
-		case 300:
+		}
+		else if (500 > userUpdatedPoints && userUpdatedPoints >= 300 && currentRank == 2){
 			user.getStats().setRank(3);
 			rankPayload.put("Rank", "3");
-			break;
-		case 500:
+		}
+		else if (1000 > userUpdatedPoints && userUpdatedPoints >= 500 && currentRank == 3){
 			user.getStats().setRank(4);
 			rankPayload.put("Rank", "4");
-			break;
-		case 1000:
+		}
+		else if (userUpdatedPoints >= 1000 && currentRank == 4){
 			user.getStats().setRank(5);
 			rankPayload.put("Rank", "5");
-			break;
-		default:
-			return null;
 		}
-
 		user.SaveChanges();
-
-		if (sendToUser){
-			try {
-				C2DMCommon.PushGenericMessage(user.getRegisterID(), C2DMCommon.Actions.RankUpdated.toString(), rankPayload);
-			} catch (ServletException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return rankPayload;
-		}
-		else{
-			return rankPayload;
-		}
+		
+		return rankPayload;
 	}
 }
-
-
