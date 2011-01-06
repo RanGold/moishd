@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import moishd.server.common.DSCommon;
+import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.GameStatistics;
 import moishd.server.servlets.GeneralServlet;
 
@@ -30,6 +31,8 @@ public class GetMostPopularGameServlet extends GeneralServlet{
 			} else {
 				gameType = stats.get(0).getGameType();
 			}
+			
+			LoggerCommon.Get().LogInfo(this, gameType);
 			
 			response.getWriter().print(gameType);
 		}
