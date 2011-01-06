@@ -67,6 +67,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import moishd.android.games.MostPopularGameActivity;
 
 public class AllOnlineUsersActivity extends Activity{
 
@@ -295,7 +296,13 @@ public class AllOnlineUsersActivity extends Activity{
 				game_id = null;
 				last_user = null;
 			}
+
+			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
+				StartGamePopular();
+			}
+
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
+
 				startGameTruth();
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
@@ -468,6 +475,12 @@ public class AllOnlineUsersActivity extends Activity{
 		Intent intent = new Intent(this, TruthPartGameActivity.class);
 		commonForTruthAndDare(intent);
 	}
+	
+	private void StartGamePopular(){
+		Intent intent = new Intent(this, MostPopularGameActivity.class);
+		commonForTruthAndDare(intent);
+		
+	}
 
 	private void hasNoLocationDialog(){
 		showDialog(DIALOG_HAS_NO_LOCATION);
@@ -606,13 +619,19 @@ public class AllOnlineUsersActivity extends Activity{
 					int i = random.nextInt(100);
 					i = i % 4;
 					if (i==0 || i==1) {
+						chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 						chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDareActivity.class); 
+						startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+					}
+					else if (i==2){
+						chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+						chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
+						startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
 					}
 					else {
-						chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
+						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
+						sendInvitationResponse("PopularAccept" + mostPopular);
 					}
-
-					startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());                                             
 
 					dialog.cancel();
 				}
