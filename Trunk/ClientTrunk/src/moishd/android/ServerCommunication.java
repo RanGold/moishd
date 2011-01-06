@@ -140,13 +140,9 @@ public class ServerCommunication {
 		}
 		return null;
 	}
-	
-	public static String inviteUser(ClientMoishdUser user, String authString){
-		return inviteUser(user.getUserGoogleIdentifier(), authString);
-	}
-		
-	public static String inviteUser(String user, String authString){
-		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, user, authString);
+			
+	public static String inviteUser(String userGoogleIdentifier, String authString){
+		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, userGoogleIdentifier, authString);
 		try {
 			String content = convertStreamToString(response.getEntity().getContent());
 			if (response.containsHeader("Error")){

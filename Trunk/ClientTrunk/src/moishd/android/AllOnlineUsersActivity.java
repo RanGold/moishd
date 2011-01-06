@@ -419,7 +419,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void inviteUserToMoish(ClientMoishdUser user){
 
-		game_id = ServerCommunication.inviteUser(user, authToken);
+		game_id = ServerCommunication.inviteUser(user.getUserGoogleIdentifier(), authToken);
 
 	}
 	
@@ -623,26 +623,24 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD);
 				}
 			});
 			return builder.create();  
 			
 		case DIALOG_GET_GAME_OFFER:
-			
-			
 			builder.setMessage("Hey! " + opponent_nick_name + " has a higher rank than you! Would you like to show him/her what you've got?!")
 			.setCancelable(false)
 			.setPositiveButton("Oh yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
 					inviteUserOfferedByServerToMoish(opponent_auth_token);
 				}
 			})
 			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
+					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
+					}
 			});
 			return builder.create();
 			
@@ -671,15 +669,14 @@ public class AllOnlineUsersActivity extends Activity{
 						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
 						sendInvitationResponse("Accept" + mostPopular, "Popular");
 					}
-
-					dialog.cancel();
-				}
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
+					}
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					sendInvitationResponse("Decline", "");      
-					dialog.cancel();
-				}
+					sendInvitationResponse("Decline", "");  
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
+					}
 			});
 			return builder.create();  
 
@@ -697,7 +694,7 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_RANK_UPDATED);		
 				}
 			});
 			return builder.create(); 
@@ -712,21 +709,22 @@ public class AllOnlineUsersActivity extends Activity{
 					//					Bundle bundle = new Bundle();
 					//					bundle.putInt("rank", newRank);
 					//					postOnFacebookWall(FACEBOOK_POST_RANK_UPDATED, bundle);
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
 				}
 			})
 			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
 				}
 			});
 			return builder.create(); 
+			
 		case DIALOG_USER_IS_BUSY:
 			builder.setMessage(args.getString("userName") + " is currently playing. Please try again later.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_USER_IS_BUSY);		
 				}
 			});
 			return builder.create(); 
@@ -736,7 +734,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dismissAndRemoveDialog(DIALOG_USER_IS_OFFLINE);		
 				}
 			});
 			return builder.create();  
@@ -797,6 +795,11 @@ public class AllOnlineUsersActivity extends Activity{
 		default:
 			return null;
 		}
+	}
+	
+	private void dismissAndRemoveDialog(int code){
+		dismissDialog(code);
+		removeDialog(code);	
 	}
 
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
