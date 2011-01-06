@@ -487,7 +487,7 @@ public class AllOnlineUsersActivity extends Activity{
 		intent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
-		startActivity(intent);
+		startActivityForResult(intent, IntentRequestCodesEnum.GameRequestCode.getCode());
 	}
 
 	private void startGameDare(){
@@ -523,7 +523,6 @@ public class AllOnlineUsersActivity extends Activity{
 			setGameDare(startPopular);
 		}
 		commonForTruthAndDare(startPopular);
-		
 	
 	}
 
