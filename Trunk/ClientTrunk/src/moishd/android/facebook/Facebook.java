@@ -93,7 +93,8 @@ public class Facebook {
 	 * Default authorize method doesn't require any permissions.
 	 */
 	public void authorize(Activity activity, final DialogListener listener) {
-		authorize(activity, new String[] {}, DEFAULT_AUTH_ACTIVITY_CODE,
+		authorize(activity, new String[] {}, FORCE_DIALOG_AUTH
+,
 				listener);
 	}
 
@@ -102,7 +103,8 @@ public class Facebook {
      */
 	public void authorize(Activity activity, String[] permissions,
             final DialogListener listener) {
-		authorize(activity, permissions, DEFAULT_AUTH_ACTIVITY_CODE, listener);
+		authorize(activity, permissions, FORCE_DIALOG_AUTH
+, listener);
     }
 
     /**
