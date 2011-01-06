@@ -327,6 +327,7 @@ public class AllOnlineUsersActivity extends Activity{
 				trophiesUpdate(numberOfTropies, trophiesString);
 			}
 		}
+		last_user = null;
 	}
 
 	@Override
@@ -354,6 +355,7 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
 			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
+			Log.d("Tammy",gameType);
 			sendInvitationResponse("Accept" + gameType, "");
 		}
 	}
@@ -611,6 +613,7 @@ public class AllOnlineUsersActivity extends Activity{
 		switch (id) {
 
 		case DIALOG_INVITE_USER_TO_MOISHD:
+			//TODO - check why the same name is applied each time.
 			last_user = moishdUsers.get(currentClickPosition).getUserNick();
 			Log.d("Tammy", last_user);
 			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
@@ -667,6 +670,7 @@ public class AllOnlineUsersActivity extends Activity{
 					}
 					else {
 						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
+						Log.d("Tammy",mostPopular);
 						sendInvitationResponse("Accept" + mostPopular, "Popular");
 					}
 					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
