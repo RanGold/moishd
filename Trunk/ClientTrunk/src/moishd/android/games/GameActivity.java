@@ -22,9 +22,11 @@ public class GameActivity extends Activity{
 			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
 			int numOfTrophies = intent.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), -1);
 			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+			String nearByGame = intent.getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
 			
 			Intent intentForResult = new Intent();
 			intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
+			intentForResult.putExtra(IntentExtraKeysEnum.NearByGame.toString(), nearByGame);
 
 			if (result.equals("Won")) 
 				intentForResult.setClass(this, YouMoishdActivity.class);

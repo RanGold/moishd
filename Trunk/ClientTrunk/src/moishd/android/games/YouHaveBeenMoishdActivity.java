@@ -19,17 +19,22 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 
 		ImageView moishdHand = (ImageView) findViewById(R.id.hands);
 		TextView text = (TextView) findViewById(R.id.youHaveBeenMoishdText);
-
+		
+		checkIfGameIsNearBy();
+	
 		if (points > 0){
 			if (points == 1){
-				text.setText("Oh no! You have been Moish'd! But hey, you received " + points + " point!");
+				text.setText("Oh no! You have been Moish'd! But hey, you received " + points + " point! " + addToMesseage);
 			}
 			else{
-				text.setText("Oh no! You have been Moish'd! But hey, you got " + points + " points!");
+				text.setText("Oh no! You have been Moish'd! But hey, you got " + points + " points! " + addToMesseage);
 			}
 		}
 		else{
 			text.setText("Oh no! You have been Moish'd!");
+		}
+		if (needToChangeTextSize){
+			text.setTextSize(20);
 		}
 
 		moishdHand.setOnClickListener(new OnClickListener() {

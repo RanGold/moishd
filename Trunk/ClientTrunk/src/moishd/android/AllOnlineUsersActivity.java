@@ -85,6 +85,9 @@ public class AllOnlineUsersActivity extends Activity{
 	private String last_user;
 	private String opponent_auth_token;
 	private String opponent_nick_name;
+	private String initName;
+	private String recName;
+	private String myUserName;
 	private boolean serverHasFacebookFriends;
 
 	private int currentClickPosition;
@@ -114,6 +117,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_RANK_UPDATED = 18;
 	private final int DIALOG_TROPHIES_UPDATED = 19;
 	private final int DIALOG_GET_GAME_OFFER = 20;
+	private final int DIALOG_USER_CANCELED_GAME = 21;
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 	private final int FACEBOOK_POST_TROPHIES_UPDATED = 31;
 
@@ -192,6 +196,8 @@ public class AllOnlineUsersActivity extends Activity{
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
 		locationManagment.startUpdateLocation(1);
+		
+		myUserName = MoishdPreferences.getUserName(getApplicationContext());
 
 		serverHasFacebookFriends = false;
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
@@ -283,6 +289,14 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
+				game_id = null;
+				last_user=null;
+			}
+			
+			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
+				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
+				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
+				userCanceledGameDialog();
 				game_id = null;
 				last_user=null;
 			}
@@ -481,9 +495,10 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void userDeclinedToMoishDialog(){
 		showDialog(DIALOG_USER_DECLINED);
-
 	}
-
+	private void userCanceledGameDialog(){
+		showDialog(DIALOG_USER_CANCELED_GAME);
+	}
 	/* Common commands for both truth and dare games.
 	 * Preparing the intent, adding all necessary details into it.
 	 */
@@ -795,6 +810,25 @@ public class AllOnlineUsersActivity extends Activity{
 				}
 			});
 			return builder.create();  
+			
+		case DIALOG_USER_CANCELED_GAME:
+			
+			//TODO cancel game
+			String user;
+			if (myUserName.equals(initName)){
+				user = recName;
+			}
+			else{
+				user = initName;
+			}
+			builder.setMessage("The game with +" + user + " has been canceled.")
+			.setCancelable(false)
+			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					cancelDialog(dialog);
+				}
+			});
+			return builder.create(); 
 
 		case DIALOG_HAS_NO_LOCATION:
 			builder.setMessage("Location hasn't been settled yet. Would you like to configure Location Settings?")

@@ -54,6 +54,16 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			startIntent = false;
 			ServerCommunication.sendAlive();
 		}
+		
+		else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
+			String initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
+			String recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameCanceled.toString());
+			resultIntent.putExtra(IntentExtraKeysEnum.InitName.toString(), initName);
+			resultIntent.putExtra(IntentExtraKeysEnum.RecName.toString(), recName);
+		}
+
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 			String authTokenOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString());
 			String UserNickNameOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
@@ -118,9 +128,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			}
 			
 			int numberOfTropies = Integer.valueOf(intent.getStringExtra(IntentExtraKeysEnum.NumberOfTrophies.toString()));	
-			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());	
+			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
+			String nearByGame = intent.getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);				
-			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);	
+			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numberOfTropies);
+			resultIntent.putExtra(IntentExtraKeysEnum.NearByGame.toString(), nearByGame);
+			
 
 			String resultWithGameType = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString()); 
 			int placeToCut = resultWithGameType.indexOf(":");

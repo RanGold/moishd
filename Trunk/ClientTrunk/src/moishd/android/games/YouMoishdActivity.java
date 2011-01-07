@@ -18,13 +18,18 @@ public class YouMoishdActivity extends WinnerAndLoserActivity {
 
 		ImageView moishdHand = (ImageView) findViewById(R.id.hands);
 		TextView text = (TextView) findViewById(R.id.youMoishdText);
+		
+		checkIfGameIsNearBy();
+		
 		if (points==1){
-			text.setText("Great job! You've Moish'd the opponent and won " + points + " point!");
+			text.setText("Great job! You've Moish'd the opponent and won " + points + " point! " + addToMesseage);
 		}
 		else{
-			text.setText("Great job! You've Moish'd the opponent and won " + points + " points!");
+			text.setText("Great job! You've Moish'd the opponent and won " + points + " points! " + addToMesseage);
 		}
-
+		if (needToChangeTextSize){
+			text.setTextSize(20);
+		}
 		moishdHand.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				//here to open all users list

@@ -4,6 +4,7 @@ public enum PushNotificationTypeEnum {
 
 	CheckAlive,
 	GameOffer,
+	GameCanceled,
 	GameInvitation,
 	GameDeclined,
 	PlayerBusy,
