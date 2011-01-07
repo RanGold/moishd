@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -113,7 +114,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		//check if the user is logged in into Facebook
 		boolean isSessionValid = SessionStore.restore(facebook, this);
-		SessionEvents.addAuthListener(new MoishdAuthListener());
+		SessionEvents.addAuthListener(new MoishdAuthListener(this));
 		SessionEvents.addLogoutListener(new MoishdLogoutListener());
 		loginButton.init(this, facebook);
 
@@ -128,9 +129,41 @@ public class WelcomeScreenActivity extends Activity{
 		if (isFinishing())
 			Log.d("Amico","after locatin managment activity is finishing - wtf !???");
 		if (isSessionValid){
-			doAuthSucceed();
+			//doAuthSucceed();
+			new AsyncAuthSucceed(this).execute();
 		}
 
+	}
+	
+	private class AsyncAuthSucceed extends AsyncTask<Void, Void, Void>{
+
+	private Context context ;
+		public AsyncAuthSucceed(Context context){
+			super();
+			this.context = context;
+			
+		}
+		
+		@Override
+		protected void onPreExecute(){
+			progressDialog = ProgressDialog.show(context, null, "Registering with Moish'd! server", true, false);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
+			registrationIntent.putExtra("app", PendingIntent.getBroadcast(getApplicationContext(), 0, new Intent(), 0)); // boilerplate
+			registrationIntent.putExtra("sender", "app.moishd@gmail.com");
+			startService(registrationIntent);
+			Log.d("TEST","Resgistering...");
+
+			progressDialog = ProgressDialog.show(getApplicationContext(), null, "Registering with Moish'd! server", true, false);	
+			
+			timer=new Timer();
+			timer.schedule(new ifRegisteredThanLoginTask(), 3000, 3000);
+			return null;
+		}
+		
 	}
 
 	@Override
@@ -205,7 +238,7 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
-	private void doAuthSucceed(){
+	/*private void doAuthSucceed(){
 		if (isFinishing())
 			Log.d("Amico","after doAuth activity is finishing - wtf !???  thread is - "+Thread.currentThread().toString()+" Activity is - "+this.toString());
 
@@ -217,11 +250,12 @@ public class WelcomeScreenActivity extends Activity{
 		startService(registrationIntent);
 		Log.d("TEST","Resgistering...");
 
-		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);		
+		//progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);		
+		showDialog(RETRIEVING_USERS);
 		
 		timer=new Timer();
 		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 3000);
-	}
+	}*/
 	
 	private class ifRegisteredThanLoginTask extends TimerTask{
 		private Runnable run;
@@ -329,9 +363,14 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	public class MoishdAuthListener implements AuthListener {
-
+		private Context context;
+		
+		public MoishdAuthListener(Context context){
+			this.context = context;
+		}
+		
 		public void onAuthSucceed() {
-			doAuthSucceed();
+			new AsyncAuthSucceed(context).execute();
 		}
 
 		public void onAuthFail(String error) {
@@ -447,6 +486,7 @@ public class WelcomeScreenActivity extends Activity{
 			return builder.create();  
 		}
 		return null;
+		
 	}
 
 	//listener for incoming HttpResponse containing user's Facebook profile. Continues registration process
