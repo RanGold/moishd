@@ -6,5 +6,6 @@
     <string name="get_all_users">All users</string>
     <string name="get_all_facebook_friends">Facebook friends</string>
     <string name="get_all_nearby_users">Nearby users</string>
+    <string name="own_statistics">Rank and Trophies</string>
     <string name="logout">Logout</string>
 </resources>

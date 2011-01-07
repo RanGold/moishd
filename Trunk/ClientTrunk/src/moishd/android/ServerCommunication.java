@@ -77,6 +77,11 @@ public class ServerCommunication {
 		} 
 	}
 	
+	public static ClientMoishdUser getCurrentUser(String authString) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetCurrentUser, null, authString);
+		return getUserFromResponse(response);
+	}
+	
 	public static boolean updateLocationInServer(Location location, String authString){
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
 		HttpResponse response = SendObjToServer(sendLocation, ServletNamesEnum.UpdateLocation, authString);

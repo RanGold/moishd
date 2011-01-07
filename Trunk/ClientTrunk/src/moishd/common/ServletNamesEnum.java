@@ -5,6 +5,7 @@ public enum ServletNamesEnum {
 
 	UserLogin,
 	GetAllUsers,
+	GetCurrentUser,
 	GetFriendUsers,
 	GetNearbyUsers,
 	GetMergedUsers,

@@ -26,17 +26,15 @@ import android.widget.TextView;
 
 public class UserStatisticsActivity extends Activity {
 
-	private List<ClientTrophy> userTrophies;
-	private ClientUserGameStatistics userGameStatistics;
 	private Map<String, Boolean> allTrophiesMap;
-	private ListView list;
+	private ArrayList<ClientTrophy> userTrophiesToDetailedList;
 	static List<Trophy> trophiesList;
 
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);	
 		
 		ClientMoishdUser moishdUser = (ClientMoishdUser) getIntent().getExtras().get(IntentExtraKeysEnum.MoishdUser.toString());
-		userGameStatistics = moishdUser.getStats();
+		ClientUserGameStatistics userGameStatistics = moishdUser.getStats();
 		setContentView(R.layout.users_statistics_layout);
 		TextView header = (TextView) findViewById(R.id.games_statistics_header);
 
@@ -55,31 +53,26 @@ public class UserStatisticsActivity extends Activity {
 				"Rank:");
 		
 		ImageView userRankPic = (ImageView) findViewById(R.id.rankPic);
-		setRankIcon(userRankPic);
-
-		//Just until we have a real trophies list sent from the server
-		userTrophies = new ArrayList<ClientTrophy>();
-		userTrophies.add(new ClientTrophy(TrophiesEnum.TinyMoisher.toString(), 
-				TrophiesEnum.TinyMoisher.getTrophyPoints()));
-		userTrophies.add(new ClientTrophy(TrophiesEnum.BestFriends.toString(), 
-				TrophiesEnum.BestFriends.getTrophyPoints()));
-		userTrophies.add(new ClientTrophy(TrophiesEnum.TenInARow.toString(),
-				TrophiesEnum.TenInARow.getTrophyPoints()));
+		setRankIcon(userGameStatistics, userRankPic);
+		
+		List<TrophiesEnum> userTrophies = moishdUser.getTrophies();		
+		userTrophiesToDetailedList = new ArrayList<ClientTrophy>();
+		convertUserTrophiesToDetailedList(userTrophies);
 
 		populateNeedToAchieveTrophiesMap();
 
 		for (int i = 0; i < userTrophies.size(); i++){
-			String currentTrophy = userTrophies.get(i).getName();
+			String currentTrophy = userTrophies.get(i).toString();
 			allTrophiesMap.put(currentTrophy, true);
 		}
 		
 		createTrophyListFromMap();
 
-		list = (ListView) findViewById(R.id.trophiesList);
+		ListView list = (ListView) findViewById(R.id.trophiesList);
 		list.setAdapter(new EfficientAdapter(this));
 	}
 
-	private void setRankIcon(ImageView userRankPic) {
+	private void setRankIcon(ClientUserGameStatistics userGameStatistics, ImageView userRankPic) {
 		switch(userGameStatistics.getRank()){
 		case 0:
 			userRankPic.setImageResource(R.drawable.rank_0);
@@ -115,6 +108,47 @@ public class UserStatisticsActivity extends Activity {
 		allTrophiesMap.put(TrophiesEnum.TwentyInARow.toString(), false);
 		allTrophiesMap.put(TrophiesEnum.BestFriends.toString(), false);
 		allTrophiesMap.put(TrophiesEnum.FaceOff.toString(), false);
+	}
+	
+	private void convertUserTrophiesToDetailedList(List<TrophiesEnum> userTrophies){
+		
+		TrophiesEnum currentTrophy;
+		for (int i=0; i < userTrophies.size(); i++){
+			currentTrophy = userTrophies.get(i);
+			switch(currentTrophy){
+			case BestFriends:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.BestFriends.toString(), TrophiesEnum.BestFriends.getTrophyPoints()));
+				break;
+			case FaceOff:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.FaceOff.toString(), TrophiesEnum.FaceOff.getTrophyPoints()));
+				break;
+			case FirstTime:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.FirstTime.toString(), TrophiesEnum.FirstTime.getTrophyPoints()));
+				break;
+			case MasterMoisher:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.MasterMoisher.toString(), TrophiesEnum.MasterMoisher.getTrophyPoints()));
+				break;
+			case MegaMoisher:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.MegaMoisher.toString(), TrophiesEnum.MegaMoisher.getTrophyPoints()));
+				break;
+			case MiniMoisher:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.MiniMoisher.toString(), TrophiesEnum.MiniMoisher.getTrophyPoints()));
+				break;
+			case SuperMoisher:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.SuperMoisher.toString(), TrophiesEnum.SuperMoisher.getTrophyPoints()));
+				break;
+			case TenInARow:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.TenInARow.toString(), TrophiesEnum.TenInARow.getTrophyPoints()));
+				break;
+			case TinyMoisher:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.TinyMoisher.toString(), TrophiesEnum.TinyMoisher.getTrophyPoints()));
+				break;
+			case TwentyInARow:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.TwentyInARow.toString(), TrophiesEnum.TwentyInARow.getTrophyPoints()));
+				break;
+			}
+			
+		}
 	}
 	
 	private void createTrophyListFromMap() {
