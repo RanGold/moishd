@@ -67,6 +67,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameInvitation.toString());
+			String inviterName = intent.getStringExtra("InviterName");
+			resultIntent.putExtra("Inviter", inviterName);
 		}
 		else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);

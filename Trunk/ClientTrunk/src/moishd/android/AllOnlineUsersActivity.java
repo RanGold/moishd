@@ -281,7 +281,8 @@ public class AllOnlineUsersActivity extends Activity{
 
 		if (action!=null){
 			if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
-				retrieveInvitation();
+				String inviterName = intent.getStringExtra("Inviter");
+				retrieveInvitation(inviterName);
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
@@ -450,19 +451,11 @@ public class AllOnlineUsersActivity extends Activity{
 
 	}
 	
-
-	private void retrieveInvitation(){
-
-		ClientMoishdUser user = ServerCommunication.retrieveInvitation(game_id, authToken);
-		if (user != null){
-			Bundle bundle = new Bundle();
-			Log.d("Tammy",user.getUserNick());
-			bundle.putString("userName", user.getUserNick());
-			showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
-		}
-		else{
-
-		}
+	private void retrieveInvitation(String inviterName){
+		Bundle bundle = new Bundle();
+		Log.d("Tammy",inviterName);
+		bundle.putString("userName", inviterName);
+		showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
 	}
 
 	private boolean sendInvitationResponse(String response, String isPopular){
