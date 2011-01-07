@@ -21,6 +21,7 @@ public class SendGameResultServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	int factorNearBy=1;
 	private static final long serialVersionUID = -530008367358724317L;
 	
 	
@@ -58,15 +59,34 @@ public class SendGameResultServlet extends HttpServlet {
 						winner = mRecUser;
 						loser = mInitUser;
 					}
+
 					
 					HashMap<String, String> winPayload = updateRankAndTrophies(winner);
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					winPayload.put("Result", winValue.toString() + ":" + gameType);
-					
+			
 					HashMap<String, String> losePayload = updateRankAndTrophies(loser);
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", loseValue.toString() + ":" + gameType);
 
+					
+					if (winner.getLocation().isInitialized() && 
+							loser.getLocation().isInitialized() &&
+							DSCommon.CalculateDistance(winner.getLocation(), loser.getLocation()) <=1){
+						LoggerCommon.Get().LogInfo(this, "winner location is " + winner.getLocation());
+						LoggerCommon.Get().LogInfo(this, "loser location is " + loser.getLocation());
+						LoggerCommon.Get().LogInfo(this, "distance is " + DSCommon.CalculateDistance(winner.getLocation(), loser.getLocation()));
+						
+						
+								factorNearBy = 2;
+								winPayload.put("NearByGame", "yes");
+								losePayload.put("NearByGame", "yes");
+							}
+					else {
+						winPayload.put("NearByGame", "no");
+						losePayload.put("NearByGame", "no");
+					}
+					
 					if (winValue.toString().equals("Won")){
 						int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
@@ -100,6 +120,7 @@ public class SendGameResultServlet extends HttpServlet {
 	
 	private int [] UpdateGameStatistics(MoishdGame moishdGame, MoishdUser winner, MoishdUser loser){
 		
+		
 		//Increment number of games played for both users
 		int winnerGamesPlayed = winner.getStats().getGamesPlayed();
 		winner.getStats().setGamesPlayed(winnerGamesPlayed + 1);
@@ -124,23 +145,23 @@ public class SendGameResultServlet extends HttpServlet {
 		//Do points logic
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.toString())){
 			winner.getStats().setPoints(winnerPoints + 1);
-			addedPoints[0] = 1;
-			addedPoints[1] = 0;
+			addedPoints[0] = 1 *factorNearBy;
+			addedPoints[1] = 0*factorNearBy;
 		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.toString())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
-			addedPoints[0] = 3;
-			addedPoints[1] = 1;
+			addedPoints[0] = 3*factorNearBy;
+			addedPoints[1] = 1*factorNearBy;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.toString())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
-			addedPoints[0] = 3;
-			addedPoints[1] = 1;
+			addedPoints[0] = 3*factorNearBy;
+			addedPoints[1] = 1*factorNearBy;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.toString())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
-			addedPoints[0] = 3;
-			addedPoints[1] = 1;
+			addedPoints[0] = 3*factorNearBy;
+			addedPoints[1] = 1*factorNearBy;
 		}
 		else{
 			
