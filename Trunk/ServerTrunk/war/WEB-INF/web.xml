@@ -118,6 +118,14 @@
 		<url-pattern>/GetAllUsers</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>GetCurrentUserServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.GetCurrentUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCurrentUserServlet</servlet-name>
+		<url-pattern>/GetCurrentUser</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UserLoginServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.UserLoginServlet</servlet-class>
 	</servlet>
