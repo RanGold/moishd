@@ -70,6 +70,14 @@
 		<url-pattern>/test/DeleteIrrelevant</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>PushGameOffersServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.PushGameOffersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PushGameOffersServlet</servlet-name>
+		<url-pattern>/cron/PushGameOffers</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>C2DMAuthServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.C2DM.C2DMAuthServlet</servlet-class>
 	</servlet>

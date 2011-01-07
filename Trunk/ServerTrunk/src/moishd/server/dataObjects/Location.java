@@ -70,6 +70,9 @@ public class Location extends CommonJDO implements Serializable {
 	}
 	
 	public boolean isInitialized() {
+		// TODO:
+		// Longitude measurements range from 0° to (+/–)180°
+		// Latitude measurements range from 0° to (+/–)90°
 		return ((this.getLatitude() < 200.0) && (this.getLongitude() < 200.0));
 	}
 }

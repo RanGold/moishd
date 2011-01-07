@@ -30,7 +30,8 @@ public class C2DMCommon {
 		StartGameDareMixing,
 		StartGameDareFastClick,
 		PlayerBusy, 
-		PlayerOffline;
+		PlayerOffline, 
+		GameOffer;
 		
 		public String getPopular(String popular) {
 			return popular + this.toString();
