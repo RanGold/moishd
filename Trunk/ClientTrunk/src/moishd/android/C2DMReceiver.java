@@ -19,7 +19,7 @@ import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthPartGameActivity;
-import moishd.common.AvailablePreferences;
+import moishd.common.MoishdPreferences;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
 import android.content.Context;
@@ -88,7 +88,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(16));
 		}
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
-			AvailablePreferences.setAvailableStatus(context, true);
+			MoishdPreferences.setAvailableStatus(context, true);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameTruth.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
@@ -97,13 +97,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())){
-			AvailablePreferences.setAvailableStatus(context, true);
+			MoishdPreferences.setAvailableStatus(context, true);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameDare.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			AvailablePreferences.setAvailableStatus(context, false);
+			MoishdPreferences.setAvailableStatus(context, false);
 			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameResult.toString());
 			Log.d("C2DM", resultIntent.getStringExtra(IntentExtraKeysEnum.PushAction.toString()));

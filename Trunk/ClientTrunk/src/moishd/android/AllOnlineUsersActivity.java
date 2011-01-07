@@ -23,7 +23,7 @@ import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.AvailablePreferences;
+import moishd.common.MoishdPreferences;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
@@ -194,7 +194,7 @@ public class AllOnlineUsersActivity extends Activity{
 		locationManagment.startUpdateLocation(1);
 
 		serverHasFacebookFriends = false;
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 
@@ -327,7 +327,7 @@ public class AllOnlineUsersActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 		if (needRefresh)
 			sendMessageToHandler(UPDATE_LIST_ADAPTER);		
 	}
@@ -335,7 +335,7 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onPause(){
 
 		super.onPause();
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 	}
 
 	@Override
@@ -409,7 +409,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getMergedUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
 				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
 			asyncRunner.request("me/friends", new FriendsRequestListener());
 		}
@@ -421,7 +421,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getFriendsUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
 				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
 			asyncRunner.request("me/friends", new FriendsRequestListener());
 		}
@@ -618,6 +618,7 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 
 	protected void postOnFacebookWall(int code, Bundle bundle) {
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 		Bundle parameters = new Bundle();
 		String message;
 
@@ -637,18 +638,18 @@ public class AllOnlineUsersActivity extends Activity{
 		parameters.putString("picture", "http://moishd.googlecode.com/files/moishd");
 		WelcomeScreenActivity.facebook.dialog(this,"stream.publish", parameters, new PostDialogListener());
 
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 	}
 
-
 	private void cancelDialog (DialogInterface dialog){
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 		dialog.cancel();		
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 
 		switch (id) {
 
@@ -666,7 +667,7 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+					MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD);
 				}
 			});
@@ -846,7 +847,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private void dismissAndRemoveDialog(int code){
 		dismissDialog(code);
 		removeDialog(code);	
-		AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 	}
 
 	private String stringArrayToString(String [] stringArray){
@@ -862,7 +863,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
-			if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
 				mainProgressDialog = ProgressDialog.show(AllOnlineUsersActivity.this, null, "Retrieving users...", true, false);
 		}
 
@@ -953,13 +954,13 @@ public class AllOnlineUsersActivity extends Activity{
 				moishdUsers = (List<ClientMoishdUser>) resultList.get(0);
 				usersPictures = (List<Drawable>) resultList.get(1);
 
-				if (AvailablePreferences.userIsAvailable(getApplicationContext()))
+				if (MoishdPreferences.userIsAvailable(getApplicationContext()))
 					sendMessageToHandler(UPDATE_LIST_ADAPTER);
 				else 
 					needRefresh = true;
 			}
 			else{
-				if (!AvailablePreferences.userIsAvailable(getApplicationContext())){
+				if (!MoishdPreferences.userIsAvailable(getApplicationContext())){
 					Integer messageCode = (Integer) resultList.get(0);
 					final int messageCodeInt = messageCode.intValue();
 					sendMessageToHandler(messageCodeInt);
@@ -1009,7 +1010,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		public void onComplete(Bundle values) {
 
-			AvailablePreferences.setAvailableStatus(getApplicationContext(), false);
+			MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 
 			final String postId = values.getString("post_id");
 
@@ -1021,7 +1022,7 @@ public class AllOnlineUsersActivity extends Activity{
 				// "No wall post made..."
 			}
 
-			AvailablePreferences.setAvailableStatus(getApplicationContext(), true);
+			MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 
 		}
 
