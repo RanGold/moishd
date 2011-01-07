@@ -37,7 +37,7 @@ public class UnBusyUsersServlet extends HttpServlet {
 					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
 					
 					for (MoishdUser user : users) {
-						user.setBusy(false);
+						user.setNotBusy();
 					}
 					
 					pm.makePersistentAll(users);

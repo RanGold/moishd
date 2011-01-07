@@ -116,8 +116,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public void InitUser() {
 		this.setRegisterID("NULL");
 		this.setRegistered(false);
-		this.setBusy(false);
-		this.setBusyWith("");
+		this.setNotBusy();
 		this.setIsAlive(2);
 		this.getLocation().setLatitude(200);
 		this.getLocation().setLongitude(200);
@@ -260,5 +259,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public void setPartner(String partner) {
 		this.setBusy(true);
 		this.setBusyWith(partner);
+	}
+	
+	public boolean isPartnerWith(String partner) {
+		return (this.isBusy() && this.getBusyWith().equals(partner));
 	}
 }

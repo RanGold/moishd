@@ -53,7 +53,7 @@ public class UserLoginServlet extends GeneralServlet {
 				
 				muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 				muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
-				muser.setBusy(false);
+				muser.setNotBusy();
 				muser.setRegistered(true);
 				muser.setRegisterID(newUser.getRegisterID());
 						
