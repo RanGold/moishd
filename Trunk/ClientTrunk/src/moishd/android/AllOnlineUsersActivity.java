@@ -83,7 +83,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private String game_id;
 	private String gameType;
 	private String last_user;
-	private String opponent_auth_token;
+	private String opponent_google_id;
 	private String opponent_nick_name;
 	private String initName;
 	private String recName;
@@ -324,7 +324,7 @@ public class AllOnlineUsersActivity extends Activity{
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
-				opponent_auth_token =  intent.getStringExtra(IntentExtraKeysEnum.GoogleAuthTokenOfOpponent.toString());
+				opponent_google_id =  intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				GetGameOfferDialog();
 			}
@@ -694,7 +694,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setPositiveButton("Oh yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
-					inviteUserOfferedByServerToMoish(opponent_auth_token);
+					inviteUserOfferedByServerToMoish(opponent_google_id);
 				}
 			})
 			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
