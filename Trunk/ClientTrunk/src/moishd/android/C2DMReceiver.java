@@ -40,10 +40,12 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	protected void onMessage(Context context, Intent intent) {
 
 		Log.d("TEST", "got Message"); 
+		
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-
+		Log.d("Tammy",action);
+		
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -66,9 +68,11 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 			String authTokenOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
+			Log.d("Tammy","google id " + authTokenOfOpponent);
 			String UserNickNameOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
-			
+			Log.d("Tammy","user nick of opponent " + UserNickNameOfOpponent);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameOffer.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString(), authTokenOfOpponent);
 			resultIntent.putExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString(), UserNickNameOfOpponent);
 		}

@@ -325,7 +325,9 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 				opponent_google_id =  intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
+				Log.d("Tammy", "allonline" + opponent_google_id);
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+				Log.d("Tammy", "allonline" + opponent_nick_name);
 				GetGameOfferDialog();
 			}
 		}
