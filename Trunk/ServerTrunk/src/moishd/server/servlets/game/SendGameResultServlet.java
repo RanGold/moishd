@@ -61,11 +61,11 @@ public class SendGameResultServlet extends HttpServlet {
 					}
 
 					
-					HashMap<String, String> winPayload = updateRankAndTrophies(winner);
+					HashMap<String, String> winPayload = new HashMap<String, String>();
 					winPayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					winPayload.put("Result", winValue.toString() + ":" + gameType);
 			
-					HashMap<String, String> losePayload = updateRankAndTrophies(loser);
+					HashMap<String, String> losePayload = new HashMap<String, String>();
 					losePayload.put("GameId", String.valueOf(tg.getGameId().getId()));
 					losePayload.put("Result", loseValue.toString() + ":" + gameType);
 
@@ -97,6 +97,8 @@ public class SendGameResultServlet extends HttpServlet {
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));	
 					}
+					updateRankAndTrophies(winPayload, winner);
+					updateRankAndTrophies(losePayload, loser);
 				
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), winPayload);
@@ -173,21 +175,23 @@ public class SendGameResultServlet extends HttpServlet {
 		return addedPoints;
 	}
 	
-	private HashMap<String, String> updateRankAndTrophies(MoishdUser user) {
+	private void updateRankAndTrophies(HashMap<String, String> payload, MoishdUser user) {
 		
-		HashMap<String, String> rankAndTrophiesPayload = updateRank(user);
-		
-		if (rankAndTrophiesPayload == null){
-			rankAndTrophiesPayload = new HashMap<String, String>();
-		}
+		updateRank(payload, user);
+
+		LoggerCommon.Get().LogInfo(this, "starting trophies calc ");
 		
 		List<TrophiesEnum> trophies = user.getTrophies();
+		
 		String tropiesAchieved = "";
 		int numOfTrophiesObtained = 0;
 		
 		int numOfWinsInARow = user.getStats().getGamesWonInARow();
-		
+		LoggerCommon.Get().LogInfo(this, "numOfWinsInARow " + numOfWinsInARow );
+
 		if (numOfWinsInARow == 10 && !trophies.contains(TrophiesEnum.TenInARow)){
+			LoggerCommon.Get().LogInfo(this, "TenInARow");
+
 			trophies.add(TrophiesEnum.TenInARow);
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.TenInARow.toString();
@@ -199,8 +203,11 @@ public class SendGameResultServlet extends HttpServlet {
 		}
 		
 		int numOfWins = user.getStats().getGamesWon();
+		LoggerCommon.Get().LogInfo(this, "gamesWon " + numOfWins );
 		
 		if  (numOfWins == 1 && !trophies.contains(TrophiesEnum.FirstTime)){
+			LoggerCommon.Get().LogInfo(this, "firstTime");
+
 			trophies.add(TrophiesEnum.FirstTime);
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.FirstTime.toString();
@@ -232,41 +239,38 @@ public class SendGameResultServlet extends HttpServlet {
 		}
 		user.SaveChanges();
 		
-		rankAndTrophiesPayload.put("Trophies", tropiesAchieved);
-		rankAndTrophiesPayload.put("NumberOfTrophies", String.valueOf(numOfTrophiesObtained));
-		
-		return rankAndTrophiesPayload;
+		payload.put("Trophies", tropiesAchieved);
+		payload.put("NumberOfTrophies", String.valueOf(numOfTrophiesObtained));
+
 	}
 	
-	private HashMap<String, String> updateRank(MoishdUser user){
+	private void updateRank(HashMap<String, String> payload, MoishdUser user){
 		
 		int userUpdatedPoints = user.getStats().getPoints();
 		LoggerCommon.Get().LogInfo(this, "currentPoints " + userUpdatedPoints);
-		HashMap<String, String> rankPayload = new HashMap<String, String>();
 		
 		int currentRank = user.getStats().getRank();
 		if (100 > userUpdatedPoints && userUpdatedPoints >= 50 && currentRank == 0){
 			user.getStats().setRank(1);
-			rankPayload.put("Rank", "1");
+			payload.put("Rank", "1");
 		}
 		else if (300 > userUpdatedPoints && userUpdatedPoints >= 150 && currentRank == 1){
 			user.getStats().setRank(2);
-			rankPayload.put("Rank", "2");
+			payload.put("Rank", "2");
 		}
 		else if (500 > userUpdatedPoints && userUpdatedPoints >= 300 && currentRank == 2){
 			user.getStats().setRank(3);
-			rankPayload.put("Rank", "3");
+			payload.put("Rank", "3");
 		}
 		else if (1000 > userUpdatedPoints && userUpdatedPoints >= 500 && currentRank == 3){
 			user.getStats().setRank(4);
-			rankPayload.put("Rank", "4");
+			payload.put("Rank", "4");
 		}
 		else if (userUpdatedPoints >= 1000 && currentRank == 4){
 			user.getStats().setRank(5);
-			rankPayload.put("Rank", "5");
+			payload.put("Rank", "5");
 		}
 		user.SaveChanges();
 		
-		return rankPayload;
 	}
 }
