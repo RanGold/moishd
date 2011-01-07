@@ -477,4 +477,21 @@ public class DSCommon {
 			pm.close();
 		}
 	}
+
+	public static void DeleteGameById(String gameId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(MoishdGame.class);
+			q.setFilter("gameId == :id");
+
+			q.deletePersistentAll(gameId);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
 }
