@@ -19,7 +19,10 @@ public enum IntentExtraKeysEnum {
 	Points("Points"),
 	Rank("Rank"),
 	Trophies("Trophies"),
-	NumberOfTrophies("NumberOfTrophies");
+	NumberOfTrophies("NumberOfTrophies"),
+	InitName("InitName"),
+	RecName("RecName"),
+	NearByGame("NearByGame");
 	
 	private String name;
 
