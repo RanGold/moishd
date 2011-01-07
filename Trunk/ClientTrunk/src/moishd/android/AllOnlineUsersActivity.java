@@ -647,7 +647,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case FACEBOOK_POST_TROPHIES_UPDATED:
 			String [] trophiesList = bundle.getStringArray("trophiesList");
-			message = firstName +"'s Moish'd! trophies has just been updated!";
+			message = firstName +"'s Moish'd! trophies have just been updated!";
 			parameters.putString("description", message);
 			parameters.putString("name", "Moish'd! trophies received: " + trophiesList);
 		}
@@ -823,7 +823,7 @@ public class AllOnlineUsersActivity extends Activity{
 			else{
 				user = initName;
 			}
-			builder.setMessage("The game with +" + user + " has been canceled.")
+			builder.setMessage("The game with " + user + " has been canceled.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
