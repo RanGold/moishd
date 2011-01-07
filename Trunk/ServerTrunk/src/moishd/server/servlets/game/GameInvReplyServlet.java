@@ -42,22 +42,34 @@ public class GameInvReplyServlet extends GeneralServlet {
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId", String.valueOf(tg.getGameLongId()));
+					payload.put("InitName", mInitUser.getUserNick());
+					payload.put("RecName", mRecUser.getUserNick());
 					
-					if ((!mRecUser.isBusy() || !mRecUser.getBusyWith().equals(tg.getPlayerInitId())) || 
-						(invReply.equals("Decline") && mInitUser.isBusy() && 
-							mInitUser.getBusyWith().equals(tg.getPlayerRecId()))) {
+					if (invReply.equals("Decline") && mInitUser.isBusy() && 
+							mInitUser.getBusyWith().equals(tg.getPlayerRecId())) {
 						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 								C2DMCommon.Actions.GameDeclined.toString(), payload);
-						mInitUser.setBusy(false);
+						mInitUser.setNotBusy();
 						mInitUser.SaveChanges();
-						mRecUser.setBusy(false);
-						mRecUser.SaveChanges();
-					} else if (!invReply.equals("Decline") && mInitUser.isBusy() && 
-							!mInitUser.getBusyWith().equals(tg.getPlayerRecId())) {
-						C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
-								C2DMCommon.Actions.GameDeclined.toString(), payload);
-						mRecUser.setBusy(false);
-						mRecUser.SaveChanges();
+						mRecUser.setNotBusy();
+						mRecUser.SaveChanges(); 
+					} else if ((!mRecUser.isBusy() || !mRecUser.getBusyWith().equals(tg.getPlayerInitId())) || 
+							(mInitUser.isBusy() && !mInitUser.getBusyWith().equals(tg.getPlayerRecId()))) {
+						if (mRecUser.isPartnerWith(tg.getPlayerRecId()) || !mRecUser.isBusy()) {
+							if (!invReply.equals("Decline")) {
+								C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+										C2DMCommon.Actions.GameCanceled.toString(), payload);
+							}
+							mRecUser.setNotBusy();
+							mRecUser.SaveChanges();
+						} else {
+							if (!invReply.equals("Decline")) {
+								C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
+										C2DMCommon.Actions.GameCanceled.toString(), payload);
+							}
+							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+									C2DMCommon.Actions.GameCanceled.toString(), payload);
+						}
 					} else if (!invReply.equals("Decline") && mInitUser.isBusy() && 
 							mInitUser.getBusyWith().equals(tg.getPlayerRecId())) {
 						if (invReply.equals("AcceptTruth")) {

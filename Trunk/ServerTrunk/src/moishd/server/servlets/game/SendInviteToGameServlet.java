@@ -43,8 +43,10 @@ public class SendInviteToGameServlet extends HttpServlet {
 					
 					if (initUser.isBusy()) {
 						MoishdUser oldRecUser = DSCommon.GetUserByGoogleId(initUser.getBusyWith());
-						oldRecUser.setNotBusy();
-						oldRecUser.SaveChanges();
+						if (oldRecUser.isBusy() && oldRecUser.getBusyWith().equals(initID)) {
+							oldRecUser.setNotBusy();
+							oldRecUser.SaveChanges();
+						}
 					}
 					
 					initUser.setPartner(recID);

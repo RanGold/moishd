@@ -83,9 +83,9 @@ public class SendGameResultServlet extends HttpServlet {
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), losePayload);
 					
-					mInitUser.setBusy(false);
+					mInitUser.setNotBusy();
 					mInitUser.SaveChanges();
-					mRecUser.setBusy(false);
+					mRecUser.setNotBusy();
 					mRecUser.SaveChanges();
 					
 				}
