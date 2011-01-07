@@ -260,6 +260,9 @@ public class AllOnlineUsersActivity extends Activity{
 			getUsers(GetUsersByTypeEnum.MergedUsers);
 			restartTimer();
 			return true;
+		case R.id.statistics:
+			displayOwnStatistics();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -396,7 +399,6 @@ public class AllOnlineUsersActivity extends Activity{
 
 	}
 
-
 	private void doQuitActions() {
 		WelcomeScreenActivity.facebookLogout(null);
 		finish();
@@ -445,6 +447,16 @@ public class AllOnlineUsersActivity extends Activity{
 			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken);
 		}
 	}
+	
+
+	private void displayOwnStatistics() {
+
+		ClientMoishdUser me = ServerCommunication.getCurrentUser(authToken);
+		Intent intent = new Intent(this, UserStatisticsActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), me);
+		startActivity(intent);
+	}
+
 
 	private void inviteUserToMoishDialog(){
 
@@ -603,7 +615,6 @@ public class AllOnlineUsersActivity extends Activity{
 	private void updateList() {
 		switch(currentUsersType){
 		case MergedUsers:
-		case AllUsers:
 			header.setText("All online users");
 			break;
 		case NearbyUsers:
