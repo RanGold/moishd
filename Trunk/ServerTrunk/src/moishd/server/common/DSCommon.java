@@ -1,8 +1,10 @@
 package moishd.server.common;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -288,6 +290,42 @@ public class DSCommon {
 			}
 			
 			return users;
+		}
+		finally {
+			pm.close();
+		}
+	}
+	
+	public static Map<String, String> GetNearbyUsersSets(double distance) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query q = pm.newQuery("SELECT FROM " + Location.class.getName() + " WHERE " +
+					"longitude < 200.0");
+			
+			@SuppressWarnings("unchecked")
+			List<Location> locations = (List<Location>) q.execute();
+			Map<String, String> usersSets = new HashMap<String, String>();
+			
+			locations = DetachCopyLocations(locations, pm);
+			
+			for (Location location : locations) {
+				String curUserGI = location.getMoishdUser().getUserGoogleIdentifier();
+				int curPoints = location.getMoishdUser().getStats().getPoints();
+				for (Location secLocation : locations) {
+					if (!curUserGI.equals(secLocation.getMoishdUser().getUserGoogleIdentifier()) &&
+							(!location.getMoishdUser().isBusy()) &&
+							(!secLocation.getMoishdUser().isBusy()) &&
+							(CalculateDistance(location, secLocation) <= distance) &&
+							(curPoints < secLocation.getMoishdUser().getStats().getPoints())) {
+						usersSets.put(location.getMoishdUser().getRegisterID(), 
+								secLocation.getMoishdUser().getUserGoogleIdentifier() + "#" +
+								secLocation.getMoishdUser().getUserNick());
+						break;
+					}
+				}
+			}
+			
+			return usersSets;
 		}
 		finally {
 			pm.close();
