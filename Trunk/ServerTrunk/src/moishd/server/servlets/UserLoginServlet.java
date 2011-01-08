@@ -51,13 +51,17 @@ public class UserLoginServlet extends GeneralServlet {
 					}
 				}
 				
-				muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
-				muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
-				muser.setNotBusy();
-				muser.setRegistered(true);
-				muser.setRegisterID(newUser.getRegisterID());
+				if (muser.isRegistered()) {
+					LoggerCommon.Get().LogError(this, response, "Tried to login twice with the same user");
+				} else {
+					muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
+					muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
+					muser.setNotBusy();
+					muser.setRegistered(true);
+					muser.setRegisterID(newUser.getRegisterID());
 						
-				muser.SaveChanges();
+					muser.SaveChanges();
+				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ClassNotFoundException e) {
