@@ -26,6 +26,7 @@ public class GeneralServlet extends HttpServlet {
 	protected MoishdUser mUser;
 	protected boolean doesExist = true;
 	protected boolean checkRegister = true;
+	protected boolean checkBusy = true;
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
@@ -45,11 +46,15 @@ public class GeneralServlet extends HttpServlet {
 						mUser.InitUser();
 						mUser.SaveChanges();
 						user = null;
-						return;
+					} else if (checkBusy && mUser.isPartnerWith(mUser.getUserGoogleIdentifier())) {
+						LoggerCommon.Get().LogError(this, response,
+								"Tried to do an action with a busy user (with himself)");
+						user = null;
+					} else {
+						mUser.setIsAlive(0);
+						mUser.SaveChanges();
+						mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					}
-					mUser.setIsAlive(0);
-					mUser.SaveChanges();
-					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(),
