@@ -31,7 +31,8 @@ public class GameInvReplyServlet extends GeneralServlet {
 				String paramters = request.getReader().readLine();
 				
 				if (!paramters.endsWith("#") && paramters.split("#").length != 3) {
-					LoggerCommon.Get().LogError(this, response, "TimeGameInvReplyServlet: invalid parameters " + paramters);
+					LoggerCommon.Get().LogError(this, response, 
+							"TimeGameInvReplyServlet: invalid parameters " + paramters);
 				} else {
 					String gameId = paramters.split("#")[0];
 					String invReply = paramters.split("#")[1];
@@ -47,6 +48,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 					boolean deleteGame = true;
 					
 					if (invReply.equals("Decline")) {
+						LoggerCommon.Get().LogInfo(this,"Decline");
 						if (mInitUser.isPartnerWith(tg.getPlayerRecId()) &&
 								mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
@@ -55,22 +57,27 @@ public class GameInvReplyServlet extends GeneralServlet {
 							mInitUser.SaveChanges();
 							mRecUser.setNotBusy();
 							mRecUser.SaveChanges(); 
+							LoggerCommon.Get().LogInfo(this,"in 1");
 						} else if (mInitUser.isPartnerWith(tg.getPlayerRecId()) && 
 								!mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 									C2DMCommon.Actions.GameDeclined.toString(), payload);
 							mInitUser.setNotBusy();
 							mInitUser.SaveChanges();
+							LoggerCommon.Get().LogInfo(this,"in 2");
 						} else if (!mInitUser.isPartnerWith(tg.getPlayerRecId()) && 
 								mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							mRecUser.setNotBusy();
 							mRecUser.SaveChanges();
+							LoggerCommon.Get().LogInfo(this,"in 3");
 						}  else if (!mInitUser.isPartnerWith(tg.getPlayerRecId()) && !mInitUser.isBusy() && 
 								!mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
 									C2DMCommon.Actions.GameDeclined.toString(), payload);
+							LoggerCommon.Get().LogInfo(this,"in 4");
 						}
 					} else { 
+						LoggerCommon.Get().LogInfo(this,"Not Decline");
 						if (mInitUser.isPartnerWith(tg.getPlayerRecId()) && 
 								!mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
@@ -79,24 +86,29 @@ public class GameInvReplyServlet extends GeneralServlet {
 									C2DMCommon.Actions.GameCanceled.toString(), payload);
 							mInitUser.setNotBusy();
 							mInitUser.SaveChanges();
+							LoggerCommon.Get().LogInfo(this,"in 5");
 						} else if (!mInitUser.isPartnerWith(tg.getPlayerRecId()) && 
 								mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 									C2DMCommon.Actions.GameCanceled.toString(), payload);
 							mRecUser.setNotBusy();
 							mRecUser.SaveChanges();
+							LoggerCommon.Get().LogInfo(this,"in 6");
 						}  else if (!mInitUser.isPartnerWith(tg.getPlayerRecId()) && 
 								!mRecUser.isPartnerWith(tg.getPlayerInitId())) {
 							if (!mInitUser.isBusy()) {
-								C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
-										C2DMCommon.Actions.GameDeclined.toString(), payload);
+//								C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+//										C2DMCommon.Actions.GameDeclined.toString(), payload);
+//								LoggerCommon.Get().LogInfo(this,"in 7");
 							}
 							if (!mRecUser.isBusy()) {
-								C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
+								C2DMCommon.PushGenericMessage(mRecUser.getRegisterID(), 
 										C2DMCommon.Actions.GameCanceled.toString(), payload);
+								LoggerCommon.Get().LogInfo(this,"in 8");
 							}
 						} else if (mInitUser.isPartnerWith(tg.getPlayerRecId()) &&
 								mRecUser.isPartnerWith(tg.getPlayerInitId())) {
+							LoggerCommon.Get().LogInfo(this,"in 9");
 							deleteGame = false;
 							if (invReply.equals("AcceptTruth")) {
 								C2DMCommon.PushGenericMessage(mInitUser
@@ -147,6 +159,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 										.toString());
 								tg.SaveChanges();
 							} else {
+								LoggerCommon.Get().LogInfo(this,"in 10");
 								C2DMCommon.PushGenericMessage(
 										mInitUser.getRegisterID(),
 										C2DMCommon.Actions.GameCanceled.toString(),
