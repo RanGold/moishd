@@ -22,6 +22,8 @@ public enum ServletNamesEnum {
 	RankGame,
 	Alive,	
 	AddGamePlayed,
-	GetMostPopularGame;
+	GetMostPopularGame,
+	SetBusy,
+	SetSingleUnbusy;
 	
 }

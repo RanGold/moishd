@@ -307,6 +307,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
+				Log.d("Tammy", "ths busy user is " + last_user);
 				userIsBusy(last_user);
 				game_id = null;
 				last_user = null;
@@ -314,7 +315,7 @@ public class AllOnlineUsersActivity extends Activity{
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 				userIsOffline(last_user);
 				game_id = null;
-				last_user = null;
+			//	last_user = null;
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
@@ -686,7 +687,7 @@ public class AllOnlineUsersActivity extends Activity{
 		case DIALOG_INVITE_USER_TO_MOISHD:
 			//TODO - check why the same name is applied each time.
 			last_user = moishdUsers.get(currentClickPosition).getUserNick();
-			Log.d("Tammy", last_user);
+			Log.d("Tammy", "the last user2 is " + last_user);
 			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {

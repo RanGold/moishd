@@ -28,16 +28,16 @@
 	
 	<ImageView android:id="@+id/mixing"
 	android:src="@drawable/mixing_game"
-	android:layout_width="120px" 
-	android:layout_height="140px"	
+	android:layout_width="120dip" 
+	android:layout_height="140dip"	
 	android:clickable="true"
 	android:layout_marginLeft="40dip"/>
 
 	<ImageView android:id="@+id/simonpro"
 		android:src="@drawable/simonpro_2"
 		android:clickable="true"
-	android:layout_width="120px" 
-	android:layout_height="140px"
+	android:layout_width="120dip" 
+	android:layout_height="140dip"
 		layout_marginLeft="20dip"
 		android:layout_marginTop="14dip"/>
 
@@ -53,8 +53,8 @@
   	<ImageView android:id="@+id/trivia"
   		android:src="@drawable/trivia_1"
   		android:clickable="true"
-	android:layout_width="120px" 
-	android:layout_height="140px"
+	android:layout_width="120dip" 
+	android:layout_height="140dip"
 	android:layout_marginLeft="40dip"
 
        />	
@@ -62,8 +62,8 @@
   	<ImageView android:id="@+id/fastClick"
   		android:src="@drawable/fast_click_game"
   		android:clickable="true"
-	android:layout_width="120px" 
-	android:layout_height="140px"
+	android:layout_width="120dip" 
+	android:layout_height="140dip"
 	android:paddingRight="5dip"
 	android:layout_marginTop="10dip"
 	layout_marginLeft="20dip"
