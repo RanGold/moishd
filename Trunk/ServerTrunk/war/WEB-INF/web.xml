@@ -287,6 +287,18 @@
 		<url-pattern>/AddGamePlayed</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>SetBusyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.SetBusyServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>SetBusyServlet</servlet-name>
+		<url-pattern>/SetBusy</url-pattern></servlet-mapping>
+	<servlet>
+		<servlet-name>SetSingleUnbusyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.SetSingleUnbusyServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>SetSingleUnbusyServlet</servlet-name>
+		<url-pattern>/SetSingleUnbusy</url-pattern></servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
