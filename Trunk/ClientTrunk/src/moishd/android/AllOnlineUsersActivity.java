@@ -300,6 +300,8 @@ public class AllOnlineUsersActivity extends Activity{
 				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
+				initName=null;
+				recName=null;
 				game_id = null;
 				
 			}
@@ -308,12 +310,14 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
 				game_id = null;
+				opponent_nick_name=null;
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsOffline(opponent_nick_name);
 				game_id = null;
+				opponent_nick_name=null;
 			
 			}
 
@@ -334,6 +338,8 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				Log.d("Tammy", "allonline" + opponent_nick_name);
 				GetGameOfferDialog();
+				opponent_google_id=null;
+				opponent_nick_name=null;
 			}
 		}
 
