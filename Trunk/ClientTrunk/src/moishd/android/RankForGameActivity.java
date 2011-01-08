@@ -140,12 +140,13 @@ public class RankForGameActivity extends Activity{
 		}    
 		public void onFinish() {
 			ServerCommunication.sendRankToServer(game_type,star_rank,authToken);
+			ServerCommunication.setSingleUserUnbusy(authToken);
 			//TODO check if the result is not an error
 			finish();
 		}    
 		public void onTick(long millisUntilFinished) {
 			done = (ImageView) findViewById(R.id.done);
-			done.setPadding(50, 20, 50, 0);
+			done.setPadding(0, 20, 50, 0);
 			done.setImageBitmap(thankYou);
 
 		}

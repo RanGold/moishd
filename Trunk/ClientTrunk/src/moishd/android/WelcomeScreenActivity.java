@@ -38,6 +38,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug.FlagToString;
+import android.widget.TextView;
 
 import com.google.android.c2dm.C2DMessaging;
 
@@ -137,6 +139,10 @@ public class WelcomeScreenActivity extends Activity{
 
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
+		TextView text = (TextView) findViewById(R.id.moishdName);
+		
+		Typeface fontOfName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
+		text.setTypeface(fontOfName);
 
 		facebook = new Facebook(APP_ID);
 		asyncRunner = new AsyncFacebookRunner(facebook);

@@ -116,7 +116,31 @@ public class ServerCommunication {
 		return getUserListFromResponse(response);
 	}
 
-	//TODO add all cases
+
+	public static boolean setUserBusy(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.SetBusy,authString);
+		if (resp==null)
+			return false;
+		if (resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else
+			return true;
+	}
+	
+	public static boolean setSingleUserUnbusy(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.SetSingleUnbusy,authString);
+		if (resp==null)
+			return false;
+		if (resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else
+			return true;
+	}
+
 	public static String getMostPopularGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.GetMostPopularGame,authString);
 		try {
