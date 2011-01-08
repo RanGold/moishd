@@ -84,7 +84,6 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private String game_id;
 	private String gameType;
-	private String last_user;
 	private String opponent_google_id;
 	private String opponent_nick_name;
 	private String initName;
@@ -295,7 +294,7 @@ public class AllOnlineUsersActivity extends Activity{
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 				userDeclinedToMoishDialog();
 				game_id = null;
-				last_user=null;
+				
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
@@ -303,19 +302,21 @@ public class AllOnlineUsersActivity extends Activity{
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
 				game_id = null;
-				last_user=null;
+				
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
-				Log.d("Tammy", "ths busy user is " + last_user);
-				userIsBusy(last_user);
+				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+				userIsBusy(opponent_nick_name);
 				game_id = null;
-				last_user = null;
+				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
-				userIsOffline(last_user);
+				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+				userIsBusy(opponent_nick_name);
+				userIsOffline(opponent_nick_name);
 				game_id = null;
-			//	last_user = null;
+			
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
@@ -686,8 +687,8 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_INVITE_USER_TO_MOISHD:
 			//TODO - check why the same name is applied each time.
-			last_user = moishdUsers.get(currentClickPosition).getUserNick();
-			Log.d("Tammy", "the last user2 is " + last_user);
+			String last_user = moishdUsers.get(currentClickPosition).getUserNick();
+			
 			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
