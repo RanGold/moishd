@@ -549,7 +549,6 @@ public class AllOnlineUsersActivity extends Activity{
 			intent.setClass(this, MixingGameActivity.class);
 		else //TODO right now else case is fast click.
 			intent.setClass(this, FastClickGameActivity.class);
-
 	}
 
 	private void StartGamePopular(){
@@ -564,25 +563,30 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void rankUpdated(int newRank) {
 		Bundle bundle = new Bundle();
-		bundle.putInt("Rank", newRank);
+		bundle.putInt("rank", newRank);
 		showDialog(DIALOG_RANK_UPDATED, bundle);		
 	}
 
-	private void trophiesUpdated(int numberOfTropies, String trophiesString) {
+	private void trophiesUpdated(int numberOfTrophies, String trophiesString) {
 
 		String[] trophiesList = trophiesString.split("#");
-		assert(numberOfTropies == trophiesList.length);
+		assert(numberOfTrophies == trophiesList.length);
 
 		Bundle bundle = new Bundle();
 		bundle.putStringArray("trophiesList", trophiesList);
 
 		showDialog(DIALOG_TROPHIES_UPDATED, bundle);		
-
-
 	}
 
 	private void rankAndTrophiesUpdated(int newRank, int numOfTrophies,String trophiesString){
+		
+		String[] trophiesList = trophiesString.split("#");
+		assert(numOfTrophies == trophiesList.length);
 
+		Bundle bundle = new Bundle();
+		bundle.putStringArray("trophiesList", trophiesList);
+		bundle.putInt("rank", newRank);
+		showDialog(DIALOG_RANK_AND_TROPHIES_UPDATED, bundle);
 	}
 
 	private void openLocationSettings(){
@@ -773,7 +777,7 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create();  
 
 		case DIALOG_RANK_UPDATED:
-			final int newRank = args.getInt("Rank");
+			final int newRank = args.getInt("rank");
 			builder.setMessage("Congratulations, your rank has been updated! Your new rank is " + newRank)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
@@ -792,7 +796,7 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create(); 
 
 		case DIALOG_RANK_AND_TROPHIES_UPDATED:
-			final int rank = args.getInt("Rank");
+			final int rank = args.getInt("rank");
 			final String trophies = stringArrayToString(args.getStringArray("trophiesList"));
 			builder.setMessage("Congratulations, your rank and trophies have been updated!" +
 					"Your new rank is " + rank + "\n" +
