@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
+import moishd.common.MoishdPreferences;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -109,11 +110,13 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 		String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
+		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
 		setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 		finish();
 	}
 	
 	protected void onError(){
+		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
 		Intent resultIntent = new Intent();
 		setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
 		finish();		

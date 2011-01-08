@@ -9,6 +9,8 @@ public class MoishdPreferences {
 	private static String booleanName = "AVAILABLE";
 	private static String prefUserName = "USERNAME_PREF";
 	private static String stringName = "NAME";
+	private static String prefReturnName = "RETURN_PREFS";
+	private static String returnName = "RETURN";
 	
 	public static boolean userIsAvailable(Context context) {
 		SharedPreferences playingPrefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE);
@@ -35,4 +37,23 @@ public class MoishdPreferences {
 		editor.putString(stringName, name);
 		editor.commit();
 	}
+	
+	public static void setReturnFromAuth(Context context, boolean var){
+		SharedPreferences userNamePref = context.getSharedPreferences(prefReturnName, Context.MODE_PRIVATE);
+		Editor editor = userNamePref.edit();
+		editor.putBoolean(returnName, var);
+		editor.commit();
+	}
+	
+	public static boolean isReturnedFromAuthe(Context context){
+		SharedPreferences userNamePref = context.getSharedPreferences(prefReturnName, Context.MODE_PRIVATE);
+		boolean returned = userNamePref.getBoolean(returnName, false);
+		return returned;
+	}
+	
+	
+	
+	
+	
+	
 }
