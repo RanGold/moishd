@@ -116,10 +116,13 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_HAS_NO_LOCATION_BEGINNING = 17;
 	private final int DIALOG_RANK_UPDATED = 18;
 	private final int DIALOG_TROPHIES_UPDATED = 19;
-	private final int DIALOG_GET_GAME_OFFER = 20;
-	private final int DIALOG_USER_CANCELED_GAME = 21;
+	private final int DIALOG_RANK_AND_TROPHIES_UPDATED = 20;
+	private final int DIALOG_GET_GAME_OFFER = 21;
+	private final int DIALOG_USER_CANCELED_GAME = 22;
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 	private final int FACEBOOK_POST_TROPHIES_UPDATED = 31;
+	private final int FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED = 32;
+
 
 	private Handler autoRefreshHandler = new Handler();
 
@@ -649,6 +652,7 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 
 	protected void postOnFacebookWall(int code, Bundle bundle) {
+		
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 		Bundle parameters = new Bundle();
 		String message;
@@ -660,11 +664,18 @@ public class AllOnlineUsersActivity extends Activity{
 			parameters.putString("name", "Moish'd! rank updated");
 
 		case FACEBOOK_POST_TROPHIES_UPDATED:
-			String [] trophiesList = bundle.getStringArray("trophiesList");
-			message = firstName +"'s Moish'd! trophies have just been updated!";
+			String trophiesList = bundle.getString("trophiesList");
+			message = firstName +"'s Moish'd! trophies have just been updated! New trophies receieved:\n" + trophiesList;
 			parameters.putString("description", message);
-			parameters.putString("name", "Moish'd! trophies received: " + trophiesList);
-		}
+			parameters.putString("name", "Moish'd! trophies have been updated!");
+			
+		case FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED:
+			String trophies = bundle.getString("trophiesList");
+			message = firstName +"'s Moish'd! rank and trophies has just been updated! \n" +
+			"New trophies receieved:\n" + trophies;
+			parameters.putString("description", message);
+			parameters.putString("name", "Moish'd! rank and trophies have been updated!");
+		}		
 		parameters.putString("link", "http://www.facebook.com/apps/application.php?id=108614622540129");
 		parameters.putString("picture", "http://moishd.googlecode.com/files/moishd");
 		WelcomeScreenActivity.facebook.dialog(this,"stream.publish", parameters, new PostDialogListener());
@@ -761,7 +772,6 @@ public class AllOnlineUsersActivity extends Activity{
 			});
 			return builder.create();  
 
-
 		case DIALOG_RANK_UPDATED:
 			final int newRank = args.getInt("Rank");
 			builder.setMessage("Congratulations, your rank has been updated! Your new rank is " + newRank)
@@ -781,9 +791,33 @@ public class AllOnlineUsersActivity extends Activity{
 			});
 			return builder.create(); 
 
+		case DIALOG_RANK_AND_TROPHIES_UPDATED:
+			final int rank = args.getInt("Rank");
+			final String trophies = stringArrayToString(args.getStringArray("trophiesList"));
+			builder.setMessage("Congratulations, your rank and trophies have been updated!" +
+					"Your new rank is " + rank + "\n" +
+					"You've earned the following trophies: " + trophies)
+			.setCancelable(false)
+			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
+
+				public void onClick(DialogInterface dialog, int id) {
+					Bundle bundle = new Bundle();
+					bundle.putInt("rank", rank);
+					bundle.putString("trophiesList", trophies);
+					postOnFacebookWall(FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED, bundle);
+					dismissAndRemoveDialog(DIALOG_RANK_AND_TROPHIES_UPDATED);		
+				}
+			})
+			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
+				}
+			});
+			return builder.create(); 
+			
 		case DIALOG_TROPHIES_UPDATED:
 			final String trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
-			builder.setMessage("Congratulations, you've earned the following trophies: " + trophiesList)
+			builder.setMessage("Congratulations, you've earned the following trophies: \n" + trophiesList)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
 
@@ -915,34 +949,38 @@ public class AllOnlineUsersActivity extends Activity{
 		for (int i=0; i < userTrophies.length; i++){
 			currentTrophy = userTrophies[i];
 			if (currentTrophy.equals(TrophiesEnum.BestFriends.toString())){
-				builder.append(TrophiesEnum.BestFriends.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.BestFriends.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.FaceOff.toString())){
-				builder.append(TrophiesEnum.FaceOff.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.FaceOff.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.FirstTime.toString())){
-				builder.append(TrophiesEnum.FirstTime.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.FirstTime.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.MasterMoisher.toString())){
-				builder.append(TrophiesEnum.MasterMoisher.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.MasterMoisher.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.MegaMoisher.toString())){
-				builder.append(TrophiesEnum.MegaMoisher.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.MegaMoisher.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.MiniMoisher.toString())){
-				builder.append(TrophiesEnum.MiniMoisher.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.MiniMoisher.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.SuperMoisher.toString())){
-				builder.append(TrophiesEnum.SuperMoisher.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.SuperMoisher.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.TenInARow.toString())){
-				builder.append(TrophiesEnum.TenInARow.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.TenInARow.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.TinyMoisher.toString())){
-				builder.append(TrophiesEnum.TinyMoisher.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.TinyMoisher.getTrophyName());
 			}
 			else if (currentTrophy.equals(TrophiesEnum.TwentyInARow.toString())){
-				builder.append(TrophiesEnum.TwentyInARow.getTrophyName() + "\n");
+				builder.append(TrophiesEnum.TwentyInARow.getTrophyName());
+			}
+			
+			if (i < userTrophies.length - 1){
+				builder.append(",\n");
 			}
 		}
 
