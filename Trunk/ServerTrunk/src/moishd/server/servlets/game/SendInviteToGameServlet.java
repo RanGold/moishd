@@ -32,9 +32,11 @@ public class SendInviteToGameServlet extends HttpServlet {
 				MoishdUser recUser = DSCommon.GetUserByGoogleId(recID);
 
 				if (!recUser.isRegistered()){
+					HashMap<String, String> payload = new HashMap<String, String>();
+					payload.put("UserNickNameOfOpponent", recUser.getUserNick());
 					C2DMCommon.PushGenericMessage(initUser.getRegisterID(),
 							C2DMCommon.Actions.PlayerOffline.toString(),
-							new HashMap<String, String>());
+							payload);
 				} else if (recUser.isBusy() && !recUser.getBusyWith().equals(initID)) {
 					
 					HashMap<String, String> payload = new HashMap<String, String>();
