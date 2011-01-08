@@ -265,7 +265,7 @@ public class WelcomeScreenActivity extends Activity{
 		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);		
 		
 		timer=new Timer();
-		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 3000);
+		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 5000);
 	}
 	
 	private class ifRegisteredThanLoginTask extends TimerTask{
@@ -276,13 +276,14 @@ public class WelcomeScreenActivity extends Activity{
 			run = new Runnable() {
 				public void run() {
 						if (isC2DMRegistered()){
-							asyncRunner.request("me", new ProfileRequestListener(location));
+							Log.d("TEST", "in isRegistered");
 							timer.cancel();
+							asyncRunner.request("me", new ProfileRequestListener(location));
 						}
 						else{
 							if (numberOfTriesLeft == 1) {
-								numberOfTriesLeft =3;
 								timer.cancel();
+								numberOfTriesLeft =3;
 								
 								progressDialog.dismiss();
 								Message registrationErrorMessage = Message.obtain();
