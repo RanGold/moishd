@@ -300,8 +300,6 @@ public class AllOnlineUsersActivity extends Activity{
 				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
-				initName=null;
-				recName=null;
 				game_id = null;
 				
 			}
@@ -338,8 +336,7 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				Log.d("Tammy", "allonline" + opponent_nick_name);
 				GetGameOfferDialog();
-				opponent_google_id=null;
-				opponent_nick_name=null;
+
 			}
 		}
 
@@ -714,11 +711,15 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
 					inviteUserOfferedByServerToMoish(opponent_google_id);
+					opponent_google_id=null;
+					opponent_nick_name=null;
 				}
 			})
 			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
+					opponent_google_id=null;
+					opponent_nick_name=null;
 				}
 			});
 			return builder.create();
@@ -847,6 +848,8 @@ public class AllOnlineUsersActivity extends Activity{
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					cancelDialog(dialog);
+					initName=null;
+					recName=null;
 				}
 			});
 			return builder.create(); 
