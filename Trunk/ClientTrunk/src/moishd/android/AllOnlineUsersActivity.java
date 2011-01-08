@@ -23,13 +23,12 @@ import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.client.dataObjects.ClientTrophy;
 import moishd.client.dataObjects.TrophiesEnum;
-import moishd.common.MoishdPreferences;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
 import moishd.common.LocationManagment;
+import moishd.common.MoishdPreferences;
 import moishd.common.PushNotificationTypeEnum;
 import moishd.common.SharedPreferencesKeysEnum;
 
@@ -313,7 +312,6 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
-				userIsBusy(opponent_nick_name);
 				userIsOffline(opponent_nick_name);
 				game_id = null;
 			
@@ -551,8 +549,6 @@ public class AllOnlineUsersActivity extends Activity{
 	private void StartGamePopular(){
 		Intent popularScreen = new Intent(AllOnlineUsersActivity.this, MostPopularGameActivity.class);
 		startActivityForResult(popularScreen, IntentRequestCodesEnum.StartPopularGame.getCode());
-
-
 	}
 
 	private void hasNoLocationDialog(){
@@ -799,6 +795,7 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create(); 
 
 		case DIALOG_USER_IS_BUSY:
+			Log.d("Tammy", "busy");
 			builder.setMessage(args.getString("userName") + " is currently playing. Please try again later.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -809,6 +806,7 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create(); 
 
 		case DIALOG_USER_IS_OFFLINE:
+			Log.d("Tammy", "offline");
 			builder.setMessage(args.getString("userName") + " is offline. Please refresh your list.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -1216,31 +1214,31 @@ public class AllOnlineUsersActivity extends Activity{
 			});
 			holder.userPicture.setImageDrawable(usersPictures.get(position));
 
-			//tammy
-
-			/*	boolean friend = moishdUsers.get(position).isFacebookFriend();
-			String isfriend="";
-			if (friend)
-				isfriend="True moment before show";
-			else
-				isfriend="False moment before show";
-
-			Log.d("AllOnlineUsersActivity", isfriend);*/
-
 			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 				holder.facebookPic.setImageBitmap(facebookPic);
 
 			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)){
 				if (moishdUsers.get(position).isFacebookFriend()){
+				
 					holder.facebookPic.setImageBitmap(facebookPic);
+					if (moishdUsers.get(position).isNearByUser()){
+						holder.nearBy.setImageBitmap(nearByUsers);
+					}
+					else{
+						holder.nearBy.setImageBitmap(noPic);
+					}
+						
 				}
-				else
-					holder.facebookPic.setImageBitmap(noPic);
-
-				if (moishdUsers.get(position).isNearByUser())			
-					holder.nearBy.setImageBitmap(nearByUsers);
-				else
+				
+				else if (moishdUsers.get(position).isNearByUser()){
+					holder.facebookPic.setImageBitmap(nearByUsers);
 					holder.nearBy.setImageBitmap(noPic);
+					
+				} 
+				else {
+					holder.facebookPic.setImageBitmap(noPic);
+					holder.nearBy.setImageBitmap(noPic);
+				}
 			}
 
 			else if (currentUsersType.equals(GetUsersByTypeEnum.NearbyUsers))
