@@ -23,6 +23,8 @@ import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.client.dataObjects.ClientTrophy;
+import moishd.client.dataObjects.TrophiesEnum;
 import moishd.common.MoishdPreferences;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
@@ -196,7 +198,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
 		locationManagment.startUpdateLocation(1);
-		
+
 		myUserName = MoishdPreferences.getUserName(getApplicationContext());
 
 		serverHasFacebookFriends = false;
@@ -295,7 +297,7 @@ public class AllOnlineUsersActivity extends Activity{
 				game_id = null;
 				last_user=null;
 			}
-			
+
 			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
 				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
@@ -447,7 +449,7 @@ public class AllOnlineUsersActivity extends Activity{
 			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken);
 		}
 	}
-	
+
 
 	private void displayOwnStatistics() {
 
@@ -823,9 +825,9 @@ public class AllOnlineUsersActivity extends Activity{
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_USER_CANCELED_GAME:
-			
+
 			//TODO cancel game
 			String user;
 			if (myUserName.equals(initName)){
@@ -897,13 +899,44 @@ public class AllOnlineUsersActivity extends Activity{
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 	}
 
-	private String stringArrayToString(String [] stringArray){
-		
-		StringBuilder builder = new StringBuilder();
-		for(int i=0; i < stringArray.length; i++){
-			builder.append(stringArray[i] + "\n");
+	private String stringArrayToString(String [] userTrophies){
+
+		StringBuilder builder = new StringBuilder();		
+		String currentTrophy;
+		for (int i=0; i < userTrophies.length; i++){
+			currentTrophy = userTrophies[i];
+			if (currentTrophy.equals(TrophiesEnum.BestFriends.toString())){
+				builder.append(TrophiesEnum.BestFriends.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.FaceOff.toString())){
+				builder.append(TrophiesEnum.FaceOff.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.FirstTime.toString())){
+				builder.append(TrophiesEnum.FirstTime.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.MasterMoisher.toString())){
+				builder.append(TrophiesEnum.MasterMoisher.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.MegaMoisher.toString())){
+				builder.append(TrophiesEnum.MegaMoisher.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.MiniMoisher.toString())){
+				builder.append(TrophiesEnum.MiniMoisher.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.SuperMoisher.toString())){
+				builder.append(TrophiesEnum.SuperMoisher.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.TenInARow.toString())){
+				builder.append(TrophiesEnum.TenInARow.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.TinyMoisher.toString())){
+				builder.append(TrophiesEnum.TinyMoisher.getTrophyName() + "\n");
+			}
+			else if (currentTrophy.equals(TrophiesEnum.TwentyInARow.toString())){
+				builder.append(TrophiesEnum.TwentyInARow.getTrophyName() + "\n");
+			}
 		}
-		
+
 		return builder.toString();
 	}
 
