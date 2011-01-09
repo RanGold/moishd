@@ -130,7 +130,7 @@ public class ServerCommunication {
 	}
 	
 	public static boolean setSingleUserUnbusy(String authString){
-		HttpResponse resp = activateServlet(ServletNamesEnum.SetSingleUnbusy,authString);
+		HttpResponse resp = activateServlet(ServletNamesEnum.SetNotBusy,authString);
 		if (resp==null)
 			return false;
 		if (resp.containsHeader("Error")){
@@ -139,6 +139,18 @@ public class ServerCommunication {
 		}
 		else
 			return true;
+	}
+	
+	public static boolean IsBusy(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.IsBusy,authString);
+		if (resp==null)
+			return false;
+		else if (resp.containsHeader("Busy")){
+			return true;
+		}
+		else
+			return false;
+
 	}
 
 	public static String getMostPopularGame(String authString){

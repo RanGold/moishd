@@ -750,22 +750,30 @@ public class AllOnlineUsersActivity extends Activity{
 					Random random = new Random();  
 					int i = random.nextInt(100);
 					i = i % 4;
-					if (i==0 || i==1) {
-						chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-						chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDareActivity.class); 
-						startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+					boolean isBusy = ServerCommunication.IsBusy(authToken);
+					if (isBusy) {
+						if (i==0 || i==1) {
+							chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+							chooseGame.setClass(AllOnlineUsersActivity.this,TruthOrDareActivity.class); 
+							startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+						}
+						else if (i==2){
+							chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+							chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
+							startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+						}
+						else {
+							String mostPopular = ServerCommunication.getMostPopularGame(authToken);
+							sendInvitationResponse("Accept" + mostPopular, "Popular");
+						}	
 					}
-					else if (i==2){
-						chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-						chooseGame.setClass(AllOnlineUsersActivity.this,ChooseGameActivity.class);
-						startActivityForResult(chooseGame, IntentRequestCodesEnum.GetChosenGame.getCode());
+					
+					else{
+						sendInvitationResponse("AcceptTruth","");
 					}
-					else {
-						String mostPopular = ServerCommunication.getMostPopularGame(authToken);
-
-						sendInvitationResponse("Accept" + mostPopular, "Popular");
-					}
-					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);		
+					
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);
+					
 				}
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
