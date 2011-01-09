@@ -18,7 +18,7 @@ public class IsBusyServlet extends GeneralServlet {
 
 		if (user != null) {
 			if (mUser.isBusy()) {
-				response.addHeader("HasLocation", "");
+				response.addHeader("Busy", "");
 			}
 		}
 	}
