@@ -9,10 +9,10 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionEvents.AuthListener;
-import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.android.facebook.SessionStore;
 import moishd.android.facebook.Util;
+import moishd.android.facebook.SessionEvents.AuthListener;
+import moishd.android.facebook.SessionEvents.LogoutListener;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
@@ -25,7 +25,6 @@ import moishd.common.SharedPreferencesKeysEnum;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.style;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -45,7 +44,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewDebug.FlagToString;
 import android.widget.TextView;
 
 import com.google.android.c2dm.C2DMessaging;
