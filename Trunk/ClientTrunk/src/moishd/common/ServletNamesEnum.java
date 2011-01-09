@@ -24,6 +24,7 @@ public enum ServletNamesEnum {
 	AddGamePlayed,
 	GetMostPopularGame,
 	SetBusy,
-	SetSingleUnbusy;
+	SetNotBusy,
+	IsBusy;
 	
 }
