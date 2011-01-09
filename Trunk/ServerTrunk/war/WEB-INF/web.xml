@@ -299,6 +299,13 @@
 		<servlet-name>SetNotBusyServlet</servlet-name>
 		<url-pattern>/SetSingleUnbusy</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>IsBusyServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.IsBusyServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>IsBusyServlet</servlet-name>
+		<url-pattern>/IsBusy</url-pattern>
+	</servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
