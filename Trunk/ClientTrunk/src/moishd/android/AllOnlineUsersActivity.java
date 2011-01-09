@@ -286,8 +286,6 @@ public class AllOnlineUsersActivity extends Activity{
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 
-		//String gameTypeNoRank = gameType.substring(0, gameType.length() - 1);
-
 		if (action!=null){
 			if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 				String inviterName = intent.getStringExtra("Inviter");
@@ -369,7 +367,6 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
 			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			Log.d("Tammy",gameType);
 			sendInvitationResponse("Accept" + gameType, "");
 		}
 		else if (requestCode == IntentRequestCodesEnum.GameRequestCode.getCode()){
@@ -418,7 +415,6 @@ public class AllOnlineUsersActivity extends Activity{
 		currentUsersType = usersType;
 
 		switch(usersType){
-		//case AllUsers://tammy
 		case NearbyUsers:
 			new GetUsersTask().execute(usersType.toString(), authToken);
 			break;
@@ -435,9 +431,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getMergedUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
-				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
-			asyncRunner.request("me/friends", new FriendsRequestListener());
+			commonForFriendsUsersAndMergedUsers();
 		}
 		else{
 			new GetUsersTask().execute(GetUsersByTypeEnum.MergedUsers.toString(), authToken);
@@ -447,14 +441,20 @@ public class AllOnlineUsersActivity extends Activity{
 	private void getFriendsUsers(){ 
 
 		if (!serverHasFacebookFriends){
-			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
-				mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
-			asyncRunner.request("me/friends", new FriendsRequestListener());
+			commonForFriendsUsersAndMergedUsers();
 		}
 		else{
 			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken);
 		}
 	}
+	
+	private void commonForFriendsUsersAndMergedUsers(){
+		if (MoishdPreferences.userIsAvailable(getApplicationContext())) 
+			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+		asyncRunner.request("me/friends", new FriendsRequestListener());
+	
+	}
+	
 
 
 	private void displayOwnStatistics() {
@@ -1016,11 +1016,7 @@ public class AllOnlineUsersActivity extends Activity{
 			String usersType = (String) objects[0];
 			String authToken = (String) objects[1];
 
-			/*if (usersType.equals(GetUsersByTypeEnum.AllUsers.toString())){
-				moishdUsers = ServerCommunication.getAllUsers(authToken);
 
-			}*/ 
-			// tammy - merged list has got to have also the facebook friends' list
 			if (usersType.equals(GetUsersByTypeEnum.MergedUsers.toString())){
 				List<String> friendsID;
 				if (objects.length == 3){
@@ -1065,14 +1061,7 @@ public class AllOnlineUsersActivity extends Activity{
 				for (int i=0; i < moishdUsers.size(); i++){
 					Drawable userPic = LoadImageFromWebOperations(moishdUsers.get(i).getPictureLink());
 					usersPictures.add(userPic);
-					/*boolean friend = moishdUsers.get(i).isFacebookFriend();
-					String isfriend="";
-					if (friend)
-						isfriend="True";
-					else
-						isfriend="False"
 
-					Log.d("AllOnlineUsersActivity", isfriend);*/
 					setProgress((int) ((i / (float) moishdUsers.size()) * 100));
 
 				}
@@ -1195,6 +1184,7 @@ public class AllOnlineUsersActivity extends Activity{
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
 			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
+			// TODO - do we need the 'no world' image?
 			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
 			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
