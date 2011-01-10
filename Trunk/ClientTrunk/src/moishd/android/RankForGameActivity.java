@@ -146,7 +146,7 @@ public class RankForGameActivity extends Activity{
 		}    
 		public void onTick(long millisUntilFinished) {
 			done = (ImageView) findViewById(R.id.done);
-			done.setPadding(0, 20, 50, 0);
+			//done.setPadding(0, 20, 50, 0);
 			done.setImageBitmap(thankYou);
 
 		}
