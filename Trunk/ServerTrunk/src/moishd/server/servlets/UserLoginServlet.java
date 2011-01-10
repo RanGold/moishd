@@ -45,7 +45,7 @@ public class UserLoginServlet extends GeneralServlet {
 				} else {
 					muser = users.get(0);
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
-						LoggerCommon.Get().LogError(this, response, "facebook id given " + 
+						LoggerCommon.Get().LogError(this, response, "AccountNotMatch", "facebook id given " + 
 								"differes from the database version");
 						return;
 					}
