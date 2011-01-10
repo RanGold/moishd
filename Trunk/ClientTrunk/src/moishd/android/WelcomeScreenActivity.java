@@ -73,6 +73,7 @@ public class WelcomeScreenActivity extends Activity{
 	private final int DIALOG_NO_ACCOUNTS = 17;
 	private final int DIALOG_SHOW_ACCOUNTS = 18;
 	private final int DIALOG_NO_INTERNET_CONNECTION = 19;
+	private final int DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT = 20;
 
 	private String googleAuthString = null;
 	private int numberOfTriesLeft = 3;
@@ -116,7 +117,13 @@ public class WelcomeScreenActivity extends Activity{
 				intent = new Intent(android.provider.Settings.ACTION_SYNC_SETTINGS);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				startActivity(intent);
-
+				break;
+				
+			case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
+				if (progressDialog != null)
+					progressDialog.dismiss();
+				showDialog(DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT);
+				
 			}
 		}
 	};
@@ -175,6 +182,12 @@ public class WelcomeScreenActivity extends Activity{
 			unregisterC2DM();
 		}
 		super.onDestroy();
+	}
+	
+	@Override
+	public void onBackPressed(){
+		moveTaskToBack(true);
+		return;
 	}
 
 	@Override
@@ -400,23 +413,26 @@ public class WelcomeScreenActivity extends Activity{
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle args){
 		switch (id){
 		case DIALOG_NO_ACCOUNTS:
-			super.onPrepareDialog(id, dialog);
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		case DIALOG_SHOW_ACCOUNTS:
 			args.putStringArray("names", names);
-			super.onPrepareDialog(id, dialog);
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		case DIALOG_AUTH_TOKEN_DECLINED:
-			super.onPrepareDialog(id, dialog);
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		case DIALOG_FACEBOOK_ERROR:
-			super.onPrepareDialog(id, dialog);	
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		case DIALOG_MOISHD_SERVER_REGISTRATION_ERROR:
-			super.onPrepareDialog(id, dialog);
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		case DIALOG_C2DM_ERROR:
-			super.onPrepareDialog(id, dialog);
+			super.onPrepareDialog(id, dialog, args);
+			break;
+		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
+			super.onPrepareDialog(id, dialog, args);
 			break;
 		}
 	}
@@ -506,11 +522,23 @@ public class WelcomeScreenActivity extends Activity{
 					moveTaskToBack(true);
 				}
 			});
-			return builder.create();  			
+			return builder.create();  
+			
 		case DIALOG_C2DM_ERROR:
 			builder.setTitle("Error");
 			builder.setMessage("Registration to Moish'd! server failed. Please retry in a few seconds.")
 			.setCancelable(false)
+			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					facebookLogout(null);
+				}
+			});
+			return builder.create();  
+			
+		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
+			builder.setTitle("Error");
+			builder.setMessage("The Google account you selected doesn't match the one you registered with. please try again.")
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
@@ -559,15 +587,15 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setLocation(loc);
 
 				String authString = getGoogleAuthToken();
-				boolean registrationComplete = ServerCommunication.enlistUser(newUser, authString);
-				if (registrationComplete){
+				int registrationStatus = ServerCommunication.enlistUser(newUser, authString);
+				if (registrationStatus==2){
 					saveUserName(userName, firstName);
 					sendMessageToHandler(REGISTRATION_COMPLETE);					
-				}
-				else{
+				}else if(registrationStatus==0){
 					sendMessageToHandler(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
-				}
-			} catch (JSONException e) {
+				}else 
+					sendMessageToHandler(DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT);
+			}catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
 				sendMessageToHandler(DIALOG_FACEBOOK_ERROR);
 			} catch (FacebookError e) {

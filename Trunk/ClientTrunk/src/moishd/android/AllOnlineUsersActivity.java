@@ -169,14 +169,14 @@ public class AllOnlineUsersActivity extends Activity{
 		}
 	}
 
-	private void activateTimer(){
+	private void activateRefreshTimer(){
 		refreshTimer = new Timer();
 		refreshTimer.schedule(new autoRefreshTask(), 60*1000, REFRESH_INTERVAL);
 	}
 
 	private void restartTimer(){
 		refreshTimer.cancel();
-		activateTimer();
+		activateRefreshTimer();
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class AllOnlineUsersActivity extends Activity{
 		if(!ServerCommunication.hasLocation(authToken))
 			showDialog(DIALOG_HAS_NO_LOCATION_BEGINNING);
 
-		activateTimer();
+		activateRefreshTimer();
 
 	}
 
