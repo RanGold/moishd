@@ -94,7 +94,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private String trophiesList;
 
 	private int currentClickPosition;
-	private boolean userResponedToMoish = false;
+
 	private TextView header;
 	private ListView list;
 
@@ -124,7 +124,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 	private final int FACEBOOK_POST_TROPHIES_UPDATED = 31;
 	private final int FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED = 32;
-
+	private waitForResponse timerForResponse;
 
 	private Handler autoRefreshHandler = new Handler();
 
@@ -294,7 +294,7 @@ public class AllOnlineUsersActivity extends Activity{
 				retrieveInvitation(inviterName);
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
@@ -308,7 +308,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
 				game_id = null;
@@ -317,7 +317,7 @@ public class AllOnlineUsersActivity extends Activity{
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsOffline(opponent_nick_name);
 				game_id = null;
@@ -327,18 +327,18 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				StartGamePopular();
 
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				startGameTruth();
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
-				userResponedToMoish = true;
+				timerForResponse.cancel();
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
@@ -714,7 +714,6 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
-					waitForResponse timerForResponse;
 					timerForResponse= new waitForResponse(30000,1000);
 					timerForResponse.start();
 				}
@@ -1319,13 +1318,9 @@ public class AllOnlineUsersActivity extends Activity{
 			super(millisInFuture, countDownInterval);
 		}    
 		public void onFinish() {
-			if (!userResponedToMoish) {
-				ServerCommunication.cancelGame(authToken);
-			}
-			else {
-				userResponedToMoish = false;
-			}
+			ServerCommunication.cancelGame(authToken);
 		}    
+		
 		public void onTick(long millisUntilFinished) {
 		}
 		
