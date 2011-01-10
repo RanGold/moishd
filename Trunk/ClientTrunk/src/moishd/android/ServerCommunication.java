@@ -79,18 +79,16 @@ public class ServerCommunication {
 		}
 	}
 
-	public static boolean enlistUser(ClientMoishdUser user, String authString){
+	public static int enlistUser(ClientMoishdUser user, String authString){
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
-		if (response == null){
-			return false;		
-		}
-		if (response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
-			return false;
-		}
-		else{
-			return true;
-		} 
+			return 0;		
+		}else if (response.containsHeader("AccountNotMatch")){
+			Log.d("GAE ERROR", "Account not match the one on the server");
+			return 1;
+		} else
+			return 2;
 	}
 
 	public static ClientMoishdUser getCurrentUser(String authString) {
