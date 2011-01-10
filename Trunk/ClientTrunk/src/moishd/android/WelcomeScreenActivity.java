@@ -102,6 +102,7 @@ public class WelcomeScreenActivity extends Activity{
 			case DIALOG_C2DM_ERROR:
 				if (progressDialog != null)
 					progressDialog.dismiss();
+				showDialog(DIALOG_C2DM_ERROR);
 				break;
 
 			case REGISTRATION_COMPLETE:
