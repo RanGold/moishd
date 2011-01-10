@@ -150,16 +150,8 @@
 		<url-pattern>/InviteUser</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>GetGameInitiatorServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.GetGameInitiatorServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>GetGameInitiatorServlet</servlet-name>
-		<url-pattern>/GetGameInitiator</url-pattern>
-	</servlet-mapping>
-	<servlet>
 		<servlet-name>GameInvReplyServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.GameInvReplyServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.busy.GameInvReplyServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GameInvReplyServlet</servlet-name>
@@ -181,6 +173,14 @@
 		<servlet-name>GameLoseServlet</servlet-name>
 		<url-pattern>/GameLose</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>CancelGameServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.busy.CancelGameServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CancelGameServlet</servlet-name>
+		<url-pattern>/CancelGame</url-pattern>
+	</servlet-mapping>	
 	<servlet>
 		<servlet-name>GetFriendUsersServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.GetFriendUsersServlet</servlet-class>
@@ -223,7 +223,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>SendGameResultServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.SendGameResultServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.busy.SendGameResultServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SendGameResultServlet</servlet-name>
@@ -231,7 +231,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>SendInviteToGameServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.game.SendInviteToGameServlet</servlet-class>
+		<servlet-class>moishd.server.servlets.game.busy.SendInviteToGameServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SendInviteToGameServlet</servlet-name>
@@ -280,13 +280,13 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>SetBusyServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.SetBusyServlet</servlet-class></servlet>
+		<servlet-class>moishd.server.servlets.game.busy.SetBusyServlet</servlet-class></servlet>
 	<servlet-mapping>
 		<servlet-name>SetBusyServlet</servlet-name>
 		<url-pattern>/SetBusy</url-pattern></servlet-mapping>
 	<servlet>
 		<servlet-name>SetNotBusyServlet</servlet-name>
-		<servlet-class>moishd.server.servlets.SetNotBusyServlet</servlet-class></servlet>
+		<servlet-class>moishd.server.servlets.game.busy.SetNotBusyServlet</servlet-class></servlet>
 	<servlet-mapping>
 		<servlet-name>SetNotBusyServlet</servlet-name>
 		<url-pattern>/SetNotBusy</url-pattern>

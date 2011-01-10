@@ -1,4 +1,4 @@
-package moishd.server.servlets.game;
+package moishd.server.servlets.game.busy;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -109,7 +109,6 @@ public class SendGameResultServlet extends HttpServlet {
 					mInitUser.SaveChanges();
 					mRecUser.setNotBusy();
 					mRecUser.SaveChanges();
-					
 				}
 				
 			} catch (DataAccessException e) {
