@@ -20,6 +20,7 @@ import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.ServerRequest;
 import moishd.common.ServletNamesEnum;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -38,7 +39,7 @@ public class ServerCommunication {
 
 	public static int registerC2DMToServer(ClientMoishdUser user, String authString){
 		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, authString);
-		if (resp!=null){
+		if (resp != null){
 			return resp.getStatusLine().getStatusCode();
 		}
 		else{
@@ -100,7 +101,7 @@ public class ServerCommunication {
 	public static boolean updateLocationInServer(Location location, String authString){
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
 		HttpResponse response = SendObjToServer(sendLocation, ServletNamesEnum.UpdateLocation, authString);
-		if (response ==null || response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -134,10 +135,10 @@ public class ServerCommunication {
 
 	public static boolean setUserBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetBusy,authString);
-		if (resp==null){
+		if (resp == null){
 			return false;
 		}
-		if (resp.containsHeader("Error")){
+		else if (resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -148,10 +149,10 @@ public class ServerCommunication {
 
 	public static boolean setSingleUserUnbusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetNotBusy,authString);
-		if (resp==null){
+		if (resp == null){
 			return false;
 		}
-		if (resp.containsHeader("Error")){
+		else if (resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -161,10 +162,10 @@ public class ServerCommunication {
 	}
 	public static boolean cancelGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.CancelGame,authString);
-		if (resp==null){
+		if (resp == null){
 			return false;
 		}
-		if (resp.containsHeader("Error")){
+		else if (resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -176,7 +177,7 @@ public class ServerCommunication {
 
 	public static boolean IsBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.IsBusy,authString);
-		if (resp==null){
+		if (resp == null){
 			return false;
 		}
 		else if (resp.containsHeader("Busy")){
@@ -190,40 +191,55 @@ public class ServerCommunication {
 
 	public static String getMostPopularGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.GetMostPopularGame,authString);
-		try {
-			String popularGame = convertStreamToString(resp.getEntity().getContent());
-			if (resp.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-				return null;
-			}
-			else{
-				return popularGame;
-			}
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		if (resp == null){
+			return null;
 		}
-		return null;
+		else{
+			try {
+				String popularGame = convertStreamToString(resp.getEntity().getContent());
+				if (resp.containsHeader("Error")){
+					Log.d("GAE ERROR", "an Error occured");
+					return null;
+				}
+				else{
+					return popularGame;
+				}
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 
 	public static String inviteUser(String userGoogleIdentifier, String authString){
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, userGoogleIdentifier, authString);
-		try {
-			String content = convertStreamToString(response.getEntity().getContent());
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-				return null;
-			}
-			else{
-				return content;
-			}
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (response == null){
+			return null;
 		}
-		return null;
+		else{
+			try {
+				HttpEntity entity = response.getEntity();
+				if (entity == null){
+					return null;
+				}
+				String content = convertStreamToString(entity.getContent());
+				if (response.containsHeader("Error")){
+					Log.d("GAE ERROR", "an Error occured");
+					return null;
+				}
+				else{
+					return content;
+				}
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 
 	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
@@ -233,7 +249,10 @@ public class ServerCommunication {
 	//TODO check if there's a need in the game_id
 	public static boolean sendRankToServer(String gameType,int rank, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.RankGame,gameType+":"+rank, authString);
-		if (response.containsHeader("Error")){
+		if (response == null){
+			return false;
+		}
+		else if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -244,7 +263,10 @@ public class ServerCommunication {
 
 	public static boolean sendGamePlayedToServer(String gameType,String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.AddGamePlayed,gameType, authString);
-		if (response.containsHeader("Error")){
+		if (response == null){
+			return false;
+		}
+		else if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -255,9 +277,10 @@ public class ServerCommunication {
 
 	public static boolean isFirstTimePlayed(String gameType, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.IsFirstTimePlayed,gameType, authString);
-		if (response==null)
+		if (response==null){
 			return false;
-		if (response.containsHeader("FirstTimePlayed")){
+		}
+		else if (response.containsHeader("FirstTimePlayed")){
 			return true;
 		}
 		else{
@@ -270,7 +293,10 @@ public class ServerCommunication {
 		String invitationResponse = gameId + "#" + responseString + "#" + isPopular;
 		Log.d("Tammy", invitationResponse);
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InvitationResponse, invitationResponse, authString);
-		if (response.containsHeader("Error")){
+		if (response == null){
+			return false;
+		}
+		else if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -281,7 +307,10 @@ public class ServerCommunication {
 
 	public static boolean sendWinToServer(String gameId, String authString, String gameType) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GameWin, gameId + ":" + gameType, authString);
-		if (response.containsHeader("Error")){
+		if (response == null){
+			return false;
+		}
+		else if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -292,7 +321,10 @@ public class ServerCommunication {
 
 	public static boolean sendLoseToServer(String gameId, String authString, String gameType) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GameLose, gameId + ":" + gameType, authString);
-		if (response.containsHeader("Error")){
+		if (response == null){
+			return false;
+		}
+		else if (response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -317,7 +349,11 @@ public class ServerCommunication {
 		InputStream contentStream;
 		String json = null;
 		try {
-			contentStream = response.getEntity().getContent();
+			HttpEntity entity = response.getEntity();
+			if (entity == null){
+				return null;
+			}
+			contentStream = entity.getContent();
 			if (response.containsHeader("Error")){
 				Log.d("GAE ERROR", "an Error occured");
 			}
