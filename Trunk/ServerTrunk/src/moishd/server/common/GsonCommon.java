@@ -19,8 +19,7 @@ public class GsonCommon {
 	throws IOException {
 		response.setContentType("application/json");
 
-		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-		String json = g.toJson(obj);
+		String json = GetJsonString(obj);
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(response.getOutputStream());
@@ -32,13 +31,23 @@ public class GsonCommon {
 			}
 		}
 	}
+	
+	public static String GetJsonString(Object obj) {
+		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+		return g.toJson(obj);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T GetObjFromJsonString(String s, Type t) {
+		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
+		return (T)g.fromJson(s, t);
+	}
+	
 	public static <T> T GetObjFromJsonStream(InputStream s, Type t) 
 	throws IOException,ClassNotFoundException {
 		ObjectInputStream ois = new ObjectInputStream(s);
 		String json = (String) ois.readObject();
-		Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-		@SuppressWarnings("unchecked")
-		T obj = (T)g.fromJson(json, t);
+		T obj = GetObjFromJsonString(json,t);
 		ois.close();
 		return obj;
 	}

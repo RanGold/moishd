@@ -2,6 +2,7 @@ package moishd.server.servlets.game.busy;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,11 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
+
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
+import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
+import moishd.server.dataObjects.BusyObject;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
@@ -105,10 +113,21 @@ public class SendGameResultServlet extends HttpServlet {
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), losePayload);
 					
-					mInitUser.setNotBusy();
-					mInitUser.SaveChanges();
-					mRecUser.setNotBusy();
-					mRecUser.SaveChanges();
+					List<BusyObject> busyUsers = new LinkedList<BusyObject>();
+					busyUsers
+							.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false));
+					busyUsers.add(new BusyObject(mRecUser.getBusyWith(), false));
+
+					String json = GsonCommon.GetJsonString(busyUsers);
+
+					Queue queue = QueueFactory.getQueue("inviteQueue");
+					queue.add(TaskOptions.Builder
+							.url("/queues/UpdateBusySynced").method(Method.POST)
+							.param("json", json));
+//					mInitUser.setNotBusy();
+//					mInitUser.SaveChanges();
+//					mRecUser.setNotBusy();
+//					mRecUser.SaveChanges();
 				}
 				
 			} catch (DataAccessException e) {

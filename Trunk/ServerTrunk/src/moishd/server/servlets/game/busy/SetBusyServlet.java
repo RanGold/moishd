@@ -5,8 +5,16 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.DSCommon;
+import moishd.server.common.DataAccessException;
 import moishd.server.common.LoggerCommon;
+import moishd.server.dataObjects.MoishdUser;
 import moishd.server.servlets.GeneralServlet;
+
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
 
 public class SetBusyServlet extends GeneralServlet {
 	/**
@@ -20,12 +28,32 @@ public class SetBusyServlet extends GeneralServlet {
 		super.doPost(request, response);
 
 		if (user != null) {
-			if (mUser.isBusy()) {
-				LoggerCommon.Get().LogError(this, response,
-					"Tried to get busy (with himself) while busy with " + mUser.getBusyWith());
-			} else {
-				mUser.setPartner(mUser.getUserGoogleIdentifier());
-				mUser.SaveChanges();
+			Queue queue = QueueFactory.getQueue("inviteQueue");
+			queue.add(TaskOptions.Builder.url("/SetBusyServlet")
+					.method(Method.GET)
+					.param("id", mUser.getUserGoogleIdentifier()));
+		}
+	}
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		if (request.getHeader("X-AppEngine-QueueName").equals("inviteQueue")) {
+			try {
+				String id = request.getParameter("id");
+				MoishdUser mUser = DSCommon.GetUserByGoogleId(id);
+
+				if (mUser.isBusy()) {
+					LoggerCommon.Get().LogError(
+							this,
+							response,
+							"Tried to get busy (with himself) while busy with "
+									+ mUser.getBusyWith());
+				} else {
+					mUser.setPartner(mUser.getUserGoogleIdentifier());
+					mUser.SaveChanges();
+				}
+			} catch (DataAccessException e) {
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
 	}
