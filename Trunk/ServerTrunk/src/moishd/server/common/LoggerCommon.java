@@ -38,14 +38,18 @@ public class LoggerCommon {
 		this.LogError(servlet, null, message);
 	}
 	
-	public void LogError(HttpServlet servlet, HttpServletResponse response, String message) throws IOException {
+	public void LogError(HttpServlet servlet, HttpServletResponse response, String header, String message) throws IOException {
 		this.getLog(servlet.getServletName()).log(Level.SEVERE, message);
 		
 		if (response != null) {
-			response.addHeader("Error", "");
+			response.addHeader(header, "");
 			response.getWriter().println(servlet.getServletName() + ": no logged in user");
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	public void LogError(HttpServlet servlet, HttpServletResponse response, String message) throws IOException {
+		LogError(servlet, response, "Error", message);
 	}
 	
 	public void LogError(HttpServlet servlet, String message, StackTraceElement[] messages) throws IOException {
