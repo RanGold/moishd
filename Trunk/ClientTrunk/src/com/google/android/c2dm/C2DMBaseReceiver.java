@@ -86,14 +86,14 @@ public abstract class C2DMBaseReceiver extends IntentService {
     /**
      * Called when a registration token has been received.
      */
-    public void onRegistrered(Context context, String registrationId) throws IOException {
+    public void onRegistrered(@SuppressWarnings("unused") Context context, @SuppressWarnings("unused") String registrationId) throws IOException {
         // registrationId will also be saved
     }
 
     /**
      * Called when the device has been unregistered.
      */
-    public void onUnregistered(Context context) {
+    public void onUnregistered(@SuppressWarnings("unused") Context context) {
     }
 
     

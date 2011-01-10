@@ -45,7 +45,7 @@ public class MoishdPreferences {
 		editor.commit();
 	}
 	
-	public static boolean isReturnedFromAuthe(Context context){
+	public static boolean isReturnedFromAuth(Context context){
 		SharedPreferences userNamePref = context.getSharedPreferences(prefReturnName, Context.MODE_PRIVATE);
 		boolean returned = userNamePref.getBoolean(returnName, false);
 		return returned;
