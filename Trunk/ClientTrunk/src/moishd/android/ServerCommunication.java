@@ -140,6 +140,18 @@ public class ServerCommunication {
 		else
 			return true;
 	}
+	public static boolean cancelGame(String authString){
+		HttpResponse resp = activateServlet(ServletNamesEnum.CancelGame,authString);
+		if (resp==null)
+			return false;
+		if (resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
+		}
+		else
+			return true;
+		
+	}
 	
 	public static boolean IsBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.IsBusy,authString);
