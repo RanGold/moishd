@@ -50,6 +50,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -93,7 +94,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private String trophiesList;
 
 	private int currentClickPosition;
-
+	private boolean userResponedToMoish = false;
 	private TextView header;
 	private ListView list;
 
@@ -293,9 +294,9 @@ public class AllOnlineUsersActivity extends Activity{
 				retrieveInvitation(inviterName);
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
+				userResponedToMoish = true;
 				userDeclinedToMoishDialog();
 				game_id = null;
-				
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
@@ -307,29 +308,37 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
+				userResponedToMoish = true;
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
 				game_id = null;
 				opponent_nick_name=null;
+
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
+				userResponedToMoish = true;
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsOffline(opponent_nick_name);
 				game_id = null;
 				opponent_nick_name=null;
+
 			
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
+				userResponedToMoish = true;
 				StartGamePopular();
+
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
-
+				userResponedToMoish = true;
 				startGameTruth();
+				
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
+				userResponedToMoish = true;
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
@@ -705,6 +714,9 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
+					waitForResponse timerForResponse;
+					timerForResponse= new waitForResponse(30000,1000);
+					timerForResponse.start();
 				}
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -1302,4 +1314,21 @@ public class AllOnlineUsersActivity extends Activity{
 			ImageView facebookPic;
 		}
 	}
+	private class waitForResponse extends CountDownTimer {
+		private waitForResponse(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}    
+		public void onFinish() {
+			if (!userResponedToMoish) {
+				ServerCommunication.cancelGame(authToken);
+			}
+			else {
+				userResponedToMoish = false;
+			}
+		}    
+		public void onTick(long millisUntilFinished) {
+		}
+		
+	}
+
 }
