@@ -498,15 +498,33 @@ public class DSCommon {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<GameStatistics> GetMostPopularGame() {
+	public static String GetMostPopularGame() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(GameStatistics.class);
 			q.setOrdering("gameRank descending");
-			q.setRange(0, 1);
+			
+			List<GameStatistics> stats = (List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute());
+			
+			double popularPoints = 0;
+			String popularName = "DareSimonPro";
+			if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "No stats for any game returning default - DareSimonPro");
+			}
+			int totalPlayed = 0;
+			for (GameStatistics stat : stats) {
+				totalPlayed += stat.getTimesPlayed();
+			}
+			for (GameStatistics stat : stats) {
+				double temp = stat.getRankTotal() * 0.5 + (double)stat.getTimesPlayed() / (double)totalPlayed * 0.5; 
+				if (temp > popularPoints) {
+					popularName = stat.getGameType();
+					popularPoints = temp;
+				}
+			}
 
-			return ((List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute()));
+			return (popularName);
 		}
 		finally {
 			if (q != null) {
