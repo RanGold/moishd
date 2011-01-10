@@ -104,7 +104,7 @@ public class WelcomeScreenActivity extends Activity{
 					progressDialog.dismiss();
 				showDialog(DIALOG_C2DM_ERROR);
 				break;
-
+		
 			case REGISTRATION_COMPLETE:
 				if (progressDialog != null)
 					progressDialog.dismiss();
@@ -155,7 +155,7 @@ public class WelcomeScreenActivity extends Activity{
 		if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}
-		else if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
+		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
 			if (googleAuthString == null){
 				startGoogleAuth();
 			}
@@ -168,6 +168,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
+	
 	@Override
 	protected void onDestroy (){
 		if(isC2DMRegistered()){
@@ -183,6 +184,7 @@ public class WelcomeScreenActivity extends Activity{
 			if (resultCode == IntentResultCodesEnum.OK.getCode()){
 				MoishdPreferences.setReturnFromAuth(getApplicationContext(), false);
 				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
+				googleAuthString = authString;
 				saveGoogleAuthToken(authString);
 			}
 			else{
