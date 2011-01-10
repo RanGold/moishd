@@ -39,6 +39,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,6 +61,7 @@ public class WelcomeScreenActivity extends Activity{
 	private AsyncFacebookRunner asyncRunner;
 
 	private LocationManagment locationManagment;
+	private ConnectivityManager connectivityManager;
 	private Location location;
 	private ProgressDialog progressDialog ;
 	private final int DIALOG_AUTH_TOKEN_DECLINED = 11;
@@ -69,7 +72,7 @@ public class WelcomeScreenActivity extends Activity{
 	private final int START_ACOUNT_SETTINGS = 16;
 	private final int DIALOG_NO_ACCOUNTS = 17;
 	private final int DIALOG_SHOW_ACCOUNTS = 18;
-
+	private final int DIALOG_NO_INTERNET_CONNECTION = 19;
 
 	private String googleAuthString = null;
 	private int numberOfTriesLeft = 3;
@@ -128,6 +131,8 @@ public class WelcomeScreenActivity extends Activity{
 		Typeface fontOfName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
 		text.setTypeface(fontOfName);
 
+		connectivityManager =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE); 
+
 		facebook = new Facebook(APP_ID);
 		asyncRunner = new AsyncFacebookRunner(facebook);
 		//check if the user is logged in into Facebook
@@ -146,7 +151,10 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
+		if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+			showDialog(DIALOG_NO_INTERNET_CONNECTION);
+		}
+		else if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
 			if (googleAuthString == null){
 				startGoogleAuth();
 			}
@@ -425,6 +433,18 @@ public class WelcomeScreenActivity extends Activity{
 					registrationErrorMessage.setTarget(mHandler);
 					registrationErrorMessage.what = START_ACOUNT_SETTINGS;
 					registrationErrorMessage.sendToTarget();
+				}
+			});
+			return builder.create();
+			
+		case DIALOG_NO_INTERNET_CONNECTION:
+			builder.setTitle("Error");
+			builder.setMessage("Moish'd! cannot start as it requires internet connection.")
+			.setCancelable(false)
+			.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					moveTaskToBack(true);
 				}
 			});
 			return builder.create();
