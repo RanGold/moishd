@@ -74,7 +74,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private static List<Drawable> usersPictures = new ArrayList<Drawable>();
 	private static List<String> friendsID;
 	private static GetUsersByTypeEnum currentUsersType;
-	private GetUsersByTypeEnum previousClickPosition;
+	private GetUsersByTypeEnum previousUserType;
 
 	private static Typeface fontName, fontHeader;
 
@@ -89,6 +89,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private String recName;
 	private String myUserName;
 	private boolean serverHasFacebookFriends;
+	private int newRank;
+	private String trophiesList;
 
 	private int currentClickPosition;
 
@@ -96,7 +98,6 @@ public class AllOnlineUsersActivity extends Activity{
 	private ListView list;
 
 	private AsyncFacebookRunner asyncRunner;
-
 	private ProgressDialog mainProgressDialog;
 
 	private LocationManagment locationManagment;
@@ -411,7 +412,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void getUsers(GetUsersByTypeEnum usersType){
 
-		previousClickPosition = currentUsersType;
+		previousUserType = currentUsersType;
 		currentUsersType = usersType;
 
 		switch(usersType){
@@ -558,7 +559,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void hasNoLocationDialog(){
 		showDialog(DIALOG_HAS_NO_LOCATION);
-		currentUsersType = previousClickPosition;
+		currentUsersType = previousUserType;
 	}
 
 	private void rankUpdated(int newRank) {
@@ -660,7 +661,7 @@ public class AllOnlineUsersActivity extends Activity{
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 		Bundle parameters = new Bundle();
 		String message;
-
+ 
 		switch(code){
 		case FACEBOOK_POST_RANK_UPDATED:
 			message = firstName +"'s Moish'd! rank has just been updated!";
@@ -687,11 +688,6 @@ public class AllOnlineUsersActivity extends Activity{
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 	}
 
-	private void cancelDialog (DialogInterface dialog){
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
-		dialog.cancel();		
-	}
-
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -707,14 +703,13 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					cancelDialog(dialog);
+					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
 				}
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
-					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD);
+					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 				}
 			});
 			return builder.create();  
@@ -722,9 +717,9 @@ public class AllOnlineUsersActivity extends Activity{
 		case DIALOG_GET_GAME_OFFER:
 			builder.setMessage("Hey! " + opponent_nick_name + " has a higher rank than you! Would you like to show him/her what you've got?!")
 			.setCancelable(false)
-			.setPositiveButton("Oh yes", new DialogInterface.OnClickListener() {
+			.setPositiveButton("Oh yes!", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
+					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER, true);
 					inviteUserOfferedByServerToMoish(opponent_google_id);
 					opponent_google_id=null;
 					opponent_nick_name=null;
@@ -732,7 +727,7 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER);
+					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER, true);
 					opponent_google_id=null;
 					opponent_nick_name=null;
 				}
@@ -744,7 +739,6 @@ public class AllOnlineUsersActivity extends Activity{
 			builder.setMessage("You've been invited by " + args.getString("userName") + " to Moish.")
 			.setCancelable(false)
 			.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-
 				public void onClick(DialogInterface dialog, int id) {
 					Intent chooseGame = new Intent();
 					Random random = new Random();  
@@ -772,20 +766,20 @@ public class AllOnlineUsersActivity extends Activity{
 						sendInvitationResponse("AcceptTruth","");
 					}
 					
-					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION, true);
 					
 				}
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					sendInvitationResponse("Decline", "");  
-					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION);
+					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION, true);
 				}
 			});
 			return builder.create();  
 
 		case DIALOG_RANK_UPDATED:
-			final int newRank = args.getInt("rank");
+			newRank = args.getInt("rank");
 			builder.setMessage("Congratulations, your rank has been updated! Your new rank is " + newRank)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
@@ -793,42 +787,43 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					Bundle bundle = new Bundle();
 					bundle.putInt("rank", newRank);
+					dismissAndRemoveDialog(DIALOG_RANK_UPDATED, false);
 					postOnFacebookWall(FACEBOOK_POST_RANK_UPDATED, bundle);
 				}
 			})
 			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_RANK_UPDATED);		
+					dismissAndRemoveDialog(DIALOG_RANK_UPDATED, true);		
 				}
 			});
 			return builder.create(); 
 
 		case DIALOG_RANK_AND_TROPHIES_UPDATED:
-			final int rank = args.getInt("rank");
-			final String trophies = stringArrayToString(args.getStringArray("trophiesList"));
+			newRank = args.getInt("rank");
+			trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
 			builder.setMessage("Congratulations, your rank and trophies have been updated!" +
-					"Your new rank is " + rank + "\n" +
-					"You've earned the following trophies: " + trophies)
+					"Your new rank is " + newRank + "\n" +
+					"You've earned the following trophies: " + trophiesList)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
 
 				public void onClick(DialogInterface dialog, int id) {
 					Bundle bundle = new Bundle();
-					bundle.putInt("rank", rank);
-					bundle.putString("trophiesList", trophies);
+					bundle.putInt("rank", newRank);
+					bundle.putString("trophiesList", trophiesList);
+					dismissAndRemoveDialog(DIALOG_RANK_AND_TROPHIES_UPDATED, false);		
 					postOnFacebookWall(FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED, bundle);
-					dismissAndRemoveDialog(DIALOG_RANK_AND_TROPHIES_UPDATED);		
 				}
 			})
 			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED, true);		
 				}
 			});
 			return builder.create(); 
 			
 		case DIALOG_TROPHIES_UPDATED:
-			final String trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
+			trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
 			builder.setMessage("Congratulations, you've earned the following trophies: \n" + trophiesList)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
@@ -836,13 +831,13 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					Bundle bundle = new Bundle();
 					bundle.putString("trophiesList", trophiesList);
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED, false);		
 					postOnFacebookWall(FACEBOOK_POST_RANK_UPDATED, bundle);
-					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
 				}
 			})
 			.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED);		
+					dismissAndRemoveDialog(DIALOG_TROPHIES_UPDATED, true);		
 				}
 			});
 			return builder.create(); 
@@ -853,7 +848,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_USER_IS_BUSY);		
+					dismissAndRemoveDialog(DIALOG_USER_IS_BUSY, true);		
 				}
 			});
 			return builder.create(); 
@@ -864,7 +859,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dismissAndRemoveDialog(DIALOG_USER_IS_OFFLINE);		
+					dismissAndRemoveDialog(DIALOG_USER_IS_OFFLINE, true);		
 				}
 			});
 			return builder.create();  
@@ -880,7 +875,6 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create();  
 
 		case DIALOG_USER_CANCELED_GAME:
-
 			//TODO cancel game
 			String user;
 			if (myUserName.equals(initName)){
@@ -893,7 +887,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					cancelDialog(dialog);
+					dismissAndRemoveDialog(DIALOG_USER_CANCELED_GAME, true);
 					initName=null;
 					recName=null;
 				}
@@ -928,7 +922,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					cancelDialog(dialog);		
-					currentUsersType = previousClickPosition;
+					currentUsersType = previousUserType;
 				}
 			});
 			return builder.create(); 
@@ -948,10 +942,17 @@ public class AllOnlineUsersActivity extends Activity{
 		}
 	}
 
-	private void dismissAndRemoveDialog(int code){
+	private void dismissAndRemoveDialog(int code, boolean changeStatusToAvailable){
+		if (changeStatusToAvailable){
+			MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		}
 		dismissDialog(code);
 		removeDialog(code);	
+	}
+	
+	private void cancelDialog(DialogInterface dialog){
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		dialog.cancel();		
 	}
 
 	private String stringArrayToString(String [] userTrophies){
@@ -1173,8 +1174,6 @@ public class AllOnlineUsersActivity extends Activity{
 		private Bitmap facebookPic;
 		private Bitmap noPic;
 		private Bitmap nearByUsers;
-		private Bitmap noNearBy;
-
 
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
@@ -1184,8 +1183,6 @@ public class AllOnlineUsersActivity extends Activity{
 			facebookPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.facebook);
 			nearByUsers = BitmapFactory.decodeResource(context.getResources(), R.drawable.world);
 			noPic = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
-			// TODO - do we need the 'no world' image?
-			noNearBy = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_world);
 			userRank0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_0);
 			userRank1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_1);
 			userRank2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.rank_2);
