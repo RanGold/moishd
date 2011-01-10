@@ -1,15 +1,20 @@
 package moishd.server.servlets.game.busy;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.server.common.DSCommon;
-import moishd.server.common.DataAccessException;
-import moishd.server.common.LoggerCommon;
-import moishd.server.dataObjects.MoishdUser;
+import moishd.server.common.GsonCommon;
+import moishd.server.dataObjects.BusyObject;
 import moishd.server.servlets.GeneralServlet;
+
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
 
 public class CancelGameServlet extends GeneralServlet {
 	/**
@@ -22,15 +27,29 @@ public class CancelGameServlet extends GeneralServlet {
 		super.doPost(request, response);
 
 		if (user != null) {
-			try {
-				MoishdUser otherUser = DSCommon.GetUserByGoogleId(mUser.getBusyWith());
-				mUser.setNotBusy();
-				mUser.SaveChanges();
-				otherUser.setNotBusy();
-				otherUser.SaveChanges();
-			} catch (DataAccessException e) {
-				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
-			}
+			// try {
+			List<BusyObject> busyUsers = new LinkedList<BusyObject>();
+			busyUsers
+					.add(new BusyObject(mUser.getUserGoogleIdentifier(), false));
+			busyUsers.add(new BusyObject(mUser.getBusyWith(), false));
+
+			String json = GsonCommon.GetJsonString(busyUsers);
+
+			Queue queue = QueueFactory.getQueue("inviteQueue");
+			queue.add(TaskOptions.Builder
+					.url("/queues/UpdateBusySynced").method(Method.POST)
+					.param("json", json));
+			// TODO : delete
+			// MoishdUser otherUser =
+			// DSCommon.GetUserByGoogleId(mUser.getBusyWith());
+			// mUser.setNotBusy();
+			// mUser.SaveChanges();
+			// otherUser.setNotBusy();
+			// otherUser.SaveChanges();
+			// } catch (DataAccessException e) {
+			// LoggerCommon.Get().LogError(this, response, e.getMessage(),
+			// e.getStackTrace());
+			// }
 		}
 	}
 }

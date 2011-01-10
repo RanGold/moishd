@@ -7,6 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
+
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
@@ -23,12 +28,23 @@ public class GameInvReplyServlet extends GeneralServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		
+
 		super.doPost(request, response);
 
 		if (user != null) {
+			String paramters = request.getReader().readLine();
+
+			Queue queue = QueueFactory.getQueue("inviteQueue");
+			queue.add(TaskOptions.Builder.url("/GameInvReply").method(Method.GET)
+					.param("paramters", paramters));
+		}
+	}
+	
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	throws IOException {
+		if (request.getHeader("X-AppEngine-QueueName").equals("inviteQueue")) {
 			try {
-				String paramters = request.getReader().readLine();
+				String paramters = request.getParameter("paramters");
 				
 				if (!paramters.endsWith("#") && paramters.split("#").length != 3) {
 					LoggerCommon.Get().LogError(this, response, 
@@ -177,7 +193,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 						DSCommon.DeleteGameById(gameId);
 					}
 				}
-					
+					// TODO : delete
 //					if (invReply.equals("Decline") && mInitUser.isBusy() && 
 //							mInitUser.getBusyWith().equals(tg.getPlayerRecId())) {
 //						C2DMCommon.PushGenericMessage(mInitUser.getRegisterID(), 
