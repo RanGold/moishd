@@ -98,20 +98,22 @@ public class ServerRequest  {
 			HttpGet http_get = new HttpGet(appDomain + "/_ah/login?continue=http://localhost/&auth=" + token);
 			HttpResponse response;
 			response = http_client.execute(http_get);
-			if(response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_MOVED_TEMP)
+			if(response.getStatusLine().getStatusCode() != HttpURLConnection.HTTP_MOVED_TEMP) {
+				Log.d("COOKIE","Error getting cookie - " + response.getStatusLine().getStatusCode() + 
+						" instead of redirect " + HttpURLConnection.HTTP_MOVED_TEMP);
 				// Response should be a redirect
 				return false;
+			}
 			
 			for(Cookie cookie : http_client.getCookieStore().getCookies()) {
-				if(cookie.getName().equals("ACSID"))
+				if(cookie.getName().equals("ACSID")) {
 					return true;
+				}
 			}
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d("COOKIE","Error getting cookie - \n\r" + e.getStackTrace()[0].toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d("COOKIE","Error getting cookie - \n\r" + e.getStackTrace()[0].toString());
 		} finally {
 			http_client.getParams().setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
 		}
