@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 public class AuthorizeGoogleAccountActivity extends Activity {
 	
@@ -30,6 +32,11 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		
+		setContentView(R.layout.authorize_google_account_layout);
+		LinearLayout view = (LinearLayout) findViewById(R.id.authorizeGoogleAccountLinearView);
+		view.setVisibility(View.INVISIBLE);
+
 		Intent intent = getIntent();
 		accountManager = AccountManager.get(this);
 		account = (Account)intent.getExtras().get(IntentExtraKeysEnum.GoogleAccount.toString());
@@ -107,10 +114,10 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	};
 
 	protected void onGetAuthToken(Bundle bundle) {
+		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
 		String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
-		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
 		setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 		finish();
 	}
