@@ -6,9 +6,10 @@
 	android:background="#ffffff"
 	android:gravity="center_horizontal">
 		
+		
 	<TextView
   	android:id="@+id/moishdName"
-  	android:layout_marginTop="40dip" 
+  	android:layout_margin ="20dip"
   	android:text="Moish'd!" 
 	android:gravity="center_vertical|center_horizontal"
 	android:textSize="40dip"
@@ -19,6 +20,7 @@
 	</TextView>
 
 	<ImageView android:id="@+id/moishdLogo"
+	  	android:layout_margin ="10dip"
 		android:src="@drawable/moishd_logo"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
@@ -30,6 +32,6 @@
 		android:src="@drawable/login_button"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
-		android:layout_margin="30dip" />
+		android:layout_margin="20dip" />
 
 </LinearLayout>
