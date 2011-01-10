@@ -52,7 +52,7 @@ public class UserLoginServlet extends GeneralServlet {
 				}
 				
 				if (muser.isRegistered()) {
-					LoggerCommon.Get().LogError(this, response, "Tried to login twice with the same user");
+					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", "Tried to login twice with the same user");
 				} else {
 					muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 					muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
