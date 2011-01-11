@@ -74,6 +74,7 @@ public class WelcomeScreenActivity extends Activity{
 	private final int DIALOG_SHOW_ACCOUNTS = 18;
 	private final int DIALOG_NO_INTERNET_CONNECTION = 19;
 	private final int DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT = 20;
+	private final int DIALOG_ALREADY_LOGIN = 21;
 
 	private String googleAuthString = null;
 	private int numberOfTriesLeft = 3;
@@ -123,7 +124,12 @@ public class WelcomeScreenActivity extends Activity{
 				if (progressDialog != null)
 					progressDialog.dismiss();
 				showDialog(DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT);
+				break;
 				
+			case DIALOG_ALREADY_LOGIN:
+				if (progressDialog != null)
+					progressDialog.dismiss();
+				showDialog(DIALOG_ALREADY_LOGIN);
 			}
 		}
 	};
@@ -434,6 +440,8 @@ public class WelcomeScreenActivity extends Activity{
 		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
 			super.onPrepareDialog(id, dialog, args);
 			break;
+		case DIALOG_ALREADY_LOGIN:
+			super.onPrepareDialog(id, dialog, args);
 		}
 	}
 
@@ -546,6 +554,17 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();  
+			
+		case DIALOG_ALREADY_LOGIN:
+			builder.setTitle("Error");
+			builder.setMessage("The user you're trying to login with is currently logged in to Moishd server.")
+			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+					facebookLogout(null);
+				}
+			});
+			return builder.create();  
 		}
 		return null;
 
@@ -587,14 +606,24 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setLocation(loc);
 
 				String authString = getGoogleAuthToken();
+				
 				int registrationStatus = ServerCommunication.enlistUser(newUser, authString);
-				if (registrationStatus==2){
+				
+				switch (registrationStatus){
+				case ServerCommunication.ENLIST_OK:
 					saveUserName(userName, firstName);
-					sendMessageToHandler(REGISTRATION_COMPLETE);					
-				}else if(registrationStatus==0){
+					sendMessageToHandler(REGISTRATION_COMPLETE);
+					break;	
+				case ServerCommunication.ENLIST_SERVER_ERROR:
 					sendMessageToHandler(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
-				}else 
+					break;
+				case ServerCommunication.ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR:
 					sendMessageToHandler(DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT);
+					break;
+				case ServerCommunication.ENLIST_ALREADY_LOGIN:
+					sendMessageToHandler(DIALOG_ALREADY_LOGIN);
+				}
+
 			}catch (JSONException e) {
 				Log.w("Moishd-JsonExeption", "JSON Error in response");
 				sendMessageToHandler(DIALOG_FACEBOOK_ERROR);

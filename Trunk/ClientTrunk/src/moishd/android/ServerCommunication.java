@@ -36,7 +36,11 @@ public class ServerCommunication {
 
 	private static final String serverPath = "http://moish-d.appspot.com";
 	private static Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-
+	public final static int ENLIST_SERVER_ERROR = 0;
+	public final static int ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR = 1;
+	public final static int ENLIST_OK = 2;
+	public final static int ENLIST_ALREADY_LOGIN = 3;
+	
 	public static int registerC2DMToServer(ClientMoishdUser user, String authString){
 		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, authString);
 		if (resp != null){
@@ -83,12 +87,16 @@ public class ServerCommunication {
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
 		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
-			return 0;		
+			return ENLIST_SERVER_ERROR;		
 		}else if (response.containsHeader("AccountNotMatch")){
 			Log.d("GAE ERROR", "Account not match the one on the server");
-			return 1;
-		} else
-			return 2;
+			return ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR;
+		} else if (response.containsHeader("AlreadyLoggedIn")){
+			Log.d("GAE ERROR", "User already login to the server");
+			return ENLIST_ALREADY_LOGIN;
+		} else{
+			return ENLIST_OK;
+		}
 	}
 
 	public static ClientMoishdUser getCurrentUser(String authString) {
