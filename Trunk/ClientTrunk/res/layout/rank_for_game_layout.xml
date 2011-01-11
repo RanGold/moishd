@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:background="#FFFFFF">
+	android:layout_height="fill_parent" android:background="@drawable/bg2">
 
 	<TextView android:id="@+id/rank" android:layout_marginTop="40dip"
 		android:text="Please rank the game, from 1 to 5:"
 		android:layout_marginLeft="10dip" android:gravity="center_vertical|center_horizontal"
 		android:layout_marginRight="10dip" android:textSize="30dip"
 		android:textColor="#436EEE" android:textStyle="bold"
-		android:layout_width="wrap_content" android:layout_height="wrap_content">
+		android:layout_width="fill_parent" android:layout_height="wrap_content">
 	</TextView>
 
-	<TableRow android:id="@+id/Row01" android:layout_width="fill_parent"
+	<TableRow android:id="@+id/Row01" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:gravity="center"
 		android:layout_marginTop="30dip">
 
@@ -23,25 +23,37 @@
 		<ImageView android:id="@+id/rank2" android:src="@drawable/gray_star"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:clickable="true" android:paddingRight="5dip" />
-
-		<ImageView android:id="@+id/rank3" android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:src="@drawable/gray_star"
-			android:clickable="true" android:paddingRight="5dip" />
-
-		<ImageView android:id="@+id/rank4" android:src="@drawable/gray_star"
+			
+		<ImageView android:id="@+id/rank3" android:src="@drawable/gray_star"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:clickable="true" android:paddingRight="5dip" />
-
-		<ImageView android:id="@+id/rank5" android:src="@drawable/gray_star"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
-			android:clickable="true" android:paddingRight="10dip" />
-
-	</TableRow>
+       />	
 	
-	<ImageView android:id="@+id/done" android:src="@drawable/done"
-		android:clickable="true" android:visibility="visible"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_gravity="center" android:layout_marginTop="20dip">
-	</ImageView>
-
+  	<ImageView android:id="@+id/rank4"
+		android:src="@drawable/gray_star"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+  		android:clickable="true"
+		android:paddingRight="5dip"
+   />
+	
+  	<ImageView android:id="@+id/rank5"
+  		android:src="@drawable/gray_star"
+  		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+  		android:clickable="true"   
+		android:paddingRight="5dip"
+      />
+      
+      </TableRow>
+	
+  	<ImageView android:id="@+id/done"
+  		android:src="@drawable/done"
+  		android:clickable="true"
+  		android:visibility="invisible"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"        
+		android:layout_gravity="center"
+		android:layout_marginTop = "50dip"
+      />
 </LinearLayout>
