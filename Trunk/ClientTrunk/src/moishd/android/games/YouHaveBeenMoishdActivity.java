@@ -2,6 +2,7 @@ package moishd.android.games;
 
 import moishd.android.R;
 import moishd.common.IntentExtraKeysEnum;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,11 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 
 		ImageView moishdHand = (ImageView) findViewById(R.id.hands);
 		TextView text = (TextView) findViewById(R.id.youHaveBeenMoishdText);
+		TextView bottomText  = (TextView) findViewById(R.id.clickOnHand);
+		
+		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
+		text.setTypeface(fontName);
+		bottomText.setTypeface(fontName);
 		
 		checkIfGameIsNearBy();
 	
@@ -39,7 +45,9 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 
 		moishdHand.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				checkIfRankNeeded();
+			checkIfRankNeeded();
+		
+			
 			}});
 
 

@@ -3,6 +3,7 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,14 +57,21 @@ public class TruthPartGameActivity extends GameActivity {
 		setContentView(R.layout.truth);
 
 		final TextView question = (TextView) findViewById(R.id.question);
+		final TextView ourQuestion = (TextView) findViewById(R.id.ourquestion);
 		final ImageView yes = (ImageView) findViewById(R.id.yes);
 		final ImageView no = (ImageView) findViewById(R.id.no);
 
+		
 		Random random = new Random();  
 		i = random.nextInt(100);
 		int j = questions.length;
 		i= i % j;
 		final String theQuestion = questions[i][0];
+		
+		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
+		Typeface fontName2 = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
+		question.setTypeface(fontName);
+		ourQuestion.setTypeface(fontName2);
 		
 		question.setText(theQuestion);
 		question.setTextScaleX(1);

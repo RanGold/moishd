@@ -4,15 +4,16 @@
   android:orientation="vertical"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-   android:background="#FFFFFF">
+   android:background="@drawable/bg2purple">
   
     <TextView
   	android:id="@+id/text1"
   	android:layout_marginTop="40dip" 
   	android:text="Prepare yourself! " 
-	android:layout_marginLeft="30px"
+	android:layout_marginLeft="10dip"
 	android:gravity="center_vertical|center_horizontal"
-	android:layout_marginRight="10px"
+	android:layout_gravity="center"
+	android:layout_marginRight="10dip"
 	android:textSize="35dip"
 	android:textColor="#436EEE" 
 	android:textStyle="bold"
@@ -20,32 +21,25 @@
 	android:layout_height="wrap_content">
 	</TextView>
 	
-
-	
-	<TableRow 
-	android:id="@+id/Row01" 
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:layout_marginTop="45dip">
 	
 	<ImageView android:id="@+id/mixing"
+	android:layout_marginTop="35dip"
 	android:src="@drawable/bigger_hand"
-	android:layout_width="160px" 
-	android:layout_height="160px"	
-	android:layout_marginLeft="80dip"/>
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"	/>
 	
-	</TableRow>
 	
-		    <TextView
+	<TextView
   	android:id="@+id/text2"
-  	android:layout_marginTop="20dip" 
+  	android:layout_marginTop="10dip" 
   	android:text="This game is the most popular Moish'd game!" 
-	android:layout_marginLeft="10px"
+	android:layout_marginLeft="10dip"
 	android:gravity="center_vertical|center_horizontal"
-	android:layout_marginRight="10px"
+	android:layout_gravity="center"
+	android:layout_marginRight="10dip"
 	android:textSize="30dip"
 	android:textColor="#BA55D3" 
-	android:textStyle="bold"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content">
 	</TextView>

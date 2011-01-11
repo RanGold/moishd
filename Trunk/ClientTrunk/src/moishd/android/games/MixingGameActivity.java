@@ -148,7 +148,7 @@ public class MixingGameActivity extends GameActivity{
 			mixedWord= mix3(currentWord);
 			
 		word.setText(mixedWord);
-		word.setTextSize(60);
+		word.setTextSize(50);
 		word.setTextScaleX(1);
 
 

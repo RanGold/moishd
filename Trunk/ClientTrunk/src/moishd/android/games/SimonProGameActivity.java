@@ -5,6 +5,7 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -49,7 +50,8 @@ public class SimonProGameActivity extends GameActivity{
 		tries = (TextView) findViewById(R.id.tries);
 		explain = (TextView) findViewById(R.id.explain);
 
-
+		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
+		explain.setTypeface(fontName);
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.animation5);
 		explain.startAnimation(anim);
 		explain.clearAnimation();
@@ -57,7 +59,11 @@ public class SimonProGameActivity extends GameActivity{
 		
 		word = (TextView) findViewById(R.id.theWord);
 		word.setTextSize(25);
+		word.setTypeface(fontName);
+		tries.setTypeface(fontName);
+		giveUp.setTypeface(fontName);
 		word.startAnimation(anim);
+		
 		
 		
 		//fill the array in random ints
@@ -148,7 +154,7 @@ public class SimonProGameActivity extends GameActivity{
 		public void onFinish() {
 			counter=0;
 			word.setTextSize(30);
-			word.setPadding(80, 0, 0, 0);
+			//word.setPadding(90, 0, 0, 0);
 			word.setText("go go go!!!");
 			click1.setVisibility(0);		
 			click2.setVisibility(0);
@@ -162,14 +168,14 @@ public class SimonProGameActivity extends GameActivity{
 		public void onTick(long millisUntilFinished) {
 			if (counter != 5) {
 				number = Integer.toString(arr[counter]);
-				word.setPadding(130, 0, 0, 0);
 				word.setTextSize(80);
+				//word.setPadding(140, 0, 0, 0);
 				word.setText(number);
 				counter++;
 			}
 			else {
 				word.setTextSize(40);
-				word.setPadding(50, 0, 0, 0);
+				//word.setPadding(0, 0, 0, 0);
 				word.setText("wait...remember...and...");
 		}
 		}
