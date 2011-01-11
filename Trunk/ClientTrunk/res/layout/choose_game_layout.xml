@@ -4,11 +4,11 @@
   	android:orientation="vertical"
   	android:layout_width="fill_parent"
   	android:layout_height="fill_parent"
-   	android:background="#FFFFFF">
+   	android:background="@drawable/bg2blue">
   
     <TextView
   		android:id="@+id/text"
-  		android:layout_marginTop="40dip" 
+  		android:layout_marginTop="20dip" 
   		android:text="Please choose the game you wish to play:" 
 		android:layout_marginLeft="20dip"
 		android:gravity="center_vertical|center_horizontal"
@@ -24,7 +24,7 @@
 		android:id="@+id/Row01" 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
-		android:layout_marginTop="30dip">
+		android:layout_marginTop="10dip">
 	
 	<ImageView android:id="@+id/mixing"
 		android:src="@drawable/mixing_game"
@@ -48,7 +48,7 @@
 		android:id="@+id/Row02" 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
-		android:layout_marginTop="5dip">
+		>
 	
   	<ImageView android:id="@+id/trivia"
   		android:src="@drawable/trivia_1"

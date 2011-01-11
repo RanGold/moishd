@@ -45,6 +45,7 @@ public class ChooseGameActivity extends Activity{
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text.setTypeface(fontName);
 		
+		
 		MyCount count;
 		count= new MyCount(30000,1000);
 		count.start();
@@ -55,10 +56,10 @@ public class ChooseGameActivity extends Activity{
 			}
 		});	
 		
+		
 		simonPro.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				returnGameTypeToCallingActivity(IntentExtraKeysEnum.DareSimonPro.toString());
-			
 			}
 		});
 		
@@ -75,6 +76,7 @@ public class ChooseGameActivity extends Activity{
 			}
 		});
 	}
+	
 	
 	public class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {

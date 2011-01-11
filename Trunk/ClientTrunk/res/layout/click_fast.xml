@@ -4,15 +4,15 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
-	android:background="#FFFFF0">
+	android:background="@drawable/bg2">
 
 	<TextView android:text="Click on the buttons as fast as you can according to the number on the screen" 
-	android:paddingLeft="12px"
-	android:paddingRight="12px"
+	android:paddingLeft="12dip"
+	android:paddingRight="12dip"
 	
 	android:gravity="center_vertical|center_horizontal"
-	android:paddingTop="10px"
-	android:textSize="15dip"
+	android:paddingTop="10dip"
+	android:textSize="20dip"
 	android:id="@+id/explaination"
 	android:textColor="#7A67EE" 
 	android:textStyle="bold"
@@ -34,10 +34,8 @@ android:paddingLeft="20dip">
 	android:layout_height="fill_parent"
 	android:textColor="#00FF00" 
 	android:textStyle="bold"
-	android:paddingTop="5px"
-	android:gravity="center_vertical|center_horizontal"
-	android:layout_marginLeft="50dip"
-	android:layout_marginRight="55dip">
+	android:paddingTop="5dip"
+	android:gravity="center_vertical|center_horizontal">
 	</TextView>
 	
 	</TableRow>
@@ -61,7 +59,7 @@ android:paddingLeft="20dip">
 	android:textStyle="bold"
 	android:drawableBottom="@drawable/middle_size_hand"
 	android:layout_width="wrap_content"
-	android:layout_marginLeft="40px" 
+	android:layout_marginLeft="40dip" 
 	android:layout_height="wrap_content"
 	
 	android:background="#FF6347">
@@ -74,7 +72,7 @@ android:paddingLeft="20dip">
 		android:clickable="true"
 	android:text="Moish!"
 	android:textStyle="bold"
-	android:layout_marginLeft = "60px"
+	android:layout_marginLeft ="60dip"
 	android:drawableBottom="@drawable/middle_size_hand"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
@@ -97,7 +95,7 @@ android:paddingLeft="20dip">
 	android:textStyle="bold"
 	android:drawableBottom="@drawable/middle_size_hand"
 	android:layout_width="wrap_content"
-	android:layout_marginLeft="40px" 
+	android:layout_marginLeft="40dip" 
 	android:visibility="invisible"
 	android:layout_height="wrap_content"
 	android:background="#9932CC">
@@ -110,7 +108,7 @@ android:paddingLeft="20dip">
 	android:textStyle="bold"
 	android:drawableBottom="@drawable/middle_size_hand"
 	android:layout_width="wrap_content"
-	android:layout_marginLeft="60px" 
+	android:layout_marginLeft="60dip" 
 	android:layout_height="wrap_content"
 	android:visibility="invisible"
 	android:background="#00FF00"

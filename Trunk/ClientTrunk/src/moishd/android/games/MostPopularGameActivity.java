@@ -31,7 +31,7 @@ public class MostPopularGameActivity extends Activity{
 		text2.setTypeface(fontName);
 		
 		MyCount count;
-		count= new MyCount(5000,1000);
+		count= new MyCount(7000,1000);
 		count.start();
 		
 	}

@@ -5,6 +5,7 @@ package moishd.android.games;
 import java.util.Random;
 
 import moishd.android.R;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -106,6 +107,9 @@ public class FastClickGameActivity extends GameActivity{
 		click3=(Button) findViewById(R.id.clickOnMe3);
 		click4=(Button) findViewById(R.id.clickOnMe4);
 
+		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
+		explain.setTypeface(fontName);
+		word.setTypeface(fontName);
 		
 		Animation myAnimation2 = AnimationUtils.loadAnimation(this, R.anim.animation3);
 		explain.startAnimation(myAnimation2);

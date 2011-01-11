@@ -5,12 +5,12 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
-	android:background="#FFFFF0">
+	android:background="@drawable/bg2">
 	
 	<TextView android:text="Find out what is the mixed word, type it to the text box and click the moish button." 
-	android:paddingLeft="20px"
-	android:paddingRight="20px"
-	android:paddingTop="10px"
+	android:paddingLeft="20dip"
+	android:paddingRight="20dip"
+	android:paddingTop="10dip"
 	android:textSize="20dip"
 	android:gravity="center_vertical|center_horizontal"
 	android:id="@+id/explain"
@@ -21,8 +21,11 @@
 	</TextView>
 	
 	<TextView android:text="The word is..." 
-	android:paddingLeft="70px"
-	android:paddingTop="30px"
+	android:paddingLeft="30dip"
+	android:paddingRight="30dip"
+	android:paddingTop="10dip"
+	android:layout_gravity="center"
+	android:gravity="center_vertical|center_horizontal"
 	android:textSize="30dip"
 	android:id="@+id/TheWordIs"
 	android:textColor="#7A67EE" 
@@ -34,14 +37,15 @@
 	<TextView 
 	android:id="@+id/theWord" 
 	android:visibility="invisible"
+	android:layout_gravity="center"
 	android:gravity="center_vertical|center_horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:textColor="#00FF00" 
 	android:textStyle="bold"
-	android:paddingTop="5px"
-	android:paddingLeft="5px"
-	android:paddingRight="5px"
+	android:paddingTop="5dip"
+	android:paddingLeft="5dip"
+	android:paddingRight="5dip"
 >
 	</TextView>
 	
@@ -70,11 +74,11 @@
 		android:layout_width="wrap_content"
 		android:hint="Hurry up!"
 		android:textStyle="italic"
-		android:width="170px"
+		android:width="170dip"
 		android:paddingRight = "10dip"
 		android:layout_marginLeft="25dip"
 		android:textSize="15dip"
-		android:paddingTop="10px">
+		android:paddingTop="10dip">
 		</EditText>
 	</TableRow>
 	
@@ -102,14 +106,6 @@
 </TableRow>
 	</TableRow>
 			
-<TableRow android:id="@+id/forthRow" 
-	android:layout_width="wrap_content" 
-	android:layout_height="fill_parent"
-	android:orientation="horizontal">
-
-
-
-</TableRow>
 
 
 </TableLayout>
