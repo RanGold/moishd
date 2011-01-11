@@ -61,11 +61,9 @@ public class RankForGameActivity extends Activity{
 
 		done.setClickable(true);
 		done.setVisibility(View.VISIBLE);
-		done.setPadding(100, 20, 00, 0);
-
 	}
 
-
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.rank_for_game_layout);
@@ -74,6 +72,7 @@ public class RankForGameActivity extends Activity{
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		Log.d("Tammy", "The game type for rank is " + game_type);
 
+		
 		yellowStar = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_star);
 		grayStar = BitmapFactory.decodeResource(getResources(), R.drawable.gray_star);
 		thankYou = BitmapFactory.decodeResource(getResources(), R.drawable.thank_you);
@@ -89,7 +88,6 @@ public class RankForGameActivity extends Activity{
 		text.setTypeface(fontName);
 
 
-
 		rank1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(1);
@@ -101,6 +99,7 @@ public class RankForGameActivity extends Activity{
 			public void onClick(View v) {
 				ColorStars(2);
 			}
+			
 		});
 
 		rank3.setOnClickListener(new OnClickListener() {
@@ -131,7 +130,6 @@ public class RankForGameActivity extends Activity{
 		});
 
 
-
 	}
 
 	public class MyCount extends CountDownTimer {
@@ -146,7 +144,6 @@ public class RankForGameActivity extends Activity{
 		}    
 		public void onTick(long millisUntilFinished) {
 			done = (ImageView) findViewById(R.id.done);
-			//done.setPadding(0, 20, 50, 0);
 			done.setImageBitmap(thankYou);
 
 		}
