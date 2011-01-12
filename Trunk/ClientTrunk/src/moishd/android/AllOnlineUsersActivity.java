@@ -20,6 +20,7 @@ import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
 import moishd.android.games.MostPopularGameActivity;
 import moishd.android.games.SimonProGameActivity;
+import moishd.android.games.TopFiveGamesActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
@@ -268,6 +269,12 @@ public class AllOnlineUsersActivity extends Activity{
 		case R.id.statistics:
 			displayOwnStatistics();
 			return true;
+		case R.id.topFivePopular:
+			displayTopPopularGames();
+			return true;
+		case R.id.topFiveRanked:
+			displayTopRankedGames();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -283,7 +290,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	@Override
 	protected void onNewIntent (Intent intent){
-
+		Log.d("Tammy", "do I ever get to new intent?");
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
@@ -472,6 +479,18 @@ public class AllOnlineUsersActivity extends Activity{
 		ClientMoishdUser me = ServerCommunication.getCurrentUser(authToken);
 		Intent intent = new Intent(this, UserStatisticsActivity.class);
 		intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), me);
+		startActivity(intent);
+	}
+	
+	private void displayTopRankedGames() {
+		Intent intent = new Intent(this, TopFiveGamesActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.TopFiveRequest.toString(), IntentExtraKeysEnum.TopFiveRanked.toString());
+		startActivity(intent);
+	}
+	
+	private void displayTopPopularGames() {
+		Intent intent = new Intent(this, TopFiveGamesActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.TopFiveRequest.toString(), IntentExtraKeysEnum.TopFivePopular.toString());
 		startActivity(intent);
 	}
 
@@ -714,8 +733,9 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
-					timerForResponse= new waitForResponse(30000,1000);
+					timerForResponse= new waitForResponse(10000,1000);
 					timerForResponse.start();
+					
 				}
 			})
 			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

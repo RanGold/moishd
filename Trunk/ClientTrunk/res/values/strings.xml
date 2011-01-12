@@ -8,4 +8,6 @@
     <string name="get_all_nearby_users">Nearby users</string>
     <string name="own_statistics">Rank and Trophies</string>
     <string name="logout">Logout</string>
+<string name="top_five_ranked">Top five ranked games</string>
+<string name="top_five_popular">Top five popular games</string>
 </resources>

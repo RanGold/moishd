@@ -94,6 +94,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString(), opponent_nick_name);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerBusy.toString());
 		}
+		
 		else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			String opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString()); 
