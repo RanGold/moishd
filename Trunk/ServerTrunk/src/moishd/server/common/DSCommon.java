@@ -533,6 +533,37 @@ public class DSCommon {
 			pm.close();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static LinkedList<String> GetTopFiveRanked() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(GameStatistics.class);
+			q.setOrdering("gameRank descending");
+			q.setRange(0, 4);
+			
+			List<GameStatistics> stats = (List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute());
+			LinkedList<String> topFiveRanked = new LinkedList();
+			if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "No ranks for any game returning default - none");
+			}
+
+			for (GameStatistics stat : stats) {
+				double rank = stat.getGameRank();
+				String game = stat.getGameType();
+				topFiveRanked.add(game +":"+ rank);
+			}
+
+			return topFiveRanked;
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
 
 	public static void DeleteGameById(String gameId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();

@@ -307,6 +307,12 @@
 		<url-pattern>/IsBusy</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>GetTopFiveRankedServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.GetTopFiveRankedServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>GetTopFiveRankedServlet</servlet-name>
+		<url-pattern>/GetTopFiveRanked</url-pattern></servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
