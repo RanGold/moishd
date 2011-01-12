@@ -1,12 +1,15 @@
 package moishd.server.servlets;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
@@ -45,14 +48,24 @@ public class UserLoginServlet extends GeneralServlet {
 				} else {
 					muser = users.get(0);
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
-						LoggerCommon.Get().LogError(this, response, "AccountNotMatch", "facebook id given " + 
+						LoggerCommon.Get().LogError(this, response, "AccountNotMatch", "Facebook id given " + 
 								"differes from the database version");
 						return;
 					}
 				}
 				
-				if (muser.isRegistered()) {
+				if (muser.isRegistered() && (muser.getIsAlive() == 2)) {
+					muser.InitUser();
+					LoggerCommon.Get().LogInfo(this, "Logging off current user connection");
+				}
+				
+				if (muser.isRegistered() && (muser.getIsAlive() != 2)) {
 					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", "Tried to login twice with the same user");
+					LoggerCommon.Get().LogInfo(this, "Checking current user connection");
+					muser.setIsAlive(2);
+					muser.SaveChanges();
+					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
+							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
 				} else {
 					muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 					muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
@@ -65,6 +78,8 @@ public class UserLoginServlet extends GeneralServlet {
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ClassNotFoundException e) {
+				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
+			} catch (ServletException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			}
 		}
