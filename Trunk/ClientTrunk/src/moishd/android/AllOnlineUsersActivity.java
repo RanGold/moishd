@@ -125,6 +125,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int FACEBOOK_POST_RANK_UPDATED = 30;
 	private final int FACEBOOK_POST_TROPHIES_UPDATED = 31;
 	private final int FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED = 32;
+	private final int DIALOG_SERVER_ERROR = 33;
+	
 	private waitForResponse timerForResponse;
 
 	private Handler autoRefreshHandler = new Handler();
@@ -147,6 +149,9 @@ public class AllOnlineUsersActivity extends Activity{
 				break;
 			case START_LOCATION_SETTINGS:
 				openLocationSettings();
+				break;
+			case DIALOG_SERVER_ERROR:
+				serverErrorDialog();
 				break;
 			}
 		}
@@ -221,9 +226,14 @@ public class AllOnlineUsersActivity extends Activity{
 
 		list.setAdapter(new EfficientAdapter(this));
 
-		if(!ServerCommunication.hasLocation(authToken))
+		int hasLocationStatus = ServerCommunication.hasLocation(authToken);
+		if (hasLocationStatus == ServerCommunication.HAS_LOCATION_FALSE){
 			showDialog(DIALOG_HAS_NO_LOCATION_BEGINNING);
-
+		} 
+		else if (hasLocationStatus == ServerCommunication.SERVER_ERROR){
+			sendMessageToHandler(DIALOG_SERVER_ERROR);
+		}
+		
 		activateRefreshTimer();
 
 	}
@@ -252,7 +262,6 @@ public class AllOnlineUsersActivity extends Activity{
 			return true;
 		case R.id.logout:
 			doQuitActions();
-			restartTimer();
 			return true;
 		case R.id.facebookFriends:
 			getUsers(GetUsersByTypeEnum.FacebookFriends);
@@ -301,12 +310,14 @@ public class AllOnlineUsersActivity extends Activity{
 				retrieveInvitation(inviterName);
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
+				Log.d("Amico","cancel timer on gameDeclined");
 				timerForResponse.cancel();
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
+				Log.d("Amico","cancel timer on gameCanceled");
 				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
@@ -315,6 +326,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
+				Log.d("Amico","cancel timer on playerBusy");
 				timerForResponse.cancel();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
@@ -324,6 +336,7 @@ public class AllOnlineUsersActivity extends Activity{
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
+				Log.d("Amico","cancel timer on playerOffline");
 				timerForResponse.cancel();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsOffline(opponent_nick_name);
@@ -334,17 +347,20 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
+				Log.d("Amico","cancel timer on popularGame");
 				timerForResponse.cancel();
 				StartGamePopular();
 
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
+				Log.d("Amico","cancel timer on startGametTruth");
 				timerForResponse.cancel();
 				startGameTruth();
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
+				Log.d("Amico","cancel timer on startGameDare");
 				timerForResponse.cancel();
 				startGameDare();
 			}
@@ -423,6 +439,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void doQuitActions() {
 		WelcomeScreenActivity.facebookLogout(null);
+		refreshTimer.cancel();
 		finish();
 	}
 
@@ -477,9 +494,13 @@ public class AllOnlineUsersActivity extends Activity{
 	private void displayOwnStatistics() {
 
 		ClientMoishdUser me = ServerCommunication.getCurrentUser(authToken);
-		Intent intent = new Intent(this, UserStatisticsActivity.class);
-		intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), me);
-		startActivity(intent);
+		if (me == null){
+			sendMessageToHandler(DIALOG_SERVER_ERROR);
+		}else {
+			Intent intent = new Intent(this, UserStatisticsActivity.class);
+			intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), me);
+			startActivity(intent);
+		}
 	}
 	
 	private void displayTopRankedGames() {
@@ -506,15 +527,21 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 
 	private void inviteUserToMoish(ClientMoishdUser user){
-
-		game_id = ServerCommunication.inviteUser(user.getUserGoogleIdentifier(), authToken);
-
+		boolean inviteSucceeded = ServerCommunication.inviteUser(user.getUserGoogleIdentifier(), authToken);
+		if (!inviteSucceeded){
+			sendMessageToHandler(DIALOG_SERVER_ERROR);
+		} /*else{
+			game_id = returnedGameId;
+		}*/
 	}
 
 	private void inviteUserOfferedByServerToMoish(String authTokenOfOpponent){
-
-		game_id = ServerCommunication.inviteUser(authTokenOfOpponent, authToken);
-
+		boolean inviteSucceeded = ServerCommunication.inviteUser(authTokenOfOpponent, authToken);
+		if (!inviteSucceeded){
+			sendMessageToHandler(DIALOG_SERVER_ERROR);
+		}/* else{
+			game_id = returnedGameId;
+		}*/
 	}
 
 	private void retrieveInvitation(String inviterName){
@@ -628,6 +655,11 @@ public class AllOnlineUsersActivity extends Activity{
 		mainProgressDialog.dismiss();
 		showDialog(DIALOG_ERROR_RETRIEVING_USERS);
 	}
+	
+	private void serverErrorDialog(){
+		mainProgressDialog.dismiss();
+		showDialog(DIALOG_SERVER_ERROR);
+	}
 
 	private String getGoogleAuthToken() {
 
@@ -723,11 +755,23 @@ public class AllOnlineUsersActivity extends Activity{
 
 		switch (id) {
 
+		case DIALOG_SERVER_ERROR:
+		//	builder.setTitle("Error");
+			builder.setMessage("There was an error connecting to Moish'd! server. please check your Internet connection, and try to login again.")
+			.setCancelable(false)
+			.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dismissAndRemoveDialog(DIALOG_SERVER_ERROR, true);
+					doQuitActions();
+				}
+			});
+			return builder.create(); 
+		
 		case DIALOG_INVITE_USER_TO_MOISHD:
 			//TODO - check why the same name is applied each time.
 			String last_user = moishdUsers.get(currentClickPosition).getUserNick();
 			
-			builder.setMessage("You've invited  " + last_user + " to Moish. Continue?")
+			builder.setMessage("You've invited " + last_user + " to Moish. Continue?")
 			.setCancelable(false)
 			.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -775,7 +819,10 @@ public class AllOnlineUsersActivity extends Activity{
 					Random random = new Random();  
 					int i = random.nextInt(100);
 					i = i % 4;
+					boolean invitationResult = false;
 					boolean isBusy = ServerCommunication.IsBusy(authToken);
+					timerForResponse= new waitForResponse(30000,1000);
+					timerForResponse.start();
 					if (isBusy) {
 						if (i==0 || i==1) {
 							chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
@@ -789,14 +836,21 @@ public class AllOnlineUsersActivity extends Activity{
 						}
 						else {
 							String mostPopular = ServerCommunication.getMostPopularGame(authToken);
-							sendInvitationResponse("Accept" + mostPopular, "Popular");
+							if (mostPopular==null){
+								sendMessageToHandler(DIALOG_SERVER_ERROR);
+							}
+							invitationResult = sendInvitationResponse("Accept" + mostPopular, "Popular");
+							if (invitationResult==false){
+								sendMessageToHandler(DIALOG_SERVER_ERROR);
+							}
 						}	
 					}
-					
 					else{
-						sendInvitationResponse("AcceptTruth","");
+						invitationResult = sendInvitationResponse("AcceptTruth","");
+						if (invitationResult==false){
+							sendMessageToHandler(DIALOG_SERVER_ERROR);
+						}
 					}
-					
 					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION, true);
 					
 				}
@@ -1062,13 +1116,16 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (usersType.equals(GetUsersByTypeEnum.NearbyUsers.toString())){
-				if (ServerCommunication.hasLocation(authToken) == true) {
-
+				int hasLocationStatus = ServerCommunication.hasLocation(authToken);
+				switch (hasLocationStatus){
+				case ServerCommunication.HAS_LOCATION_TRUE:
 					moishdUsers = ServerCommunication.getNearbyUsers(authToken);
-				}
-				else{
+					break;
+				case ServerCommunication.HAS_LOCATION_FALSE:
 					resultList.add(HAS_NO_LOCATION_DIALOG);
 					return resultList;
+				case ServerCommunication.SERVER_ERROR:
+					resultList.add(DIALOG_SERVER_ERROR);
 				}
 			}
 			else if (usersType.equals(GetUsersByTypeEnum.FacebookFriends.toString())){
@@ -1343,7 +1400,6 @@ public class AllOnlineUsersActivity extends Activity{
 		
 		public void onTick(long millisUntilFinished) {
 		}
-		
 	}
 
 }

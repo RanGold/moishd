@@ -36,50 +36,57 @@ public class ServerCommunication {
 
 	private static final String serverPath = "http://moish-d.appspot.com";
 	private static Gson g = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").create();
-	public final static int ENLIST_SERVER_ERROR = 0;
+	public final static int SERVER_ERROR = 0;
+	
 	public final static int ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR = 1;
 	public final static int ENLIST_OK = 2;
 	public final static int ENLIST_ALREADY_LOGIN = 3;
 	
+	public final static int HAS_LOCATION_TRUE = 1;
+	public final static int HAS_LOCATION_FALSE = 2;
+	
+	//if fails the user wont be inserted to application any way
 	public static int registerC2DMToServer(ClientMoishdUser user, String authString){
 		HttpResponse resp = SendObjToServer(user, ServletNamesEnum.RegisterUser, authString);
-		if (resp != null){
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return SERVER_ERROR;
+		}else{
 			return resp.getStatusLine().getStatusCode();
 		}
-		else{
-			return -1;
-		}	
 	}
 
 	public static int unregisterC2DMToServer(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.UnregisterUser, authString);
-		if (resp!=null){
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return SERVER_ERROR;
+		}else{		
 			return resp.getStatusLine().getStatusCode();
 		}
-		else{
-			return -1;
-		}	
 	}
 
+	//not checking for success in sending. if fails 3 times - the server will disconnect the user and he will
+	//get notified once he'll try to make an active action with the server
 	public static int sendAlive(){
 		HttpResponse resp = activateServlet(ServletNamesEnum.Alive, null);
-		if (resp!=null){
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return SERVER_ERROR;
+		}else{
 			return resp.getStatusLine().getStatusCode();
-		}
-		else{
-			return -1;
 		}
 	}
 
-	public static boolean hasLocation(String authString){
+	public static int hasLocation(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.HasLocation,authString);
-		if (resp==null)
-			return false;
-		if (resp.containsHeader("HasLocation")){
-			return true;
-		}
-		else{
-			return false;
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return SERVER_ERROR;
+		}else if(resp.containsHeader("HasLocation")){
+			return HAS_LOCATION_TRUE;
+		}else{
+			return HAS_LOCATION_FALSE;
 		}
 	}
 
@@ -87,7 +94,7 @@ public class ServerCommunication {
 		HttpResponse response = SendObjToServer(user, ServletNamesEnum.UserLogin, authString);
 		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
-			return ENLIST_SERVER_ERROR;		
+			return SERVER_ERROR;		
 		}else if (response.containsHeader("AccountNotMatch")){
 			Log.d("GAE ERROR", "Account not match the one on the server");
 			return ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR;
@@ -118,11 +125,6 @@ public class ServerCommunication {
 		} 
 	}
 
-	public static List<ClientMoishdUser> getAllUsers(String authString){
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetAllUsers, null, authString);
-		return getUserListFromResponse(response);
-	}
-
 	public static List<ClientMoishdUser> getMergedUsers(List<String> friendsID, String authString){
 		HttpResponse response = SendObjToServer(friendsID,ServletNamesEnum.GetMergedUsers, authString);
 		return getUserListFromResponse(response);
@@ -143,49 +145,38 @@ public class ServerCommunication {
 
 	public static boolean setUserBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetBusy,authString);
-		if (resp == null){
-			return false;
-		}
-		else if (resp.containsHeader("Error")){
+		if (resp == null || resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}
 	}
 
 	public static boolean setSingleUserUnbusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetNotBusy,authString);
-		if (resp == null){
-			return false;
-		}
-		else if (resp.containsHeader("Error")){
+		if (resp == null || resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}
 	}
+	
 	public static boolean cancelGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.CancelGame,authString);
-		if (resp == null){
-			return false;
-		}
-		else if (resp.containsHeader("Error")){
+		if (resp == null || resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}
-
 	}
 
 	public static boolean IsBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.IsBusy,authString);
-		if (resp == null){
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
 		else if (resp.containsHeader("Busy")){
@@ -199,19 +190,21 @@ public class ServerCommunication {
 
 	public static String getMostPopularGame(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.GetMostPopularGame,authString);
-
-		if (resp == null){
+		if (resp == null || resp.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
 			return null;
-		}
-		else{
+		}else{
 			try {
-				String popularGame = convertStreamToString(resp.getEntity().getContent());
-				if (resp.containsHeader("Error")){
-					Log.d("GAE ERROR", "an Error occured");
+				HttpEntity entity = resp.getEntity();
+				if (entity==null){
 					return null;
-				}
-				else{
-					return popularGame;
+				}else {
+					String popularGame = convertStreamToString(entity.getContent());
+					if (popularGame.equals("")){
+						return null;
+					}else{
+						return popularGame;
+					}
 				}
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
@@ -222,26 +215,24 @@ public class ServerCommunication {
 		}
 	}
 	
-
-
-	public static String inviteUser(String userGoogleIdentifier, String authString){
+	public static boolean inviteUser(String userGoogleIdentifier, String authString){
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, userGoogleIdentifier, authString);
-		if (response == null){
-			return null;
+		if (response == null || response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return false;
 		}
-		else{
+/*		else{
 			try {
 				HttpEntity entity = response.getEntity();
 				if (entity == null){
 					return null;
-				}
-				String content = convertStreamToString(entity.getContent());
-				if (response.containsHeader("Error")){
-					Log.d("GAE ERROR", "an Error occured");
-					return null;
-				}
-				else{
-					return content;
+				} else{
+					String content = convertStreamToString(entity.getContent());
+					if (content.equals("")){
+						return null;
+					}else{
+						return content;
+					}
 				}
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
@@ -249,45 +240,40 @@ public class ServerCommunication {
 				e.printStackTrace();
 			}
 			return null;
-		}
+		}*/
+		return true;
 	}
 
-	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
+/*	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetGameInitiator, gameId, authString);
 		return getUserFromResponse(response);
-	}
+	}*/
+	
 	//TODO check if there's a need in the game_id
 	public static boolean sendRankToServer(String gameType,int rank, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.RankGame,gameType+":"+rank, authString);
-		if (response == null){
-			return false;
-		}
-		else if (response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}
 	}
 
 	public static boolean sendGamePlayedToServer(String gameType,String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.AddGamePlayed,gameType, authString);
-		if (response == null){
-			return false;
-		}
-		else if (response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}
 	}
 
 	public static boolean isFirstTimePlayed(String gameType, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.IsFirstTimePlayed,gameType, authString);
-		if (response==null){
+		if (response==null || response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
 		else if (response.containsHeader("FirstTimePlayed")){
@@ -303,24 +289,17 @@ public class ServerCommunication {
 		String invitationResponse = gameId + "#" + responseString + "#" + isPopular;
 		Log.d("Tammy", invitationResponse);
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InvitationResponse, invitationResponse, authString);
-		if (response == null){
-			return false;
-		}
-		else if (response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
-		}
-		else{
+		}else{
 			return true;
 		}			
 	}
 
 	public static boolean sendWinToServer(String gameId, String authString, String gameType) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GameWin, gameId + ":" + gameType, authString);
-		if (response == null){
-			return false;
-		}
-		else if (response.containsHeader("Error")){
+		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
@@ -331,14 +310,9 @@ public class ServerCommunication {
 
 	public static boolean sendLoseToServer(String gameId, String authString, String gameType) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GameLose, gameId + ":" + gameType, authString);
-		if (response == null){
+		if (response == null || response.containsHeader("Error")){
 			return false;
-		}
-		else if (response.containsHeader("Error")){
-			Log.d("GAE ERROR", "an Error occured");
-			return false;
-		}
-		else{
+		}else{
 			return true;
 		}			
 	}
@@ -354,64 +328,61 @@ public class ServerCommunication {
 	private static HttpResponse SendReqToServer(ServletNamesEnum servletName, String content, String authString){
 		return SendToServer(servletName, null, content, authString);
 	}
-
+	
+	//assumes the response is not NULL
 	private static String getJsonFromResponse(HttpResponse response){
 		InputStream contentStream;
 		String json = null;
-		try {
-			HttpEntity entity = response.getEntity();
-			if (entity == null){
-				return null;
+		if (response == null || response.containsHeader("Error")){
+			Log.d("GAE ERROR", "an Error occured");
+			return null;
+		} else
+			try {
+				HttpEntity entity = response.getEntity();
+				if (entity == null){
+					return null;
+				}
+				contentStream = entity.getContent();
+				if (contentStream == null){
+					Log.d("GAE ERROR", "an Error occured - contentStream in null");
+				}else {
+					ObjectInputStream ois = new ObjectInputStream(contentStream);
+					json = (String) ois.readObject();
+					ois.close();
+					contentStream.close();
+				}
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			contentStream = entity.getContent();
-			if (response.containsHeader("Error")){
-				Log.d("GAE ERROR", "an Error occured");
-			}
-			else if (contentStream != null) {
-				ObjectInputStream ois = new ObjectInputStream(contentStream);
-				json = (String) ois.readObject();
-				ois.close();
-				contentStream.close();
-			}
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		return json;
 	}
 
+	//the check if response is null is checked inside getJsonFromResponse
 	@SuppressWarnings("unchecked")
 	private static List<ClientMoishdUser> getUserListFromResponse(HttpResponse response){
-		if (response==null){
-			return null;
-		}
 		String json = getJsonFromResponse(response);
 		if (json == null){
 			return null;
 		}
 		return (List<ClientMoishdUser>)g.fromJson(json, new TypeToken<Collection<ClientMoishdUser>>(){}.getType());
 	}
-
+	
+	//the check if response is null is checked inside getJsonFromResponse
 	private static ClientMoishdUser getUserFromResponse(HttpResponse response){
-		if (response==null){
-			return null;
-		}
 		String json = getJsonFromResponse(response);
-		if (json!=null){
+		if (json==null){
+			return null;
+		}else{
 			return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
 		}
-		else{
-			return null;
-		}
 	}
-	
 
 	private static HttpResponse SendToServer(ServletNamesEnum servletName, Object obj, String content, String authString){
 		HttpResponse response = null;
@@ -497,7 +468,6 @@ public class ServerCommunication {
 		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFivePopular, authString);
 		return getTopFiveFromResponse(response);
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	private static List<String> getTopFiveFromResponse(HttpResponse response){
@@ -512,6 +482,4 @@ public class ServerCommunication {
 			return null;
 		}
 	}
-	
-
 }

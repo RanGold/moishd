@@ -614,7 +614,7 @@ public class WelcomeScreenActivity extends Activity{
 					saveUserName(userName, firstName);
 					sendMessageToHandler(REGISTRATION_COMPLETE);
 					break;	
-				case ServerCommunication.ENLIST_SERVER_ERROR:
+				case ServerCommunication.SERVER_ERROR:
 					sendMessageToHandler(DIALOG_MOISHD_SERVER_REGISTRATION_ERROR);
 					break;
 				case ServerCommunication.ENLIST_FACEBOOK_ACCOUNT_NOT_MATCH_ERROR:
