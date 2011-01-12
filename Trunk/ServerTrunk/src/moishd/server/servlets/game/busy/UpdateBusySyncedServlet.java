@@ -22,7 +22,7 @@ public class UpdateBusySyncedServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 9109001677014006249L;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		if (request.getHeader("X-AppEngine-QueueName").equals("inviteQueue")) {
 			try { 

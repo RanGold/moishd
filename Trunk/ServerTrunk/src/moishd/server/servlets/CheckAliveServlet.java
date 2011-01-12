@@ -29,12 +29,11 @@ public class CheckAliveServlet extends HttpServlet {
 				&& UserServiceFactory.getUserService().isUserAdmin())) {
 			DSCommon.UnregisterDisconnectedUsers();
 			List<String> registerIds = DSCommon.GetCheckAliveRegisterIds();
-			HashMap<String, String> payload = new HashMap<String, String>();
 			
 			for (String registerId : registerIds) {
 				try {
 					C2DMCommon.PushGenericMessage(registerId, 
-							C2DMCommon.Actions.CheckAlive.toString(), payload);
+							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
 				} catch (ServletException e) {
 					LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 				}
