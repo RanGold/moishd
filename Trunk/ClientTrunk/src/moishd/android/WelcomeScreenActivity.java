@@ -165,9 +165,9 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+	/* (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
-		}
+		}*/
 		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
 			if (googleAuthString == null){
 				startGoogleAuth();

@@ -22,7 +22,10 @@ public enum IntentExtraKeysEnum {
 	NumberOfTrophies("NumberOfTrophies"),
 	InitName("InitName"),
 	RecName("RecName"),
-	NearByGame("NearByGame");
+	NearByGame("NearByGame"),
+	TopFiveRequest("TopFiveRequest"),
+	TopFiveRanked("TopFiveRanked"),
+	TopFivePopular("TopFivePopular");
 	
 	private String name;
 

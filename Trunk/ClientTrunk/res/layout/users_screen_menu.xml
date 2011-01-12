@@ -23,4 +23,12 @@
     <item android:id="@+id/logout"
     	  android:title="@string/logout"
           android:icon="@drawable/logout"/>
+          
+    <item android:id="@+id/topFiveRanked"
+    	  android:title="@string/top_five_ranked"
+          android:icon="@drawable/logout"/>
+                 
+    <item android:id="@+id/topFivePopular"
+    	  android:title="@string/top_five_popular"
+          android:icon="@drawable/logout"/>
 </menu>

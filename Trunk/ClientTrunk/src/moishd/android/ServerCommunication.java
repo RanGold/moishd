@@ -104,11 +104,7 @@ public class ServerCommunication {
 		return getUserFromResponse(response);
 	}
 	
-	public static String[] getTopFiveRanked(String authString){
-		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFiveRanked, authString);
-		return getTopFiveFromResponse(response);
-		
-	}
+
 
 	public static boolean updateLocationInServer(Location location, String authString){
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
@@ -225,6 +221,8 @@ public class ServerCommunication {
 			return null;
 		}
 	}
+	
+
 
 	public static String inviteUser(String userGoogleIdentifier, String authString){
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InviteUser, userGoogleIdentifier, authString);
@@ -414,18 +412,6 @@ public class ServerCommunication {
 		}
 	}
 	
-	private static String[] getTopFiveFromResponse(HttpResponse response){
-		if (response==null){
-			return null;
-		}
-		String json = getJsonFromResponse(response);
-		if (json!=null){
-			return (String[])g.fromJson(json, String[].class);
-		}
-		else{
-			return null;
-		}
-	}
 
 	private static HttpResponse SendToServer(ServletNamesEnum servletName, Object obj, String content, String authString){
 		HttpResponse response = null;
@@ -501,5 +487,31 @@ public class ServerCommunication {
 			return "";
 		}
 	}
+	
+	public static List<String> getTopFiveRanked(String authString){
+		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFiveRanked, authString);
+		return getTopFiveFromResponse(response);
+	}
+	
+	public static List<String> getTopFivePopular(String authString){
+		HttpResponse response = activateServlet(ServletNamesEnum.GetTopPopular, authString);
+		return getTopFiveFromResponse(response);
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	private static List<String> getTopFiveFromResponse(HttpResponse response){
+		if (response==null){
+			return null;
+		}
+		String json = getJsonFromResponse(response);
+		if (json!=null){
+			return (List<String>)g.fromJson(json, new TypeToken<Collection<String>>(){}.getType() );
+		}
+		else{
+			return null;
+		}
+	}
+	
 
 }
