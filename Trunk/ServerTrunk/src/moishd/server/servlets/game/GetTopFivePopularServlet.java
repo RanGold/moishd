@@ -10,11 +10,11 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.GsonCommon;
 import moishd.server.servlets.GeneralServlet;
 
-public class GetTopFiveRankedServlet extends GeneralServlet{
+public class GetTopFivePopularServlet extends GeneralServlet{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4504932226580707385L;
+	private static final long serialVersionUID = -4276309781499603816L;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
@@ -22,7 +22,7 @@ public class GetTopFiveRankedServlet extends GeneralServlet{
 		super.doPost(request, response);
 
 		if (user != null) {
-			List<String> topFiveRanked = DSCommon.GetTopFiveGames("gameRank");
+			List<String> topFiveRanked = DSCommon.GetTopFiveGames("timesPlayed");
 			GsonCommon.WriteJsonToResponse(topFiveRanked, response);
 		}
 	}

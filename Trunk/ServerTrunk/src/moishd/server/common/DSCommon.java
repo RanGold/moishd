@@ -517,7 +517,7 @@ public class DSCommon {
 				totalPlayed += stat.getTimesPlayed();
 			}
 			for (GameStatistics stat : stats) {
-				double temp = stat.getRankTotal() * 0.5 + (double)stat.getTimesPlayed() / (double)totalPlayed * 0.5; 
+				double temp = stat.getRankTotal() / (double)5 * 0.5 + (double)stat.getTimesPlayed() / (double)totalPlayed * 0.5; 
 				if (temp > popularPoints) {
 					popularName = stat.getGameType();
 					popularPoints = temp;
@@ -534,17 +534,17 @@ public class DSCommon {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static LinkedList<String> GetTopFiveRanked() {
+	public static List<String> GetTopFiveGames(String field) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
 			q = pm.newQuery(GameStatistics.class);
-			q.setOrdering("gameRank descending");
+			q.setOrdering(field + " descending");
 			q.setRange(0, 4);
 			
+			@SuppressWarnings("unchecked")
 			List<GameStatistics> stats = (List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute());
-			LinkedList<String> topFiveRanked = new LinkedList();
+			LinkedList<String> topFive = new LinkedList<String>();
 			if (stats.size() == 0) {
 				LoggerCommon.Get().LogInfo("DSCommon", "No ranks for any game returning default - none");
 			}
@@ -552,10 +552,10 @@ public class DSCommon {
 			for (GameStatistics stat : stats) {
 				double rank = stat.getGameRank();
 				String game = stat.getGameType();
-				topFiveRanked.add(game +":"+ rank);
+				topFive.add(game +":"+ rank);
 			}
 
-			return topFiveRanked;
+			return topFive;
 		}
 		finally {
 			if (q != null) {
