@@ -26,6 +26,7 @@ public enum ServletNamesEnum {
 	SetBusy,
 	SetNotBusy,
 	CancelGame,
+	GetTopFiveRanked,
 	IsBusy;
 	
 }

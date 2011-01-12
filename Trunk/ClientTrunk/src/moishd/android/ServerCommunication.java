@@ -103,6 +103,12 @@ public class ServerCommunication {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetCurrentUser, null, authString);
 		return getUserFromResponse(response);
 	}
+	
+	public static String[] getTopFiveRanked(String authString){
+		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFiveRanked, authString);
+		return getTopFiveFromResponse(response);
+		
+	}
 
 	public static boolean updateLocationInServer(Location location, String authString){
 		ClientLocation sendLocation = new ClientLocation(location.getLongitude(), location.getLatitude());
@@ -402,6 +408,19 @@ public class ServerCommunication {
 		String json = getJsonFromResponse(response);
 		if (json!=null){
 			return (ClientMoishdUser)g.fromJson(json, ClientMoishdUser.class);
+		}
+		else{
+			return null;
+		}
+	}
+	
+	private static String[] getTopFiveFromResponse(HttpResponse response){
+		if (response==null){
+			return null;
+		}
+		String json = getJsonFromResponse(response);
+		if (json!=null){
+			return (String[])g.fromJson(json, String[].class);
 		}
 		else{
 			return null;
