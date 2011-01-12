@@ -29,7 +29,7 @@ public enum ServletNamesEnum {
 	CancelGame,
 	GetTopFiveRanked,
 	IsBusy,
-	GetTopPopular;
+	GetTopFivePopular;
 
 
 	

@@ -494,7 +494,7 @@ public class ServerCommunication {
 	}
 	
 	public static List<String> getTopFivePopular(String authString){
-		HttpResponse response = activateServlet(ServletNamesEnum.GetTopPopular, authString);
+		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFivePopular, authString);
 		return getTopFiveFromResponse(response);
 	}
 	
