@@ -35,7 +35,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 			String paramters = request.getReader().readLine();
 
 			Queue queue = QueueFactory.getQueue("inviteQueue");
-			queue.add(TaskOptions.Builder.url("/GameInvReply").method(Method.GET)
+			queue.add(TaskOptions.Builder.url("/InvitationResponse").method(Method.GET)
 					.param("paramters", paramters));
 		}
 	}
