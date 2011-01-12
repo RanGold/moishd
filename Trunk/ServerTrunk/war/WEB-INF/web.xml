@@ -313,6 +313,13 @@
 		<servlet-name>GetTopFiveRankedServlet</servlet-name>
 		<url-pattern>/GetTopFiveRanked</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>GetTopFivePopularServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.GetTopFivePopularServlet</servlet-class></servlet>
+	<servlet-mapping>
+		<servlet-name>GetTopFivePopularServlet</servlet-name>
+		<url-pattern>/GetTopFivePopular</url-pattern>
+	</servlet-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
