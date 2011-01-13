@@ -2,15 +2,11 @@ package moishd.server.dataObjects;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import moishd.client.dataObjects.TrophiesEnum;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -47,18 +43,6 @@ public class MoishdGame extends CommonJDO implements Serializable {
 	private Date playerRecEndTime;
 	
 	@Persistent
-	private int playerInitPoints;
-	
-	@Persistent
-	private int playerRecPoints;
-	
-	@Persistent
-	private List<TrophiesEnum> playerInitTrophies;
-	
-	@Persistent
-	private List<TrophiesEnum> playerRecTrophies;
-	
-	@Persistent
 	private boolean isDecided;
 
 	@Persistent
@@ -73,10 +57,6 @@ public class MoishdGame extends CommonJDO implements Serializable {
 		this.playerRecId = playerRecId;
 		this.initiated = new Date();
 		this.isDecided = false;
-		this.playerInitPoints = 0;
-		this.playerRecPoints = 0;
-		this.playerInitTrophies = new LinkedList<TrophiesEnum>();
-		this.playerRecTrophies = new LinkedList<TrophiesEnum>();
 	}
 
 	public String getPlayerInitId() {
@@ -164,37 +144,5 @@ public class MoishdGame extends CommonJDO implements Serializable {
 
 	public String getGameType() {
 		return gameType;
-	}
-
-	public void setPlayerInitPoints(int playerInitPoints) {
-		this.playerInitPoints = playerInitPoints;
-	}
-
-	public int getPlayerInitPoints() {
-		return playerInitPoints;
-	}
-
-	public void setPlayerRecPoints(int playerRecPoints) {
-		this.playerRecPoints = playerRecPoints;
-	}
-
-	public int getPlayerRecPoints() {
-		return playerRecPoints;
-	}
-
-	public void setPlayerInitTrophies(List<TrophiesEnum> playerInitTrophies) {
-		this.playerInitTrophies = playerInitTrophies;
-	}
-
-	public List<TrophiesEnum> getPlayerInitTrophies() {
-		return playerInitTrophies;
-	}
-
-	public void setPlayerRecTrophies(List<TrophiesEnum> playerRecTrophies) {
-		this.playerRecTrophies = playerRecTrophies;
-	}
-
-	public List<TrophiesEnum> getPlayerRecTrophies() {
-		return playerRecTrophies;
 	}
 }

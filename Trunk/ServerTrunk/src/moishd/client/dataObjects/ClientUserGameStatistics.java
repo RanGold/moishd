@@ -1,6 +1,8 @@
 package moishd.client.dataObjects;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientUserGameStatistics implements Serializable {
 
@@ -18,6 +20,8 @@ public class ClientUserGameStatistics implements Serializable {
 	private int points;
 	
 	private int gamesWonInARow;
+	
+	private Map<String,Integer> gamesPoints;
 
 	public ClientUserGameStatistics() {
 		super();
@@ -26,16 +30,17 @@ public class ClientUserGameStatistics implements Serializable {
 		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
+		this.gamesPoints = new HashMap<String, Integer>();
 	}
 
-	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,
-			int rank, int points, int gamesWonInARow) {
+	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,int rank, int points, int gamesWonInARow, Map<String, Integer> gamesPoints) {
 		super();
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
+		this.gamesPoints = gamesPoints;
 	}
 
 	public int getGamesPlayed() {
@@ -76,6 +81,14 @@ public class ClientUserGameStatistics implements Serializable {
 
 	public void setGamesWonInARow(int gamesWonInARow) {
 		this.gamesWonInARow = gamesWonInARow;
+	}
+	
+	public void setGamesPoints(Map<String,Integer> gamesPoints) {
+		this.gamesPoints = gamesPoints;
+	}
+
+	public Map<String,Integer> getGamesPoints() {
+		return gamesPoints;
 	}
 
 }

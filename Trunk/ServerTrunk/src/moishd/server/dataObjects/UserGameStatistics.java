@@ -1,6 +1,8 @@
 package moishd.server.dataObjects;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -36,6 +38,9 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	
 	@Persistent
 	private int gamesWonInARow;
+	
+    @Persistent
+    private Map<String,Integer> gamesPoints;
 
 	@Persistent(mappedBy = "stats")
 	private MoishdUser moishdUser;
@@ -46,20 +51,20 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
+		this.gamesPoints = new HashMap<String, Integer>();
 	}
 
-	public UserGameStatistics(int gamesPlayed, int gamesWon,
-			int rank, int points, int gamesWonInARow) {
+	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow,  Map<String, Integer> gamesPoints ) {
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
+		this.gamesPoints = gamesPoints;
 	}
 
 	public ClientUserGameStatistics toClientUserGameStatistics() {
-		return (new ClientUserGameStatistics(this.getGamesPlayed(),
-				this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow()));
+		return (new ClientUserGameStatistics(this.getGamesPlayed(), this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow(), this.getGamesPoints()));
 	}
 
 	public Integer getGamesPlayed() {
@@ -108,5 +113,13 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 
 	public MoishdUser getMoishdUser() {
 		return moishdUser;
+	}
+	
+	public void setGamesPoints(Map<String,Integer> gamesPoints) {
+		this.gamesPoints = gamesPoints;
+	}
+
+	public Map<String,Integer> getGamesPoints() {
+		return gamesPoints;
 	}
 }

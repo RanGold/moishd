@@ -1,7 +1,6 @@
 package moishd.server.dataObjects;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -35,9 +34,6 @@ public class GameStatistics extends CommonJDO implements Serializable {
     
     @Persistent
     private double gameRank;
-    
-    @Persistent
-    private Map<String,Integer> gamesPoints;
 
 	public GameStatistics(String gameType) {
 		super();
@@ -102,11 +98,4 @@ public class GameStatistics extends CommonJDO implements Serializable {
 		this.setGameRank(this.getRankTotal() / this.getRankingNumber());
 	}
 
-	public void setGamesPoints(Map<String,Integer> gamesPoints) {
-		this.gamesPoints = gamesPoints;
-	}
-
-	public Map<String,Integer> getGamesPoints() {
-		return gamesPoints;
-	}
 }
