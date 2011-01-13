@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import moishd.server.common.StringIntPair;
+
 public class ClientUserGameStatistics implements Serializable {
 
 	/**

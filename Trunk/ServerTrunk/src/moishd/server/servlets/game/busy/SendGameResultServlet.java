@@ -16,7 +16,10 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
+import moishd.server.common.StringIntPair;
 import moishd.server.dataObjects.BusyObject;
+import moishd.server.dataObjects.GamePoints;
+import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
@@ -137,7 +140,6 @@ public class SendGameResultServlet extends HttpServlet {
 
 	private int [] UpdateGameStatistics(MoishdGame moishdGame, MoishdUser winner, MoishdUser loser){
 
-
 		//Increment number of games played for both users
 		int winnerGamesPlayed = winner.getStats().getGamesPlayed();
 		winner.getStats().setGamesPlayed(winnerGamesPlayed + 1);
@@ -187,16 +189,59 @@ public class SendGameResultServlet extends HttpServlet {
 		winner.SaveChanges();
 		loser.SaveChanges();
 
-//		Map<String, Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
-//		int previousWinnerGamePoints = winnerGamesPoints.get(moishdGame.getGameType());
-//		winnerGamesPoints.put(moishdGame.getGameType(), previousWinnerGamePoints + addedPoints[0]);
-//		
-//		Map<String, Integer> loserGamesPoints = loser.getStats().getGamesPoints();
-//		int previousLoserGamePoints = loserGamesPoints.get(moishdGame.getGameType());
-//		loserGamesPoints.put(moishdGame.getGameType(), previousLoserGamePoints + addedPoints[1]);
+		List<StringIntPair> winnerGamesPoints = winner.getStats().getGamesPoints();
+		updateGamePoints(winnerGamesPoints, winner, addedPoints[0], moishdGame);
+
+		List<StringIntPair> loserGamesPoints = loser.getStats().getGamesPoints();
+		updateGamePoints(loserGamesPoints, loser, addedPoints[1], moishdGame);
 
 		return addedPoints;
 	}
+	
+	private void updateGamePoints(List<StringIntPair> gamesPointsList, MoishdUser user, int addedPoints, MoishdGame moishdGame){
+		
+		boolean updated = false;
+		int currentGamePoints = -1;
+		
+		for (int i=0; i < gamesPointsList.size(); i++){
+			StringIntPair current = gamesPointsList.get(i);
+			if (current.getStringValue().equals(moishdGame.getGameType())){
+				int previousGamePoints = current.getNumberValue();
+				currentGamePoints = previousGamePoints + addedPoints;
+				current.setNumberValue(currentGamePoints);
+				updated = true;
+				break;
+			}
+		}
+		
+		if (!updated){
+			currentGamePoints = addedPoints;
+			gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), currentGamePoints));
+		}
+		
+		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
+		List<StringIntPair> topMoishersList = gameStatistics.getTopMoishers();
+		if (topMoishersList.size() == 0){
+			topMoishersList.add(0, new StringIntPair(user.getUserGoogleIdentifier(), currentGamePoints));
+		}
+		else{
+			for (int i=0; i < topMoishersList.size(); i++){
+				StringIntPair currentMoisher = topMoishersList.get(i);
+				int currentMoisherPoints = currentMoisher.getNumberValue();
+				if (currentMoisherPoints < currentGamePoints){
+					topMoishersList.add(i, new StringIntPair(user.getUserGoogleIdentifier(), currentGamePoints));
+				}
+			}
+		}
+		
+		if (topMoishersList.size() == 6){
+			topMoishersList.remove(5);
+		}
+		
+		user.SaveChanges();
+		gameStatistics.SaveChanges();
+	}
+
 
 	private void updateRankAndTrophies(HashMap<String, String> payload, MoishdUser user) {
 
