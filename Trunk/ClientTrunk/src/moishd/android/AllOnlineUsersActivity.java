@@ -21,6 +21,7 @@ import moishd.android.games.MixingGameActivity;
 import moishd.android.games.MostPopularGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TopFiveGamesActivity;
+import moishd.android.games.TopPopularActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
@@ -509,12 +510,13 @@ public class AllOnlineUsersActivity extends Activity{
 	private void displayTopRankedGames() {
 		Intent intent = new Intent(this, TopFiveGamesActivity.class);
 		intent.putExtra(IntentExtraKeysEnum.TopFiveRequest.toString(), IntentExtraKeysEnum.TopFiveRanked.toString());
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
 	}
 	
 	private void displayTopPopularGames() {
-		Intent intent = new Intent(this, TopFiveGamesActivity.class);
-		intent.putExtra(IntentExtraKeysEnum.TopFiveRequest.toString(), IntentExtraKeysEnum.TopFivePopular.toString());
+		Intent intent = new Intent(this, TopPopularActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
 	}
 
@@ -1351,10 +1353,6 @@ public class AllOnlineUsersActivity extends Activity{
 			});
 			holder.userPicture.setImageDrawable(usersPictures.get(position));
 
-			if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
-				holder.facebookPic.setImageBitmap(facebookPic);
-
-			else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)){
 				if (moishdUsers.get(position).isFacebookFriend()){
 				
 					holder.facebookPic.setImageBitmap(facebookPic);
@@ -1376,10 +1374,7 @@ public class AllOnlineUsersActivity extends Activity{
 					holder.facebookPic.setImageBitmap(noPic);
 					holder.nearBy.setImageBitmap(noPic);
 				}
-			}
-
-			else if (currentUsersType.equals(GetUsersByTypeEnum.NearbyUsers))
-				holder.nearBy.setImageBitmap(nearByUsers);
+			
 
 
 			return convertView;
