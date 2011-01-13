@@ -222,6 +222,14 @@
 		<url-pattern>/UpdateLocation</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>DeleteLastUndecidedGameServlet</servlet-name>
+		<servlet-class>moishd.server.servlets.game.busy.DeleteLastUndecidedGameServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteLastUndecidedGameServlet</servlet-name>
+		<url-pattern>/queues/DeleteLastUndecidedGame</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UpdateBusySyncedServlet</servlet-name>
 		<servlet-class>moishd.server.servlets.game.busy.UpdateBusySyncedServlet</servlet-class>
 	</servlet>

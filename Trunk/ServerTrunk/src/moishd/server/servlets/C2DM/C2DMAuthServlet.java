@@ -29,10 +29,10 @@ public class C2DMAuthServlet extends HttpServlet {
 //			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
 //		}
 //		LoggerCommon.Get().LogInfo("adsd", "check2");
-		if ((request.getHeader("X-AppEngine-Cron").equals("true") &&
-				request.getHeader("User-Agent").equals("AppEngine-Google; (+http://code.google.com/appengine)")) ||
-				(UserServiceFactory.getUserService().isUserLoggedIn()
-				&& UserServiceFactory.getUserService().isUserAdmin())) {
+		if ((UserServiceFactory.getUserService().isUserLoggedIn()
+				&& UserServiceFactory.getUserService().isUserAdmin()) ||
+			(request.getHeader("X-AppEngine-Cron").equals("true") &&
+				request.getHeader("User-Agent").equals("AppEngine-Google; (+http://code.google.com/appengine)"))) {
 			try {
 				DSCommon.SetC2DMAuth(C2DMCommon.getAuthToken(true));
 			} catch (ServletException e) {

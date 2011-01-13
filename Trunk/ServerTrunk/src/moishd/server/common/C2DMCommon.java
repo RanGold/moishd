@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -14,7 +15,6 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import moishd.server.common.DSCommon;
 import moishd.server.dataObjects.C2DMAuth;
 
 public class C2DMCommon {
@@ -136,10 +136,29 @@ public class C2DMCommon {
 			stream.writeBytes(data); 
 			stream.flush(); 
 			stream.close();
-
+			LoggerCommon.Get().LogInfo("C2DMCommon", String.valueOf(connection.getResponseCode()));
+			String newAuth = connection.getHeaderField("update-client-auth");
+			if (newAuth != null) {
+				DSCommon.SetC2DMAuth(newAuth);
+			}
+			Map<String,List<String>> map = connection.getHeaderFields();
+			for (String resp : map.keySet()) {
+				for (String header : map.get(resp)) {
+					LoggerCommon.Get().LogInfo("C2DMCommon", resp + " - " + header);
+				}
+			}
 			switch (connection.getResponseCode()) { 
 			case 200: 
-				// Success, but check for errors in the body
+				BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                        connection.getInputStream()));
+				String inputLine;
+				String output = "";
+
+				while ((inputLine = in.readLine()) != null) 
+					output = output + inputLine + "\n\r";
+				in.close();
+				LoggerCommon.Get().LogInfo("C2DMCommon", output);
 				return true;
 			case 503: 
 				// Service unavailable
