@@ -29,7 +29,7 @@ public class SetBusyServlet extends GeneralServlet {
 
 		if (user != null) {
 			Queue queue = QueueFactory.getQueue("inviteQueue");
-			queue.add(TaskOptions.Builder.url("/SetBusyServlet")
+			queue.add(TaskOptions.Builder.url("/SetBusy")
 					.method(Method.GET)
 					.param("id", mUser.getUserGoogleIdentifier()));
 		}
@@ -43,9 +43,7 @@ public class SetBusyServlet extends GeneralServlet {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(id);
 
 				if (mUser.isBusy()) {
-					LoggerCommon.Get().LogError(
-							this,
-							response,
+					LoggerCommon.Get().LogInfo(this,
 							"Tried to get busy (with himself) while busy with "
 									+ mUser.getBusyWith());
 				} else {

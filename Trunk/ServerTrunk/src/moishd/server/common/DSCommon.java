@@ -512,12 +512,15 @@ public class DSCommon {
 			if (stats.size() == 0) {
 				LoggerCommon.Get().LogInfo("DSCommon", "No stats for any game returning default - DareSimonPro");
 			}
-			int totalPlayed = 0;
+			int maxPlayed = 0;
 			for (GameStatistics stat : stats) {
-				totalPlayed += stat.getTimesPlayed();
+				if (stat.getTimesPlayed() > maxPlayed) {
+					maxPlayed = stat.getTimesPlayed();
+				}
 			}
 			for (GameStatistics stat : stats) {
-				double temp = stat.getRankTotal() / (double)5 * 0.5 + (double)stat.getTimesPlayed() / (double)totalPlayed * 0.5; 
+				double temp = stat.getRankTotal() / (double)5 * 0.5 +
+				(double)stat.getTimesPlayed() / (double)maxPlayed * 0.5; 
 				if (temp > popularPoints) {
 					popularName = stat.getGameType();
 					popularPoints = temp;
@@ -550,9 +553,7 @@ public class DSCommon {
 			}
 
 			for (GameStatistics stat : stats) {
-				double rank = stat.getGameRank();
-				String game = stat.getGameType();
-				topFive.add(game +":"+ rank);
+				topFive.add(stat.getGameType() + ":" + stat.getGameRank());
 			}
 
 			return topFive;
@@ -565,12 +566,13 @@ public class DSCommon {
 		}
 	}
 
-	public static void DeleteGameById(String gameId) {
+	public static void DeleteGameById(Long gameId) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
+			LoggerCommon.Get().LogInfo("DSCommon", "Deleting game " + gameId);
 			q = pm.newQuery(MoishdGame.class);
-			q.setFilter("gameId == :id");
+			q.setFilter("gameLongId == :id");
 
 			q.deletePersistentAll(gameId);
 		}
@@ -579,6 +581,40 @@ public class DSCommon {
 				q.closeAll();
 			}
 			pm.close();
+		}
+	}
+
+	public static void DeleteLastUnDecidedGame(String initId,
+			String recId) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		long gameId = -1;
+		try {
+			q = pm.newQuery(MoishdGame.class);
+			q.setFilter("playerInitId == :id1 && playerRecId == :id2 && gameType == :ND");
+			q.setOrdering("initiated ascending");
+			q.setRange(0, 1);
+			LoggerCommon.Get().LogInfo("DSCommon", "initId: " + initId + " recId: " + recId);
+			
+			@SuppressWarnings("unchecked")
+			List<MoishdGame> mg = (List<MoishdGame>)q.executeWithArray(initId, recId, "NotDecided");
+			
+			if (mg.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "No games match");
+				gameId = mg.get(0).getGameLongId();
+			}
+			
+			LoggerCommon.Get().LogInfo("DSCommon", String.valueOf(gameId));
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+		
+		if (gameId != -1) {
+			DSCommon.DeleteGameById(gameId);
 		}
 	}
 }

@@ -36,6 +36,14 @@ public class C2DMCommon {
 		public String getPopular(String popular) {
 			return popular + this.toString();
 		}
+		
+		public String getGameName() {
+			if (this.toString().startsWith("StartGame")) {
+				return (this.toString().substring("StartGame".length()));
+			} else {
+				return ("NotGameType");
+			}
+		}
 	}
 	
 	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());

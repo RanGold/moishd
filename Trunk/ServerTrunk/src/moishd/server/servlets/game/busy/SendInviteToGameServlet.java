@@ -61,16 +61,17 @@ public class SendInviteToGameServlet extends HttpServlet {
 					recUser.SaveChanges();
 
 					MoishdGame tg = new MoishdGame(initID, recID);
+					tg.setGameType("NotDecided");
 					tg.SaveChanges();
 					response.getWriter().write(
 							String.valueOf(tg.getGameLongId()));
-
-					LoggerCommon.Get().LogInfo(this, initID + " invited " + recID);
 					
 					HashMap<String, String> payload = new HashMap<String, String>();
 					payload.put("GameId",
 							String.valueOf(tg.getGameId().getId()));
 					payload.put("InviterName", DSCommon.GetUserByGoogleId(initID).getUserNick());
+					
+					LoggerCommon.Get().LogInfo(this, initID + " invited " + recID);
 					C2DMCommon.PushGenericMessage(recUser.getRegisterID(),
 							C2DMCommon.Actions.GameInvitation.toString(),
 							payload);

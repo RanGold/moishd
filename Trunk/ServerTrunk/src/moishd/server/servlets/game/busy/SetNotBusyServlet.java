@@ -43,11 +43,9 @@ public class SetNotBusyServlet extends GeneralServlet {
 				MoishdUser mUser = DSCommon.GetUserByGoogleId(id);
 
 				if (!mUser.isPartnerWith(mUser.getUserGoogleIdentifier())) {
-					LoggerCommon.Get().LogError(
-							this,
-							response,
-							"Tried to get un busy (with himself) while busy with "
-									+ mUser.getBusyWith());
+					LoggerCommon.Get().LogInfo(this,
+							"Tried to get un busy (with himself) while " + (!mUser.isBusy() ? "not busy" : 
+								"busy with " + mUser.getBusyWith()));
 				} else {
 					mUser.setNotBusy();
 					mUser.SaveChanges();

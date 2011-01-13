@@ -55,7 +55,6 @@ public class SendGameResultServlet extends HttpServlet {
 					MoishdUser loser;
 					
 					tg = DSCommon.GetGameById(gameId);
-					// TODO: Check if concurrent win is consistent
 					if ((tg.getPlayerRecEndTime() == null) ||
 						((tg.getPlayerInitEndTime() != null) && 
 						 (tg.getPlayerRecEndTime().after(tg.getPlayerInitEndTime())))) {
@@ -105,8 +104,48 @@ public class SendGameResultServlet extends HttpServlet {
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));	
 					}
+					
+					int winnerOldPoints = winner.getStats().getPoints();
+					List<TrophiesEnum> winnerOldTrophies = new LinkedList<TrophiesEnum>(winner.getTrophies());
+					int loserOldPoints = winner.getStats().getPoints();
+					List<TrophiesEnum> loserOldTrophies = new LinkedList<TrophiesEnum>(loser.getTrophies());
+					
 					updateRankAndTrophies(winPayload, winner);
 					updateRankAndTrophies(losePayload, loser);
+					
+					if (winner.getUserGoogleIdentifier().equals(tg.getPlayerInitId())) {
+						tg.setPlayerInitPoints(winner.getStats().getPoints() - winnerOldPoints);
+						tg.setPlayerRecPoints(loser.getStats().getPoints() - loserOldPoints);
+						
+						for (TrophiesEnum trophy : winner.getTrophies()) {
+							if (!winnerOldTrophies.contains(trophy)) {
+								tg.getPlayerInitTrophies().add(trophy);
+							}
+						}
+						
+						for (TrophiesEnum trophy : loser.getTrophies()) {
+							if (!loserOldTrophies.contains(trophy)) {
+								tg.getPlayerRecTrophies().add(trophy);
+							}
+						}
+					} else {
+						tg.setPlayerRecPoints(winner.getStats().getPoints() - winnerOldPoints);
+						tg.setPlayerInitPoints(loser.getStats().getPoints() - loserOldPoints);
+						
+						for (TrophiesEnum trophy : winner.getTrophies()) {
+							if (!winnerOldTrophies.contains(trophy)) {
+								tg.getPlayerRecTrophies().add(trophy);
+							}
+						}
+						
+						for (TrophiesEnum trophy : loser.getTrophies()) {
+							if (!loserOldTrophies.contains(trophy)) {
+								tg.getPlayerInitTrophies().add(trophy);
+							}
+						}
+					}
+					
+					tg.SaveChanges();
 				
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 												  C2DMCommon.Actions.GameResult.toString(), winPayload);

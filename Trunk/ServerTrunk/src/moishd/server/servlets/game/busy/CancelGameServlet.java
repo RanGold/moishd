@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.DSCommon;
 import moishd.server.common.GsonCommon;
 import moishd.server.dataObjects.BusyObject;
 import moishd.server.servlets.GeneralServlet;
@@ -27,7 +28,6 @@ public class CancelGameServlet extends GeneralServlet {
 		super.doPost(request, response);
 
 		if (user != null) {
-			// try {
 			List<BusyObject> busyUsers = new LinkedList<BusyObject>();
 			busyUsers
 					.add(new BusyObject(mUser.getUserGoogleIdentifier(), false));
@@ -39,17 +39,8 @@ public class CancelGameServlet extends GeneralServlet {
 			queue.add(TaskOptions.Builder
 					.url("/queues/UpdateBusySynced").method(Method.POST)
 					.param("json", json));
-			// TODO : delete
-			// MoishdUser otherUser =
-			// DSCommon.GetUserByGoogleId(mUser.getBusyWith());
-			// mUser.setNotBusy();
-			// mUser.SaveChanges();
-			// otherUser.setNotBusy();
-			// otherUser.SaveChanges();
-			// } catch (DataAccessException e) {
-			// LoggerCommon.Get().LogError(this, response, e.getMessage(),
-			// e.getStackTrace());
-			// }
+			
+			DSCommon.DeleteLastUnDecidedGame(mUser.getUserGoogleIdentifier(), mUser.getBusyWith());
 		}
 	}
 }
