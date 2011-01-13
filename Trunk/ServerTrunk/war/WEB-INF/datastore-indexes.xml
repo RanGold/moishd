@@ -10,5 +10,11 @@
         <property name="facebookID" direction="asc"/>
         <property name="isRegistered" direction="asc"/>
         <property name="userGoogleIdentifier" direction="asc"/>
-    </datastore-index>        
+    </datastore-index>
+    <datastore-index kind="MoishdGame" ancestor="false" source="manual">
+        <property name="gameType" direction="asc"/>
+        <property name="playerInitId" direction="asc"/>
+        <property name="playerRecId" direction="asc"/>
+        <property name="initiated" direction="asc"/>
+    </datastore-index>
 </datastore-indexes>

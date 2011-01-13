@@ -30,13 +30,19 @@ public class UpdateBusySyncedServlet extends HttpServlet {
 						new TypeToken<List<BusyObject>>(){}.getType());
 				
 				for (BusyObject user : busyUsers) {
-					MoishdUser mUser = DSCommon.GetUserByGoogleId(user.getUserId());
-					if (!user.isBusy()) {
-						mUser.setNotBusy();
-						mUser.SaveChanges();
+					List<MoishdUser> mUsers = DSCommon.GetUsersByGoogleId(user.getUserId());
+					if (mUsers.size() == 0) {
+						LoggerCommon.Get().LogInfo(this, "User " + user.getUserId() + " not found");
 					} else {
-						mUser.setPartner(user.getBusyWith());
-						mUser.SaveChanges();
+						MoishdUser mUser = mUsers.get(0);
+					
+						if (!user.isBusy()) {
+							mUser.setNotBusy();
+							mUser.SaveChanges();
+						} else {
+							mUser.setPartner(user.getBusyWith());
+							mUser.SaveChanges();
+						}
 					}
 				}
 			} catch (DataAccessException e) {
