@@ -1,4 +1,4 @@
-package moishd.server.common;
+package moishd.server.dataObjects;
 
 import java.io.Serializable;
 

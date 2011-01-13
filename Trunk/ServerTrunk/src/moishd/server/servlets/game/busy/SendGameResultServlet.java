@@ -16,12 +16,11 @@ import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
-import moishd.server.common.StringIntPair;
 import moishd.server.dataObjects.BusyObject;
-import moishd.server.dataObjects.GamePoints;
 import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
+import moishd.server.dataObjects.StringIntPair;
 
 import com.google.appengine.api.labs.taskqueue.Queue;
 import com.google.appengine.api.labs.taskqueue.QueueFactory;
