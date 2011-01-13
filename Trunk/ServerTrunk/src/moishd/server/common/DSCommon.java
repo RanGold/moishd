@@ -320,6 +320,9 @@ public class DSCommon {
 						usersSets.put(location.getMoishdUser().getRegisterID(), 
 								secLocation.getMoishdUser().getUserGoogleIdentifier() + "#" +
 								secLocation.getMoishdUser().getUserNick());
+						LoggerCommon.Get().LogInfo("DSCommon", 
+								secLocation.getMoishdUser().getUserGoogleIdentifier() + "#" +
+								secLocation.getMoishdUser().getUserNick());
 						break;
 					}
 				}
@@ -680,6 +683,35 @@ public class DSCommon {
 			q.setFilter("gameLongId == :id");
 
 			q.deletePersistentAll(gameId);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+	}
+	
+	public static GameStatistics GetGameStatByName(String gameName) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			LoggerCommon.Get().LogInfo("DSCommon", "Get Game Stat By Name " + gameName);
+			q = pm.newQuery(MoishdGame.class);
+			q.setFilter("gameType == :type");
+
+			@SuppressWarnings("unchecked")
+			List<GameStatistics> stats = (List<GameStatistics>)q.execute(gameName);
+			
+			if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "No game found");
+				return null;
+			} else if (stats.size() > 1) {
+				LoggerCommon.Get().LogInfo("DSCommon", "Too many games found");
+				return null;
+			} else {
+				return stats.get(0);
+			}
 		}
 		finally {
 			if (q != null) {
