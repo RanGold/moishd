@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+  	android:orientation="vertical"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+   	android:background="@drawable/bg2">
+  
+    <TextView
+  		android:id="@+id/text"
+  		android:layout_marginTop="20dip" 
+  		android:text="Click on the desired game to find out its top Moishers!" 
+		android:layout_marginLeft="20dip"
+		android:gravity="center_vertical|center_horizontal"
+		android:layout_marginRight="20dip"
+		android:textSize="20dip"
+		android:textColor="#000000" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content">
+	</TextView>
+	
+	<TableRow 
+		android:id="@+id/Row01" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dip">
+	
+	<ImageView android:id="@+id/mixing"
+		android:src="@drawable/mixing_game"
+		android:layout_width="120dip" 
+		android:layout_height="140dip"	
+		android:clickable="true"
+		android:layout_marginLeft="40dip"/>
+
+	<ImageView android:id="@+id/simonpro"
+		android:src="@drawable/simonpro_2"
+		android:clickable="true"
+		android:layout_width="120dip" 
+		android:layout_height="140dip"
+		layout_marginLeft="20dip"
+		android:layout_marginTop="14dip"/>
+
+	</TableRow>
+
+
+	<TableRow 
+		android:id="@+id/Row02" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		>
+	
+  	<ImageView android:id="@+id/trivia"
+  		android:src="@drawable/trivia_1"
+  		android:clickable="true"
+		android:layout_width="120dip" 
+		android:layout_height="140dip"
+		android:layout_marginLeft="40dip"
+       />	
+	
+  	<ImageView android:id="@+id/fastClick"
+  		android:src="@drawable/fast_click_game"
+  		android:clickable="true"
+		android:layout_width="120dip" 
+		android:layout_height="140dip"
+		android:paddingRight="5dip"
+		android:layout_marginTop="10dip"
+		layout_marginLeft="20dip"
+   />
+
+  	</TableRow>
+
+</LinearLayout>
