@@ -40,7 +40,7 @@ public class GetTopGamePlayersServlet extends GeneralServlet{
 				}
 			}
 			
-			GsonCommon.WriteJsonToResponse(users, response);
+			GsonCommon.WriteJsonToResponse(MoishdUser.copyToClientMoishdUserList(users), response);
 		}
 	}
 
