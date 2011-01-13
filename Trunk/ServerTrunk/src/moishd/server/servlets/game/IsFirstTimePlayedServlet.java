@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.client.dataObjects.StringIntPair;
 import moishd.server.servlets.GeneralServlet;
 
 public class IsFirstTimePlayedServlet extends GeneralServlet{
@@ -19,27 +20,20 @@ public class IsFirstTimePlayedServlet extends GeneralServlet{
 		super.doPost(request, response);
 		
 		if (user != null) {
-//			String gameType = request.getReader().readLine();
-//			if (!mUser.getGameTypesPlayed().contains(gameType)) {
-//				//mUser.getGameTypesPlayed().set(gameType,1);
-//				mUser.SaveChanges();
-//				
-//			}
-//			else {
-//				//Integer times = mUser.getGameTypesPlayed().get(gameType);
-//				if (times < 3){
-//					//mUser.getGameTypesPlayed().put(gameType,times++);
-//				}
-//				else{
-//					response.addHeader("ThirdTimePlayed", "");
-//					mUser.getGameTypesPlayed().put(gameType,times++);
-//				}
-//			}
-//				mUser.SaveChanges();
-//
-//			*/	
+			String gameType = request.getReader().readLine();
+			if (!mUser.getGameTypesPlayed().contains(new StringIntPair(gameType, 0))) {
+				mUser.getGameTypesPlayed().add(new StringIntPair(gameType, 1));
+				mUser.SaveChanges();
+			}
+			else {
+				int index = mUser.getGameTypesPlayed().indexOf(new StringIntPair(gameType, 0));
+				StringIntPair pair = mUser.getGameTypesPlayed().get(index);
+				pair.setNumberValue(pair.getNumberValue() + 1);
+				if (pair.getNumberValue() == 3){
+					response.addHeader("ThirdTimePlayed", "");
+				}
+				mUser.SaveChanges();
 			}
 		}
-	
-
+	}
 }
