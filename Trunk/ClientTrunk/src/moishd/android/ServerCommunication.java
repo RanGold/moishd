@@ -468,6 +468,11 @@ public class ServerCommunication {
 		HttpResponse response = activateServlet(ServletNamesEnum.GetTopFivePopular, authString);
 		return getTopFiveFromResponse(response);
 	}
+	
+	public static List<ClientMoishdUser> getTopMoishers(String gameType, String authString){
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTopGamePlayersServlet, gameType, authString); 
+		return getUserListFromResponse(response);
+	}
 
 	@SuppressWarnings("unchecked")
 	private static List<String> getTopFiveFromResponse(HttpResponse response){

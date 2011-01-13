@@ -15,11 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class TopFiveGamesActivity extends Activity{
-	Bitmap trivia,fastClick,clickMemory, mixedWord,
-	s0,s1,s2,s3,s4,s5,s05,s15,s25,s35,s45;
+	Bitmap trivia,fastClick,clickMemory, mixedWord, s0,s1,s2,s3,s4,s5,s05,s15,s25,s35,s45;
 	String authString,pageRequest;
-	ImageView gamepic1,gamepic2,gamepic3,gamepic4,gamepic5,
-			rank1,rank2,rank3,rank4,rank5;
+	ImageView gamepic1,gamepic2,gamepic3,gamepic4,gamepic5, rank1,rank2,rank3,rank4,rank5;
 	TextView text;
 	int flag = 1;
 	
