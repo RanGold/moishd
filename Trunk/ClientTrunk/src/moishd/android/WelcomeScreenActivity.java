@@ -418,30 +418,12 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle args){
 		switch (id){
-		case DIALOG_NO_ACCOUNTS:
-			super.onPrepareDialog(id, dialog, args);
-			break;
 		case DIALOG_SHOW_ACCOUNTS:
 			args.putStringArray("names", names);
 			super.onPrepareDialog(id, dialog, args);
 			break;
-		case DIALOG_AUTH_TOKEN_DECLINED:
-			super.onPrepareDialog(id, dialog, args);
-			break;
-		case DIALOG_FACEBOOK_ERROR:
-			super.onPrepareDialog(id, dialog, args);
-			break;
-		case DIALOG_MOISHD_SERVER_REGISTRATION_ERROR:
-			super.onPrepareDialog(id, dialog, args);
-			break;
-		case DIALOG_C2DM_ERROR:
-			super.onPrepareDialog(id, dialog, args);
-			break;
-		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
-			super.onPrepareDialog(id, dialog, args);
-			break;
-		case DIALOG_ALREADY_LOGIN:
-			super.onPrepareDialog(id, dialog, args);
+		
+		default: super.onPrepareDialog(id, dialog, args);
 		}
 	}
 
