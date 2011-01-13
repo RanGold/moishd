@@ -1,7 +1,6 @@
 package moishd.server.servlets.test;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -38,7 +37,7 @@ public class NoPlayedGamesServlet extends HttpServlet {
 					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
 					
 					for (MoishdUser user : users) {
-						user.setGameTypesPlayed(new LinkedList<String>());
+						user.getGameTypesPlayed().clear();
 					}
 					
 					pm.makePersistentAll(users);

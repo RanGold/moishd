@@ -2,8 +2,10 @@ package moishd.server.dataObjects;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -63,7 +65,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private List<String> friendsFacebookIds;
 	
 	@Persistent
-	private List<String> gameTypesPlayed;
+	private Map<String,Integer> gameTypesPlayed;
 	
 	@Persistent(dependent = "true")
 	private Location location;
@@ -88,7 +90,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.busyWith = "";
 		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
-		this.gameTypesPlayed = new LinkedList<String>();
+		this.gameTypesPlayed = new HashMap<String,Integer>();
 		this.dateRegistered = new Date();
 		this.trophies = new LinkedList<TrophiesEnum>();
 		this.stats = new UserGameStatistics();
@@ -235,13 +237,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		return trophies;
 	}
 
-	public void setGameTypesPlayed(List<String> gameTypesPlayed) {
-		this.gameTypesPlayed = gameTypesPlayed;
-	}
 
-	public List<String> getGameTypesPlayed() {
-		return gameTypesPlayed;
-	}
 
 	public void setBusyWith(String busyWith) {
 		this.busyWith = busyWith;
@@ -263,5 +259,13 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	
 	public boolean isPartnerWith(String partner) {
 		return (this.isBusy() && this.getBusyWith().equals(partner));
+	}
+
+	public void setGameTypesPlayed(Map<String,Integer> gameTypesPlayed) {
+		this.gameTypesPlayed = gameTypesPlayed;
+	}
+
+	public Map<String,Integer> getGameTypesPlayed() {
+		return gameTypesPlayed;
 	}
 }
