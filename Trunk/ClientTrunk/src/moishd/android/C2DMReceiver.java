@@ -53,6 +53,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		boolean startIntent = true;
 
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
+			Log.d("TEST","checkAlive???");
 			startIntent = false;
 			ServerCommunication.sendAlive();
 		}
@@ -78,6 +79,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		}
 
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
+			Log.d("Amico","gotGameInvitation");
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameInvitation.toString());
 			String inviterName = intent.getStringExtra("InviterName");

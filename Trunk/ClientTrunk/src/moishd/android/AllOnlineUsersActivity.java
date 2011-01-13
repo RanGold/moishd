@@ -526,8 +526,9 @@ public class AllOnlineUsersActivity extends Activity{
 
 
 	private void inviteUserToMoishDialog(){
-
-		showDialog(DIALOG_INVITE_USER_TO_MOISHD);
+		Bundle args = new Bundle();
+		args.putString("UserInviting", moishdUsers.get(currentClickPosition).getUserNick());
+		showDialog(DIALOG_INVITE_USER_TO_MOISHD, args);
 	}
 
 	private void GetGameOfferDialog(){
@@ -756,11 +757,33 @@ public class AllOnlineUsersActivity extends Activity{
 
 		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
 	}
+	
+	@Override
+	protected void onPrepareDialog (int id, Dialog dialog, Bundle args){
+		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
+		switch (id){
+
+		case DIALOG_USER_CANCELED_GAME:
+			String user;
+			if (myUserName.equals(initName)){
+				user = recName;
+			}
+			else{
+				user = initName;
+			}
+			args.putString("User", user);
+			super.onPrepareDialog(id, dialog, args);
+			break;
+		
+		default:  super.onPrepareDialog(id, dialog, args);
+			
+		
+		}
+	}
 
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle args) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
 
 		switch (id) {
 
@@ -778,7 +801,7 @@ public class AllOnlineUsersActivity extends Activity{
 		
 		case DIALOG_INVITE_USER_TO_MOISHD:
 			//TODO - check why the same name is applied each time.
-			String last_user = moishdUsers.get(currentClickPosition).getUserNick();
+			String last_user = args.getString("UserInviting");
 			
 			builder.setMessage("You've invited " + last_user + " to Moish. Continue?")
 			.setCancelable(false)
@@ -826,7 +849,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent chooseGame = new Intent();
-					Random random = new Random();  
+					Random random = new Random();  					
 					int i = random.nextInt(100);
 					i = i % 4;
 					boolean invitationResult = false;
@@ -970,13 +993,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_USER_CANCELED_GAME:
 			//TODO cancel game
-			String user;
-			if (myUserName.equals(initName)){
-				user = recName;
-			}
-			else{
-				user = initName;
-			}
+			String user = args.getString("User");
 			builder.setMessage("The game with " + user + " has been canceled.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
