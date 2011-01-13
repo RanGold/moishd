@@ -18,6 +18,7 @@ import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
+import com.google.appengine.repackaged.com.google.common.base.Logger;
 import com.google.gson.reflect.TypeToken;
 
 public class DSCommon {
@@ -536,6 +537,111 @@ public class DSCommon {
 			pm.close();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<String> GetTopPopularGames() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(GameStatistics.class);
+			q.setOrdering("gameRank descending");
+			
+			List<GameStatistics> stats = (List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute());
+			LinkedList<String> topFive = new LinkedList<String>();			
+			
+			double popularPoints1 = 0, popularPoints2 = 0, popularPoints3 = 0, popularPoints4 = 0, popularPoints5 = 0;
+			String popular5="",popular4="",popular3="",popular2="",popular1="";
+			if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "No ranks for any game returning default - none");
+			}
+			else {
+				int totalPlayed = 0;
+
+				for (GameStatistics stat : stats) {
+					totalPlayed += stat.getTimesPlayed();
+				}
+				for (GameStatistics stat : stats) {
+					double temp = stat.getRankTotal() / (double)5 * 0.5 + (double)stat.getTimesPlayed() / (double)totalPlayed * 0.5; 
+					if (temp > popularPoints1) {
+						popularPoints5 = popularPoints4;
+						popularPoints4 = popularPoints3;
+						popularPoints3 = popularPoints2;
+						popularPoints2 = popularPoints1;
+						popularPoints1 = temp;
+						popular5 = popular4;
+						popular4 = popular3;
+						popular3 = popular2;
+						popular2 = popular1;
+						popular1 = stat.getGameType();		
+					}
+					
+					else if (temp > popularPoints2) {
+						popularPoints5 = popularPoints4;
+						popularPoints4 = popularPoints3;
+						popularPoints3 = popularPoints2;
+						popularPoints2 = temp;
+						popular5 = popular4;
+						popular4 = popular3;
+						popular3 = popular2;
+						popular2 = stat.getGameType();	
+					}
+					
+					else if (temp > popularPoints3) {
+						popularPoints5 = popularPoints4;
+						popularPoints4 = popularPoints3;
+						popularPoints3 = temp;
+						popular5 = popular4;
+						popular4 = popular3;
+						popular3 = stat.getGameType();	
+					}
+					
+					else if (temp > popularPoints4) {
+						popularPoints5 = popularPoints4;
+						popularPoints4 = temp;
+						popular5 = popular4;
+						popular4 = stat.getGameType();	
+					}
+					
+					else if (temp > popularPoints5) {
+						popularPoints5 = temp;
+						popular5 = stat.getGameType();
+					}
+					
+				}
+			}
+			if (popularPoints1 != 0){
+				LoggerCommon.Get().LogInfo("DSCommon", popular1);
+				topFive.add(popular1);
+			}
+			if (popularPoints2 != 0){
+				LoggerCommon.Get().LogInfo("DSCommon", popular2);
+				topFive.add(popular2);
+			}
+			if (popularPoints3!= 0){
+				LoggerCommon.Get().LogInfo("DSCommon", popular3);
+				topFive.add(popular3);
+			}
+			if (popularPoints4 != 0){
+				LoggerCommon.Get().LogInfo("DSCommon", popular4);
+				topFive.add(popular4);
+			}
+			if (popularPoints5 != 0){
+				LoggerCommon.Get().LogInfo("DSCommon", popular5);
+				topFive.add(popular5);
+			}
+			return (topFive);
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}
+
+	}
+	
+	
+	
 	
 	public static List<String> GetTopFiveGames(String field) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();

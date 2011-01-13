@@ -22,7 +22,7 @@ public class GetTopFivePopularServlet extends GeneralServlet{
 		super.doPost(request, response);
 
 		if (user != null) {
-			List<String> topFiveRanked = DSCommon.GetTopFiveGames("timesPlayed");
+			List<String> topFiveRanked = DSCommon.GetTopPopularGames();
 			GsonCommon.WriteJsonToResponse(topFiveRanked, response);
 		}
 	}
