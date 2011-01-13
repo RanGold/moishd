@@ -25,7 +25,8 @@ public enum IntentExtraKeysEnum {
 	NearByGame("NearByGame"),
 	TopFiveRequest("TopFiveRequest"),
 	TopFiveRanked("TopFiveRanked"),
-	TopFivePopular("TopFivePopular");
+	TopFivePopular("TopFivePopular"),
+	ServerResponse("ServerResponse");
 	
 	private String name;
 

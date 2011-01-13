@@ -270,13 +270,13 @@ public class ServerCommunication {
 		}
 	}
 
-	public static boolean isFirstTimePlayed(String gameType, String authString) {
+	public static boolean isThirdTimePlayed(String gameType, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.IsFirstTimePlayed,gameType, authString);
 		if (response==null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
-		else if (response.containsHeader("FirstTimePlayed")){
+		else if (response.containsHeader("ThirdTimePlayed")){
 			return true;
 		}
 		else{

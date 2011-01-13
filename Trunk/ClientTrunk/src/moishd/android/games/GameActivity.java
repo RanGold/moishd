@@ -10,8 +10,12 @@ import android.widget.Toast;
 
 
 public class GameActivity extends Activity{
-
+	public final static int SERVER_ERROR = 0;
+	public final static int SERVER_OK = 1;
+	public final static int DIDNT_CALL_SERVER = 2;
 	String gameId, authString, gameType, action;
+	int serverFlag = DIDNT_CALL_SERVER;
+	
 
 	protected void onNewIntent (Intent intent){
 		action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
@@ -41,7 +45,13 @@ public class GameActivity extends Activity{
 			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
 			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numOfTrophies);
 			resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
-			setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
+			resultIntent.putExtra(IntentExtraKeysEnum.ServerResponse.toString(), serverFlag);
+			if (serverFlag != SERVER_ERROR){
+				setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
+			}else{
+				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+			}
+		
 			finish();
 
 		}
@@ -69,12 +79,25 @@ public class GameActivity extends Activity{
 
 	protected void Win(){		
 		CommonForWinAndLose();
-		ServerCommunication.sendWinToServer(gameId, authString, gameType);
+		boolean serverResponse = ServerCommunication.sendWinToServer(gameId, authString, gameType);
+		setFlag(serverResponse);
 	}
 
 	protected void Lose(){		
 		CommonForWinAndLose();
-		ServerCommunication.sendLoseToServer(gameId, authString, gameType);
+		boolean serverResponse = ServerCommunication.sendLoseToServer(gameId, authString, gameType);
+		setFlag(serverResponse);
+	}
+	
+	protected void setFlag(boolean serverResponse){
+	
+		if (!serverResponse) {
+			serverFlag=SERVER_ERROR;
+		}
+		else {
+			serverFlag=SERVER_OK;
+		}
+		
 	}
 
 }

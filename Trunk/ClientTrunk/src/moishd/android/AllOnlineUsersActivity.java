@@ -27,6 +27,7 @@ import moishd.client.dataObjects.TrophiesEnum;
 import moishd.common.GetUsersByTypeEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentRequestCodesEnum;
+import moishd.common.IntentResultCodesEnum;
 import moishd.common.LocationManagment;
 import moishd.common.MoishdPreferences;
 import moishd.common.PushNotificationTypeEnum;
@@ -400,7 +401,11 @@ public class AllOnlineUsersActivity extends Activity{
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
+		if (requestCode ==IntentResultCodesEnum.Failed.getCode()){
+			sendMessageToHandler(DIALOG_SERVER_ERROR);
+		}
+		
+		else if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
 			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 			sendInvitationResponse("Accept" + gameType, "");
 		}
@@ -436,6 +441,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			commonForTruthAndDare(intent);
 		}
+		
 
 	}
 
