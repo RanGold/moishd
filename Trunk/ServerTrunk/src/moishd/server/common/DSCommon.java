@@ -642,9 +642,6 @@ public class DSCommon {
 
 	}
 	
-	
-	
-	
 	public static List<String> GetTopFiveGames(String field) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;

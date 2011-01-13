@@ -50,7 +50,7 @@ public class MoishdGame extends CommonJDO implements Serializable {
 	
 	@Persistent
 	private String gameType;
-	
+		
 	public MoishdGame(String playerInitId, String playerRecId) {
 		super();
 		this.playerInitId = playerInitId;
