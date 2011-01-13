@@ -13,6 +13,6 @@
   <cron>
     <url>/cron/PushGameOffers</url>
     <description>Pushing Game Offers</description>
-    <schedule>every 15 minutes synchronized</schedule>
+    <schedule>every 1 minutes synchronized</schedule>
   </cron>
 </cronentries>
