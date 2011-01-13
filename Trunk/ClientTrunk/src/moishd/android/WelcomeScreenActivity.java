@@ -281,7 +281,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
-		registrationIntent.putExtra("sender", "moishd.moishd@gmail.com");
+		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
 		startService(registrationIntent);
 		Log.d("TEST","Resgistering...");
 

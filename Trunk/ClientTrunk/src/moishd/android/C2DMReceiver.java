@@ -30,7 +30,7 @@ import com.google.android.c2dm.C2DMBaseReceiver;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
-	static final String SENDER_ID = "moishd.moishd@gmail.com";
+	static final String SENDER_ID = "app.moishd@gmail.com";
 
 	public C2DMReceiver() {
 		super(SENDER_ID);
