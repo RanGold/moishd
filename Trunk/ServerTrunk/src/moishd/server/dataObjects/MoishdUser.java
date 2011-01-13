@@ -2,10 +2,8 @@ package moishd.server.dataObjects;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,6 +11,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.client.dataObjects.StringIntPair;
 import moishd.client.dataObjects.TrophiesEnum;
 
 import com.google.appengine.api.datastore.Key;
@@ -65,7 +64,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	private List<String> friendsFacebookIds;
 	
 	@Persistent
-	private Map<String,Integer> gameTypesPlayed;
+	private List<StringIntPair> gameTypesPlayed;
 	
 	@Persistent(dependent = "true")
 	private Location location;
@@ -90,7 +89,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.busyWith = "";
 		this.isAlive = 0;
 		this.friendsFacebookIds = new LinkedList<String>();
-		this.gameTypesPlayed = new HashMap<String,Integer>();
+		this.gameTypesPlayed = new LinkedList<StringIntPair>();
 		this.dateRegistered = new Date();
 		this.trophies = new LinkedList<TrophiesEnum>();
 		this.stats = new UserGameStatistics();
@@ -261,11 +260,11 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		return (this.isBusy() && this.getBusyWith().equals(partner));
 	}
 
-	public void setGameTypesPlayed(Map<String,Integer> gameTypesPlayed) {
+	public void setGameTypesPlayed(List<StringIntPair> gameTypesPlayed) {
 		this.gameTypesPlayed = gameTypesPlayed;
 	}
 
-	public Map<String,Integer> getGameTypesPlayed() {
+	public List<StringIntPair> getGameTypesPlayed() {
 		return gameTypesPlayed;
 	}
 }

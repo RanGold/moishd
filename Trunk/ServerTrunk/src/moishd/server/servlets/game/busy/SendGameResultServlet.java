@@ -4,17 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.google.appengine.api.labs.taskqueue.Queue;
-import com.google.appengine.api.labs.taskqueue.QueueFactory;
-import com.google.appengine.api.labs.taskqueue.TaskOptions;
-import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
 
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.server.common.C2DMCommon;
@@ -25,6 +19,11 @@ import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.BusyObject;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
+
+import com.google.appengine.api.labs.taskqueue.Queue;
+import com.google.appengine.api.labs.taskqueue.QueueFactory;
+import com.google.appengine.api.labs.taskqueue.TaskOptions;
+import com.google.appengine.api.labs.taskqueue.TaskOptions.Method;
 
 public class SendGameResultServlet extends HttpServlet {
 	/**
@@ -188,13 +187,13 @@ public class SendGameResultServlet extends HttpServlet {
 		winner.SaveChanges();
 		loser.SaveChanges();
 
-		Map<String, Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
-		int previousWinnerGamePoints = winnerGamesPoints.get(moishdGame.getGameType());
-		winnerGamesPoints.put(moishdGame.getGameType(), previousWinnerGamePoints + addedPoints[0]);
-		
-		Map<String, Integer> loserGamesPoints = loser.getStats().getGamesPoints();
-		int previousLoserGamePoints = loserGamesPoints.get(moishdGame.getGameType());
-		loserGamesPoints.put(moishdGame.getGameType(), previousLoserGamePoints + addedPoints[1]);
+//		Map<String, Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
+//		int previousWinnerGamePoints = winnerGamesPoints.get(moishdGame.getGameType());
+//		winnerGamesPoints.put(moishdGame.getGameType(), previousWinnerGamePoints + addedPoints[0]);
+//		
+//		Map<String, Integer> loserGamesPoints = loser.getStats().getGamesPoints();
+//		int previousLoserGamePoints = loserGamesPoints.get(moishdGame.getGameType());
+//		loserGamesPoints.put(moishdGame.getGameType(), previousLoserGamePoints + addedPoints[1]);
 
 		return addedPoints;
 	}
