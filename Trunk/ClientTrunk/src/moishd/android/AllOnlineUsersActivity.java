@@ -811,7 +811,7 @@ public class AllOnlineUsersActivity extends Activity{
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_INVITE_USER_TO_MOISHD, true);
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
-					timerForResponse= new waitForResponse(10000,1000);
+					timerForResponse= new waitForResponse(40000,1000);
 					timerForResponse.start();
 					timerOn=true;
 					
