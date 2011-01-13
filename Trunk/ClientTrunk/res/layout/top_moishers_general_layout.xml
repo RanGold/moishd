@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
   	xmlns:android="http://schemas.android.com/apk/res/android"
   	android:orientation="vertical"
@@ -25,14 +26,14 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="10dip">
 	
-	<ImageView android:id="@+id/mixing"
+	<ImageView android:id="@+id/gameIconMixing"
 		android:src="@drawable/mixing_game"
 		android:layout_width="120dip" 
 		android:layout_height="140dip"	
 		android:clickable="true"
 		android:layout_marginLeft="40dip"/>
 
-	<ImageView android:id="@+id/simonpro"
+	<ImageView android:id="@+id/gameIconSimonPro"
 		android:src="@drawable/simonpro_2"
 		android:clickable="true"
 		android:layout_width="120dip" 
@@ -42,14 +43,13 @@
 
 	</TableRow>
 
-
 	<TableRow 
 		android:id="@+id/Row02" 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		>
 	
-  	<ImageView android:id="@+id/trivia"
+  	<ImageView android:id="@+id/gameIconTrivia"
   		android:src="@drawable/trivia_1"
   		android:clickable="true"
 		android:layout_width="120dip" 
@@ -57,7 +57,7 @@
 		android:layout_marginLeft="40dip"
        />	
 	
-  	<ImageView android:id="@+id/fastClick"
+  	<ImageView android:id="@+id/gameIconFastClick"
   		android:src="@drawable/fast_click_game"
   		android:clickable="true"
 		android:layout_width="120dip" 
