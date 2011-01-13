@@ -10,7 +10,6 @@ public enum IntentExtraKeysEnum {
 	PushGameId("GameId"),
 	PushAction("Action"),
 	GameType("GameType"),
-	GameName("GameName"),
 	GameIcon("GameIcon"),
 	PushGameResult("Result"),
 	Truth("Truth"),
