@@ -1,8 +1,8 @@
 package moishd.server.dataObjects;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -10,6 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientUserGameStatistics;
+import moishd.client.dataObjects.StringIntPair;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -40,7 +41,7 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	private int gamesWonInARow;
 	
     @Persistent
-    private Map<String,Integer> gamesPoints;
+    private List<StringIntPair> gamesPoints;
 
 	@Persistent(mappedBy = "stats")
 	private MoishdUser moishdUser;
@@ -51,16 +52,17 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
-		this.gamesPoints = new HashMap<String, Integer>();
+		this.gamesPoints = new LinkedList<StringIntPair>();
 	}
 
-	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow,  Map<String, Integer> gamesPoints ) {
+	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow,  
+			LinkedList<StringIntPair> gamesPoints ) {
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
-		this.gamesPoints = gamesPoints;
+		this.setGamesPoints(gamesPoints);
 	}
 
 	public ClientUserGameStatistics toClientUserGameStatistics() {
@@ -114,12 +116,12 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	public MoishdUser getMoishdUser() {
 		return moishdUser;
 	}
-	
-	public void setGamesPoints(Map<String,Integer> gamesPoints) {
+
+	public void setGamesPoints(List<StringIntPair> gamesPoints) {
 		this.gamesPoints = gamesPoints;
 	}
 
-	public Map<String,Integer> getGamesPoints() {
+	public List<StringIntPair> getGamesPoints() {
 		return gamesPoints;
 	}
 }

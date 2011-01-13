@@ -19,25 +19,25 @@ public class IsFirstTimePlayedServlet extends GeneralServlet{
 		super.doPost(request, response);
 		
 		if (user != null) {
-			String gameType = request.getReader().readLine();
-			if (!mUser.getGameTypesPlayed().containsKey(gameType)) {
-				mUser.getGameTypesPlayed().put(gameType,1);
-				mUser.SaveChanges();
-				
-			}
-			else {
-				Integer times = mUser.getGameTypesPlayed().get(gameType);
-				if (times < 3){
-					mUser.getGameTypesPlayed().put(gameType,times++);
-				}
-				else{
-					response.addHeader("ThirdTimePlayed", "");
-					mUser.getGameTypesPlayed().put(gameType,times++);
-				}
-			}
-				mUser.SaveChanges();
-
-				
+//			String gameType = request.getReader().readLine();
+//			if (!mUser.getGameTypesPlayed().contains(gameType)) {
+//				//mUser.getGameTypesPlayed().set(gameType,1);
+//				mUser.SaveChanges();
+//				
+//			}
+//			else {
+//				//Integer times = mUser.getGameTypesPlayed().get(gameType);
+//				if (times < 3){
+//					//mUser.getGameTypesPlayed().put(gameType,times++);
+//				}
+//				else{
+//					response.addHeader("ThirdTimePlayed", "");
+//					mUser.getGameTypesPlayed().put(gameType,times++);
+//				}
+//			}
+//				mUser.SaveChanges();
+//
+//			*/	
 			}
 		}
 	
