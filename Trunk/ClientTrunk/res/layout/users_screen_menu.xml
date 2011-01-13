@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
     <item android:id="@+id/RefreshList"
           android:icon="@drawable/menu_refresh"
           android:title="@string/refresh" />
@@ -25,10 +26,11 @@
           android:icon="@drawable/logout"/>
           
     <item android:id="@+id/topFiveRanked"
-    	  android:title="@string/top_five_ranked"
-          android:icon="@drawable/logout"/>
+    	  android:title="@string/top_five_ranked"/>
                  
     <item android:id="@+id/topFivePopular"
-    	  android:title="@string/top_five_popular"
-          android:icon="@drawable/logout"/>
+    	  android:title="@string/top_five_popular"/>
+          
+    <item android:id="@+id/topMoishers"
+    	  android:title="@string/top_moishers"/>
 </menu>

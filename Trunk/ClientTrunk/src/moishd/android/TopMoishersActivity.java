@@ -2,6 +2,7 @@ package moishd.android;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import moishd.client.dataObjects.ClientMoishdUser;
@@ -34,16 +35,20 @@ public class TopMoishersActivity extends Activity{
 
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		
-		GamesEnum gameName = (GamesEnum) getIntent().getExtras().get(IntentExtraKeysEnum.GameName.toString());
+		GamesEnum gameName = (GamesEnum) getIntent().getExtras().get(IntentExtraKeysEnum.GameType.toString());
 		String authToken = (String) getIntent().getExtras().get(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		Log.d("TEST", "GAME ENUM TO STRING " + gameName.toString());
 		topMoishers = ServerCommunication.getTopMoishers(gameName.toString(), authToken);
 		
+		if (topMoishers == null){
+			topMoishers = new ArrayList<ClientMoishdUser>();
+		}
 		TextView header = (TextView) findViewById(R.id.top_moishers_header);
 		header.setText(gameName + " Top Moishers\n");
 		header.setTypeface(fontName);
+		header.setTextSize(20);
 		
-		ListView list = (ListView) findViewById(R.id.trophiesList);
+		ListView list = (ListView) findViewById(R.id.topMoishersList);
 		list.setAdapter(new EfficientAdapter(this));
 	}
 	

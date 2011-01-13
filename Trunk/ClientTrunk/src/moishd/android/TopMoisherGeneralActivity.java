@@ -42,7 +42,6 @@ public class TopMoisherGeneralActivity extends Activity{
 			}
 		});	
 
-
 		simonPro.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DareSimonPro);

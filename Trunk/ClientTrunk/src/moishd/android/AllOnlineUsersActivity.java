@@ -285,6 +285,8 @@ public class AllOnlineUsersActivity extends Activity{
 			return true;
 		case R.id.topFiveRanked:
 			displayTopRankedGames();
+		case R.id.topMoishers:
+			startActivity(new Intent(this, TopMoisherGeneralActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
