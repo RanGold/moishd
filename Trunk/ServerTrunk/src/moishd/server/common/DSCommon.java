@@ -18,7 +18,6 @@ import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
 
-import com.google.appengine.repackaged.com.google.common.base.Logger;
 import com.google.gson.reflect.TypeToken;
 
 public class DSCommon {
