@@ -34,6 +34,8 @@ public class GetTopGamePlayersServlet extends GeneralServlet{
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
 			for (StringIntPair siPair : stat.getTopMoishers()) {
 				try {
+					MoishdUser topMoisher = DSCommon.GetUserByGoogleId(siPair.getStringValue());
+					topMoisher.getStats().setTopMoisherPoints(siPair.getNumberValue());
 					users.add(DSCommon.GetUserByGoogleId(siPair.getStringValue()));
 				} catch (DataAccessException e) {
 					LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());

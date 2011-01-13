@@ -39,6 +39,9 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	@Persistent
 	private int gamesWonInARow;
 	
+	@Persistent
+	private int topMoisherPoints;
+	
     @Persistent
     private List<StringIntPair> gamesPoints;
 
@@ -51,21 +54,22 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
+		this.topMoisherPoints = -1;
 		this.gamesPoints = new LinkedList<StringIntPair>();
 	}
 
-	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow,  
-			LinkedList<StringIntPair> gamesPoints ) {
+	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow, int topMoisherPoints, LinkedList<StringIntPair> gamesPoints ) {
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
+		this.topMoisherPoints = topMoisherPoints;
 		this.setGamesPoints(gamesPoints);
 	}
 
 	public ClientUserGameStatistics toClientUserGameStatistics() {
-		return (new ClientUserGameStatistics(this.getGamesPlayed(), this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow(), this.getGamesPoints()));
+		return (new ClientUserGameStatistics(this.getGamesPlayed(), this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow(), this.getTopMoisherPoints(), this.getGamesPoints()));
 	}
 
 	public Integer getGamesPlayed() {
@@ -106,6 +110,14 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 
 	public void setGamesWonInARow(int gamesWonInARow) {
 		this.gamesWonInARow = gamesWonInARow;
+	}
+	
+	public int getTopMoisherPoints() {
+		return topMoisherPoints;
+	}
+
+	public void setTopMoisherPoints(int topMoisherPoints) {
+		this.topMoisherPoints = topMoisherPoints;
 	}
 
 	public Key getStatsId() {

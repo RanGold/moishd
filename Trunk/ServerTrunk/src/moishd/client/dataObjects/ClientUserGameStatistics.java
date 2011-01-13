@@ -23,6 +23,8 @@ public class ClientUserGameStatistics implements Serializable {
 	
 	private int gamesWonInARow;
 	
+	private int topMoisherPoints;
+	
 	private List<StringIntPair> gamesPoints;
 
 	public ClientUserGameStatistics() {
@@ -32,16 +34,18 @@ public class ClientUserGameStatistics implements Serializable {
 		this.rank = 0;
 		this.points = 0;
 		this.gamesWonInARow = 0;
+		this.topMoisherPoints = -1;
 		this.setGamesPoints(new LinkedList<StringIntPair>());
 	}
 
-	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,int rank, int points, int gamesWonInARow, List<StringIntPair> gamesPoints) {
+	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,int rank, int points, int gamesWonInARow, int topMoisherPoints, List<StringIntPair> gamesPoints) {
 		super();
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
+		this.topMoisherPoints = topMoisherPoints;
 		this.setGamesPoints(gamesPoints);
 	}
 
@@ -91,5 +95,13 @@ public class ClientUserGameStatistics implements Serializable {
 
 	public List<StringIntPair> getGamesPoints() {
 		return gamesPoints;
+	}
+
+	public void setTopMoisherPoints(int topMoisherPoints) {
+		this.topMoisherPoints = topMoisherPoints;
+	}
+
+	public int getTopMoisherPoints() {
+		return topMoisherPoints;
 	}
 }
