@@ -128,6 +128,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_SERVER_ERROR = 33;
 	
 	private waitForResponse timerForResponse;
+	
+	private boolean timerOn = false;
 
 	private Handler autoRefreshHandler = new Handler();
 
@@ -296,10 +298,16 @@ public class AllOnlineUsersActivity extends Activity{
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	public void turnOffTimer(){
+		if (timerOn){
+			timerForResponse.cancel();
+			timerOn=false;
+		}
+	}
 
 	@Override
 	protected void onNewIntent (Intent intent){
-		Log.d("Tammy", "do I ever get to new intent?");
 		game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());	
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
@@ -311,13 +319,13 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 				Log.d("Amico","cancel timer on gameDeclined");
-				timerForResponse.cancel();
+				turnOffTimer();
 				userDeclinedToMoishDialog();
 				game_id = null;
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
-				Log.d("Amico","cancel timer on gameCanceled");
+				turnOffTimer();
 				initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
@@ -326,8 +334,7 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
-				Log.d("Amico","cancel timer on playerBusy");
-				timerForResponse.cancel();
+				turnOffTimer();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
 				game_id = null;
@@ -336,8 +343,7 @@ public class AllOnlineUsersActivity extends Activity{
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
-				Log.d("Amico","cancel timer on playerOffline");
-				timerForResponse.cancel();
+				turnOffTimer();
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsOffline(opponent_nick_name);
 				game_id = null;
@@ -347,21 +353,18 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
-				Log.d("Amico","cancel timer on popularGame");
-				timerForResponse.cancel();
+				turnOffTimer();
 				StartGamePopular();
 
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
-				Log.d("Amico","cancel timer on startGametTruth");
-				timerForResponse.cancel();
+				turnOffTimer();
 				startGameTruth();
 				
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
-				Log.d("Amico","cancel timer on startGameDare");
-				timerForResponse.cancel();
+				turnOffTimer();
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
@@ -779,6 +782,7 @@ public class AllOnlineUsersActivity extends Activity{
 					inviteUserToMoish(moishdUsers.get(currentClickPosition));
 					timerForResponse= new waitForResponse(10000,1000);
 					timerForResponse.start();
+					timerOn=true;
 					
 				}
 			})
@@ -821,8 +825,7 @@ public class AllOnlineUsersActivity extends Activity{
 					i = i % 4;
 					boolean invitationResult = false;
 					boolean isBusy = ServerCommunication.IsBusy(authToken);
-					timerForResponse= new waitForResponse(30000,1000);
-					timerForResponse.start();
+					
 					if (isBusy) {
 						if (i==0 || i==1) {
 							chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
@@ -843,7 +846,7 @@ public class AllOnlineUsersActivity extends Activity{
 							if (invitationResult==false){
 								sendMessageToHandler(DIALOG_SERVER_ERROR);
 							}
-						}	
+						}
 					}
 					else{
 						invitationResult = sendInvitationResponse("AcceptTruth","");
