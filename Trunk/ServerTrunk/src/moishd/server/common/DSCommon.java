@@ -601,6 +601,7 @@ public class DSCommon {
 			
 			if (mg.size() == 0) {
 				LoggerCommon.Get().LogInfo("DSCommon", "No games match");
+			} else {
 				gameId = mg.get(0).getGameLongId();
 			}
 			

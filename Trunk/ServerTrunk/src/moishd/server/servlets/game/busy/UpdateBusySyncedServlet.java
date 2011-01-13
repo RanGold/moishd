@@ -36,10 +36,10 @@ public class UpdateBusySyncedServlet extends HttpServlet {
 					} else {
 						MoishdUser mUser = mUsers.get(0);
 					
-						if (!user.isBusy()) {
+						if (user.isBusy() && mUser.isPartnerWith(user.getBusyWith())) {
 							mUser.setNotBusy();
 							mUser.SaveChanges();
-						} else {
+						} else if (!user.isBusy()) {
 							mUser.setPartner(user.getBusyWith());
 							mUser.SaveChanges();
 						}

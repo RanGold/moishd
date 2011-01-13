@@ -29,9 +29,9 @@ public class SendGameResultServlet extends HttpServlet {
 	/**
 	 * 
 	 */
-	int factorNearBy=1;
 	private static final long serialVersionUID = -530008367358724317L;
 	
+	private int factorNearBy = 1;
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
@@ -154,8 +154,8 @@ public class SendGameResultServlet extends HttpServlet {
 					
 					List<BusyObject> busyUsers = new LinkedList<BusyObject>();
 					busyUsers
-							.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false));
-					busyUsers.add(new BusyObject(mRecUser.getBusyWith(), false));
+							.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
+					busyUsers.add(new BusyObject(mRecUser.getBusyWith(), false, mInitUser.getUserGoogleIdentifier()));
 
 					String json = GsonCommon.GetJsonString(busyUsers);
 
