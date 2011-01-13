@@ -198,8 +198,8 @@ public class C2DMCommon {
 		StringBuilder sb = new StringBuilder();
 
 		addEncodedParameter(sb, "accountType", "GOOGLE");
-		addEncodedParameter(sb, "Email", "moishd.moishd@gmail.com");
-		addEncodedParameter(sb, "Passwd", "appMoishd123");
+		addEncodedParameter(sb, "Email", "app.moishd@gmail.com");
+		addEncodedParameter(sb, "Passwd", "moishdapp123");
 		addEncodedParameter(sb, "service", "ac2dm");
 		addEncodedParameter(sb, "source", "moishdVer1");
 		String data = sb.toString();
