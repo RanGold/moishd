@@ -107,6 +107,8 @@ public class SendGameResultServlet extends HttpServlet {
 					updateRankAndTrophies(winPayload, winner);
 					updateRankAndTrophies(losePayload, loser);
 
+					LoggerCommon.Get().LogInfo(this, "Winner: " + winner.getUserGoogleIdentifier());
+					LoggerCommon.Get().LogInfo(this, "Winner: " + winner.getUserGoogleIdentifier());
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 							C2DMCommon.Actions.GameResult.toString(), winPayload);
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
