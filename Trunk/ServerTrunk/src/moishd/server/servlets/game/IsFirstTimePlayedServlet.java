@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.client.dataObjects.StringIntPair;
+import moishd.server.dataObjects.StringIntPair;
 import moishd.server.servlets.GeneralServlet;
 
 public class IsFirstTimePlayedServlet extends GeneralServlet{
