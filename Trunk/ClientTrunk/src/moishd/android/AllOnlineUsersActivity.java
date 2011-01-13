@@ -20,8 +20,6 @@ import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
 import moishd.android.games.MostPopularGameActivity;
 import moishd.android.games.SimonProGameActivity;
-import moishd.android.games.TopFiveGamesActivity;
-import moishd.android.games.TopPopularActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
