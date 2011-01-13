@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -199,8 +198,8 @@ public class C2DMCommon {
 		StringBuilder sb = new StringBuilder();
 
 		addEncodedParameter(sb, "accountType", "GOOGLE");
-		addEncodedParameter(sb, "Email", "app.moishd@gmail.com");
-		addEncodedParameter(sb, "Passwd", "moishdapp123");
+		addEncodedParameter(sb, "Email", "moishd.moishd@gmail.com");
+		addEncodedParameter(sb, "Passwd", "appMoishd123");
 		addEncodedParameter(sb, "service", "ac2dm");
 		addEncodedParameter(sb, "source", "moishdVer1");
 		String data = sb.toString();
