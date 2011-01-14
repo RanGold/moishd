@@ -33,7 +33,6 @@ public class TopMoisherGeneralActivity extends Activity{
 		
 		topMoishersIntent = new Intent(this, TopMoishersActivity.class);
 		topMoishersIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-
 		
 		mixing.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

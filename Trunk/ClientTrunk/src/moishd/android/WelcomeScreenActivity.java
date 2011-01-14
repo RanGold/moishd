@@ -52,11 +52,11 @@ import com.google.android.c2dm.C2DMessaging;
 
 public class WelcomeScreenActivity extends Activity{
 
+	protected static Facebook facebook;
 	private static final String APP_ID = "108614622540129";
 
 	private Account userGoogleAccount;
 
-	protected static Facebook facebook;
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
 
@@ -106,7 +106,7 @@ public class WelcomeScreenActivity extends Activity{
 					progressDialog.dismiss();
 				showDialog(DIALOG_C2DM_ERROR);
 				break;
-		
+
 			case REGISTRATION_COMPLETE:
 				if (progressDialog != null)
 					progressDialog.dismiss();
@@ -119,13 +119,13 @@ public class WelcomeScreenActivity extends Activity{
 				intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 				startActivity(intent);
 				break;
-				
+
 			case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
 				if (progressDialog != null)
 					progressDialog.dismiss();
 				showDialog(DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT);
 				break;
-				
+
 			case DIALOG_ALREADY_LOGIN:
 				if (progressDialog != null)
 					progressDialog.dismiss();
@@ -163,9 +163,15 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	@Override
+	public void onBackPressed(){
+		moveTaskToBack(true);
+		return;
+	}
+
+	@Override
 	protected void onResume(){
 		super.onResume();
-	/* (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+		/* (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}*/
 		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
@@ -181,7 +187,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
-	
+
 	@Override
 	protected void onDestroy (){
 		if(isC2DMRegistered()){
@@ -189,12 +195,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 		super.onDestroy();
 	}
-	
-	@Override
-	public void onBackPressed(){
-		moveTaskToBack(true);
-		return;
-	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -291,40 +292,6 @@ public class WelcomeScreenActivity extends Activity{
 		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 5000);
 	}
 
-	private class ifRegisteredThanLoginTask extends TimerTask{
-		private Runnable run;
-
-		@Override
-		public void run() {
-			run = new Runnable() {
-				public void run() {
-					if (isC2DMRegistered()){
-						Log.d("TEST", "in isRegistered");
-						timer.cancel();
-						asyncRunner.request("me", new ProfileRequestListener(location));
-					}
-					else{
-						if (numberOfTriesLeft == 1) {
-							timer.cancel();
-							numberOfTriesLeft =3;
-
-							progressDialog.dismiss();
-							Message registrationErrorMessage = Message.obtain();
-							registrationErrorMessage.setTarget(mHandler);
-							registrationErrorMessage.what = DIALOG_C2DM_ERROR;
-							registrationErrorMessage.sendToTarget();
-						}
-						else
-							numberOfTriesLeft--;
-					}
-				}
-			}; 
-			Log.d("TEST", "in TimerTask");
-			timerHandler.post(run);
-		}
-
-	}
-
 	private boolean isC2DMRegistered() {
 
 		String registrationId = C2DMessaging.getRegistrationId(this);
@@ -397,24 +364,6 @@ public class WelcomeScreenActivity extends Activity{
 		editor.commit();
 	}
 
-	public class MoishdAuthListener implements AuthListener {
-		public void onAuthSucceed() {
-			doAuthSucceed();
-		}
-
-		public void onAuthFail(String error) {
-		}
-	}
-
-	public class MoishdLogoutListener implements LogoutListener {
-		public void onLogoutBegin() {
-		}
-
-		public void onLogoutFinish() {
-			unregisterC2DM();
-		}
-	}
-
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog, Bundle args){
 		switch (id){
@@ -422,7 +371,7 @@ public class WelcomeScreenActivity extends Activity{
 			args.putStringArray("names", names);
 			super.onPrepareDialog(id, dialog, args);
 			break;
-		
+
 		default: super.onPrepareDialog(id, dialog, args);
 		}
 	}
@@ -445,7 +394,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();
-			
+
 		case DIALOG_NO_INTERNET_CONNECTION:
 			builder.setTitle("Error");
 			builder.setMessage("Moish'd! cannot start as it requires internet connection.")
@@ -513,7 +462,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_C2DM_ERROR:
 			builder.setTitle("Error");
 			builder.setMessage("Registration to Moish'd! server failed. Please retry in a few seconds.")
@@ -525,7 +474,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
 			builder.setTitle("Error");
 			builder.setMessage("The Google account you selected doesn't match the one you registered with. please try again.")
@@ -536,7 +485,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();  
-			
+
 		case DIALOG_ALREADY_LOGIN:
 			builder.setTitle("Error");
 			builder.setMessage("The user you're trying to login with is currently logged in to Moishd server.")
@@ -552,8 +501,60 @@ public class WelcomeScreenActivity extends Activity{
 
 	}
 
+	private class ifRegisteredThanLoginTask extends TimerTask{
+		private Runnable run;
+
+		@Override
+		public void run() {
+			run = new Runnable() {
+				public void run() {
+					if (isC2DMRegistered()){
+						Log.d("TEST", "in isRegistered");
+						timer.cancel();
+						asyncRunner.request("me", new ProfileRequestListener(location));
+					}
+					else{
+						if (numberOfTriesLeft == 1) {
+							timer.cancel();
+							numberOfTriesLeft =3;
+
+							progressDialog.dismiss();
+							Message registrationErrorMessage = Message.obtain();
+							registrationErrorMessage.setTarget(mHandler);
+							registrationErrorMessage.what = DIALOG_C2DM_ERROR;
+							registrationErrorMessage.sendToTarget();
+						}
+						else
+							numberOfTriesLeft--;
+					}
+				}
+			}; 
+			Log.d("TEST", "in TimerTask");
+			timerHandler.post(run);
+		}
+
+	}
+	
+	private class MoishdAuthListener implements AuthListener {
+		public void onAuthSucceed() {
+			doAuthSucceed();
+		}
+
+		public void onAuthFail(String error) {
+		}
+	}
+
+	private class MoishdLogoutListener implements LogoutListener {
+		public void onLogoutBegin() {
+		}
+
+		public void onLogoutFinish() {
+			unregisterC2DM();
+		}
+	}
+
 	//listener for incoming HttpResponse containing user's Facebook profile. Continues registration process
-	public class ProfileRequestListener extends BaseRequestListener {
+	private class ProfileRequestListener extends BaseRequestListener {
 		private Location location;
 
 
@@ -588,9 +589,9 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setLocation(loc);
 
 				String authString = getGoogleAuthToken();
-				
+
 				int registrationStatus = ServerCommunication.enlistUser(newUser, authString);
-				
+
 				switch (registrationStatus){
 				case ServerCommunication.ENLIST_OK:
 					saveUserName(userName, firstName);
@@ -621,7 +622,5 @@ public class WelcomeScreenActivity extends Activity{
 			registrationErrorMessage.what = messageType;
 			registrationErrorMessage.sendToTarget();
 		}
-
 	}
-
 }
