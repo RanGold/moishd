@@ -137,14 +137,10 @@ public class C2DMCommon {
 			stream.close();
 			LoggerCommon.Get().LogInfo("C2DMCommon", String.valueOf(connection.getResponseCode()));
 			String newAuth = connection.getHeaderField("update-client-auth");
+			
 			if (newAuth != null) {
+				LoggerCommon.Get().LogInfo("C2DMCommon", "updating auth");
 				DSCommon.SetC2DMAuth(newAuth);
-			}
-			Map<String,List<String>> map = connection.getHeaderFields();
-			for (String resp : map.keySet()) {
-				for (String header : map.get(resp)) {
-					LoggerCommon.Get().LogInfo("C2DMCommon", resp + " - " + header);
-				}
 			}
 			switch (connection.getResponseCode()) { 
 			case 200: 
@@ -160,14 +156,17 @@ public class C2DMCommon {
 				LoggerCommon.Get().LogInfo("C2DMCommon", output);
 				return true;
 			case 503: 
+				LoggerCommon.Get().LogInfo("C2DMCommon", "Error code 503");
 				// Service unavailable
 				return false;
-			case 401: 
+			case 401:
+				LoggerCommon.Get().LogInfo("C2DMCommon", "Error code 401");
 				// Invalid authentication token
 				return false;
 			} 
 		} catch
 		(IOException e) { 
+			LoggerCommon.Get().LogInfo("C2DMCommon", e.getMessage());
 			// Exception handling 
 		}
 		

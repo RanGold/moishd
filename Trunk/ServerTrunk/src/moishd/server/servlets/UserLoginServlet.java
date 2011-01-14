@@ -43,9 +43,11 @@ public class UserLoginServlet extends GeneralServlet {
 				if (users.size() > 1) {
 					throw new DataAccessException("user " + user.getEmail() + " more than 1 result");
 				} else if (users.size() == 0) {	
+					LoggerCommon.Get().LogInfo(this, "New user: " + user.getEmail());
 					muser = new MoishdUser(newUser.getUserNick(), newUser.getPictureLink(), 
 							user.getEmail(), newUser.getRegisterID(), newUser.getFacebookID(), "MAC");
 				} else {
+					LoggerCommon.Get().LogInfo(this, "User exist: " + user.getEmail());
 					muser = users.get(0);
 					if (!muser.getFacebookID().equals(newUser.getFacebookID())) {
 						LoggerCommon.Get().LogError(this, response, "AccountNotMatch", "Facebook id given " + 
@@ -63,7 +65,6 @@ public class UserLoginServlet extends GeneralServlet {
 					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", "Tried to login twice with the same user");
 					LoggerCommon.Get().LogInfo(this, "Checking current user connection");
 					muser.setIsAlive(2);
-					muser.SaveChanges();
 					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
 							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
 				} else {
@@ -72,9 +73,9 @@ public class UserLoginServlet extends GeneralServlet {
 					muser.setNotBusy();
 					muser.setRegistered(true);
 					muser.setRegisterID(newUser.getRegisterID());
-						
-					muser.SaveChanges();
 				}
+				
+				muser.SaveChanges();
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ClassNotFoundException e) {

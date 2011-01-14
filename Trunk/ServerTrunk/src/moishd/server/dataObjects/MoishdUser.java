@@ -92,7 +92,7 @@ public class MoishdUser extends CommonJDO implements Serializable {
 		this.dateRegistered = new Date();
 		this.trophies = new LinkedList<TrophiesEnum>();
 		this.stats = new UserGameStatistics();
-		this.location = new Location(200, 200);
+		this.setLocation(new Location(200, 200));
 	}
 
 	public ClientMoishdUser toClientMoishdUser() {

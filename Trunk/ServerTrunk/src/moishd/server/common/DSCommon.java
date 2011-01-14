@@ -694,7 +694,7 @@ public class DSCommon {
 		Query q = null;
 		try {
 			LoggerCommon.Get().LogInfo("DSCommon", "Get Game Stat By Name " + gameName);
-			q = pm.newQuery(MoishdGame.class);
+			q = pm.newQuery(GameStatistics.class);
 			q.setFilter("gameType == :type");
 
 			@SuppressWarnings("unchecked")
