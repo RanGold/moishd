@@ -10,17 +10,17 @@ import javax.jdo.annotations.PrimaryKey;
 import moishd.client.dataObjects.ClientLocation;
 
 import com.google.appengine.api.datastore.Key;
-
+//32.063856,34.77999
 @PersistenceCapable
-public class Location extends CommonJDO implements Serializable {
-    /**
+public class ConstantLocation extends CommonJDO implements Serializable {
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5699415381628138991L;
+	private static final long serialVersionUID = -229245300527618813L;
 
 	@PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key locationId;
+    private Key constLocId;
 
     @Persistent
     private double longitude;
@@ -28,10 +28,10 @@ public class Location extends CommonJDO implements Serializable {
     @Persistent
     private double latitude;
     
-    @Persistent(mappedBy = "location")
-    private MoishdUser moishdUser;
+    @Persistent
+    private double name;
 
-	public Location(double longitude, double latitude) {
+	public ConstantLocation(double longitude, double latitude) {
 		super();
 		this.setLongitude(longitude);
 		this.setLatitude(latitude);
@@ -39,18 +39,6 @@ public class Location extends CommonJDO implements Serializable {
 
 	public ClientLocation toClientLocaion() {
 		return (new ClientLocation(this.getLongitude(),this.getLatitude()));
-	}
-
-	public Key getLocationId() {
-		return locationId;
-	}
-
-	public MoishdUser getMoishdUser() {
-		return moishdUser;
-	}
-	
-	public void setMoishdUser(MoishdUser moishdUser) {
-		this.moishdUser = moishdUser;
 	}
 
 	public void setLongitude(double longitude) {
