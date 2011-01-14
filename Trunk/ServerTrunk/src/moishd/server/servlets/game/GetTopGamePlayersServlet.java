@@ -30,7 +30,8 @@ public class GetTopGamePlayersServlet extends GeneralServlet{
 		if (user != null) {
 			String gameName = request.getReader().readLine();
 			GameStatistics stat = DSCommon.GetGameStatByName(gameName);
-			
+			LoggerCommon.Get().LogInfo(this, "TOP MOISHER GAME STAT " + stat.getGameType());
+
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
 			for (StringIntPair siPair : stat.getTopMoishers()) {
 				try {
