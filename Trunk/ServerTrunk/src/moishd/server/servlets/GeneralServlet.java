@@ -40,7 +40,7 @@ public class GeneralServlet extends HttpServlet {
 				if (doesExist) {
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					if (checkRegister && !mUser.isRegistered()) {
-						LoggerCommon.Get().LogError(this, response,
+						LoggerCommon.Get().LogError(this, response, "UserUnregistered",
 								"Tried to do an action with unregistered user");
 						mUser.InitUser();
 						mUser.SaveChanges();
