@@ -38,7 +38,7 @@ public class WinnerAndLoserActivity extends Activity{
 			rankForGame.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
 			rankForGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authString);
 			startActivity(rankForGame);
-			boolean unbusy = ServerCommunication.setSingleUserUnbusy(authString); 
+			
 		}
 		
 		finish();
