@@ -187,6 +187,12 @@ public class GameInvReplyServlet extends GeneralServlet {
 								mRecUser.SaveChanges();
 								deleteGame = true;
 							}
+							
+							if (!deleteGame) {
+								Queue queue = QueueFactory.getQueue("gameStatsQueue");
+								queue.add (TaskOptions.Builder.url("/queues/UpdateGameStats").method(Method.POST).
+										param("gameType", tg.getGameType()).param("createGame", "1"));
+							}
 						}
 					}
 					
