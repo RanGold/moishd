@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.client.dataObjects.StringIntPair;
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
@@ -20,7 +21,6 @@ import moishd.server.dataObjects.BusyObject;
 import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.MoishdGame;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.StringIntPair;
 
 import com.google.appengine.api.labs.taskqueue.Queue;
 import com.google.appengine.api.labs.taskqueue.QueueFactory;
