@@ -470,7 +470,7 @@ public class ServerCommunication {
 	}
 	
 	public static List<ClientMoishdUser> getTopMoishers(String gameType, String authString){
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTopGamePlayersServlet, gameType, authString); 
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GetTopGamePlayers, gameType, authString); 
 		return getUserListFromResponse(response);
 	}
 
