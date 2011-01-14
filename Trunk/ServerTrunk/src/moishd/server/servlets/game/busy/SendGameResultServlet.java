@@ -110,7 +110,6 @@ public class SendGameResultServlet extends HttpServlet {
 					updateRankAndTrophies(losePayload, loser);
 
 					LoggerCommon.Get().LogInfo(this, "Winner: " + winner.getUserGoogleIdentifier());
-					LoggerCommon.Get().LogInfo(this, "Winner: " + winner.getUserGoogleIdentifier());
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
 							C2DMCommon.Actions.GameResult.toString(), winPayload);
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
@@ -126,10 +125,6 @@ public class SendGameResultServlet extends HttpServlet {
 					queue.add(TaskOptions.Builder
 							.url("/queues/UpdateBusySynced").method(Method.POST)
 							.param("json", json));
-					//					mInitUser.setNotBusy();
-					//					mInitUser.SaveChanges();
-					//					mRecUser.setNotBusy();
-					//					mRecUser.SaveChanges();
 				}
 
 			} catch (DataAccessException e) {
