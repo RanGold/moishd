@@ -221,7 +221,7 @@ public class DSCommon {
 		}
 	}
 	
-	public static MoishdGame GetGameById(String gameId) throws DataAccessException {
+	public static MoishdGame GetGameById(String gameId, boolean throwError) throws DataAccessException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Query q = null;
 		try {
@@ -232,11 +232,23 @@ public class DSCommon {
 			List<MoishdGame> games = (List<MoishdGame>)q.execute(Long.valueOf(gameId));
 
 			if (games.size() == 0) {
-				throw new DataAccessException("game " + gameId + 
+				if (throwError) {
+					throw new DataAccessException("game " + gameId + 
 						" doesn't exist");
+				} else {
+					LoggerCommon.Get().LogInfo("DSCommon", "game " + gameId + 
+							" doesn't exist");
+					return null;
+				}
 			} else if (games.size() > 1) {
-				throw new DataAccessException("game " + gameId + 
+				if (throwError) {
+					throw new DataAccessException("game " + gameId + 
 						" has more than 1 result");
+				} else {
+					LoggerCommon.Get().LogInfo("DSCommon", "game " + gameId + 
+							" has more than 1 result");
+					return null;
+				}
 			} else {
 				return (pm.detachCopy(games.get(0)));
 			}
@@ -250,6 +262,10 @@ public class DSCommon {
 			}
 			pm.close();
 		}
+	}
+	
+	public static MoishdGame GetGameById(String gameId) throws DataAccessException {
+		return GetGameById(gameId, true);
 	}
 
 	public static List<ClientMoishdUser> GetFilteredRegisteredClientUsers(
@@ -707,7 +723,7 @@ public class DSCommon {
 				LoggerCommon.Get().LogInfo("DSCommon", "Too many games found");
 				return null;
 			} else {
-				return stats.get(0);
+				return (GameStatistics)stats.get(0).DetachCopy();
 			}
 		}
 		finally {
