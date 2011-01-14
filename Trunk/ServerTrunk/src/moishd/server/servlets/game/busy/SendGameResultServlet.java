@@ -197,28 +197,33 @@ public class SendGameResultServlet extends HttpServlet {
 
 		return addedPoints;
 	}
-	
+
 	private void updateGamePoints(List<StringIntPair> gamesPointsList, MoishdUser user, int addedPoints, MoishdGame moishdGame){
-		
+
 		boolean updated = false;
 		int currentGamePoints = -1;
-		
-		for (int i=0; i < gamesPointsList.size(); i++){
-			StringIntPair current = gamesPointsList.get(i);
-			if (current.getStringValue().equals(moishdGame.getGameType())){
-				int previousGamePoints = current.getNumberValue();
-				currentGamePoints = previousGamePoints + addedPoints;
-				current.setNumberValue(currentGamePoints);
-				updated = true;
-				break;
+
+		if (gamesPointsList == null){
+			gamesPointsList = new LinkedList<StringIntPair>();
+			gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), addedPoints));
+		}
+		else{
+			for (int i=0; i < gamesPointsList.size(); i++){
+				StringIntPair current = gamesPointsList.get(i);
+				if (current.getStringValue().equals(moishdGame.getGameType())){
+					int previousGamePoints = current.getNumberValue();
+					currentGamePoints = previousGamePoints + addedPoints;
+					current.setNumberValue(currentGamePoints);
+					updated = true;
+					break;
+				}
+			}
+			if (!updated){
+				currentGamePoints = addedPoints;
+				gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), currentGamePoints));
 			}
 		}
-		
-		if (!updated){
-			currentGamePoints = addedPoints;
-			gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), currentGamePoints));
-		}
-		
+
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
 		List<StringIntPair> topMoishersList = gameStatistics.getTopMoishers();
 		if (topMoishersList == null){
@@ -234,11 +239,11 @@ public class SendGameResultServlet extends HttpServlet {
 				}
 			}
 		}
-		
+
 		if (topMoishersList.size() == 6){
 			topMoishersList.remove(5);
 		}
-		
+
 		user.SaveChanges();
 		gameStatistics.SaveChanges();
 	}
