@@ -528,8 +528,11 @@ public class DSCommon {
 			
 			double popularPoints = 0;
 			String popularName = "DareSimonPro";
-			if (stats.size() == 0) {
-				LoggerCommon.Get().LogInfo("DSCommon", "No stats for any game returning default - DareSimonPro");
+			if (stats == null){
+				LoggerCommon.Get().LogInfo("DSCommon", "GetMostPopularGame: No stats for any game- stats list IS NULL!!!! returning default - DareSimonPro");				
+			}
+			else if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "GetMostPopularGame: No stats for any game returning default - DareSimonPro");
 			}
 			int maxPlayed = 0;
 			for (GameStatistics stat : stats) {
@@ -569,8 +572,11 @@ public class DSCommon {
 			
 			double popularPoints1 = 0, popularPoints2 = 0, popularPoints3 = 0, popularPoints4 = 0, popularPoints5 = 0;
 			String popular5="",popular4="",popular3="",popular2="",popular1="";
-			if (stats.size() == 0) {
-				LoggerCommon.Get().LogInfo("DSCommon", "No ranks for any game returning default - none");
+			if (stats == null){
+				LoggerCommon.Get().LogInfo("DSCommon", "GetTopPopularGames: No ranks for any game. stats IS NULL!!!! returning default - none");
+			}
+			else if (stats.size() == 0) {
+				LoggerCommon.Get().LogInfo("DSCommon", "GetTopPopularGames: No ranks for any game returning default - none");
 			}
 			else {
 				int totalPlayed = 0;
@@ -669,7 +675,10 @@ public class DSCommon {
 			@SuppressWarnings("unchecked")
 			List<GameStatistics> stats = (List<GameStatistics>)pm.detachCopyAll((List<GameStatistics>)q.execute());
 			LinkedList<String> topFive = new LinkedList<String>();
-			if (stats.size() == 0) {
+			if (stats == null){
+				LoggerCommon.Get().LogInfo("DSCommon", "GetTopFiveGames: No ranks for any game. stats IS NULL!!! returning default - none");				
+			}
+			else if (stats.size() == 0) {
 				LoggerCommon.Get().LogInfo("DSCommon", "No ranks for any game returning default - none");
 			}
 
@@ -715,8 +724,11 @@ public class DSCommon {
 
 			@SuppressWarnings("unchecked")
 			List<GameStatistics> stats = (List<GameStatistics>)q.execute(gameName);
-			
-			if (stats.size() == 0) {
+			if (stats == null){
+				LoggerCommon.Get().LogInfo("DSCommon", "GetGameStatByName: No game found - Stats IS NULL");
+				return null;
+			}
+			else if (stats.size() == 0) {
 				LoggerCommon.Get().LogInfo("DSCommon", "No game found");
 				return null;
 			} else if (stats.size() > 1) {
