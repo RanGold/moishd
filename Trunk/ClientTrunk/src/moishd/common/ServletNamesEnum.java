@@ -30,7 +30,7 @@ public enum ServletNamesEnum {
 	GetTopFiveRanked,
 	IsBusy,
 	GetTopFivePopular,
-	GetTopGamePlayersServlet;
+	GetTopGamePlayers;
 
 
 	

@@ -16,17 +16,14 @@
     <item android:id="@+id/nearbyUsers"
           android:title="@string/get_all_nearby_users"
           android:icon="@drawable/menu_world"/>
-    
-    <item android:id="@+id/statistics"
-          android:title="@string/own_statistics"
-          android:icon="@drawable/menu_trophies"/>
                  
     <item android:id="@+id/logout"
     	  android:title="@string/logout"
           android:icon="@drawable/logout"/>
           
-    <item android:id="@+id/topFiveRanked"
-    	  android:title="@string/top_five_ranked"/>
+   <item android:id="@+id/statistics"
+          android:title="@string/own_statistics"
+          android:icon="@drawable/menu_trophies"/>
                  
     <item android:id="@+id/topFivePopular"
     	  android:title="@string/top_five_popular"/>

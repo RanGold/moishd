@@ -38,13 +38,13 @@ public class TopMoishersActivity extends Activity{
 		GamesEnum gameName = (GamesEnum) getIntent().getExtras().get(IntentExtraKeysEnum.GameType.toString());
 		String authToken = (String) getIntent().getExtras().get(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		Log.d("TEST", "GAME ENUM TO STRING " + gameName.toString());
-		topMoishers = ServerCommunication.getTopMoishers(gameName.toString(), authToken);
+		topMoishers = ServerCommunication.getTopMoishers(getGameName(gameName), authToken);
 		
 		if (topMoishers == null){
 			topMoishers = new ArrayList<ClientMoishdUser>();
 		}
 		TextView header = (TextView) findViewById(R.id.top_moishers_header);
-		header.setText(gameName + " Top Moishers\n");
+		header.setText(gameName.getFullName()+ " Top Moishers\n");
 		header.setTypeface(fontName);
 		header.setTextSize(20);
 		
@@ -52,12 +52,26 @@ public class TopMoishersActivity extends Activity{
 		list.setAdapter(new EfficientAdapter(this));
 	}
 	
+	private String getGameName(GamesEnum gameName){
+		
+		switch (gameName){
+		case DareFastClick:
+			return GamesEnum.DareFastClick.toString();
+		case DareMixing:
+			return GamesEnum.DareFastClick.toString();
+		case DareSimonPro:
+			return GamesEnum.DareFastClick.toString();
+		case Truth:
+			return GamesEnum.DareFastClick.toString();
+		}
+		return null;
+	}
+	
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
 		private Bitmap blankImage;
-
-
+		
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);

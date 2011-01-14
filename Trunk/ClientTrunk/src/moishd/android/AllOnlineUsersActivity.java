@@ -749,15 +749,18 @@ public class AllOnlineUsersActivity extends Activity{
 			String user;
 			if (myUserName.equals(initName)){
 				user = recName;
+				Log.d("TEST", "BUSY USER IS " + user);
 			}
 			else{
 				user = initName;
+				Log.d("TEST", "BUSY USER IS " + user);
 			}
 			((AlertDialog)dialog).setMessage("The game with " + user + " has been canceled.");
 			super.onPrepareDialog(id, dialog, args);
 			break;
-		
-		default:  super.onPrepareDialog(id, dialog, args);
+		default:  
+			super.onPrepareDialog(id, dialog, args);
+			break;
 			
 		
 		}
