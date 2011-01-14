@@ -135,25 +135,28 @@ public class C2DMCommon {
 			stream.writeBytes(data); 
 			stream.flush(); 
 			stream.close();
-			LoggerCommon.Get().LogInfo("C2DMCommon", String.valueOf(connection.getResponseCode()));
+			LoggerCommon.Get().LogInfo("C2DMCommon", "C2DM response code: " +
+					String.valueOf(connection.getResponseCode()));
 			String newAuth = connection.getHeaderField("update-client-auth");
 			
 			if (newAuth != null) {
-				LoggerCommon.Get().LogInfo("C2DMCommon", "updating auth");
+				LoggerCommon.Get().LogInfo("C2DMCommon", "Updating C2DM auth token");
 				DSCommon.SetC2DMAuth(newAuth);
 			}
+			BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                    connection.getInputStream()));
+			String inputLine;
+			String output = "";
+
+			while ((inputLine = in.readLine()) != null) {
+				output = output + inputLine + "\n\r";
+			}
+			in.close();
+			LoggerCommon.Get().LogInfo("C2DMCommon", "Connection content: " + output);
+			
 			switch (connection.getResponseCode()) { 
 			case 200: 
-				BufferedReader in = new BufferedReader(
-                        new InputStreamReader(
-                        connection.getInputStream()));
-				String inputLine;
-				String output = "";
-
-				while ((inputLine = in.readLine()) != null) 
-					output = output + inputLine + "\n\r";
-				in.close();
-				LoggerCommon.Get().LogInfo("C2DMCommon", output);
 				return true;
 			case 503: 
 				LoggerCommon.Get().LogInfo("C2DMCommon", "Error code 503");
