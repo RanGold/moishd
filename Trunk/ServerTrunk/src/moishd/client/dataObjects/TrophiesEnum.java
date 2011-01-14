@@ -9,7 +9,7 @@ public enum TrophiesEnum {
 	MegaMoisher("Mega Moisher", "Win 500 games", 500),
 	TenInARow("10 in a row", "Win 10 games in a row", 15),
 	TwentyInARow("20 in a row", "Win 20 games in a row", 30),
-	FirstTime("First time", "Win your first game", 5),
+	FirstTime("A new Moisher was born", "Win your first game", 5),
 	BestFriends("Best friends", "Win 10 of your facebook friends", 50),
 	FaceOff("Face off", "Win 10 nearby users", 75);
 	
