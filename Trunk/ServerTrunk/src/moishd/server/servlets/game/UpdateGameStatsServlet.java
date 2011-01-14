@@ -28,7 +28,7 @@ public class UpdateGameStatsServlet extends HttpServlet {
 			List<GameStatistics> stats = DSCommon.GetGameStatsByType(gameType);
 
 			GameStatistics newGame;
-			if ((createGame.equals("true")) && (stats.size() == 0)) {
+			if ((createGame != null) && (createGame.equals("true")) && (stats.size() == 0)) {
 				newGame = new GameStatistics(gameType);
 			} else {
 				if (stats.size() > 1) {
