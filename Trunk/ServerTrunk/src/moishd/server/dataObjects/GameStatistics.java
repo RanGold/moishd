@@ -1,16 +1,13 @@
 package moishd.server.dataObjects;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
-import moishd.client.dataObjects.StringIntPair;
-
 
 import com.google.appengine.api.datastore.Key;
 
@@ -41,7 +38,7 @@ public class GameStatistics extends CommonJDO implements Serializable {
     private double gameRank;
     
 	@Persistent
-	private List<StringIntPair> topMoishers;
+	private Map<String, Integer> topMoishers;
 
 	public GameStatistics(String gameType) {
 		super();
@@ -50,7 +47,7 @@ public class GameStatistics extends CommonJDO implements Serializable {
 		this.rankingNumber = 0;
 		this.rankTotal = 0;
 		this.setGameRank(0);
-		this.setTopMoishers(new LinkedList<StringIntPair>());
+		this.setTopMoishers(new HashMap<String, Integer>());
 	}
 
 	public Key getGameStatId() {
@@ -107,11 +104,11 @@ public class GameStatistics extends CommonJDO implements Serializable {
 		this.setGameRank(this.getRankTotal() / this.getRankingNumber());
 	}
 
-	public void setTopMoishers(List<StringIntPair> topMoishers) {
+	public void setTopMoishers(Map<String, Integer> topMoishers) {
 		this.topMoishers = topMoishers;
 	}
 
-	public List<StringIntPair> getTopMoishers() {
+	public Map<String, Integer> getTopMoishers() {
 		return topMoishers;
 	}
 

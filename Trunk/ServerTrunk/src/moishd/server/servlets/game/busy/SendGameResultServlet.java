@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.client.dataObjects.StringIntPair;
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.server.common.C2DMCommon;
 import moishd.server.common.DSCommon;
@@ -221,23 +220,34 @@ public class SendGameResultServlet extends HttpServlet {
 		}
 
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
-		List<StringIntPair> topMoishersList = gameStatistics.getTopMoishers();
-		if (topMoishersList == null){
-			topMoishersList = new LinkedList<StringIntPair>();
-			topMoishersList.add(0, new StringIntPair(user.getUserGoogleIdentifier(), currentGamePoints));
+		Map<String, Integer> topMoishersMap = gameStatistics.getTopMoishers();
+		if (topMoishersMap == null){
+			topMoishersMap = new HashMap<String, Integer>();
+			topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
 		}
 		else{
-			for (int i=0; i < topMoishersList.size(); i++){
-				StringIntPair currentMoisher = topMoishersList.get(i);
-				int currentMoisherPoints = currentMoisher.getNumberValue();
+			String moisherWithLeastPointsId = "";
+			int moisherWithLeastPointsPoints = -1;
+			for (Entry<String, Integer> currentMoisher : topMoishersMap.entrySet()){
+				int currentMoisherPoints = currentMoisher.getValue();
 				if (currentMoisherPoints < currentGamePoints){
-					topMoishersList.add(i, new StringIntPair(user.getUserGoogleIdentifier(), currentGamePoints));
+					if (moisherWithLeastPointsPoints == -1){
+						moisherWithLeastPointsId = currentMoisher.getKey();
+						moisherWithLeastPointsPoints = currentMoisher.getValue();
+					}
+					else if (moisherWithLeastPointsPoints > currentMoisher.getValue()){
+						moisherWithLeastPointsId = currentMoisher.getKey();
+						moisherWithLeastPointsPoints = currentMoisher.getValue();
+					}
 				}
 			}
-		}
-
-		if (topMoishersList.size() == 6){
-			topMoishersList.remove(5);
+			if (moisherWithLeastPointsPoints == -1){
+				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+			}
+			else{
+				topMoishersMap.remove(moisherWithLeastPointsId);
+				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+			}
 		}
 
 		user.SaveChanges();
