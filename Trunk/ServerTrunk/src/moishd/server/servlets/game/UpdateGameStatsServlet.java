@@ -23,28 +23,35 @@ public class UpdateGameStatsServlet extends HttpServlet {
 			String gameType = request.getParameter("gameType");
 			int rank = Integer.parseInt(request.getParameter("rank"));
 			int isRank = Integer.parseInt(request.getParameter("isRank"));
+			int createGame = Integer.parseInt(request
+					.getParameter("createGame"));
 
 			List<GameStatistics> stats = DSCommon.GetGameStatsByType(gameType);
 
 			GameStatistics newGame;
-			if (stats.size() > 1) {
-				LoggerCommon.Get().
-				LogError(this, response, 
-						"Game type " + gameType + 
-						" has more than 1 occurences");
-				return;
-			} else if (stats.size() == 0) {
+			if ((createGame == 1) && (stats.size() == 0)) {
 				newGame = new GameStatistics(gameType);
 			} else {
-				newGame = stats.get(0);
+				if (stats.size() > 1) {
+					LoggerCommon.Get().LogError(
+							this,
+							response,
+							"Game type " + gameType
+									+ " has more than 1 occurences");
+					return;
+				} else if (stats.size() == 0) {
+					newGame = new GameStatistics(gameType);
+				} else {
+					newGame = stats.get(0);
+				}
+
+				if (isRank == 1) {
+					newGame.addRank(rank);
+				} else {
+					newGame.addGamePlayed();
+				}
 			}
-			
-			if (isRank == 1) {
-				newGame.addRank(rank);
-			} else {
-				newGame.addGamePlayed();
-			}
-			
+
 			newGame.SaveChanges();
 		}
 	}
