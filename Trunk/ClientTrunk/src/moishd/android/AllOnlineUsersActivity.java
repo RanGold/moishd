@@ -753,7 +753,7 @@ public class AllOnlineUsersActivity extends Activity{
 			else{
 				user = initName;
 			}
-			args.putString("User", user);
+			((AlertDialog)dialog).setMessage("The game with " + user + " has been canceled.");
 			super.onPrepareDialog(id, dialog, args);
 			break;
 		
@@ -975,7 +975,13 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_USER_CANCELED_GAME:
 			//TODO cancel game
-			String user = args.getString("User");
+			String user;
+			if (myUserName.equals(initName)){
+				user = recName;
+			}
+			else{
+				user = initName;
+			}
 			builder.setMessage("The game with " + user + " has been canceled.")
 			.setCancelable(false)
 			.setNeutralButton("OK", new DialogInterface.OnClickListener() {
