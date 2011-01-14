@@ -38,7 +38,6 @@ public class GeneralServlet extends HttpServlet {
 		} else {
 			try {
 				if (doesExist) {
-					// TODO minimize this, done because multiple users when update location
 					mUser = DSCommon.GetUserByGoogleId(user.getEmail());
 					if (checkRegister && !mUser.isRegistered()) {
 						LoggerCommon.Get().LogError(this, response,
