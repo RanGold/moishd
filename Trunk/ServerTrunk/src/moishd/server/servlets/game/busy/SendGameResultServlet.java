@@ -115,8 +115,7 @@ public class SendGameResultServlet extends HttpServlet {
 							C2DMCommon.Actions.GameResult.toString(), losePayload);
 
 					List<BusyObject> busyUsers = new LinkedList<BusyObject>();
-					busyUsers
-					.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
+					busyUsers.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
 					busyUsers.add(new BusyObject(mRecUser.getBusyWith(), false, mInitUser.getUserGoogleIdentifier()));
 
 					String json = GsonCommon.GetJsonString(busyUsers);
@@ -222,7 +221,8 @@ public class SendGameResultServlet extends HttpServlet {
 		
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
 		List<StringIntPair> topMoishersList = gameStatistics.getTopMoishers();
-		if (topMoishersList.size() == 0){
+		if (topMoishersList == null){
+			topMoishersList = new LinkedList<StringIntPair>();
 			topMoishersList.add(0, new StringIntPair(user.getUserGoogleIdentifier(), currentGamePoints));
 		}
 		else{
