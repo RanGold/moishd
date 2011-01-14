@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -189,38 +191,37 @@ public class SendGameResultServlet extends HttpServlet {
 		winner.SaveChanges();
 		loser.SaveChanges();
 
-		List<StringIntPair> winnerGamesPoints = winner.getStats().getGamesPoints();
+		Map<String,Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
 		updateGamePoints(winnerGamesPoints, winner, addedPoints[0], moishdGame);
 
-		List<StringIntPair> loserGamesPoints = loser.getStats().getGamesPoints();
+		Map<String,Integer> loserGamesPoints = loser.getStats().getGamesPoints();
 		updateGamePoints(loserGamesPoints, loser, addedPoints[1], moishdGame);
 
 		return addedPoints;
 	}
 
-	private void updateGamePoints(List<StringIntPair> gamesPointsList, MoishdUser user, int addedPoints, MoishdGame moishdGame){
+	private void updateGamePoints(Map<String,Integer> gamesPointsList, MoishdUser user, int addedPoints, MoishdGame moishdGame){
 
 		boolean updated = false;
 		int currentGamePoints = -1;
 
 		if (gamesPointsList == null){
-			gamesPointsList = new LinkedList<StringIntPair>();
-			gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), addedPoints));
+			gamesPointsList = new HashMap<String,Integer>();
+			gamesPointsList.put(moishdGame.getGameType(), addedPoints);
 		}
 		else{
-			for (int i=0; i < gamesPointsList.size(); i++){
-				StringIntPair current = gamesPointsList.get(i);
-				if (current.getStringValue().equals(moishdGame.getGameType())){
-					int previousGamePoints = current.getNumberValue();
+			for (Entry<String, Integer> current : gamesPointsList.entrySet()) {
+				if (current.getKey().equals(moishdGame.getGameType())){
+					int previousGamePoints = current.getValue();
 					currentGamePoints = previousGamePoints + addedPoints;
-					current.setNumberValue(currentGamePoints);
+					current.setValue(currentGamePoints);
 					updated = true;
 					break;
 				}
 			}
 			if (!updated){
 				currentGamePoints = addedPoints;
-				gamesPointsList.add(new StringIntPair(moishdGame.getGameType(), currentGamePoints));
+				gamesPointsList.put(moishdGame.getGameType(), currentGamePoints);
 			}
 		}
 

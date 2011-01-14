@@ -1,8 +1,8 @@
 package moishd.server.dataObjects;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -10,7 +10,6 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientUserGameStatistics;
-import moishd.client.dataObjects.StringIntPair;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -43,8 +42,8 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 	@Persistent
 	private int topMoisherPoints;
 	
-    @Persistent
-    private List<StringIntPair> gamesPoints;
+	@Persistent(serialized = "true", defaultFetchGroup = "true")
+    private Map<String, Integer> gamesPoints;
 
 	@Persistent(mappedBy = "stats")
 	private MoishdUser moishdUser;
@@ -56,21 +55,25 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		this.points = 0;
 		this.gamesWonInARow = 0;
 		this.topMoisherPoints = -1;
-		this.gamesPoints = new LinkedList<StringIntPair>();
+		this.gamesPoints = new HashMap<String, Integer>();
 	}
 
-	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, int points, int gamesWonInARow, int topMoisherPoints, LinkedList<StringIntPair> gamesPoints ) {
+	public UserGameStatistics(int gamesPlayed, int gamesWon, int rank, 
+			int points, int gamesWonInARow, int topMoisherPoints, 
+			Map<String, Integer> gamesPoints ) {
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
 		this.rank = rank;
 		this.points = points;
 		this.gamesWonInARow = gamesWonInARow;
 		this.topMoisherPoints = topMoisherPoints;
-		this.setGamesPoints(gamesPoints);
+		this.gamesPoints = gamesPoints;
 	}
 
 	public ClientUserGameStatistics toClientUserGameStatistics() {
-		return (new ClientUserGameStatistics(this.getGamesPlayed(), this.getGamesWon(), this.getRank(), this.getPoints(), this.getGamesWonInARow(), this.getTopMoisherPoints(), this.getGamesPoints()));
+		return (new ClientUserGameStatistics(this.getGamesPlayed(), this.getGamesWon(), 
+				this.getRank(), this.getPoints(), this.getGamesWonInARow(), 
+				this.getTopMoisherPoints(), this.getGamesPoints()));
 	}
 
 	public Integer getGamesPlayed() {
@@ -129,11 +132,11 @@ public class UserGameStatistics extends CommonJDO implements Serializable {
 		return moishdUser;
 	}
 
-	public void setGamesPoints(List<StringIntPair> gamesPoints) {
+	public void setGamesPoints(Map<String, Integer> gamesPoints) {
 		this.gamesPoints = gamesPoints;
 	}
 
-	public List<StringIntPair> getGamesPoints() {
+	public Map<String, Integer> getGamesPoints() {
 		return gamesPoints;
 	}
 }

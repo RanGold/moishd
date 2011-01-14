@@ -1,8 +1,8 @@
 package moishd.client.dataObjects;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ClientUserGameStatistics implements Serializable {
@@ -24,7 +24,7 @@ public class ClientUserGameStatistics implements Serializable {
 	
 	private int topMoisherPoints;
 	
-	private List<StringIntPair> gamesPoints;
+	private Map<String, Integer> gamesPoints;
 
 	public ClientUserGameStatistics() {
 		super();
@@ -34,10 +34,11 @@ public class ClientUserGameStatistics implements Serializable {
 		this.points = 0;
 		this.gamesWonInARow = 0;
 		this.topMoisherPoints = -1;
-		this.setGamesPoints(new LinkedList<StringIntPair>());
+		this.setGamesPoints(new HashMap<String, Integer>());
 	}
 
-	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,int rank, int points, int gamesWonInARow, int topMoisherPoints, List<StringIntPair> gamesPoints) {
+	public ClientUserGameStatistics(int gamesPlayed, int gamesWon,int rank, int points, 
+			int gamesWonInARow, int topMoisherPoints, Map<String, Integer> gamesPoints) {
 		super();
 		this.gamesPlayed = gamesPlayed;
 		this.gamesWon = gamesWon;
@@ -88,19 +89,19 @@ public class ClientUserGameStatistics implements Serializable {
 		this.gamesWonInARow = gamesWonInARow;
 	}
 
-	public void setGamesPoints(List<StringIntPair> gamesPoints) {
-		this.gamesPoints = gamesPoints;
-	}
-
-	public List<StringIntPair> getGamesPoints() {
-		return gamesPoints;
-	}
-
 	public void setTopMoisherPoints(int topMoisherPoints) {
 		this.topMoisherPoints = topMoisherPoints;
 	}
 
 	public int getTopMoisherPoints() {
 		return topMoisherPoints;
+	}
+
+	public void setGamesPoints(Map<String, Integer> gamesPoints) {
+		this.gamesPoints = gamesPoints;
+	}
+
+	public Map<String, Integer> getGamesPoints() {
+		return gamesPoints;
 	}
 }

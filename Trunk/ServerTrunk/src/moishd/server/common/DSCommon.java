@@ -735,7 +735,7 @@ public class DSCommon {
 				LoggerCommon.Get().LogInfo("DSCommon", "Too many games found");
 				return null;
 			} else {
-				return (GameStatistics)stats.get(0).DetachCopy();
+				return (GameStatistics)stats.get(0);
 			}
 		}
 		finally {
