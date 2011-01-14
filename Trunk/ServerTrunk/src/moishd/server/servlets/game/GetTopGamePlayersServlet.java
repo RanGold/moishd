@@ -3,11 +3,12 @@ package moishd.server.servlets.game;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.client.dataObjects.StringIntPair;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
@@ -33,11 +34,12 @@ public class GetTopGamePlayersServlet extends GeneralServlet{
 			LoggerCommon.Get().LogInfo(this, "TOP MOISHER GAME STAT " + stat.getGameType());
 
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
-			for (StringIntPair siPair : stat.getTopMoishers()) {
+			Set<Entry<String, Integer>> entries = stat.getTopMoishers().entrySet();
+			for (Entry<String, Integer> siPair : entries) {
 				try {
-					MoishdUser topMoisher = DSCommon.GetUserByGoogleId(siPair.getStringValue());
-					topMoisher.getStats().setTopMoisherPoints(siPair.getNumberValue());
-					users.add(DSCommon.GetUserByGoogleId(siPair.getStringValue()));
+					MoishdUser topMoisher = DSCommon.GetUserByGoogleId(siPair.getKey());
+					topMoisher.getStats().setTopMoisherPoints(siPair.getValue());
+					users.add(topMoisher);
 				} catch (DataAccessException e) {
 					LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 				}
