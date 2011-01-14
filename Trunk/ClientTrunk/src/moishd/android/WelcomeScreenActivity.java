@@ -579,6 +579,7 @@ public class WelcomeScreenActivity extends Activity{
 
 
 				location = locationManagment.getLastKnownLocation();
+				MoishdPreferences.setUserName(getApplicationContext(), userName);
 
 				ClientLocation loc;
 				if (location != null)				 

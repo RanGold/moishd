@@ -1208,7 +1208,7 @@ public class AllOnlineUsersActivity extends Activity{
 					needRefresh = true;
 			}
 			else{
-				if (!MoishdPreferences.userIsAvailable(getApplicationContext())){
+				if (MoishdPreferences.userIsAvailable(getApplicationContext())){
 					Integer messageCode = (Integer) resultList.get(0);
 					final int messageCodeInt = messageCode.intValue();
 					sendMessageToHandler(messageCodeInt);
