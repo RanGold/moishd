@@ -69,6 +69,8 @@ public class ServerRequest  {
 			return true;
 		}
 		else {
+			Log.d("COOKIE", "Getting cookie, authToken = " + (authToken == null ? "null" : this.authToken));
+			Log.d("COOKIE", "Getting cookie");
 			return (authToken != null ? GetCookieFromServer(this.authToken) : false);
 		}
 	}
