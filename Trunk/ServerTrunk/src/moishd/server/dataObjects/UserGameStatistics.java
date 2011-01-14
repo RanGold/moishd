@@ -10,6 +10,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientUserGameStatistics;
+import moishd.client.dataObjects.StringIntPair;
 
 import com.google.appengine.api.datastore.Key;
 

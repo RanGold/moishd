@@ -7,13 +7,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.client.dataObjects.StringIntPair;
 import moishd.server.common.DSCommon;
 import moishd.server.common.DataAccessException;
 import moishd.server.common.GsonCommon;
 import moishd.server.common.LoggerCommon;
 import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.MoishdUser;
-import moishd.server.dataObjects.StringIntPair;
 import moishd.server.servlets.GeneralServlet;
 
 public class GetTopGamePlayersServlet extends GeneralServlet{

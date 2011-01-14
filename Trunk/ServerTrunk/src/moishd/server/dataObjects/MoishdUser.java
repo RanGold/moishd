@@ -11,6 +11,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import moishd.client.dataObjects.ClientMoishdUser;
+import moishd.client.dataObjects.StringIntPair;
 import moishd.client.dataObjects.TrophiesEnum;
 
 import com.google.appengine.api.datastore.Key;
