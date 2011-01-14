@@ -23,13 +23,12 @@ public class UpdateGameStatsServlet extends HttpServlet {
 			String gameType = request.getParameter("gameType");
 			int rank = Integer.parseInt(request.getParameter("rank"));
 			int isRank = Integer.parseInt(request.getParameter("isRank"));
-			int createGame = Integer.parseInt(request
-					.getParameter("createGame"));
+			String createGame = request.getParameter("createGame");
 
 			List<GameStatistics> stats = DSCommon.GetGameStatsByType(gameType);
 
 			GameStatistics newGame;
-			if ((createGame == 1) && (stats.size() == 0)) {
+			if ((createGame.equals("true")) && (stats.size() == 0)) {
 				newGame = new GameStatistics(gameType);
 			} else {
 				if (stats.size() > 1) {
