@@ -20,77 +20,15 @@ public class TopFiveGamesActivity extends Activity{
 	ImageView gamepic1,gamepic2,gamepic3,gamepic4,gamepic5, rank1,rank2,rank3,rank4,rank5;
 	TextView text;
 	int flag = 1;
-	
-	public Bitmap setPicture(String gameType){
-		if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString())) {
-			return fastClick;
-		}
-		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString())) {
-			return mixedWord;
-		}
-		else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString())) {
-			return clickMemory;
-		}
-		else if (gameType.equals(IntentExtraKeysEnum.Truth.toString())) {
-			return trivia;
-		}
-		else
-			return null;
-		
-	}
-	
-	public Bitmap setRank(double rank){
-		
-		if (rank ==0){
-			return s0;
-			
-		}else if (rank > 0 && rank < 1){
-			return s05;			
-		}else if (rank ==1){
-			return s1;
-		}
-		else if (rank > 1 && rank < 2){
-			return s15;
-		}
-		
-		else if (rank ==2){
-			return s2;
-		}
-		else if (rank > 2 && rank < 3){
-			return s25;
-		}
-		
-		else if (rank ==3){
-			return s3;
-		}
-		else if (rank > 3 && rank < 4){
-			return s35;
-		}
-		
-		else if (rank ==4){
-			return s4;
-		}
-		else if (rank > 4 && rank < 5){
-			return s45;
-		}
-		
-		else if (rank ==5){
-			return s5;
-		}
-		else {
-			return null;
-		}
-		
-	}
-	
+
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.get_top_five_layout);  
-		
+
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		pageRequest = getIntent().getStringExtra(IntentExtraKeysEnum.TopFiveRequest.toString());
-		
-		
+
 		trivia = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_top5);
 		fastClick = BitmapFactory.decodeResource(getResources(), R.drawable.fast_click_top5);
 		clickMemory = BitmapFactory.decodeResource(getResources(), R.drawable.click_memory_top5);
@@ -118,11 +56,10 @@ public class TopFiveGamesActivity extends Activity{
 		rank4 =(ImageView) findViewById (R.id.rank4);
 		rank5 =(ImageView) findViewById (R.id.rank5);
 		text = (TextView) findViewById(R.id.topFive);
-		
+
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text.setTypeface(fontName);
-		
-		
+
 		List<String> topFive;
 		if (pageRequest.equals(IntentExtraKeysEnum.TopFiveRanked.toString())){
 			text.setText("Moish\'d! top five ranked games");
@@ -133,51 +70,108 @@ public class TopFiveGamesActivity extends Activity{
 			topFive = ServerCommunication.getTopFivePopular(authString);
 		}
 		
-		
-		
-		
 		MyCount count;
 		count= new MyCount(30000,1000);
 		count.start();
-		
-	
-		
+
 		int listSize = topFive.size();
-		
+
 		switch(listSize){
 		case(5): 
 			String gameType5 = topFive.get(4).split(":")[0];
-			double rankOfGame5 = Double.parseDouble(topFive.get(4).split(":")[1]);
-			gamepic5.setImageBitmap(setPicture(gameType5));
-			rank5.setImageBitmap(setRank(rankOfGame5));
-		
+		double rankOfGame5 = Double.parseDouble(topFive.get(4).split(":")[1]);
+		gamepic5.setImageBitmap(setPicture(gameType5));
+		rank5.setImageBitmap(setRank(rankOfGame5));
+
 		case(4):
 			String gameType4 = topFive.get(3).split(":")[0];
-			double rankOfGame4 = Double.parseDouble(topFive.get(3).split(":")[1]);
-			gamepic4.setImageBitmap(setPicture(gameType4));
-			rank4.setImageBitmap(setRank(rankOfGame4));
-		
+		double rankOfGame4 = Double.parseDouble(topFive.get(3).split(":")[1]);
+		gamepic4.setImageBitmap(setPicture(gameType4));
+		rank4.setImageBitmap(setRank(rankOfGame4));
+
 		case(3):
 			String gameType3 = topFive.get(2).split(":")[0];
-			double rankOfGame3 = Double.parseDouble(topFive.get(2).split(":")[1]);
-			gamepic3.setImageBitmap(setPicture(gameType3));
-			rank3.setImageBitmap(setRank(rankOfGame3));
-		
+		double rankOfGame3 = Double.parseDouble(topFive.get(2).split(":")[1]);
+		gamepic3.setImageBitmap(setPicture(gameType3));
+		rank3.setImageBitmap(setRank(rankOfGame3));
+
 		case(2):
 			String gameType2 = topFive.get(1).split(":")[0];
-			double rankOfGame2 = Double.parseDouble(topFive.get(1).split(":")[1]);
-			gamepic2.setImageBitmap(setPicture(gameType2));
-			rank2.setImageBitmap(setRank(rankOfGame2));
-		
+		double rankOfGame2 = Double.parseDouble(topFive.get(1).split(":")[1]);
+		gamepic2.setImageBitmap(setPicture(gameType2));
+		rank2.setImageBitmap(setRank(rankOfGame2));
+
 		case(1):
 			String gameType1 = topFive.get(0).split(":")[0];
-			double rankOfGame1 = Double.parseDouble(topFive.get(0).split(":")[1]);
-			gamepic1.setImageBitmap(setPicture(gameType1));
-			rank1.setImageBitmap(setRank(rankOfGame1));
+		double rankOfGame1 = Double.parseDouble(topFive.get(0).split(":")[1]);
+		gamepic1.setImageBitmap(setPicture(gameType1));
+		rank1.setImageBitmap(setRank(rankOfGame1));
 		}
 	}
-	
-	public class MyCount extends CountDownTimer {
+
+	private Bitmap setPicture(String gameType){
+		if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString())) {
+			return fastClick;
+		}
+		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString())) {
+			return mixedWord;
+		}
+		else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString())) {
+			return clickMemory;
+		}
+		else if (gameType.equals(IntentExtraKeysEnum.Truth.toString())) {
+			return trivia;
+		}
+		else{
+			return null;
+		}
+
+	}
+
+	private Bitmap setRank(double rank){
+
+		if (rank ==0){
+			return s0;
+		}
+		else if (rank > 0 && rank < 1){
+			return s05;			
+		}
+		else if (rank ==1){
+			return s1;
+		}
+		else if (rank > 1 && rank < 2){
+			return s15;
+		}
+		else if (rank ==2){
+			return s2;
+		}
+		else if (rank > 2 && rank < 3){
+			return s25;
+		}
+		else if (rank ==3){
+			return s3;
+		}
+		else if (rank > 3 && rank < 4){
+			return s35;
+		}
+		else if (rank ==4){
+			return s4;
+		}
+		else if (rank > 4 && rank < 5){
+			return s45;
+		}
+
+		else if (rank ==5){
+			return s5;
+		}
+		else {
+			return null;
+		}
+
+	}
+
+
+	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}    
@@ -201,5 +195,3 @@ public class TopFiveGamesActivity extends Activity{
 		}
 	}
 }
-
-

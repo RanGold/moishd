@@ -128,9 +128,13 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int DIALOG_SERVER_ERROR = 33;
 	
 	private waitForResponse timerForResponse;
-	
 	private boolean timerOn = false;
 
+	private boolean needRefresh = false;
+	Timer refreshTimer;
+	int MINUTE = 1000*60;
+	int REFRESH_INTERVAL = 5*MINUTE;
+	
 	private Handler autoRefreshHandler = new Handler();
 
 	private Handler mHandler = new Handler() {
@@ -158,34 +162,6 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 		}
 	};
-	private boolean needRefresh = false;
-	Timer refreshTimer;
-	int MINUTE = 1000*60;
-	int REFRESH_INTERVAL = 5*MINUTE;
-
-	private class autoRefreshTask extends TimerTask {
-		private Runnable run;
-
-		@Override
-		public void run() {
-			run = new Runnable() {
-				public void run() {
-					executeRefresh();					
-				}
-			};
-			autoRefreshHandler.post(run);
-		}
-	}
-
-	private void activateRefreshTimer(){
-		refreshTimer = new Timer();
-		refreshTimer.schedule(new autoRefreshTask(), 60*1000, REFRESH_INTERVAL);
-	}
-
-	private void restartTimer(){
-		refreshTimer.cancel();
-		activateRefreshTimer();
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -246,16 +222,7 @@ public class AllOnlineUsersActivity extends Activity{
 		inflater.inflate(R.layout.users_screen_menu, menu);
 		return true;
 	}
-
-	private void executeRefresh(){
-		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
-			getFriendsUsers();
-		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
-			getMergedUsers();
-		else
-			getUsers(currentUsersType);		
-	}
-
+	
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.RefreshList:
@@ -283,10 +250,8 @@ public class AllOnlineUsersActivity extends Activity{
 		case R.id.topFivePopular:
 			displayTopPopularGames();
 			return true;
-		case R.id.topFiveRanked:
-			displayTopRankedGames();
 		case R.id.topMoishers:
-			startActivity(new Intent(this, TopMoisherGeneralActivity.class));
+			displayTopMoishers();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -332,7 +297,6 @@ public class AllOnlineUsersActivity extends Activity{
 				recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
 				userCanceledGameDialog();
 				game_id = null;
-				
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
@@ -340,9 +304,7 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				userIsBusy(opponent_nick_name);
 				game_id = null;
-				opponent_nick_name=null;
-
-				
+				opponent_nick_name=null;	
 			}
 			else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 				turnOffTimer();
@@ -350,20 +312,15 @@ public class AllOnlineUsersActivity extends Activity{
 				userIsOffline(opponent_nick_name);
 				game_id = null;
 				opponent_nick_name=null;
-
-			
 			}
 
 			else if (action.equals(PushNotificationTypeEnum.PopularGame.toString())){
 				turnOffTimer();
 				StartGamePopular();
-
 			}
-
 			else if (action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 				turnOffTimer();
-				startGameTruth();
-				
+				startGameTruth();	
 			}
 			else if (action.equals(PushNotificationTypeEnum.StartGameDare.toString())) {
 				turnOffTimer();
@@ -375,10 +332,8 @@ public class AllOnlineUsersActivity extends Activity{
 				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
 				Log.d("Tammy", "allonline" + opponent_nick_name);
 				GetGameOfferDialog();
-
 			}
 		}
-
 	}
 
 	@Override
@@ -446,7 +401,29 @@ public class AllOnlineUsersActivity extends Activity{
 		
 
 	}
+	
+	private void executeRefresh(){
+		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends)){
+			getFriendsUsers();
+		}
+		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)){
+			getMergedUsers();
+		}
+		else{
+			getUsers(currentUsersType);	
+		}
+	}
 
+	private void activateRefreshTimer(){
+		refreshTimer = new Timer();
+		refreshTimer.schedule(new autoRefreshTask(), 60*1000, REFRESH_INTERVAL);
+	}
+
+	private void restartTimer(){
+		refreshTimer.cancel();
+		activateRefreshTimer();
+	}
+	
 	private void doQuitActions() {
 		WelcomeScreenActivity.facebookLogout(null);
 		refreshTimer.cancel();
@@ -465,7 +442,6 @@ public class AllOnlineUsersActivity extends Activity{
 		case FacebookFriends:
 			getFriendsUsers();
 			break;
-			//tammy - add case of merged list
 		case MergedUsers:
 			getMergedUsers();
 			break;
@@ -493,13 +469,12 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 	
 	private void commonForFriendsUsersAndMergedUsers(){
-		if (MoishdPreferences.userIsAvailable(getApplicationContext())) 
+		if (MoishdPreferences.userIsAvailable(getApplicationContext())) {
 			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
+		}
 		asyncRunner.request("me/friends", new FriendsRequestListener());
 	
 	}
-	
-
 
 	private void displayOwnStatistics() {
 
@@ -525,7 +500,12 @@ public class AllOnlineUsersActivity extends Activity{
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
 	}
-
+	
+	private void displayTopMoishers(){
+		Intent intent = new Intent(this, TopMoisherGeneralActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
+		startActivity(intent);
+	}
 
 	private void inviteUserToMoishDialog(){
 		Bundle args = new Bundle();
@@ -1113,6 +1093,20 @@ public class AllOnlineUsersActivity extends Activity{
 		return builder.toString();
 	}
 
+	private class autoRefreshTask extends TimerTask {
+		private Runnable run;
+
+		@Override
+		public void run() {
+			run = new Runnable() {
+				public void run() {
+					executeRefresh();					
+				}
+			};
+			autoRefreshHandler.post(run);
+		}
+	}
+	
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
