@@ -54,7 +54,8 @@ public class GameInvReplyServlet extends GeneralServlet {
 					String invReply = paramters.split("#")[1];
 					String popular = (paramters.endsWith("#") ? "" : paramters.split("#")[2]);
 					
-					MoishdGame tg = DSCommon.GetGameById(gameId);
+					MoishdGame tg = DSCommon.GetGameById(gameId, false);
+					if (tg != null) {
 					MoishdUser mInitUser = DSCommon.GetUserByGoogleId(tg.getPlayerInitId());
 					MoishdUser mRecUser = DSCommon.GetUserByGoogleId(tg.getPlayerRecId());
 					HashMap<String, String> payload = new HashMap<String, String>();
@@ -193,6 +194,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 							invReply + " popular: " + popular + " GameType: " + tg.getGameType());
 					if (deleteGame) {
 						DSCommon.DeleteGameById(Long.valueOf(gameId));
+					}
 					}
 				}
 			} catch (DataAccessException e) {
