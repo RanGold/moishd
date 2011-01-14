@@ -35,11 +35,16 @@ public class UpdateBusySyncedServlet extends HttpServlet {
 						LoggerCommon.Get().LogInfo(this, "User " + user.getUserId() + " not found");
 					} else {
 						MoishdUser mUser = mUsers.get(0);
-					
+						LoggerCommon.Get().LogInfo(this, "Incoming: user: " + user.getUserId() + " busy: " + 
+								String.valueOf(user.isBusy()) + " busyWith: " + user.getBusyWith());
+						LoggerCommon.Get().LogInfo(this, "Datastore: busy: " + String.valueOf(mUser.isBusy()) + 
+								" busyWith: " + mUser.getBusyWith());
 						if (!user.isBusy() && mUser.isPartnerWith(user.getBusyWith())) {
+							LoggerCommon.Get().LogInfo(this, "In 1");
 							mUser.setNotBusy();
 							mUser.SaveChanges();
-						} else if (user.isBusy()) {
+						} else if (user.isBusy() && !mUser.isBusy()) {
+							LoggerCommon.Get().LogInfo(this, "In 2");
 							mUser.setPartner(user.getBusyWith());
 							mUser.SaveChanges();
 						}

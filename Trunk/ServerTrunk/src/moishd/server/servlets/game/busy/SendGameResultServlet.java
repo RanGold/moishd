@@ -116,8 +116,8 @@ public class SendGameResultServlet extends HttpServlet {
 							C2DMCommon.Actions.GameResult.toString(), losePayload);
 
 					List<BusyObject> busyUsers = new LinkedList<BusyObject>();
-					busyUsers.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
-					busyUsers.add(new BusyObject(mRecUser.getBusyWith(), false, mInitUser.getUserGoogleIdentifier()));
+					busyUsers.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mInitUser.getBusyWith()));
+					busyUsers.add(new BusyObject(mRecUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
 
 					String json = GsonCommon.GetJsonString(busyUsers);
 
@@ -159,21 +159,21 @@ public class SendGameResultServlet extends HttpServlet {
 
 		int [] addedPoints = new int[2];
 		//Do points logic
-		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.toString())){
+		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 1);
 			addedPoints[0] = 1 *factorNearBy;
 			addedPoints[1] = 0*factorNearBy;
-		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.toString())){
+		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
 			addedPoints[1] = 1*factorNearBy;
-		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.toString())){
+		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
 			addedPoints[1] = 1*factorNearBy;
-		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.toString())){
+		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
