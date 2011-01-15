@@ -145,7 +145,7 @@ public class WelcomeScreenActivity extends Activity{
 		Typeface fontOfName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
 		text.setTypeface(fontOfName);
 
-		connectivityManager =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE); 
+		connectivityManager =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
 		facebook = new Facebook(APP_ID);
 		asyncRunner = new AsyncFacebookRunner(facebook);
@@ -171,9 +171,12 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		/* (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+		
+		//Tammy
+		//if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+		if (connectivityManager== null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
-		}*/
+		}
 		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
 			if (googleAuthString == null){
 				startGoogleAuth();

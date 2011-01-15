@@ -110,12 +110,14 @@ public class GameActivity extends Activity{
 		
 	}
 
-	@Override
-	final public void onBackPressed(){
+	protected void LoseTechnicly(){
 		GetAllExtras();
 		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
-		
+	}
+	@Override
+	final public void onBackPressed(){
+		LoseTechnicly();		
 	}
 
 }

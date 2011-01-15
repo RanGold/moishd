@@ -148,4 +148,9 @@ public class RankForGameActivity extends Activity{
 
 		}
 	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 }

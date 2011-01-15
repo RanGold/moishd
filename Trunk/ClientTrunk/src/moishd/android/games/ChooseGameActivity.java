@@ -114,6 +114,11 @@ public class ChooseGameActivity extends Activity{
 		setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
 		finish();		
 	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 
 
 }
