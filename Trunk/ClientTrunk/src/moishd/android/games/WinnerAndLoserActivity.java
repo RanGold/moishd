@@ -43,4 +43,9 @@ public class WinnerAndLoserActivity extends Activity{
 		
 		finish();
 	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 }

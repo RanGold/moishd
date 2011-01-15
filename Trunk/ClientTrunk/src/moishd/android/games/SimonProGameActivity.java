@@ -140,7 +140,7 @@ public class SimonProGameActivity extends GameActivity{
 		giveUp.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				Lose();
+				LoseTechnicly();
 			}
 		});
 		

@@ -63,4 +63,9 @@ public class MostPopularGameActivity extends Activity{
 		
 		}
 	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 }
