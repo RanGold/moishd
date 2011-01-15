@@ -293,12 +293,12 @@ public class SendGameResultServlet extends HttpServlet {
 
 			trophies.add(TrophiesEnum.TenInARow);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.TenInARow.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.TenInARow.toString() + "#";
 		}
 		else if(numOfWinsInARow == 20 && !trophies.contains(TrophiesEnum.TwentyInARow)){
 			trophies.add(TrophiesEnum.TwentyInARow);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.TwentyInARow.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.TwentyInARow.toString() + "#";
 		}
 
 		int numOfWins = user.getStats().getGamesWon();
@@ -307,37 +307,38 @@ public class SendGameResultServlet extends HttpServlet {
 		if  (numOfWins == 1 && !trophies.contains(TrophiesEnum.FirstTime)){
 			trophies.add(TrophiesEnum.FirstTime);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.FirstTime.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.FirstTime.toString() + "#";
 		}
 		else if (numOfWins == 10 && !trophies.contains(TrophiesEnum.TinyMoisher)){
 			trophies.add(TrophiesEnum.TinyMoisher);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.TinyMoisher.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.TinyMoisher.toString() + "#";
 		}
 		else if (numOfWins == 50 && !trophies.contains(TrophiesEnum.MiniMoisher)){
 			trophies.add(TrophiesEnum.MiniMoisher);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.MiniMoisher.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.MiniMoisher.toString() + "#";
 		}
 		else if (numOfWins == 100 && !trophies.contains(TrophiesEnum.MasterMoisher)){
 			trophies.add(TrophiesEnum.MasterMoisher);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.MasterMoisher.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.MasterMoisher.toString() + "#" ;
 		}
 		else if (numOfWins == 250 && !trophies.contains(TrophiesEnum.SuperMoisher)){
 			trophies.add(TrophiesEnum.SuperMoisher);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.SuperMoisher.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.SuperMoisher.toString() + "#";
 		}
 		else if (numOfWins == 500 && !trophies.contains(TrophiesEnum.MegaMoisher)){
 			trophies.add(TrophiesEnum.MegaMoisher);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.MegaMoisher.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.MegaMoisher.toString() + "#";
 		}
-		else if (userAtGoogle && !trophies.contains(TrophiesEnum.GoogleTrophy)){
+		
+		if (userAtGoogle && !trophies.contains(TrophiesEnum.GoogleTrophy)){
 			trophies.add(TrophiesEnum.GoogleTrophy);
 			numOfTrophiesObtained++;
-			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.GoogleTrophy.toString();
+			tropiesAchieved = tropiesAchieved + TrophiesEnum.GoogleTrophy.toString() + "#";
 		}
 		user.SaveChanges();
 
