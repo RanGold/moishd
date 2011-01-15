@@ -43,6 +43,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.c2dm.C2DMessaging;
@@ -83,6 +85,9 @@ public class WelcomeScreenActivity extends Activity{
 	private Intent intent;
 	private String[] names;
 	private Account[] accounts ;
+	
+	TextView currentlyLoggedInWith ;
+	Button switchAccounts;
 
 
 	private Handler mHandler = new Handler() {
@@ -141,6 +146,7 @@ public class WelcomeScreenActivity extends Activity{
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
 		TextView text = (TextView) findViewById(R.id.moishdName);
+		switchAccounts = (Button) findViewById(R.id.switchAccounts);
 
 		Typeface fontOfName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
 		text.setTypeface(fontOfName);
@@ -159,6 +165,19 @@ public class WelcomeScreenActivity extends Activity{
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 
 		googleAuthString = moishdPreferences.getGoogleAuthToken();
+		
+		switchAccounts.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				final int size = accounts.length;
+				names = new String[size];
+				for (int i = 0; i < size; i++) {
+					names[i] = accounts[i].name;
+				}
+				Bundle args = new Bundle();
+				args.putStringArray("names", names);
+				showDialog(DIALOG_SHOW_ACCOUNTS,args);
+
+			}});
 
 	}
 
@@ -282,6 +301,13 @@ public class WelcomeScreenActivity extends Activity{
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
 		Log.d("Facebook", "doAuthSucceed");
+		
+		TextView currentlyLoggedInWith = (TextView) findViewById(R.id.currentlyLoggedIn);
+		currentlyLoggedInWith.setText("You're corrently logged in with TEST");
+		switchAccounts = (Button) findViewById(R.id.switchAccounts);
+		switchAccounts.setVisibility(View.VISIBLE);
+		switchAccounts.setClickable(true);
+		
 
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
