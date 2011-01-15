@@ -16,9 +16,8 @@
 package moishd.android;
 
 import moishd.client.dataObjects.ClientMoishdUser;
-import moishd.common.SharedPreferencesKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 /**
@@ -34,16 +33,16 @@ public class DeviceRegistrar {
     private static final String TAG = "DeviceRegistrar";
     static final String SENDER_ID = "app.moishd@gmail.com";
 
-
     public static void registerWithServer(final Context context, final String deviceRegistrationID) {
         new Thread(new Runnable() {
             public void run() {
                 //Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
-                try {
+            	MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+            	try {
                     
                 	ClientMoishdUser user = new ClientMoishdUser();
                 	user.setRegisterID(deviceRegistrationID);
-                	String authString = getGoogleAuthToken(context);
+                	String authString = moishdPreferences.getGoogleAuthToken();
                 	
                 	int statusCode = ServerCommunication.registerC2DMToServer(user, authString); 
                     if (statusCode == 200) {
@@ -77,7 +76,8 @@ public class DeviceRegistrar {
             public void run() {
               //  Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
                 try {
-                    String authString = getGoogleAuthToken(context);
+                	MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+                    String authString = moishdPreferences.getGoogleAuthToken();
                 	int statusCode = ServerCommunication.unregisterC2DMToServer(authString);
                 	
                     if (statusCode == 200) {
@@ -102,13 +102,6 @@ public class DeviceRegistrar {
         
         }).start();
     }
-    
-	private static String getGoogleAuthToken(Context context) {
 
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), "");
-
-		return authString;
-	}
 
 }

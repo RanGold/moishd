@@ -32,7 +32,6 @@ public class WinnerAndLoserActivity extends Activity{
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		
 		if (ServerCommunication.isThirdTimePlayed(gameType, authString)) {
-			boolean busy = ServerCommunication.setUserBusy(authString);
 			Intent rankForGame = new Intent();
 			rankForGame.setClass(this, RankForGameActivity.class);
 			rankForGame.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);

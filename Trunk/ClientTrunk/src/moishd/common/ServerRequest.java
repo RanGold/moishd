@@ -23,6 +23,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 public class ServerRequest  {
@@ -58,19 +60,24 @@ public class ServerRequest  {
 
 		http_client = new DefaultHttpClient(cm, params);
 	}
-
+	
 	public boolean GetCookie(String auth_token) {
 		this.authToken = auth_token;
 		return this.GetCookie();
 	}
 	
 	public boolean GetCookie() {
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		
 		if (this.DoesHaveCookie()) {
 			return true;
 		}
 		else {
 			Log.d("COOKIE", "Getting cookie, authToken = " + (authToken == null ? "null" : this.authToken));
 			Log.d("COOKIE", "Getting cookie");
+			if (authToken == null){
+				authToken=moishdPreferences.getGoogleAuthToken();
+			}
 			return (authToken != null ? GetCookieFromServer(this.authToken) : false);
 		}
 	}

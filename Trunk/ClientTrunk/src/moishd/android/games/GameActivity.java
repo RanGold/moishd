@@ -109,7 +109,7 @@ public class GameActivity extends Activity{
 		}
 		
 	}
-
+	
 	protected void LoseTechnicly(){
 		GetAllExtras();
 		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
