@@ -337,9 +337,9 @@ public class DSCommon {
 						usersSets.put(location.getMoishdUser().getRegisterID(), 
 								secLocation.getMoishdUser().getUserGoogleIdentifier() + "#" +
 								secLocation.getMoishdUser().getUserNick());
-						LoggerCommon.Get().LogInfo("DSCommon", 
-								secLocation.getMoishdUser().getUserGoogleIdentifier() + "#" +
-								secLocation.getMoishdUser().getUserNick());
+						LoggerCommon.Get().LogInfo("DSCommon",
+								"TO: " + location.getMoishdUser().getUserGoogleIdentifier() +
+								"FROM: " + secLocation.getMoishdUser().getUserGoogleIdentifier());
 						break;
 					}
 				}
