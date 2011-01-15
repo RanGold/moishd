@@ -115,7 +115,7 @@ public class GameActivity extends Activity{
 
 	@Override
 	final public void onBackPressed(){
-		CommonForWinAndLose();
+		GetAllExtras();
 		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
 		
