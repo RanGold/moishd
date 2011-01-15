@@ -2,6 +2,7 @@ package moishd.android.games;
 
 import moishd.android.R;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,10 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.you_have_been_moishd);
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
+		
 
 		int points = getIntent().getIntExtra(IntentExtraKeysEnum.Points.toString(), 0);
 

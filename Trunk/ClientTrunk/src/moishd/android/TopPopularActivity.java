@@ -3,6 +3,7 @@ package moishd.android;
 import java.util.List;
 
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +25,9 @@ public class TopPopularActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.top_popular);
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
 
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 

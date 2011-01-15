@@ -2,6 +2,7 @@ package moishd.android.games;
 
 import moishd.android.R;
 import moishd.common.IntentResultCodesEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,6 +26,9 @@ public class MostPopularGameActivity extends Activity{
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.most_popular_game_layout);
 		SetTexts();
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
 		
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text1.setTypeface(fontName);

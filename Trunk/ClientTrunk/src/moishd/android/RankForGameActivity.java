@@ -1,6 +1,7 @@
 package moishd.android;
 
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,6 +68,9 @@ public class RankForGameActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.rank_for_game_layout);
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
 
 		game_type = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());

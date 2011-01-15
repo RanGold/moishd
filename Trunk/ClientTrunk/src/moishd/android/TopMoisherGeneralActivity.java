@@ -2,6 +2,7 @@ package moishd.android;
 
 import moishd.common.GamesEnum;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -19,6 +20,9 @@ public class TopMoisherGeneralActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.top_moishers_general_layout);
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
 
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		

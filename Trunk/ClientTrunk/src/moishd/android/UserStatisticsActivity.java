@@ -10,6 +10,7 @@ import moishd.client.dataObjects.ClientTrophy;
 import moishd.client.dataObjects.ClientUserGameStatistics;
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,6 +36,10 @@ public class UserStatisticsActivity extends Activity {
 		
 		ClientMoishdUser moishdUser = (ClientMoishdUser) getIntent().getExtras().get(IntentExtraKeysEnum.MoishdUser.toString());
 		ClientUserGameStatistics userGameStatistics = moishdUser.getStats();
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
+		
 		setContentView(R.layout.users_statistics_layout);
 		TextView header = (TextView) findViewById(R.id.games_statistics_header);
 

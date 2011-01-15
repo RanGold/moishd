@@ -3,9 +3,11 @@ package moishd.android.games;
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
+import moishd.common.MoishdPreferences;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 
@@ -15,6 +17,13 @@ public class GameActivity extends Activity{
 	public final static int DIDNT_CALL_SERVER = 2;
 	String gameId, authString, gameType, action;
 	int serverFlag = DIDNT_CALL_SERVER;
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
+		
+	}
 	
 
 	protected void onNewIntent (Intent intent){

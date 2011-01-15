@@ -297,7 +297,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 		else{
 			moishdPreferences.setCurrentGoogleAuthToken(googleAuthString);
-			currentlyLoggedInWith.setText("You're corrently logged in with " + account.name);
+			currentlyLoggedInWith.setText("You're corrently logged in with: \n" + account.name);
 			switchAccounts.setVisibility(View.VISIBLE);
 			switchAccounts.setClickable(true);
 		}

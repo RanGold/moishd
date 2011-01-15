@@ -10,13 +10,12 @@ import java.util.List;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.GamesEnum;
 import moishd.common.IntentExtraKeysEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -58,9 +57,12 @@ public class TopMoishersActivity extends Activity{
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
-
 		setContentView(R.layout.top_moishers_layout);
-		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");			
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
+		
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/mailrays.ttf");			
 		fontNameForList = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 
 
@@ -73,7 +75,7 @@ public class TopMoishersActivity extends Activity{
 		TextView header = (TextView) findViewById(R.id.top_moishers_header);
 		header.setText(gameName.getFullName()+ "\n Top Moishers\n");
 		header.setTypeface(fontName);
-		header.setTextSize(20);
+		header.setTextSize(25);
 		new GetTopMoishersTask().execute(getGameName(gameName), authToken);
 
 		list = (ListView) findViewById(R.id.topMoishersList);
@@ -211,14 +213,14 @@ public class TopMoishersActivity extends Activity{
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
-		private Bitmap blankImage;
+		//private Bitmap blankImage;
 
 		public EfficientAdapter(Context context) {
 			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
 
 			// Icons bound to the rows.
-			blankImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
+			//blankImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
 		}
 
 		public int getCount() {
@@ -241,7 +243,6 @@ public class TopMoishersActivity extends Activity{
 				convertView = mInflater.inflate(R.layout.top_moishers_list_item, null);
 
 				holder = new ViewHolder();
-				holder.blankImage = (ImageView) convertView.findViewById(R.id.blankPic);
 				holder.userPic = (ImageView) convertView.findViewById(R.id.userPic);
 				holder.userName = (TextView) convertView.findViewById(R.id.userName);
 				holder.userName.setTypeface(fontNameForList);
@@ -254,7 +255,6 @@ public class TopMoishersActivity extends Activity{
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			holder.blankImage.setImageBitmap(blankImage);
 			holder.userPic.setImageDrawable(topMoishersPictures.get(position));
 			holder.userName.setText(topMoishers.get(position).getUserNick());
 			holder.points.setText(String.valueOf(topMoishers.get(position).getStats().getTopMoisherPoints()));
@@ -263,7 +263,6 @@ public class TopMoishersActivity extends Activity{
 		}
 
 		static class ViewHolder {
-			ImageView blankImage;
 			ImageView userPic;
 			TextView userName;
 			TextView points;
