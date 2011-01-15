@@ -1,5 +1,6 @@
 package moishd.android.games;
 
+import moishd.android.AllOnlineUsersActivity;
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
@@ -21,6 +22,8 @@ public class GameActivity extends Activity{
 		action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		
 		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
+			
+			
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			int points = intent.getIntExtra(IntentExtraKeysEnum.Points.toString(), -1);
 			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
@@ -29,16 +32,26 @@ public class GameActivity extends Activity{
 			String nearByGame = intent.getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
 			
 			Intent intentForResult = new Intent();
-			intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
-			intentForResult.putExtra(IntentExtraKeysEnum.NearByGame.toString(), nearByGame);
-
-			if (result.equals("Won")) 
-				intentForResult.setClass(this, YouMoishdActivity.class);
-			else
-				intentForResult.setClass(this, YouHaveBeenMoishdActivity.class);
 			
-			GetAllExtras();
-			SetAllExtras(intentForResult);
+
+			if (result.equals("Won")){ 
+				intentForResult.setClass(this, YouMoishdActivity.class);
+			}
+			else if (result.equals("Lost")) {
+				intentForResult.setClass(this, YouHaveBeenMoishdActivity.class);
+			}
+			//technical lose
+			else {
+				intentForResult.setClass(this, AllOnlineUsersActivity.class);
+			}
+
+			if (!result.equals("LostTechnicly")) {
+				intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
+				intentForResult.putExtra(IntentExtraKeysEnum.NearByGame.toString(), nearByGame);
+				GetAllExtras();
+				SetAllExtras(intentForResult);
+			}
+			
 			startActivity(intentForResult);
 			
 			Intent resultIntent = new Intent();
@@ -97,6 +110,14 @@ public class GameActivity extends Activity{
 		else {
 			serverFlag=SERVER_OK;
 		}
+		
+	}
+
+	@Override
+	final public void onBackPressed(){
+		CommonForWinAndLose();
+		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
+		setFlag(serverResponse);
 		
 	}
 
