@@ -56,25 +56,27 @@ public class UserLoginServlet extends GeneralServlet {
 					}
 				}
 				
-				if (muser.isRegistered() && (muser.getIsAlive() == 2)) {
+				if (muser.isRegistered() && (muser.getIsAlive() == 1)) {
 					muser.InitUser();
 					LoggerCommon.Get().LogInfo(this, "Logging off current user connection");
 				}
 				
-				if (muser.isRegistered() && (muser.getIsAlive() != 2)) {
-					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", "Tried to login twice with the same user");
-					LoggerCommon.Get().LogInfo(this, "Checking current user connection");
-					muser.setIsAlive(2);
+				if (muser.isRegistered() && (muser.getIsAlive() == 0)) {
+					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", 
+							"Tried to login twice with the same user");
+					muser.setIsAlive(1);
 				} else {
 					muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 					muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
 					muser.setNotBusy();
 					muser.setRegistered(true);
+					muser.setIsAlive(0);
 					muser.setRegisterID(newUser.getRegisterID());
 				}
 				
 				muser.SaveChanges();
-				if (mUser.getIsAlive() == 2) {
+				if (muser.getIsAlive() == 1) {
+					LoggerCommon.Get().LogInfo(this, "Checking current user connection");
 					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
 							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
 				}

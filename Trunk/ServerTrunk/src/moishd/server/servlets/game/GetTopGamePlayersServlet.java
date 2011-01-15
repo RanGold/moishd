@@ -30,18 +30,20 @@ public class GetTopGamePlayersServlet extends GeneralServlet{
 
 		if (user != null) {
 			String gameName = request.getReader().readLine();
-			GameStatistics stat = DSCommon.GetGameStatByName(gameName);
-			LoggerCommon.Get().LogInfo(this, "TOP MOISHER GAME STAT " + stat.getGameType());
-
+			GameStatistics stat = DSCommon.GetGameStatByName(gameName);			
 			List<MoishdUser> users = new LinkedList<MoishdUser>();
-			Set<Entry<String, Integer>> entries = stat.getTopMoishers().entrySet();
-			for (Entry<String, Integer> siPair : entries) {
-				try {
-					MoishdUser topMoisher = DSCommon.GetUserByGoogleId(siPair.getKey());
-					topMoisher.getStats().setTopMoisherPoints(siPair.getValue());
-					users.add(topMoisher);
-				} catch (DataAccessException e) {
-					LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
+			
+			if (stat != null) {
+				LoggerCommon.Get().LogInfo(this, "TOP MOISHER GAME STAT " + stat.getGameType());
+				Set<Entry<String, Integer>> entries = stat.getTopMoishers().entrySet();
+				for (Entry<String, Integer> siPair : entries) {
+					try {
+						MoishdUser topMoisher = DSCommon.GetUserByGoogleId(siPair.getKey());
+						topMoisher.getStats().setTopMoisherPoints(siPair.getValue());
+						users.add(topMoisher);
+					} catch (DataAccessException e) {
+						LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
+					}
 				}
 			}
 			
