@@ -27,13 +27,13 @@ public class ConstantLocation extends CommonJDO implements Serializable {
     private double latitude;
     
     @Persistent
-    private double name;
+    private String name;
 
     @Persistent
-    private double trophyName;
-	
-	public ConstantLocation(double longitude, double latitude, double name,
-			double trophyName) {
+    private String trophyName;
+
+	public ConstantLocation(double longitude, double latitude, String name,
+			String trophyName) {
 		super();
 		this.longitude = longitude;
 		this.latitude = latitude;
@@ -57,22 +57,6 @@ public class ConstantLocation extends CommonJDO implements Serializable {
 		this.latitude = latitude;
 	}
 
-	public double getName() {
-		return name;
-	}
-
-	public void setName(double name) {
-		this.name = name;
-	}
-
-	public double getTrophyName() {
-		return trophyName;
-	}
-
-	public void setTrophyName(double trophyName) {
-		this.trophyName = trophyName;
-	}
-
 	public Key getConstLocId() {
 		return constLocId;
 	}
@@ -82,5 +66,21 @@ public class ConstantLocation extends CommonJDO implements Serializable {
 		// Latitude measurements range from 0° to (+/–)90°
 		return ((this.getLatitude() >= -90.0) && (this.getLatitude() <= 90.0) && 
 				(this.getLongitude() >= -180.0) && (this.getLongitude() <= 180.0));
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setTrophyName(String trophyName) {
+		this.trophyName = trophyName;
+	}
+
+	public String getTrophyName() {
+		return trophyName;
 	}
 }

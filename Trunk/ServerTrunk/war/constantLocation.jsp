@@ -7,7 +7,7 @@
 <%@ page import="moishd.server.common.DSCommon" %>
 
 <html>
-<head>
+  <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
@@ -17,14 +17,18 @@
     User user = userService.getCurrentUser();
     if (user == null) {
 			response.sendRedirect("/test/Login");
-    } else if (UserServiceFactory.getUserService().isUserAdmin()) {
+    } else if (!UserServiceFactory.getUserService().isUserAdmin()) {
+%>
+<p>You need to be admin to change constant locations.</p>
+<%    	
+    } else if (!UserServiceFactory.getUserService().isUserAdmin()) {
     	List<ConstantLocation> cLocs = DSCommon.GetConstantLocations();
-    	if (cLocs.size() == 0) {
+    	if (cLocs.isEmpty()) {
 %>
 <p>There are no constant locations.</p>
 <%
 		} else {
-			for (ConstantLocation loc : locs) {
+			for (ConstantLocation loc : cLocs) {
 %>
 <p>Name: <%= loc.getName()%></p>
 <%
@@ -33,7 +37,7 @@
     }
 %>
 
-    <form action="/AddConstantLocation" method="post">
+    <form action="/test/AddConstantLocation" method="post">
       <div>Name: <input type="text" name="name" /></div>
       <div>Longitude: <input type="text" name="longitude" /></div>
       <div>Latitude: <input type="text" name="latitude" /></div>
