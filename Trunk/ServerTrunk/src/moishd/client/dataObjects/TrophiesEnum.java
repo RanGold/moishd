@@ -11,7 +11,8 @@ public enum TrophiesEnum {
 	TwentyInARow("20 in a row", "Win 20 games in a row", 30),
 	FirstTime("A new Moisher was born", "Win your first game", 5),
 	BestFriends("Best friends", "Win 10 of your facebook friends", 50),
-	FaceOff("Face off", "Win 10 nearby users", 75);
+	FaceOff("Face off", "Win 10 nearby users", 75),
+	GoogleTrophy("Google Trophy", "Moish the opponent at Google TLV", 100);
 	
 	private String trophyName;
 	private String trophyDescription;
