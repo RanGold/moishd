@@ -8,7 +8,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Key;
-//32.063856,34.77999
+
 @PersistenceCapable
 public class ConstantLocation extends CommonJDO implements Serializable {
 	/**
@@ -39,6 +39,13 @@ public class ConstantLocation extends CommonJDO implements Serializable {
 		this.latitude = latitude;
 		this.name = name;
 		this.trophyName = trophyName;
+	}
+	public ConstantLocation(double longitude, double latitude, String name) {
+		super();
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.name = name;
+		this.trophyName = "NoTrophy";
 	}
 
 	public double getLongitude() {

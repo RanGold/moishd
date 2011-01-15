@@ -800,4 +800,24 @@ public class DSCommon {
 			pm.close();
 		}		
 	}
+	
+	public static List<ConstantLocation> GetConstantLocationsByName(String name) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(ConstantLocation.class);
+			q.setFilter("name == :p1");
+			
+			@SuppressWarnings("unchecked")
+			List<ConstantLocation> cl = (List<ConstantLocation>)q.execute(name);
+			
+			return ((List<ConstantLocation>)pm.detachCopyAll(cl));
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}		
+	}
 }
