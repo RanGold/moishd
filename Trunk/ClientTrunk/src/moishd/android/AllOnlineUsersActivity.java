@@ -125,6 +125,12 @@ public class AllOnlineUsersActivity extends Activity{
 	private final int FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED = 32;
 	private final int DIALOG_SERVER_ERROR = 33;
 	
+	private final int MY_QUIT_NOT_SET = 0;
+	private final int MY_QUIT_QUIT = 1;
+	private final int MY_QUIT_NOT_QUIT = 2;
+	private int myQuit = MY_QUIT_NOT_SET;
+
+	
 	private waitForResponse timerForResponse;
 	private boolean timerOn = false;
 
@@ -162,6 +168,13 @@ public class AllOnlineUsersActivity extends Activity{
 	};
 
 	@Override
+	protected void onSaveInstanceState (Bundle outState){
+		outState.putInt("MY_QUIT", myQuit);
+		
+		super.onSaveInstanceState(outState);
+	}
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -188,7 +201,15 @@ public class AllOnlineUsersActivity extends Activity{
 		myUserName = moishdPreferences.getUserName();
 
 		serverHasFacebookFriends = false;
-		moishdPreferences.setAvailableStatus(true);
+		
+		if (savedInstanceState==null){
+			moishdPreferences.setAvailableStatus(true);
+		} else {
+			myQuit = savedInstanceState.getInt("MY_QUIT");
+			if (myQuit==MY_QUIT_QUIT){
+				moishdPreferences.setAvailableStatus(false);
+			}
+		}
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 
@@ -212,7 +233,6 @@ public class AllOnlineUsersActivity extends Activity{
 		}
 		
 		activateRefreshTimer();
-
 	}
 
 	@Override
@@ -354,6 +374,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	protected void onPause(){
 
+		myQuit = MY_QUIT_NOT_QUIT;
 		super.onPause();
 		moishdPreferences.setAvailableStatus(false);
 	}
@@ -429,7 +450,9 @@ public class AllOnlineUsersActivity extends Activity{
 			WelcomeScreenActivity.unregisterC2DM = false;
 		}
 		WelcomeScreenActivity.facebookLogout(null);
+		myQuit = MY_QUIT_QUIT;
 		refreshTimer.cancel();
+		
 		finish();
 	}
 
