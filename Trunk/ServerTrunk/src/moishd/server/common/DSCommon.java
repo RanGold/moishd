@@ -352,7 +352,7 @@ public class DSCommon {
 		}
 	}
 	
-	public static Map<ConstantLocation, List<MoishdUser>> GetNearbyConstantUsersSets(double distance) {
+	public static Map<String, List<MoishdUser>> GetNearbyConstantUsersSets(double distance) {
 		List<ConstantLocation> cLocs = DSCommon.GetConstantLocations();
 		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -362,18 +362,18 @@ public class DSCommon {
 			
 			@SuppressWarnings("unchecked")
 			List<Location> locations = (List<Location>) q.execute();
-			Map<ConstantLocation, List<MoishdUser>> usersSets = new HashMap<ConstantLocation, List<MoishdUser>>();
+			Map<String, List<MoishdUser>> usersSets = new HashMap<String, List<MoishdUser>>();
 			
 			locations = DetachCopyLocations(locations, pm);
 			
 			for (ConstantLocation cLoc : cLocs) {
 				for (Location loc : locations) {
 					if (DSCommon.CalculateDistance(cLoc, loc) <= distance) {
-						if (!usersSets.containsKey(cLoc)) {
-							usersSets.put(cLoc, new LinkedList<MoishdUser>());
+						if (!usersSets.containsKey(cLoc.getName())) {
+							usersSets.put(cLoc.getName(), new LinkedList<MoishdUser>());
 						}
 						LoggerCommon.Get().LogInfo("DSCommon", cLoc.getName() + " " + loc.getMoishdUser().getUserGoogleIdentifier());
-						usersSets.get(cLoc).add(loc.getMoishdUser());
+						usersSets.get(cLoc.getName()).add(loc.getMoishdUser());
 					}
 				}
 			}
