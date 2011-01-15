@@ -58,7 +58,10 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			startIntent = false;
 			ServerCommunication.sendAlive();
 		}
-		
+		else if (action.equals(PushNotificationTypeEnum.Disconnect.toString())){
+			resultIntent.setClass(this, AllOnlineUsersActivity.class);
+			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.Disconnect.toString());
+			}
 		else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
 			String initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 			String recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());

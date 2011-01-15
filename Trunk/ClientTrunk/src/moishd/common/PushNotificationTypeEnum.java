@@ -22,6 +22,7 @@ public enum PushNotificationTypeEnum {
 	WonSecond,
 	RankUpdated,
 	TrophiesUpdated,
-	RankAndTrophiesUpdated;
+	RankAndTrophiesUpdated,
+	Disconnect;
 
 }
