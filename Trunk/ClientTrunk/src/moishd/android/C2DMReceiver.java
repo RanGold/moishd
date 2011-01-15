@@ -30,6 +30,7 @@ import com.google.android.c2dm.C2DMBaseReceiver;
 
 public class C2DMReceiver extends C2DMBaseReceiver {
 
+	private MoishdPreferences moishdPreferences ;
 	static final String SENDER_ID = "app.moishd@gmail.com";
 
 	public C2DMReceiver() {
@@ -40,7 +41,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 	protected void onMessage(Context context, Intent intent) {
 
 		Log.d("TEST", "got Message"); 
-		
+		moishdPreferences = MoishdPreferences.getMoishdPreferences();
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
@@ -109,7 +110,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(16));
 		}
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
-			MoishdPreferences.setAvailableStatus(context, true);
+			moishdPreferences.setAvailableStatus(true);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameTruth.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
@@ -118,13 +119,13 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())){
-			MoishdPreferences.setAvailableStatus(context, true);
+			moishdPreferences.setAvailableStatus(true);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameDare.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
 		}
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			MoishdPreferences.setAvailableStatus(context, false);
+			moishdPreferences.setAvailableStatus(false);
 			
 			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameResult.toString());

@@ -2,10 +2,10 @@ package moishd.common;
 
 public enum SharedPreferencesKeysEnum {
 
-	GoogleSharedPreferences,
-	GoogleAccountName,
+	ReturnedFroAuth,
+	UserName,
+	AvailableStatus,
 	GoogleAuthToken,
-	FacebookDetails,
 	FacebookFirstName,
 	FacebookUserName;
 }

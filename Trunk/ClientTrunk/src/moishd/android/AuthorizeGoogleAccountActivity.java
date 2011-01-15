@@ -26,13 +26,14 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	Account account = null;
 	AccountManager accountManager = null;
 	boolean needInvalidate = true;
-	
+	private MoishdPreferences moishdPreferences ;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		
+		moishdPreferences = MoishdPreferences.getMoishdPreferences();
+
 		setContentView(R.layout.authorize_google_account_layout);
 		LinearLayout view = (LinearLayout) findViewById(R.id.authorizeGoogleAccountLinearView);
 		view.setVisibility(View.INVISIBLE);
@@ -114,7 +115,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	};
 
 	protected void onGetAuthToken(Bundle bundle) {
-		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
+		moishdPreferences.setReturnFromAuth(true);
 		String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
@@ -123,7 +124,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	}
 	
 	protected void onError(){
-		MoishdPreferences.setReturnFromAuth(getApplicationContext(), true);
+		moishdPreferences.setReturnFromAuth(true);
 		Intent resultIntent = new Intent();
 		setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
 		finish();		

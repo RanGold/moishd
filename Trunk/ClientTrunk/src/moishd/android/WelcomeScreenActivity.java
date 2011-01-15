@@ -9,10 +9,10 @@ import moishd.android.facebook.Facebook;
 import moishd.android.facebook.FacebookError;
 import moishd.android.facebook.LoginButton;
 import moishd.android.facebook.SessionEvents;
-import moishd.android.facebook.SessionStore;
-import moishd.android.facebook.Util;
 import moishd.android.facebook.SessionEvents.AuthListener;
 import moishd.android.facebook.SessionEvents.LogoutListener;
+import moishd.android.facebook.SessionStore;
+import moishd.android.facebook.Util;
 import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.IntentExtraKeysEnum;
@@ -20,7 +20,6 @@ import moishd.common.IntentRequestCodesEnum;
 import moishd.common.IntentResultCodesEnum;
 import moishd.common.LocationManagment;
 import moishd.common.MoishdPreferences;
-import moishd.common.SharedPreferencesKeysEnum;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +34,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.net.ConnectivityManager;
@@ -59,7 +56,9 @@ public class WelcomeScreenActivity extends Activity{
 
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
-
+	
+	
+	private MoishdPreferences moishdPreferences = null;
 	private LocationManagment locationManagment;
 	private ConnectivityManager connectivityManager;
 	private Location location;
@@ -138,6 +137,7 @@ public class WelcomeScreenActivity extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		moishdPreferences = MoishdPreferences.getMoishdPreferences(getApplicationContext());
 		setContentView(R.layout.main);
 		loginButton = (LoginButton) findViewById(R.id.login);
 		TextView text = (TextView) findViewById(R.id.moishdName);
@@ -158,7 +158,7 @@ public class WelcomeScreenActivity extends Activity{
 		//check if the user already authorized Moish'd! to use his Google Account for registration
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 
-		googleAuthString = getGoogleAuthToken();
+		googleAuthString = moishdPreferences.getGoogleAuthToken();
 
 	}
 
@@ -177,8 +177,8 @@ public class WelcomeScreenActivity extends Activity{
 		if (connectivityManager== null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}
-		if (!MoishdPreferences.isReturnedFromAuth(getApplicationContext())){
-			if (googleAuthString == null){
+		if (!moishdPreferences.isReturnedFromAuth()){
+			if (googleAuthString == ""){
 				startGoogleAuth();
 			}
 			else if (sessionIsValid){
@@ -205,10 +205,10 @@ public class WelcomeScreenActivity extends Activity{
 
 		if (requestCode == IntentRequestCodesEnum.GetGoogleAccountToken.getCode()){
 			if (resultCode == IntentResultCodesEnum.OK.getCode()){
-				MoishdPreferences.setReturnFromAuth(getApplicationContext(), false);
+				moishdPreferences.setReturnFromAuth(false);
 				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
 				googleAuthString = authString;
-				saveGoogleAuthToken(authString);
+				moishdPreferences.setGoogleAuthToken(authString);
 			}
 			else{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -217,13 +217,13 @@ public class WelcomeScreenActivity extends Activity{
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
-						MoishdPreferences.setReturnFromAuth(getApplicationContext(), false);
+						moishdPreferences.setReturnFromAuth(false);
 						authorizeGoogleAccount(userGoogleAccount);
 					}
 				})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {	
-						MoishdPreferences.setReturnFromAuth(getApplicationContext(), false);
+						moishdPreferences.setReturnFromAuth(false);
 						moveTaskToBack(true);
 					}});
 
@@ -315,56 +315,10 @@ public class WelcomeScreenActivity extends Activity{
 		}
 	}
 
-	//save user's Google account name in SharedPrefernces
-	private void saveGoogleAccount(String accountName) {
-
-		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putString(SharedPreferencesKeysEnum.GoogleAccountName.toString(), accountName);
-		editor.commit();
-	}
-
-	//retrieve user's Google account name from SharedPrefernces
-	@SuppressWarnings("unused")
-	private String getGoogleAccount() {
-
-		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAccountName.toString(), null);
-
-		return authString;
-	}
-
-	//save user's GoogleAuthToken in SharedPrefernces
-	private void saveGoogleAuthToken(String authToken) {
-
-		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), authToken);
-		editor.commit();
-	}
-
-	//retrieve user's GoogleAuthToken from SharedPrefernces
-	private String getGoogleAuthToken() {
-
-		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), null);
-
-		return authString;
-	}
-
 	private void saveUserName(String userName, String firstName) {
+		moishdPreferences.setFacebookUserName(userName);
+		moishdPreferences.setFacebookFirstName(firstName);
 
-		Context context = getApplicationContext();
-		SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.FacebookDetails.toString(),Context.MODE_PRIVATE);
-		Editor editor = prefs.edit();
-		editor.putString(SharedPreferencesKeysEnum.FacebookUserName.toString(), userName);
-		editor.putString(SharedPreferencesKeysEnum.FacebookFirstName.toString(), firstName);
-
-		editor.commit();
 	}
 
 	@Override
@@ -415,7 +369,7 @@ public class WelcomeScreenActivity extends Activity{
 			builder.setItems(names, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					userGoogleAccount = accounts[which]; 
-					saveGoogleAccount(userGoogleAccount.name);
+					moishdPreferences.setGoogleAuthToken(userGoogleAccount.name);
 					authorizeGoogleAccount(userGoogleAccount);
 				}	
 			});
@@ -582,7 +536,7 @@ public class WelcomeScreenActivity extends Activity{
 
 
 				location = locationManagment.getLastKnownLocation();
-				MoishdPreferences.setUserName(getApplicationContext(), userName);
+				moishdPreferences.setUserName(userName);
 
 				ClientLocation loc;
 				if (location != null)				 
@@ -592,7 +546,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 				newUser.setLocation(loc);
 
-				String authString = getGoogleAuthToken();
+				String authString = moishdPreferences.getGoogleAuthToken();
 
 				int registrationStatus = ServerCommunication.enlistUser(newUser, authString);
 

@@ -31,7 +31,6 @@ import moishd.common.IntentResultCodesEnum;
 import moishd.common.LocationManagment;
 import moishd.common.MoishdPreferences;
 import moishd.common.PushNotificationTypeEnum;
-import moishd.common.SharedPreferencesKeysEnum;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +43,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -61,14 +59,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class AllOnlineUsersActivity extends Activity{
 
@@ -95,7 +93,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private String trophiesList;
 
 	private int currentClickPosition;
-
+	private MoishdPreferences moishdPreferences ;
 	private TextView header;
 	private ListView list;
 
@@ -168,7 +166,8 @@ public class AllOnlineUsersActivity extends Activity{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.all_users_layout);
-		
+
+		moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf"); 
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
 
@@ -178,18 +177,18 @@ public class AllOnlineUsersActivity extends Activity{
 		header.setTypeface(fontHeader);
 
 		//need the authToken for server requests
-		authToken = getGoogleAuthToken();
 		firstName = getFacebookUserName(false);
 
 		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
 
-		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),getGoogleAuthToken());
+		String authToken = moishdPreferences.getGoogleAuthToken();
+		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),authToken);
 		locationManagment.startUpdateLocation(1);
 
-		myUserName = MoishdPreferences.getUserName(getApplicationContext());
+		myUserName = moishdPreferences.getUserName();
 
 		serverHasFacebookFriends = false;
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		moishdPreferences.setAvailableStatus(true);
 		currentUsersType = GetUsersByTypeEnum.MergedUsers;
 		getUsers(GetUsersByTypeEnum.MergedUsers);
 
@@ -345,7 +344,7 @@ public class AllOnlineUsersActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		moishdPreferences.setAvailableStatus(true);
 		if (needRefresh)
 			sendMessageToHandler(UPDATE_LIST_ADAPTER);		
 	}
@@ -353,7 +352,7 @@ public class AllOnlineUsersActivity extends Activity{
 	protected void onPause(){
 
 		super.onPause();
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
+		moishdPreferences.setAvailableStatus(false);
 	}
 
 	@Override
@@ -469,7 +468,7 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 	
 	private void commonForFriendsUsersAndMergedUsers(){
-		if (MoishdPreferences.userIsAvailable(getApplicationContext())) {
+		if (moishdPreferences.userIsAvailable()) {
 			mainProgressDialog = ProgressDialog.show(this, null, "Retrieving users...", true, false);
 		}
 		asyncRunner.request("me/friends", new FriendsRequestListener());
@@ -653,25 +652,12 @@ public class AllOnlineUsersActivity extends Activity{
 		showDialog(DIALOG_SERVER_ERROR);
 	}
 
-	private String getGoogleAuthToken() {
-
-		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.GoogleSharedPreferences.toString(),Context.MODE_PRIVATE);
-		String authString = prefs.getString(SharedPreferencesKeysEnum.GoogleAuthToken.toString(), null);
-
-		return authString;
-	}
-
 	private String getFacebookUserName(boolean fullName) {
-
-		Context context = getApplicationContext();
-		final SharedPreferences prefs = context.getSharedPreferences(SharedPreferencesKeysEnum.FacebookDetails.toString(),Context.MODE_PRIVATE);
-
 		if (fullName){
-			return prefs.getString(SharedPreferencesKeysEnum.FacebookUserName.toString(), null);
+			return moishdPreferences.getFacebookUserName();
 		}
 		else{
-			return prefs.getString(SharedPreferencesKeysEnum.FacebookFirstName.toString(), null);
+			return moishdPreferences.getFacebookFirstName();
 		}
 	}
 
@@ -710,7 +696,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	protected void postOnFacebookWall(int code, Bundle bundle) {
 		
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
+		moishdPreferences.setAvailableStatus(false);
 		Bundle parameters = new Bundle();
 		String message;
  
@@ -739,12 +725,12 @@ public class AllOnlineUsersActivity extends Activity{
 		parameters.putString("picture", "http://moishd.googlecode.com/files/moishd");
 		WelcomeScreenActivity.facebook.dialog(this,"stream.publish", parameters, new PostDialogListener());
 
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		moishdPreferences.setAvailableStatus(true);
 	}
 	
 	@Override
 	protected void onPrepareDialog (int id, Dialog dialog, Bundle args){
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
+		moishdPreferences.setAvailableStatus(false);
 		switch (id){
 
 		case DIALOG_USER_CANCELED_GAME:
@@ -1057,14 +1043,14 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void dismissAndRemoveDialog(int code, boolean changeStatusToAvailable){
 		if (changeStatusToAvailable){
-			MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+			moishdPreferences.setAvailableStatus(true);
 		}
 		dismissDialog(code);
 		removeDialog(code);	
 	}
 	
 	private void cancelDialog(DialogInterface dialog){
-		MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+		moishdPreferences.setAvailableStatus(true);
 		dialog.cancel();		
 	}
 
@@ -1134,7 +1120,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private class GetUsersTask extends AsyncTask<Object, Integer, List<Object>> {
 
 		protected void onPreExecute() {
-			if (MoishdPreferences.userIsAvailable(getApplicationContext()))
+			if (moishdPreferences.userIsAvailable())
 				mainProgressDialog = ProgressDialog.show(AllOnlineUsersActivity.this, null, "Retrieving users...", true, false);
 		}
 
@@ -1217,13 +1203,13 @@ public class AllOnlineUsersActivity extends Activity{
 				moishdUsers = (List<ClientMoishdUser>) resultList.get(0);
 				usersPictures = (List<Drawable>) resultList.get(1);
 
-				if (MoishdPreferences.userIsAvailable(getApplicationContext()))
+				if (moishdPreferences.userIsAvailable())
 					sendMessageToHandler(UPDATE_LIST_ADAPTER);
 				else 
 					needRefresh = true;
 			}
 			else{
-				if (MoishdPreferences.userIsAvailable(getApplicationContext())){
+				if (moishdPreferences.userIsAvailable()){
 					Integer messageCode = (Integer) resultList.get(0);
 					final int messageCodeInt = messageCode.intValue();
 					sendMessageToHandler(messageCodeInt);
@@ -1273,7 +1259,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		public void onComplete(Bundle values) {
 
-			MoishdPreferences.setAvailableStatus(getApplicationContext(), false);
+			moishdPreferences.setAvailableStatus(false);
 
 			final String postId = values.getString("post_id");
 
@@ -1285,7 +1271,7 @@ public class AllOnlineUsersActivity extends Activity{
 				// "No wall post made..."
 			}
 
-			MoishdPreferences.setAvailableStatus(getApplicationContext(), true);
+			moishdPreferences.setAvailableStatus(true);
 
 		}
 
