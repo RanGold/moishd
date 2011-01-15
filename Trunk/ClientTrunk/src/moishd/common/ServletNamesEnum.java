@@ -14,6 +14,7 @@ public enum ServletNamesEnum {
 	GetGameInitiator,
 	GameWin,
 	GameLose,
+	GameTechnicalLose,
 	InvitationResponse,
 	RegisterUser,
 	UnregisterUser,
