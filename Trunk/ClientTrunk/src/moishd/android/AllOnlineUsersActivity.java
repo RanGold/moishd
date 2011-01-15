@@ -1083,6 +1083,9 @@ public class AllOnlineUsersActivity extends Activity{
 			else if (currentTrophy.equals(TrophiesEnum.TwentyInARow.toString())){
 				builder.append(TrophiesEnum.TwentyInARow.getTrophyName());
 			}
+			else if (currentTrophy.equals(TrophiesEnum.GoogleTrophy.toString())){
+				builder.append(TrophiesEnum.GoogleTrophy.getTrophyName());
+			}
 			
 			if (i < userTrophies.length - 1 && i>0){
 					builder.append(",\n");

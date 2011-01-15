@@ -290,7 +290,7 @@ public class WelcomeScreenActivity extends Activity{
 	private void authorizeGoogleAccount(Account account){
 
 		googleAuthString = moishdPreferences.getGoogleAuthToken(account.name);
-		if (googleAuthString.equals( "")){
+		if (googleAuthString.equals("")){
 			Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
 			intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
 			startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
@@ -395,7 +395,8 @@ public class WelcomeScreenActivity extends Activity{
 					userGoogleAccount = accounts[which]; 
 					authorizeGoogleAccount(userGoogleAccount);
 					dismissDialog(DIALOG_SHOW_ACCOUNTS);
-					removeDialog(DIALOG_SHOW_ACCOUNTS);					}	
+					removeDialog(DIALOG_SHOW_ACCOUNTS);					
+					}	
 			});
 			return builder.create();
 		case DIALOG_AUTH_TOKEN_DECLINED:
