@@ -181,7 +181,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		asyncRunner = new AsyncFacebookRunner(WelcomeScreenActivity.facebook);
 
-		String authToken = moishdPreferences.getGoogleAuthToken();
+		String authToken = moishdPreferences.getCurrentGoogleAuthToken();
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(),authToken);
 		locationManagment.startUpdateLocation(1);
 
@@ -485,13 +485,6 @@ public class AllOnlineUsersActivity extends Activity{
 			intent.putExtra(IntentExtraKeysEnum.MoishdUser.toString(), me);
 			startActivity(intent);
 		}
-	}
-	
-	private void displayTopRankedGames() {
-		Intent intent = new Intent(this, TopFiveGamesActivity.class);
-		intent.putExtra(IntentExtraKeysEnum.TopFiveRequest.toString(), IntentExtraKeysEnum.TopFiveRanked.toString());
-		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
-		startActivity(intent);
 	}
 	
 	private void displayTopPopularGames() {

@@ -49,14 +49,23 @@ public class MoishdPreferences {
 		setBooleanToSP(SharedPreferencesKeysEnum.ReturnedFroAuth, value);
 	}
 	
-	public String getGoogleAuthToken(){
+	public String getGoogleAuthToken(String userGoogleAccount){
+		return getStringFromSP(userGoogleAccount);
+	}
+	
+	public void setGoogleAuthToken(String userGoogleAccount, String token){
+		setStringToSP(userGoogleAccount, token);
+		setCurrentGoogleAuthToken(token);
+	}
+	
+	public String getCurrentGoogleAuthToken(){
 		return getStringFromSP(SharedPreferencesKeysEnum.GoogleAuthToken);
 	}
 	
-	public void setGoogleAuthToken(String token){
+	public void setCurrentGoogleAuthToken(String token){
 		setStringToSP(SharedPreferencesKeysEnum.GoogleAuthToken, token);
 	}
-	
+
 	public String getFacebookUserName(){
 		return getStringFromSP(SharedPreferencesKeysEnum.FacebookUserName);
 	}
@@ -83,6 +92,10 @@ public class MoishdPreferences {
 		return genericSharedPreferences.getString(key.toString(), "");
 	}
 	
+	private String getStringFromSP(String key){
+		return genericSharedPreferences.getString(key, "");
+	}
+	
 	private boolean getBooleanFromSP(SharedPreferencesKeysEnum key){
 		return genericSharedPreferences.getBoolean(key.toString(), false);
 	}
@@ -93,13 +106,16 @@ public class MoishdPreferences {
 		editor.commit();
 	}
 	
+	private void setStringToSP(String key, String value) {
+		Editor editor = genericSharedPreferences.edit();
+		editor.putString(key, value);
+		editor.commit();		
+	}
+	
 	private void setBooleanToSP(SharedPreferencesKeysEnum key, boolean value){
 		Editor editor = genericSharedPreferences.edit();
 		editor.putBoolean(key.toString(), value);
 		editor.commit();		
 	}
-	
-	
-	
 	
 }

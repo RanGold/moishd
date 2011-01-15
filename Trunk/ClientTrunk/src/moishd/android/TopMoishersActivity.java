@@ -37,6 +37,8 @@ public class TopMoishersActivity extends Activity{
 	private static List<Drawable> topMoishersPictures = new ArrayList<Drawable>();
 
 	private ListView list;
+	private static Typeface fontNameForList;
+	private static Typeface fontName;
 
 	private final int ERROR_RETRIEVING_USERS_DIALOG = 1;
 	private final int UPDATE_LIST_ADAPTER = 2;
@@ -58,17 +60,18 @@ public class TopMoishersActivity extends Activity{
 		super.onCreate(savedInstanceState); 
 
 		setContentView(R.layout.top_moishers_layout);
+		fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");			
+		fontNameForList = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 
-		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 
 		GamesEnum gameName = (GamesEnum) getIntent().getExtras().get(IntentExtraKeysEnum.GameType.toString());
 		String authToken = (String) getIntent().getExtras().get(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		
+
 		if (topMoishers == null){
 			topMoishers = new ArrayList<ClientMoishdUser>();
 		}
 		TextView header = (TextView) findViewById(R.id.top_moishers_header);
-		header.setText(gameName.getFullName()+ " Top Moishers\n");
+		header.setText(gameName.getFullName()+ "\n Top Moishers\n");
 		header.setTypeface(fontName);
 		header.setTextSize(20);
 		new GetTopMoishersTask().execute(getGameName(gameName), authToken);
@@ -127,7 +130,7 @@ public class TopMoishersActivity extends Activity{
 			String authToken = strings[1];
 			String gameName = strings[0];
 			topMoishers = ServerCommunication.getTopMoishers(gameName, authToken);
-			
+
 			if (topMoishers == null){
 				resultList.add(ERROR_RETRIEVING_USERS_DIALOG);
 				return resultList;
@@ -189,21 +192,21 @@ public class TopMoishersActivity extends Activity{
 			registrationErrorMessage.what = messageType;
 			registrationErrorMessage.sendToTarget();
 		}
-		
-		class PointsComparator implements Comparator<ClientMoishdUser> {
-			
-		    public int compare(ClientMoishdUser userA, ClientMoishdUser userB) {
 
-		        if (userA.getStats().getTopMoisherPoints() > userB.getStats().getTopMoisherPoints()) {
-		            return -1;
-		        }
-		        else{
-		        	return 1;
-		        }
-		    }
+		class PointsComparator implements Comparator<ClientMoishdUser> {
+
+			public int compare(ClientMoishdUser userA, ClientMoishdUser userB) {
+
+				if (userA.getStats().getTopMoisherPoints() > userB.getStats().getTopMoisherPoints()) {
+					return -1;
+				}
+				else{
+					return 1;
+				}
+			}
 		}
 	}
-	
+
 
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
@@ -241,7 +244,9 @@ public class TopMoishersActivity extends Activity{
 				holder.blankImage = (ImageView) convertView.findViewById(R.id.blankPic);
 				holder.userPic = (ImageView) convertView.findViewById(R.id.userPic);
 				holder.userName = (TextView) convertView.findViewById(R.id.userName);
+				holder.userName.setTypeface(fontNameForList);
 				holder.points = (TextView) convertView.findViewById(R.id.points);
+				holder.points.setTypeface(fontNameForList);
 
 				convertView.setTag(holder);
 			} else {

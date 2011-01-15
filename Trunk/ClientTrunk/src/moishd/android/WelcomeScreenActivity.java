@@ -58,8 +58,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
-	
-	
+
 	private MoishdPreferences moishdPreferences = null;
 	private LocationManagment locationManagment;
 	private ConnectivityManager connectivityManager;
@@ -88,7 +87,6 @@ public class WelcomeScreenActivity extends Activity{
 	
 	TextView currentlyLoggedInWith ;
 	Button switchAccounts;
-
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -164,21 +162,17 @@ public class WelcomeScreenActivity extends Activity{
 		//check if the user already authorized Moish'd! to use his Google Account for registration
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 
-		googleAuthString = moishdPreferences.getGoogleAuthToken();
+		googleAuthString = "";
 		
+		currentlyLoggedInWith = (TextView) findViewById(R.id.currentlyLoggedIn);
+		switchAccounts = (Button) findViewById(R.id.switchAccounts);
+		
+		switchAccounts.setVisibility(View.INVISIBLE);
+		switchAccounts.setClickable(false);
 		switchAccounts.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				final int size = accounts.length;
-				names = new String[size];
-				for (int i = 0; i < size; i++) {
-					names[i] = accounts[i].name;
-				}
-				Bundle args = new Bundle();
-				args.putStringArray("names", names);
-				showDialog(DIALOG_SHOW_ACCOUNTS,args);
-
+				startGoogleAuth();
 			}});
-
 	}
 
 	@Override
@@ -190,9 +184,6 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		
-		//Tammy
-		//if (connectivityManager.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED || connectivityManager.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
 		if (connectivityManager== null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}
@@ -203,12 +194,16 @@ public class WelcomeScreenActivity extends Activity{
 			else if (sessionIsValid){
 				doAuthSucceed();
 			}
+			else{
+				currentlyLoggedInWith.setText("You're corrently logged in with " + userGoogleAccount.name);
+				switchAccounts.setVisibility(View.VISIBLE);
+				switchAccounts.setClickable(true);
+			}
 		}
 		else{
 			//does nothing because the dialog takes care of getting starting startGoogleAuth()
 		}
 	}
-
 
 	@Override
 	protected void onDestroy (){
@@ -218,7 +213,6 @@ public class WelcomeScreenActivity extends Activity{
 		super.onDestroy();
 	}
 
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -227,7 +221,7 @@ public class WelcomeScreenActivity extends Activity{
 				moishdPreferences.setReturnFromAuth(false);
 				String authString = data.getExtras().getString(IntentExtraKeysEnum.GoogleAuthToken.toString());
 				googleAuthString = authString;
-				moishdPreferences.setGoogleAuthToken(authString);
+				moishdPreferences.setGoogleAuthToken(userGoogleAccount.name, authString);
 			}
 			else{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -293,22 +287,23 @@ public class WelcomeScreenActivity extends Activity{
 	//authorize user's Google account
 	private void authorizeGoogleAccount(Account account){
 
-		Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
-		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
-		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
+		googleAuthString = moishdPreferences.getGoogleAuthToken(account.name);
+		if (googleAuthString.equals( "")){
+			Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
+			intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
+			startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
+		}
+		else{
+			currentlyLoggedInWith.setText("You're corrently logged in with " + userGoogleAccount.name);
+			switchAccounts.setVisibility(View.VISIBLE);
+			switchAccounts.setClickable(true);
+		}
 	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
 		Log.d("Facebook", "doAuthSucceed");
 		
-		TextView currentlyLoggedInWith = (TextView) findViewById(R.id.currentlyLoggedIn);
-		currentlyLoggedInWith.setText("You're corrently logged in with TEST");
-		switchAccounts = (Button) findViewById(R.id.switchAccounts);
-		switchAccounts.setVisibility(View.VISIBLE);
-		switchAccounts.setClickable(true);
-		
-
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
 		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
@@ -344,7 +339,6 @@ public class WelcomeScreenActivity extends Activity{
 	private void saveUserName(String userName, String firstName) {
 		moishdPreferences.setFacebookUserName(userName);
 		moishdPreferences.setFacebookFirstName(firstName);
-
 	}
 
 	@Override
@@ -389,13 +383,13 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();
+			
 		case DIALOG_SHOW_ACCOUNTS:
 			builder.setTitle("Select a Google account");
 			String[] names = args.getStringArray("names");
 			builder.setItems(names, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					userGoogleAccount = accounts[which]; 
-					moishdPreferences.setGoogleAuthToken(userGoogleAccount.name);
 					authorizeGoogleAccount(userGoogleAccount);
 				}	
 			});
@@ -572,7 +566,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 				newUser.setLocation(loc);
 
-				String authString = moishdPreferences.getGoogleAuthToken();
+				String authString = moishdPreferences.getGoogleAuthToken(userGoogleAccount.name);
 
 				int registrationStatus = ServerCommunication.enlistUser(newUser, authString);
 
