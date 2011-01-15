@@ -13,6 +13,7 @@ import moishd.client.dataObjects.ClientLocation;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.server.dataObjects.C2DMAuth;
 import moishd.server.dataObjects.CommonJDO;
+import moishd.server.dataObjects.ConstantLocation;
 import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.Location;
 import moishd.server.dataObjects.MoishdGame;
@@ -779,5 +780,24 @@ public class DSCommon {
 		if (gameId != -1) {
 			DSCommon.DeleteGameById(gameId);
 		}
+	}
+	
+	public static List<ConstantLocation> GetConstantLocations() {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Query q = null;
+		try {
+			q = pm.newQuery(ConstantLocation.class);
+			
+			@SuppressWarnings("unchecked")
+			List<ConstantLocation> cl = (List<ConstantLocation>)q.execute();
+			
+			return ((List<ConstantLocation>)pm.detachCopyAll(cl));
+		}
+		finally {
+			if (q != null) {
+				q.closeAll();
+			}
+			pm.close();
+		}		
 	}
 }

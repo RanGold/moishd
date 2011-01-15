@@ -37,7 +37,7 @@ public class GameStatistics extends CommonJDO implements Serializable {
     @Persistent
     private double gameRank;
     
-	@Persistent
+    @Persistent(serialized = "true", defaultFetchGroup = "true")
 	private Map<String, Integer> topMoishers;
 
 	public GameStatistics(String gameType) {
