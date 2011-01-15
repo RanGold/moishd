@@ -722,12 +722,14 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case FACEBOOK_POST_TROPHIES_UPDATED:
 			String trophiesList = bundle.getString("trophiesList");
+			Log.d("Tammy", "FACEBOOK_POST_TROPHIES_UPDATED " + trophiesList);
 			message = firstName +"'s Moish'd! trophies have just been updated! New trophies receieved:\n" + trophiesList;
 			parameters.putString("description", message);
 			parameters.putString("name", "Moish'd! trophies have been updated!");
 			
 		case FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED:
 			String trophies = bundle.getString("trophiesList");
+			Log.d("Tammy", "FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED " + trophies);
 			message = firstName +"'s Moish'd! rank and trophies has just been updated! \n" +
 			"New trophies receieved:\n" + trophies;
 			parameters.putString("description", message);
@@ -747,6 +749,9 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_USER_CANCELED_GAME:
 			String user;
+			Log.d("Tammy", "init name is " + initName);
+			Log.d("Tammy", "rec name is " + recName);
+			Log.d("Tammy", "my name is " + myUserName);
 			if (myUserName.equals(initName)){
 				user = recName;
 				Log.d("TEST", "BUSY USER IS " + user);
@@ -840,6 +845,7 @@ public class AllOnlineUsersActivity extends Activity{
 					boolean invitationResult = false;
 					boolean isBusy = ServerCommunication.IsBusy(authToken);
 					
+					
 					if (isBusy) {
 						if (i==0 || i==1) {
 							chooseGame.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
@@ -903,6 +909,7 @@ public class AllOnlineUsersActivity extends Activity{
 		case DIALOG_RANK_AND_TROPHIES_UPDATED:
 			newRank = args.getInt("rank");
 			trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
+			Log.d("Tammy", "DIALOG_RANK_AND_TROPHIES_UPDATED " + trophiesList);
 			builder.setMessage("Congratulations, your rank and trophies have been updated!" +
 					"Your new rank is " + newRank + "\n" +
 					"You've earned the following trophies: " + trophiesList)
@@ -926,6 +933,7 @@ public class AllOnlineUsersActivity extends Activity{
 			
 		case DIALOG_TROPHIES_UPDATED:
 			trophiesList = stringArrayToString(args.getStringArray("trophiesList"));
+			Log.d("Tammy", "DIALOG_TROPHIES_UPDATED " + trophiesList);
 			builder.setMessage("Congratulations, you've earned the following trophies: \n" + trophiesList)
 			.setCancelable(false)
 			.setPositiveButton("Share", new DialogInterface.OnClickListener() {
@@ -979,6 +987,9 @@ public class AllOnlineUsersActivity extends Activity{
 		case DIALOG_USER_CANCELED_GAME:
 			//TODO cancel game
 			String user;
+			Log.d("Tammy", "init name is " + initName);
+			Log.d("Tammy", "rec name is " + recName);
+			Log.d("Tammy", "my name is " + myUserName);
 			if (myUserName.equals(initName)){
 				user = recName;
 			}
@@ -1094,9 +1105,13 @@ public class AllOnlineUsersActivity extends Activity{
 				builder.append(TrophiesEnum.TwentyInARow.getTrophyName());
 			}
 			
-			if (i < userTrophies.length - 1){
-				builder.append(",\n");
-			}
+			if (i < userTrophies.length - 1 && i>0){
+					builder.append(",\n");
+				}
+			else{
+					builder.append("\n");
+				}
+			
 		}
 
 		return builder.toString();
