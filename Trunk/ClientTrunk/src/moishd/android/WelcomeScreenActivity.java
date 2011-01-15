@@ -85,6 +85,8 @@ public class WelcomeScreenActivity extends Activity{
 	private String[] names;
 	private Account[] accounts ;
 	
+	private boolean doUnregisterC2DM = true;
+	
 	TextView currentlyLoggedInWith ;
 	Button switchAccounts;
 
@@ -471,6 +473,7 @@ public class WelcomeScreenActivity extends Activity{
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
+					doUnregisterC2DM = false;
 					facebookLogout(null);
 				}
 			});
@@ -524,11 +527,17 @@ public class WelcomeScreenActivity extends Activity{
 	}
 
 	private class MoishdLogoutListener implements LogoutListener {
+
 		public void onLogoutBegin() {
 		}
 
 		public void onLogoutFinish() {
-			unregisterC2DM();
+			if (doUnregisterC2DM){
+				unregisterC2DM();
+			}
+			else{
+				doUnregisterC2DM = true;
+			}
 		}
 	}
 
