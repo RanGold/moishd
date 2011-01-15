@@ -3,6 +3,7 @@ package moishd.android.games;
 import moishd.android.R;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,6 +29,8 @@ public class ChooseGameActivity extends Activity{
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.choose_game_layout);
 		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
 
 		triviaPic1 = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_1);
 		triviaPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_2);

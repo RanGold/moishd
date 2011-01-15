@@ -6,6 +6,7 @@ import java.util.Random;
 import moishd.android.R;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
+import moishd.common.MoishdPreferences;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,7 +26,11 @@ public class TruthOrDareActivity extends Activity{
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
-		setContentView(R.layout.truth_or_dare);   
+		setContentView(R.layout.truth_or_dare);
+		
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(false);
+		
 		Button truth = (Button) findViewById(R.id.truth);
 		Button dare = (Button) findViewById(R.id.dare);
 		text = (TextView)findViewById(R.id.choose);
