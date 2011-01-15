@@ -392,7 +392,8 @@ public class WelcomeScreenActivity extends Activity{
 				public void onClick(DialogInterface dialog, int which) {
 					userGoogleAccount = accounts[which]; 
 					authorizeGoogleAccount(userGoogleAccount);
-				}	
+					dismissDialog(DIALOG_SHOW_ACCOUNTS);
+					removeDialog(DIALOG_SHOW_ACCOUNTS);					}	
 			});
 			return builder.create();
 		case DIALOG_AUTH_TOKEN_DECLINED:
