@@ -168,7 +168,7 @@ public class AllOnlineUsersActivity extends Activity{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.all_users_layout);
-
+		
 		fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf"); 
 		fontHeader = Typeface.createFromAsset(getAssets(), "fonts/BROADW.ttf"); 
 

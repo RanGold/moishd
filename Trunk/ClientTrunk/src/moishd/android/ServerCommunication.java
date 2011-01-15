@@ -316,7 +316,15 @@ public class ServerCommunication {
 			return true;
 		}			
 	}
-
+	
+	public static boolean sendTechnicalLoseToServer(String gameId, String authString, String gameType) {
+		HttpResponse response = SendReqToServer(ServletNamesEnum.GameTechnicalLose, gameId + ":" + gameType, authString);
+		if (response == null || response.containsHeader("Error")){
+			return false;
+		}else{
+			return true;
+		}			
+	}
 	private static HttpResponse activateServlet(ServletNamesEnum servletName, String authString){
 		return SendToServer(servletName, null, null, authString);
 	}

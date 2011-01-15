@@ -126,6 +126,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		else if(action.equals(PushNotificationTypeEnum.GameResult.toString())){
 			MoishdPreferences.setAvailableStatus(context, false);
 			
+			
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameResult.toString());
 			Log.d("C2DM", resultIntent.getStringExtra(IntentExtraKeysEnum.PushAction.toString()));
 			
@@ -152,8 +153,9 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			String gameType = resultWithGameType.substring(placeToCut+1);
 
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
-		
-			
+	
+	
+				
 			if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
 				resultIntent.setClass(this, TruthPartGameActivity.class);
 			else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
@@ -162,6 +164,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 				resultIntent.setClass(this, MixingGameActivity.class);
 			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 				resultIntent.setClass(this, FastClickGameActivity.class);
+		
 		}
 		Log.d("TEST", "action is " + action);
 		
