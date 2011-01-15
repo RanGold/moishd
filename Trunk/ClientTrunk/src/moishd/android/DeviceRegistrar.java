@@ -42,7 +42,7 @@ public class DeviceRegistrar {
                     
                 	ClientMoishdUser user = new ClientMoishdUser();
                 	user.setRegisterID(deviceRegistrationID);
-                	String authString = moishdPreferences.getGoogleAuthToken();
+                	String authString = moishdPreferences.getCurrentGoogleAuthToken();
                 	
                 	int statusCode = ServerCommunication.registerC2DMToServer(user, authString); 
                     if (statusCode == 200) {
@@ -77,7 +77,7 @@ public class DeviceRegistrar {
               //  Intent updateUIIntent = new Intent("com.google.ctp.UPDATE_UI");
                 try {
                 	MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
-                    String authString = moishdPreferences.getGoogleAuthToken();
+                    String authString = moishdPreferences.getCurrentGoogleAuthToken();
                 	int statusCode = ServerCommunication.unregisterC2DMToServer(authString);
                 	
                     if (statusCode == 200) {
