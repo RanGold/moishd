@@ -7,8 +7,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import moishd.client.dataObjects.ClientLocation;
-
 import com.google.appengine.api.datastore.Key;
 //32.063856,34.77999
 @PersistenceCapable
@@ -31,32 +29,54 @@ public class ConstantLocation extends CommonJDO implements Serializable {
     @Persistent
     private double name;
 
-	public ConstantLocation(double longitude, double latitude) {
+    @Persistent
+    private double trophyName;
+	
+	public ConstantLocation(double longitude, double latitude, double name,
+			double trophyName) {
 		super();
-		this.setLongitude(longitude);
-		this.setLatitude(latitude);
-	}
-
-	public ClientLocation toClientLocaion() {
-		return (new ClientLocation(this.getLongitude(),this.getLatitude()));
-	}
-
-	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+		this.latitude = latitude;
+		this.name = name;
+		this.trophyName = trophyName;
 	}
 
 	public double getLongitude() {
 		return longitude;
 	}
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public double getLatitude() {
 		return latitude;
 	}
-	
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getName() {
+		return name;
+	}
+
+	public void setName(double name) {
+		this.name = name;
+	}
+
+	public double getTrophyName() {
+		return trophyName;
+	}
+
+	public void setTrophyName(double trophyName) {
+		this.trophyName = trophyName;
+	}
+
+	public Key getConstLocId() {
+		return constLocId;
+	}
+
 	public boolean isInitialized() {
 		// Longitude measurements range from 0° to (+/–)180°
 		// Latitude measurements range from 0° to (+/–)90°
