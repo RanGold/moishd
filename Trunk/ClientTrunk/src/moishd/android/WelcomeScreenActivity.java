@@ -421,12 +421,10 @@ public class WelcomeScreenActivity extends Activity{
 			builder.setTitle("Error");
 			builder.setMessage("Registration to Facebook server failed. Please retry in a few seconds.")
 			.setCancelable(false)
-			.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
+			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 					facebookLogout(null);
-					//finish();
-					moveTaskToBack(true);
 				}
 			});
 			return builder.create();  
@@ -435,12 +433,10 @@ public class WelcomeScreenActivity extends Activity{
 			builder.setTitle("Error");
 			builder.setMessage("Registration to Moish'd! server failed.")
 			.setCancelable(false)
-			.setNeutralButton("Quit", new DialogInterface.OnClickListener() {
+			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 					facebookLogout(null);
-					//finish();
-					moveTaskToBack(true);
 				}
 			});
 			return builder.create();  
