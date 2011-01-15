@@ -85,7 +85,7 @@ public class WelcomeScreenActivity extends Activity{
 	private String[] names;
 	private Account[] accounts ;
 	
-	private boolean doUnregisterC2DM = true;
+	protected static boolean unregisterC2DM = true;
 	
 	TextView currentlyLoggedInWith ;
 	Button switchAccounts;
@@ -474,7 +474,7 @@ public class WelcomeScreenActivity extends Activity{
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
-					doUnregisterC2DM = false;
+					unregisterC2DM = false;
 					facebookLogout(null);
 				}
 			});
@@ -533,11 +533,11 @@ public class WelcomeScreenActivity extends Activity{
 		}
 
 		public void onLogoutFinish() {
-			if (doUnregisterC2DM){
+			if (unregisterC2DM){
 				unregisterC2DM();
 			}
 			else{
-				doUnregisterC2DM = true;
+				unregisterC2DM = true;
 			}
 		}
 	}

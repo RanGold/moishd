@@ -229,7 +229,7 @@ public class AllOnlineUsersActivity extends Activity{
 			restartTimer();
 			return true;
 		case R.id.logout:
-			doQuitActions();
+			doQuitActions(true);
 			return true;
 		case R.id.facebookFriends:
 			getUsers(GetUsersByTypeEnum.FacebookFriends);
@@ -279,7 +279,10 @@ public class AllOnlineUsersActivity extends Activity{
 		gameType = intent.getStringExtra(IntentExtraKeysEnum.GameType.toString());
 
 		if (action!=null){
-			if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
+			if (action.equals(PushNotificationTypeEnum.Disconnect.toString())){
+				doQuitActions(false);
+				}
+			else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
 				String inviterName = intent.getStringExtra("Inviter");
 				retrieveInvitation(inviterName);
 			}
@@ -397,8 +400,6 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 			commonForTruthAndDare(intent);
 		}
-		
-
 	}
 	
 	private void executeRefresh(){
@@ -423,7 +424,10 @@ public class AllOnlineUsersActivity extends Activity{
 		activateRefreshTimer();
 	}
 	
-	private void doQuitActions() {
+	private void doQuitActions(boolean unregisterC2dm) {
+		if (!unregisterC2dm){
+			WelcomeScreenActivity.unregisterC2DM = false;
+		}
 		WelcomeScreenActivity.facebookLogout(null);
 		refreshTimer.cancel();
 		finish();
@@ -763,7 +767,7 @@ public class AllOnlineUsersActivity extends Activity{
 			.setNegativeButton("OK", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_SERVER_ERROR, true);
-					doQuitActions();
+					doQuitActions(true);
 				}
 			});
 			return builder.create(); 
