@@ -352,8 +352,46 @@ public class DSCommon {
 		}
 	}
 	
+	public static Map<ConstantLocation, List<MoishdUser>> GetNearbyConstantUsersSets(double distance) {
+		List<ConstantLocation> cLocs = DSCommon.GetConstantLocations();
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			Query q = pm.newQuery("SELECT FROM " + Location.class.getName() + " WHERE " +
+					"longitude < 200.0");
+			
+			@SuppressWarnings("unchecked")
+			List<Location> locations = (List<Location>) q.execute();
+			Map<ConstantLocation, List<MoishdUser>> usersSets = new HashMap<ConstantLocation, List<MoishdUser>>();
+			
+			locations = DetachCopyLocations(locations, pm);
+			
+			for (ConstantLocation cLoc : cLocs) {
+				for (Location loc : locations) {
+					if (DSCommon.CalculateDistance(cLoc, loc) <= distance) {
+						if (!usersSets.containsKey(cLoc)) {
+							usersSets.put(cLoc, new LinkedList<MoishdUser>());
+						}
+						LoggerCommon.Get().LogInfo("DSCommon", cLoc.getName() + " " + loc.getMoishdUser().getUserGoogleIdentifier());
+						usersSets.get(cLoc).add(loc.getMoishdUser());
+					}
+				}
+			}
+			
+			return usersSets;
+		}
+		finally {
+			pm.close();
+		}
+	}
+	
 	public static double CalculateDistance(Location location1, Location location2) {
 		return CalculateDistance(location1.toClientLocaion(), location2.toClientLocaion());
+	}
+	
+	public static double CalculateDistance(ConstantLocation location1, Location location2) {
+		return CalculateDistance(new ClientLocation(location1.getLongitude(), location1.getLatitude()), 
+				location2.toClientLocaion());
 	}
 	
 	public static double CalculateDistance(ClientLocation location1, ClientLocation location2) {
@@ -420,6 +458,7 @@ public class DSCommon {
 			for (MoishdUser user : users) {
 				user.setIsAlive(2);
 				checkAliveRegisterIds.add(user.getRegisterID());
+				LoggerCommon.Get().LogInfo("DSCommon", "Checking alive: " + user.getUserGoogleIdentifier());
 			}
 			pm.makePersistentAll(users);
 			
@@ -473,6 +512,7 @@ public class DSCommon {
 			for (MoishdUser user : users) {
 				user.InitUser();
 				user.setIsAlive(2);
+				LoggerCommon.Get().LogInfo("DSCommon", "Disconnecting user: " + user.getUserGoogleIdentifier());
 			}
 			pm.makePersistentAll(users);
 		}

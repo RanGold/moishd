@@ -28,7 +28,7 @@ public class PushGameOffersServlet extends HttpServlet {
 				(UserServiceFactory.getUserService().isUserLoggedIn()
 				&& UserServiceFactory.getUserService().isUserAdmin())) {
 			Map<String, String> usersSets = DSCommon.GetNearbyUsersSets(1);
-			
+			DSCommon.GetNearbyConstantUsersSets(0.2);
 			for (Map.Entry<String, String> pair : usersSets.entrySet()) {
 				HashMap<String, String> payload = new HashMap<String, String>();
 				payload.put("GoogleIdOfOpponent", pair.getValue().split("#")[0]);
