@@ -35,6 +35,7 @@ public class SendGameResultServlet extends HttpServlet {
 	private static final long serialVersionUID = -530008367358724317L;
 
 	private int factorNearBy = 1;
+	private int technicalLose;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 	throws IOException {
@@ -94,7 +95,14 @@ public class SendGameResultServlet extends HttpServlet {
 						losePayload.put("NearByGame", "no");
 					}
 
+					if (winValue.toString().equals("LostTechnicly") || loseValue.toString().equals("LostTechnicly")) {
+						technicalLose = 0;
+					}
+					else {
+						technicalLose = factorNearBy; 
+					}
 					if (winValue.toString().equals("Won")){
+						
 						int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
@@ -161,22 +169,22 @@ public class SendGameResultServlet extends HttpServlet {
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 1);
 			addedPoints[0] = 1 *factorNearBy;
-			addedPoints[1] = 0*factorNearBy;
+			addedPoints[1] = 0*technicalLose;
 		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*factorNearBy;
+			addedPoints[1] = 1*technicalLose;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*factorNearBy;
+			addedPoints[1] = 1*technicalLose;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.getGameName())){
 			winner.getStats().setPoints(winnerPoints + 3);
 			loser.getStats().setPoints(loserPoints + 1);
 			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*factorNearBy;
+			addedPoints[1] = 1*technicalLose;
 		}
 		else{
 

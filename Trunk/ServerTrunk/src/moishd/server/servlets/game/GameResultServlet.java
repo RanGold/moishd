@@ -25,7 +25,8 @@ public class GameResultServlet extends GeneralServlet {
 	
 	public enum Result {
 		Won,
-		Lost
+		Lost,
+		LostTechnicly
 	}
 	
 	protected String servletName;
