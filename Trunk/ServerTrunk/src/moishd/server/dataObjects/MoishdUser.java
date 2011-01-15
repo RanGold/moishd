@@ -268,4 +268,9 @@ public class MoishdUser extends CommonJDO implements Serializable {
 	public Map<String, Integer> getGameTypesPlayed() {
 		return gameTypesPlayed;
 	}
+	
+	@Override
+	public boolean equals(Object user) {
+		return (this.getUserGoogleIdentifier().equals(((MoishdUser)user).getUserGoogleIdentifier()));
+	}
 }

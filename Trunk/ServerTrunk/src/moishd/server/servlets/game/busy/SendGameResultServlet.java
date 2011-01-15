@@ -283,10 +283,7 @@ public class SendGameResultServlet extends HttpServlet {
 		
 		Map<String, List<MoishdUser>> locationAndUsersMap = DSCommon.GetNearbyConstantUsersSets(0.2);
 		List<MoishdUser> googleTLVUsers = locationAndUsersMap.get("Google TLV");
-		boolean userAtGoogle = false;
-		if (googleTLVUsers!= null && googleTLVUsers.contains(user) && googleTLVUsers.contains(other)){
-			userAtGoogle = true;
-		}
+		boolean userAtGoogle = (googleTLVUsers!= null && googleTLVUsers.contains(user) && googleTLVUsers.contains(other));
 
 		int numOfWinsInARow = user.getStats().getGamesWonInARow();
 		LoggerCommon.Get().LogInfo(this, "numOfWinsInARow " + numOfWinsInARow );
