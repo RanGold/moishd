@@ -113,8 +113,8 @@ public class SendGameResultServlet extends HttpServlet {
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));	
 					}
 
-					updateRankAndTrophies(winPayload, winner);
-					updateRankAndTrophies(losePayload, loser);
+					updateRankAndTrophies(winPayload, winner, loser);
+					updateRankAndTrophies(losePayload, loser, winner);
 
 					LoggerCommon.Get().LogInfo(this, "Winner: " + winner.getUserGoogleIdentifier());
 					C2DMCommon.PushGenericMessage(winner.getRegisterID(), 
@@ -273,16 +273,20 @@ public class SendGameResultServlet extends HttpServlet {
 	}
 
 
-	private void updateRankAndTrophies(HashMap<String, String> payload, MoishdUser user) {
+	private void updateRankAndTrophies(HashMap<String, String> payload, MoishdUser user, MoishdUser other) {
 
 		updateRank(payload, user);
-
-		LoggerCommon.Get().LogInfo(this, "starting trophies calc ");
-
 		List<TrophiesEnum> trophies = user.getTrophies();
 
 		String tropiesAchieved = "";
 		int numOfTrophiesObtained = 0;
+		
+		Map<String, List<MoishdUser>> locationAndUsersMap = DSCommon.GetNearbyConstantUsersSets(0.2);
+		List<MoishdUser> googleTLVUsers = locationAndUsersMap.get("Google TLV");
+		boolean userAtGoogle = false;
+		if (googleTLVUsers!= null && googleTLVUsers.contains(user) && googleTLVUsers.contains(other)){
+			userAtGoogle = true;
+		}
 
 		int numOfWinsInARow = user.getStats().getGamesWonInARow();
 		LoggerCommon.Get().LogInfo(this, "numOfWinsInARow " + numOfWinsInARow );
@@ -304,8 +308,6 @@ public class SendGameResultServlet extends HttpServlet {
 		LoggerCommon.Get().LogInfo(this, "gamesWon " + numOfWins );
 
 		if  (numOfWins == 1 && !trophies.contains(TrophiesEnum.FirstTime)){
-			LoggerCommon.Get().LogInfo(this, "firstTime");
-
 			trophies.add(TrophiesEnum.FirstTime);
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.FirstTime.toString();
@@ -334,6 +336,11 @@ public class SendGameResultServlet extends HttpServlet {
 			trophies.add(TrophiesEnum.MegaMoisher);
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.MegaMoisher.toString();
+		}
+		else if (userAtGoogle && !trophies.contains(TrophiesEnum.GoogleTrophy)){
+			trophies.add(TrophiesEnum.GoogleTrophy);
+			numOfTrophiesObtained++;
+			tropiesAchieved = tropiesAchieved + "#" + TrophiesEnum.GoogleTrophy.toString();
 		}
 		user.SaveChanges();
 
