@@ -60,6 +60,9 @@ public class ServerRequest  {
 	}
 	
 	public boolean GetCookie(String auth_token) {
+		if (this.authToken != null && !this.authToken.equals(auth_token)) {
+			removeCookie();
+		}
 		this.authToken = auth_token;
 		return this.GetCookie();
 	}
@@ -77,6 +80,20 @@ public class ServerRequest  {
 				authToken=moishdPreferences.getCurrentGoogleAuthToken();
 			}
 			return (authToken != null ? GetCookieFromServer(this.authToken) : false);
+		}
+	}
+	
+	public void removeCookie(){
+		Cookie cookieToRemove = null;
+		for(Cookie cookie : http_client.getCookieStore().getCookies()) {
+			if(cookie.getName().equals("ACSID")) {
+				cookieToRemove = cookie;
+			}
+		}
+		
+		if (cookieToRemove != null) {
+			Log.d("COOKIE", "removing cookie");
+			http_client.getCookieStore().getCookies().remove(cookieToRemove);
 		}
 	}
 	
