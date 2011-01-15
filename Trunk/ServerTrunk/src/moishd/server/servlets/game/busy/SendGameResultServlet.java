@@ -283,7 +283,12 @@ public class SendGameResultServlet extends HttpServlet {
 		
 		Map<String, List<MoishdUser>> locationAndUsersMap = DSCommon.GetNearbyConstantUsersSets(0.2);
 		List<MoishdUser> googleTLVUsers = locationAndUsersMap.get("Google TLV");
+		LoggerCommon.Get().LogInfo(this, "this user " + user.getUserGoogleIdentifier());
+		LoggerCommon.Get().LogInfo(this, "other user " + other.getUserGoogleIdentifier());
+
 		boolean userAtGoogle = (googleTLVUsers!= null && googleTLVUsers.contains(user) && googleTLVUsers.contains(other));
+
+		LoggerCommon.Get().LogInfo(this, "userAtGoogle " + userAtGoogle);
 
 		int numOfWinsInARow = user.getStats().getGamesWonInARow();
 		LoggerCommon.Get().LogInfo(this, "numOfWinsInARow " + numOfWinsInARow );
@@ -336,6 +341,8 @@ public class SendGameResultServlet extends HttpServlet {
 		}
 		
 		if (userAtGoogle && !trophies.contains(TrophiesEnum.GoogleTrophy)){
+			LoggerCommon.Get().LogInfo(this, "got google trophy ");
+
 			trophies.add(TrophiesEnum.GoogleTrophy);
 			numOfTrophiesObtained++;
 			tropiesAchieved = tropiesAchieved + TrophiesEnum.GoogleTrophy.toString() + "#";
