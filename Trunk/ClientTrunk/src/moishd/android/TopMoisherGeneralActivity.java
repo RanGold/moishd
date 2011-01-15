@@ -28,7 +28,7 @@ public class TopMoisherGeneralActivity extends Activity{
 		ImageView trivia = (ImageView) findViewById(R.id.gameIconTrivia);
 		TextView text = (TextView) findViewById(R.id.text);
 
-		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
+		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/mailrays.ttf");
 		text.setTypeface(fontName);
 		
 		topMoishersIntent = new Intent(this, TopMoishersActivity.class);
