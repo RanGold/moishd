@@ -339,7 +339,7 @@ public class DSCommon {
 								secLocation.getMoishdUser().getUserNick());
 						LoggerCommon.Get().LogInfo("DSCommon",
 								"TO: " + location.getMoishdUser().getUserGoogleIdentifier() +
-								"FROM: " + secLocation.getMoishdUser().getUserGoogleIdentifier());
+								" FROM: " + secLocation.getMoishdUser().getUserGoogleIdentifier());
 						break;
 					}
 				}

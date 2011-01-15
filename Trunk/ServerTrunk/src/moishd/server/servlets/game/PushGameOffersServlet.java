@@ -34,7 +34,7 @@ public class PushGameOffersServlet extends HttpServlet {
 				payload.put("GoogleIdOfOpponent", pair.getValue().split("#")[0]);
 				payload.put("UserNickNameOfOpponent", pair.getValue().split("#")[1]);
 				try {
-					LoggerCommon.Get().LogInfo(this, "Register ID: " + pair.getKey() + "\n\r " + 
+					LoggerCommon.Get().LogInfo(this, "Register ID: " + pair.getKey() + "\n\r" + 
 							"From: " + pair.getValue().split("#")[1]);
 					C2DMCommon.PushGenericMessage(pair.getKey(),
 							C2DMCommon.Actions.GameOffer.toString(), payload);

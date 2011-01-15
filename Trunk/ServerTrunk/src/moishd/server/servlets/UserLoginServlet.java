@@ -65,8 +65,6 @@ public class UserLoginServlet extends GeneralServlet {
 					LoggerCommon.Get().LogError(this, response, "AlreadyLoggedIn", "Tried to login twice with the same user");
 					LoggerCommon.Get().LogInfo(this, "Checking current user connection");
 					muser.setIsAlive(2);
-					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
-							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
 				} else {
 					muser.getLocation().setLatitude(newUser.getLocation().getLatitude());
 					muser.getLocation().setLongitude(newUser.getLocation().getLongitude());
@@ -76,6 +74,10 @@ public class UserLoginServlet extends GeneralServlet {
 				}
 				
 				muser.SaveChanges();
+				if (mUser.getIsAlive() == 2) {
+					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
+							C2DMCommon.Actions.CheckAlive.toString(), new HashMap<String, String>());
+				}
 			} catch (DataAccessException e) {
 				LoggerCommon.Get().LogError(this, response, e.getMessage(), e.getStackTrace());
 			} catch (ClassNotFoundException e) {
