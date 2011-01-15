@@ -106,8 +106,7 @@ public class UserStatisticsActivity extends Activity {
 		allTrophiesMap.put(TrophiesEnum.MegaMoisher.toString(), false);
 		allTrophiesMap.put(TrophiesEnum.TenInARow.toString(), false);
 		allTrophiesMap.put(TrophiesEnum.TwentyInARow.toString(), false);
-		allTrophiesMap.put(TrophiesEnum.BestFriends.toString(), false);
-		allTrophiesMap.put(TrophiesEnum.FaceOff.toString(), false);
+		allTrophiesMap.put(TrophiesEnum.GoogleTrophy.toString(), false);
 	}
 	
 	private void convertUserTrophiesToDetailedList(List<TrophiesEnum> userTrophies){
@@ -146,6 +145,9 @@ public class UserStatisticsActivity extends Activity {
 			case TwentyInARow:
 				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.TwentyInARow.toString(), TrophiesEnum.TwentyInARow.getTrophyPoints()));
 				break;
+			case GoogleTrophy:
+				userTrophiesToDetailedList.add(new ClientTrophy(TrophiesEnum.GoogleTrophy.toString(), TrophiesEnum.GoogleTrophy.getTrophyPoints()));
+				break;
 			}
 			
 		}
@@ -162,8 +164,7 @@ public class UserStatisticsActivity extends Activity {
 		trophiesList.add(new Trophy(TrophiesEnum.MegaMoisher, allTrophiesMap.get(TrophiesEnum.MegaMoisher.toString())));
 		trophiesList.add(new Trophy(TrophiesEnum.TenInARow, allTrophiesMap.get(TrophiesEnum.TenInARow.toString())));
 		trophiesList.add(new Trophy(TrophiesEnum.TwentyInARow, allTrophiesMap.get(TrophiesEnum.TwentyInARow.toString())));
-		trophiesList.add(new Trophy(TrophiesEnum.BestFriends, allTrophiesMap.get(TrophiesEnum.BestFriends.toString())));
-		trophiesList.add(new Trophy(TrophiesEnum.FaceOff, allTrophiesMap.get(TrophiesEnum.FaceOff.toString())));
+		trophiesList.add(new Trophy(TrophiesEnum.GoogleTrophy, allTrophiesMap.get(TrophiesEnum.GoogleTrophy.toString())));
 	}
 
 	private class Trophy{

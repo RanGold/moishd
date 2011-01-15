@@ -294,7 +294,8 @@ public class WelcomeScreenActivity extends Activity{
 			startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
 		}
 		else{
-			currentlyLoggedInWith.setText("You're corrently logged in with " + userGoogleAccount.name);
+			moishdPreferences.setCurrentGoogleAuthToken(googleAuthString);
+			currentlyLoggedInWith.setText("You're corrently logged in with " + account.name);
 			switchAccounts.setVisibility(View.VISIBLE);
 			switchAccounts.setClickable(true);
 		}
