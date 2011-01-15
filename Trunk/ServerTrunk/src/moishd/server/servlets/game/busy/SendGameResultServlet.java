@@ -208,13 +208,17 @@ public class SendGameResultServlet extends HttpServlet {
 		int currentGamePoints = -1;
 
 		if (gamesPointsList == null){
+			currentGamePoints = addedPoints;
+			LoggerCommon.Get().LogInfo(this, "GamePointsList is null, user is " + user.getUserId() + " points: " + addedPoints);
 			gamesPointsList = new HashMap<String,Integer>();
 			gamesPointsList.put(moishdGame.getGameType(), addedPoints);
+			user.getStats().setGamesPoints(gamesPointsList);
 		}
 		else{
 			for (Entry<String, Integer> current : gamesPointsList.entrySet()) {
 				if (current.getKey().equals(moishdGame.getGameType())){
 					int previousGamePoints = current.getValue();
+					LoggerCommon.Get().LogInfo(this, "Game found, previous " + previousGamePoints + ", points: " + addedPoints);
 					currentGamePoints = previousGamePoints + addedPoints;
 					current.setValue(currentGamePoints);
 					updated = true;
@@ -222,28 +226,31 @@ public class SendGameResultServlet extends HttpServlet {
 				}
 			}
 			if (!updated){
+				LoggerCommon.Get().LogInfo(this, "Game not found, previous " + 0 + ", points: " + addedPoints);
 				currentGamePoints = addedPoints;
 				gamesPointsList.put(moishdGame.getGameType(), currentGamePoints);
 			}
 		}
 
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
+		LoggerCommon.Get().LogInfo(this, "Game stats: game is  " +  gameStatistics.getGameType());
 		Map<String, Integer> topMoishersMap = gameStatistics.getTopMoishers();
 		if (topMoishersMap == null){
+			LoggerCommon.Get().LogInfo(this, "Top moishers is null");
 			topMoishersMap = new HashMap<String, Integer>();
 			topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+			gameStatistics.setTopMoishers(topMoishersMap);
 		}
 		else{
 			String moisherWithLeastPointsId = "";
 			int moisherWithLeastPointsPoints = -1;
+			LoggerCommon.Get().LogInfo(this, "Top moishers NOT null");
 			for (Entry<String, Integer> currentMoisher : topMoishersMap.entrySet()){
+				LoggerCommon.Get().LogInfo(this, "moishers count is " + topMoishersMap.entrySet().size());
+
 				int currentMoisherPoints = currentMoisher.getValue();
 				if (currentMoisherPoints < currentGamePoints){
-					if (moisherWithLeastPointsPoints == -1){
-						moisherWithLeastPointsId = currentMoisher.getKey();
-						moisherWithLeastPointsPoints = currentMoisher.getValue();
-					}
-					else if (moisherWithLeastPointsPoints > currentMoisher.getValue()){
+					if (moisherWithLeastPointsPoints == -1 || moisherWithLeastPointsPoints > currentMoisher.getValue()){
 						moisherWithLeastPointsId = currentMoisher.getKey();
 						moisherWithLeastPointsPoints = currentMoisher.getValue();
 					}
@@ -252,10 +259,13 @@ public class SendGameResultServlet extends HttpServlet {
 			if (moisherWithLeastPointsPoints == -1){
 				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
 			}
-			else{
-				topMoishersMap.remove(moisherWithLeastPointsId);
+			else if (moisherWithLeastPointsPoints < currentGamePoints){
 				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+				if (topMoishersMap.size() > 5){
+					topMoishersMap.remove(moisherWithLeastPointsId);
+				}
 			}
+			gameStatistics.setTopMoishers(topMoishersMap);
 		}
 
 		user.SaveChanges();
