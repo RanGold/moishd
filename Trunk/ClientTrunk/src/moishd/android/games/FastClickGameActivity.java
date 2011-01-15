@@ -79,10 +79,13 @@ public class FastClickGameActivity extends GameActivity{
 	/*what do do after each button click. Mutual to all buttons*/
 	public void OnClickGeneral(){
 		word = (TextView) findViewById(R.id.theWord);
+		if (i>0) {
 		i--;
 		number = Integer.toString(i);
 		word.setText(number);
-		if (i==0) {
+		}
+	
+		if (i==0){
 			Win();
 
 		}

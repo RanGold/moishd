@@ -1,6 +1,5 @@
 package moishd.android.games;
 
-import moishd.android.AllOnlineUsersActivity;
 import moishd.android.ServerCommunication;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
@@ -41,33 +40,31 @@ public class GameActivity extends Activity{
 				intentForResult.setClass(this, YouHaveBeenMoishdActivity.class);
 			}
 			//technical lose
-			else {
-				intentForResult.setClass(this, AllOnlineUsersActivity.class);
-			}
 
 			if (!result.equals("LostTechnicly")) {
 				intentForResult.putExtra(IntentExtraKeysEnum.Points.toString(), points);
 				intentForResult.putExtra(IntentExtraKeysEnum.NearByGame.toString(), nearByGame);
 				GetAllExtras();
-				SetAllExtras(intentForResult);
-			}
-			
-			startActivity(intentForResult);
-			
+				SetAllExtras(intentForResult);				
+				startActivity(intentForResult);
+				
+							}
+		
 			Intent resultIntent = new Intent();
 			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
 			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numOfTrophies);
 			resultIntent.putExtra(IntentExtraKeysEnum.Rank.toString(), newRank);
 			resultIntent.putExtra(IntentExtraKeysEnum.ServerResponse.toString(), serverFlag);
+
 			if (serverFlag != SERVER_ERROR){
 				setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
 			}else{
 				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
-			}
-		
+			}				
 			finish();
-
 		}
+
+		
 	}
 
 
