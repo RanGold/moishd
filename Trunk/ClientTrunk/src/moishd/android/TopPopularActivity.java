@@ -30,9 +30,7 @@ public class TopPopularActivity extends Activity{
 		moishdPreferences.setAvailableStatus(false);
 
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		
-		//TODO - check if the request has succeeded
-		boolean requestToServer = ServerCommunication.setUserBusy(authString);
+
 
 		trivia = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_no_name);
 		fastClick = BitmapFactory.decodeResource(getResources(), R.drawable.fast_click_no_name);
