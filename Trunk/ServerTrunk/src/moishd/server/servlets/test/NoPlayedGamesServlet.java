@@ -2,6 +2,7 @@ package moishd.server.servlets.test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,9 @@ public class NoPlayedGamesServlet extends HttpServlet {
 					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
 					
 					for (MoishdUser user : users) {
-						user.getGameTypesPlayed().clear();
+						for (Entry<String, Integer> gtp : user.getGameTypesPlayed().entrySet()) {
+							gtp.setValue(2);
+						}
 					}
 					
 					pm.makePersistentAll(users);
