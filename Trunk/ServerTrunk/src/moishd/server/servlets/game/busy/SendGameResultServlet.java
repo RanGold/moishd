@@ -253,18 +253,27 @@ public class SendGameResultServlet extends HttpServlet {
 				LoggerCommon.Get().LogInfo(this, "moishers count is " + topMoishersMap.entrySet().size());
 
 				int currentMoisherPoints = currentMoisher.getValue();
-				if (currentMoisherPoints < currentGamePoints){
-					if (moisherWithLeastPointsPoints == -1 || moisherWithLeastPointsPoints > currentMoisher.getValue()){
-						moisherWithLeastPointsId = currentMoisher.getKey();
+				if (currentMoisherPoints < currentGamePoints){ // why do we even check this? more players?
+					if (moisherWithLeastPointsPoints == -1 || moisherWithLeastPointsPoints > currentMoisher.getValue()){ //gets in always the first time
+						moisherWithLeastPointsId = currentMoisher.getKey(); //now he is the lower moisher
 						moisherWithLeastPointsPoints = currentMoisher.getValue();
 					}
 				}
 			}
-			if (moisherWithLeastPointsPoints == -1){
-				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+			if (moisherWithLeastPointsPoints == -1){ /*this could never happen???? how can we have more points to a user than a game? only if her's the first one*/
+				if (addedPoints != 0){
+					topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+				}
 			}
+
 			else if (moisherWithLeastPointsPoints < currentGamePoints){
-				topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+				int currentPoints = user.getStats().getGamesPoints().get(moishdGame.getGameType());
+				LoggerCommon.Get().LogInfo(this, "Tammy's check - current user's points are " + currentPoints);
+				if (addedPoints != 0){
+					topMoishersMap.put(user.getUserGoogleIdentifier(), currentPoints + addedPoints);
+				}
+				
+			//hila	topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
 				if (topMoishersMap.size() > 5){
 					topMoishersMap.remove(moisherWithLeastPointsId);
 				}
