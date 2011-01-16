@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import moishd.server.common.LoggerCommon;
 import moishd.server.servlets.GeneralServlet;
 
 public class IsFirstTimePlayedServlet extends GeneralServlet{
@@ -26,6 +27,10 @@ public class IsFirstTimePlayedServlet extends GeneralServlet{
 			}
 			else {
 				Integer amountPlayed = mUser.getGameTypesPlayed().get(gameType);
+				LoggerCommon.Get().LogInfo(this, "user: " + 
+						mUser.getUserGoogleIdentifier() + 
+						" game type:" + gameType + 
+						" number: " + String.valueOf(amountPlayed));
 				mUser.getGameTypesPlayed().remove(gameType);
 				mUser.getGameTypesPlayed().put(gameType, ++amountPlayed);
 				if (amountPlayed == 3){

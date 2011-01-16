@@ -1,9 +1,9 @@
 package moishd.server.servlets.test;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServlet;
@@ -35,20 +35,21 @@ public class NoPlayedGamesServlet extends HttpServlet {
 	                    "\">Return Home</a>.</p>");
 			} else {
 				PersistenceManager pm = PMF.get().getPersistenceManager();
+				
 				try {
 					@SuppressWarnings("unchecked")
 					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
 					
 					for (MoishdUser user : users) {
-						Set<String> oldKeys = new HashSet<String>(user.getGameTypesPlayed().keySet());
-						
-						user.getGameTypesPlayed().clear();
-						for (String oldKey : oldKeys) {
-							user.getGameTypesPlayed().put(oldKey, 2);
-						}
+						Map<String, Integer> map = new HashMap<String, Integer>();
+						map.put("Truth", 2);
+						map.put("DareMixing", 2);
+						map.put("DareSimonPro", 2);
+						map.put("DareFastClick", 2);
+
+						user.setGameTypesPlayed(map);
+						pm.makePersistent(user);
 					}
-					
-					pm.makePersistentAll(users);
 				} finally {
 					pm.close();
 				}
@@ -107,7 +108,7 @@ public class NoPlayedGamesServlet extends HttpServlet {
 				} finally {
 					pm.close();
 				}
-				
+
 				response.sendRedirect("/");
 			}
 		}
