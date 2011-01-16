@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.appengine.api.users.UserServiceFactory;
-
 import moishd.server.common.PMF;
 import moishd.server.dataObjects.MoishdUser;
+
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class DeleteUsersServlet extends HttpServlet {
 	/**
