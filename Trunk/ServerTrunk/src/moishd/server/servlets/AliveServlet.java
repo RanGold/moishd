@@ -5,8 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import moishd.server.servlets.GeneralServlet;
-
 public class AliveServlet extends GeneralServlet {
 	/**
 	 * 
