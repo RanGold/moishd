@@ -1,2 +1,0 @@
-#labels Featured
-http://moishd.googlecode.com/files/Moishd%20Installation%20instructions.pdf
