@@ -1,5 +1,8 @@
 package moishd.android;
 
+import java.util.ArrayList;
+
+import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.GamesEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.MoishdPreferences;
@@ -7,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -41,28 +45,32 @@ public class TopMoisherGeneralActivity extends Activity{
 		mixing.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DareMixing);
-				startActivityAndFinish(topMoishersIntent);				
+				//startActivityAndFinish(topMoishersIntent);
+				startActivity(topMoishersIntent);
 			}
 		});	
 
 		simonPro.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DareSimonPro);
-				startActivityAndFinish(topMoishersIntent);
+				//startActivityAndFinish(topMoishersIntent);
+				startActivity(topMoishersIntent);
 			}
 		});
 
 		fastClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DareFastClick);
-				startActivityAndFinish(topMoishersIntent);
+				//startActivityAndFinish(topMoishersIntent);
+				startActivity(topMoishersIntent);
 			}
 		});
 
 		trivia.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.Truth);
-				startActivityAndFinish(topMoishersIntent);
+				//startActivityAndFinish(topMoishersIntent);
+				startActivity(topMoishersIntent);
 			}
 		});
 	}
@@ -70,6 +78,16 @@ public class TopMoisherGeneralActivity extends Activity{
 	public void startActivityAndFinish(Intent intent){
 		startActivity(intent);
 		finish();
+	}
+	
+	@Override 
+	public void onBackPressed(){
+		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
+		moishdPreferences.setAvailableStatus(true);
+		Log.d("Tammy", "TopMoishersGeneralActivity - now available status is true");
+		//TODO check if there isn't an error returned.
+		finish();
+		
 	}
 
 }
