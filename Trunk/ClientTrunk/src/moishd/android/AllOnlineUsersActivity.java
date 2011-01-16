@@ -137,7 +137,7 @@ public class AllOnlineUsersActivity extends Activity{
 	private boolean needRefresh = false;
 	Timer refreshTimer;
 	int MINUTE = 1000*60;
-	int REFRESH_INTERVAL = 5*MINUTE;
+	int REFRESH_INTERVAL = 2*MINUTE;
 	
 	private Handler autoRefreshHandler = new Handler();
 
