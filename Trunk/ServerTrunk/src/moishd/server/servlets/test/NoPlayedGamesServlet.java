@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import moishd.server.common.PMF;
+import moishd.server.dataObjects.GameStatistics;
 import moishd.server.dataObjects.MoishdUser;
 
 import com.google.appengine.api.users.UserServiceFactory;
@@ -51,6 +52,62 @@ public class NoPlayedGamesServlet extends HttpServlet {
 				} finally {
 					pm.close();
 				}
+				
+				pm = PMF.get().getPersistenceManager();
+				try {
+					@SuppressWarnings("unchecked")
+					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
+					
+					for (MoishdUser user : users) {
+						user.getTrophies().clear();
+						
+						if (user.getUserGoogleIdentifier().equals("moishd2011@gmail.com") ||
+								user.getUserGoogleIdentifier().equals("moishd2010@gmail.com")) {
+							user.getLocation().setLatitude(32.06387);
+							user.getLocation().setLongitude(34.779925);
+						}
+					}
+					
+					pm.makePersistentAll(users);
+				} finally {
+					pm.close();
+				}
+				
+				pm = PMF.get().getPersistenceManager();
+				try {
+					@SuppressWarnings("unchecked")
+					List<GameStatistics> games = (List<GameStatistics>) pm.newQuery(GameStatistics.class).execute();
+					
+					for (GameStatistics game : games) {
+						game.setTimesPlayed(10);
+						game.setGameRank(3.0);
+						game.setRankingNumber(10);
+						game.setRankTotal(30);
+					}
+					
+					pm.makePersistentAll(games);
+				} finally {
+					pm.close();
+				}
+				
+				pm = PMF.get().getPersistenceManager();
+				try {
+					@SuppressWarnings("unchecked")
+					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
+					
+					for (MoishdUser user : users) {
+						user.getStats().setPoints(20);
+						
+						if (user.getUserGoogleIdentifier().equals("moishd2011@gmail.com")) {
+							user.getStats().setPoints(10);
+						}
+					}
+					
+					pm.makePersistentAll(users);
+				} finally {
+					pm.close();
+				}
+				
 				response.sendRedirect("/");
 			}
 		}
