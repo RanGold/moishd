@@ -176,6 +176,7 @@ public class AllOnlineUsersActivity extends Activity{
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d("Amico","onCreate");
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.all_users_layout);
@@ -504,6 +505,8 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void displayOwnStatistics() {
 
+		moishdPreferences.setAvailableStatus(false);
+		Log.d("Tammy", "displayOwnStatistics - status now is " + moishdPreferences.userIsAvailable());
 		ClientMoishdUser me = ServerCommunication.getCurrentUser(authToken);
 		if (me == null){
 			sendMessageToHandler(DIALOG_SERVER_ERROR);
@@ -515,12 +518,16 @@ public class AllOnlineUsersActivity extends Activity{
 	}
 	
 	private void displayTopPopularGames() {
+		moishdPreferences.setAvailableStatus(false);
+		Log.d("Tammy", "displayTopPopularGames - status now is " + moishdPreferences.userIsAvailable());
 		Intent intent = new Intent(this, TopPopularActivity.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
 	}
 	
 	private void displayTopMoishers(){
+		moishdPreferences.setAvailableStatus(false);
+		Log.d("Tammy", "displayTopMoishers - status now is " + moishdPreferences.userIsAvailable());
 		Intent intent = new Intent(this, TopMoisherGeneralActivity.class);
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authToken);
 		startActivity(intent);
@@ -1131,6 +1138,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 		@Override
 		public void run() {
+			Log.d("Amico","inTimerTask");
 			run = new Runnable() {
 				public void run() {
 					executeRefresh();					

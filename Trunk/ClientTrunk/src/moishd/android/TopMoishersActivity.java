@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -258,6 +259,7 @@ public class TopMoishersActivity extends Activity{
 			holder.userPic.setImageDrawable(topMoishersPictures.get(position));
 			holder.userName.setText(topMoishers.get(position).getUserNick());
 			holder.points.setText(String.valueOf(topMoishers.get(position).getStats().getTopMoisherPoints()));
+			Log.d("Tammy", "TopMoishersActivity- num of points of" + topMoishers.get(position).getUserNick() + "is " + String.valueOf(topMoishers.get(position).getStats().getTopMoisherPoints()));
 
 			return convertView;
 		}
@@ -267,6 +269,13 @@ public class TopMoishersActivity extends Activity{
 			TextView userName;
 			TextView points;
 		}
+	}
+	
+	@Override 
+	public void onBackPressed(){
+		topMoishers =  new ArrayList<ClientMoishdUser>();
+		finish();
+		
 	}
 
 }
