@@ -163,7 +163,8 @@ public class SendGameResultServlet extends HttpServlet {
 
 		int winnerPoints = winner.getStats().getPoints();
 		int loserPoints = loser.getStats().getPoints();
-
+		LoggerCommon.Get().LogInfo(this, winner.getUserNick() + " points before are " + winnerPoints);
+		LoggerCommon.Get().LogInfo(this, loser.getUserNick() + " points before are " + loserPoints);
 		int [] addedPoints = new int[2];
 		//Do points logic
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.getGameName())){
@@ -193,6 +194,9 @@ public class SendGameResultServlet extends HttpServlet {
 		winner.SaveChanges();
 		loser.SaveChanges();
 
+		
+		LoggerCommon.Get().LogInfo(this, winner.getUserNick() + " points after are " + winner.getStats().getPoints());
+		LoggerCommon.Get().LogInfo(this, loser.getUserNick() + " points after are " + loser.getStats().getPoints());
 		Map<String,Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
 		updateGamePoints(winnerGamesPoints, winner, addedPoints[0], moishdGame);
 
