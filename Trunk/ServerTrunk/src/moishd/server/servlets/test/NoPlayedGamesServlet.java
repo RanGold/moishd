@@ -1,8 +1,10 @@
 package moishd.server.servlets.test;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServlet;
@@ -38,8 +40,11 @@ public class NoPlayedGamesServlet extends HttpServlet {
 					List<MoishdUser> users = (List<MoishdUser>) pm.newQuery(MoishdUser.class).execute();
 					
 					for (MoishdUser user : users) {
-						for (Entry<String, Integer> gtp : user.getGameTypesPlayed().entrySet()) {
-							gtp.setValue(2);
+						Set<String> oldKeys = new HashSet<String>(user.getGameTypesPlayed().keySet());
+						
+						user.getGameTypesPlayed().clear();
+						for (String oldKey : oldKeys) {
+							user.getGameTypesPlayed().put(oldKey, 2);
 						}
 					}
 					
