@@ -167,22 +167,22 @@ public class SendGameResultServlet extends HttpServlet {
 		int [] addedPoints = new int[2];
 		//Do points logic
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.getGameName())){
-			winner.getStats().setPoints(winnerPoints + 1);
+			winner.getStats().setPoints(winnerPoints + (1*factorNearBy));
 			addedPoints[0] = 1 *factorNearBy;
 			addedPoints[1] = 0*technicalLose;
 		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.getGameName())){
-			winner.getStats().setPoints(winnerPoints + 3);
-			loser.getStats().setPoints(loserPoints + 1);
+			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
+			loser.getStats().setPoints(loserPoints + (1*technicalLose));
 			addedPoints[0] = 3*factorNearBy;
 			addedPoints[1] = 1*technicalLose;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.getGameName())){
-			winner.getStats().setPoints(winnerPoints + 3);
-			loser.getStats().setPoints(loserPoints + 1);
+			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
+			loser.getStats().setPoints(loserPoints + (1*technicalLose));
 			addedPoints[0] = 3*factorNearBy;
 			addedPoints[1] = 1*technicalLose;
 		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.getGameName())){
-			winner.getStats().setPoints(winnerPoints + 3);
-			loser.getStats().setPoints(loserPoints + 1);
+			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
+			loser.getStats().setPoints(loserPoints + (1*technicalLose));
 			addedPoints[0] = 3*factorNearBy;
 			addedPoints[1] = 1*technicalLose;
 		}
@@ -341,7 +341,7 @@ public class SendGameResultServlet extends HttpServlet {
 		}
 		
 		if (userAtGoogle && !trophies.contains(TrophiesEnum.GoogleTrophy)){
-			LoggerCommon.Get().LogInfo(this, "got google trophy ");
+			LoggerCommon.Get().LogInfo(this, "got google trophy " + user.getUserGoogleIdentifier());
 
 			trophies.add(TrophiesEnum.GoogleTrophy);
 			numOfTrophiesObtained++;
