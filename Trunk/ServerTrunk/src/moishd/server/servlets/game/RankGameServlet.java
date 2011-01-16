@@ -21,7 +21,7 @@ public class RankGameServlet extends GeneralServlet{
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-
+		checkBusy = false;
 		super.doPost(request, response);
 
 		if (user != null) {
