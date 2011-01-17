@@ -86,6 +86,10 @@ public class FastClickGameActivity extends GameActivity{
 		}
 	
 		if (i==0){
+			click1.setClickable(false);
+			click2.setClickable(false);
+			click3.setClickable(false);
+			click4.setClickable(false);
 			Win();
 
 		}
