@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/cron/C2DMAuth</url>
+    <description>Getting new c2dm auth token</description>
+    <schedule>every day 12:00</schedule>
+  </cron>
+  <cron>
+    <url>/cron/CheckAlive</url>
+    <description>Clearing Datastore from disconnected users</description>
+    <schedule>every 5 minutes synchronized</schedule>
+  </cron>
+  <cron>
+    <url>/cron/PushGameOffers</url>
+    <description>Pushing Game Offers</description>
+    <schedule>every 1 minutes synchronized</schedule>
+  </cron>
+</cronentries>

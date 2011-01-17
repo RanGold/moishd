@@ -1,0 +1,17 @@
+<queue-entries>
+  <queue>
+    <name>inviteQueue</name>
+    <bucket-size>10</bucket-size>
+    <rate>15/s</rate>
+  </queue>
+  <queue>
+    <name>resultQueue</name>
+    <bucket-size>10</bucket-size>
+    <rate>15/s</rate>
+  </queue>
+  <queue>
+    <name>gameStatsQueue</name>
+    <bucket-size>10</bucket-size>
+    <rate>15/s</rate>
+  </queue>
+</queue-entries>
