@@ -1,0 +1,173 @@
+package moishd.client.dataObjects;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+public class ClientMoishdUser implements Serializable, Comparable<ClientMoishdUser> {
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4540541990307042204L;
+
+	private String userNick;
+
+    private String pictureLink;
+
+    private Date dateRegistered;
+    
+	private String userGoogleIdentifier;
+    
+	private String registerID;
+	
+	private String facebookID;
+	
+    private ClientLocation location;
+    
+    private List<TrophiesEnum> trophies;
+    
+    private ClientUserGameStatistics stats;
+    
+    private boolean facebookFriend;
+    
+    private boolean nearByUser;
+    
+	public ClientMoishdUser() {
+		super();
+		this.userNick = "";
+		this.pictureLink = "";
+		this.dateRegistered = null;
+		this.userGoogleIdentifier = "";
+		this.registerID = "";
+		this.facebookID = "";
+		this.location = null;
+		this.trophies = null;
+		this.stats = null;
+		this.setFacebookFriend(false);
+		this.setNearByUser(false);
+	}
+
+	public ClientMoishdUser(String userNick, String pictureLink,
+			Date dateRegistered, String userGoogleIdentifier,
+			String registerID, String facebookID, 
+			ClientLocation location, List<TrophiesEnum> trophies, 
+			ClientUserGameStatistics stats) {
+		super();
+		this.userNick = userNick;
+		this.pictureLink = pictureLink;
+		this.dateRegistered = dateRegistered;
+		this.userGoogleIdentifier = userGoogleIdentifier;
+		this.registerID = registerID;
+		this.facebookID = facebookID;
+		this.location = location;
+		this.trophies = trophies;
+		this.stats = stats;
+		this.setFacebookFriend(false);
+		this.setNearByUser(false);
+	}
+	
+	@Override
+	public boolean equals(Object obj){
+		return (this.getUserGoogleIdentifier().equals(((ClientMoishdUser) obj).getUserGoogleIdentifier()));
+		
+	}
+	public String getUserNick() {
+		return userNick;
+	}
+
+	public void setUserNick(String userNick) {
+		this.userNick = userNick;
+	}
+
+	public String getPictureLink() {
+		return pictureLink;
+	}
+
+	public void setPictureLink(String pictureLink) {
+		this.pictureLink = pictureLink;
+	}
+
+	public Date getDateRegistered() {
+		return dateRegistered;
+	}
+
+	public void setDateRegistered(Date dateRegistered) {
+		this.dateRegistered = dateRegistered;
+	}
+
+	public String getUserGoogleIdentifier() {
+		return userGoogleIdentifier;
+	}
+
+	public void setUserGoogleIdentifier(String userGoogleIdentifier) {
+		this.userGoogleIdentifier = userGoogleIdentifier;
+	}
+
+	public String getRegisterID() {
+		return registerID;
+	}
+
+	public void setRegisterID(String registerID) {
+		this.registerID = registerID;
+	}
+	
+	public String getFacebookID() {
+		return facebookID;
+	}
+
+	public void setFacebookID(String facebookID) {
+		this.facebookID = facebookID;
+	}
+
+	public ClientLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(ClientLocation location) {
+		this.location = location;
+	}
+
+	public ClientUserGameStatistics getStats() {
+		return stats;
+	}
+
+	public void setStats(ClientUserGameStatistics stats) {
+		this.stats = stats;
+	}
+
+	public int compareTo(ClientMoishdUser user){
+		/*String lastNameUser1 = this.userNick.split(" ")[1];
+		String lastNameUser2 = user.userNick.split(" ")[1];*/
+		int place1 = this.userNick.indexOf(" ") + 1;
+		int place2 = user.userNick.indexOf(" ") + 1;
+		String lastNameUser1 = this.userNick.substring(place1);
+		String lastNameUser2 = user.userNick.substring(place2);
+
+		return lastNameUser1.compareTo(lastNameUser2);
+	}
+
+	public void setFacebookFriend(boolean facebookFriend) {
+		this.facebookFriend = facebookFriend;
+	}
+
+	public boolean isFacebookFriend() {
+		return facebookFriend;
+	}
+
+	public void setNearByUser(boolean nearByUser) {
+		this.nearByUser = nearByUser;
+	}
+
+	public boolean isNearByUser() {
+		return nearByUser;
+	}
+
+	public void setTrophies(List<TrophiesEnum> trophies) {
+		this.trophies = trophies;
+	}
+
+	public List<TrophiesEnum> getTrophies() {
+		return trophies;
+	}
+}
