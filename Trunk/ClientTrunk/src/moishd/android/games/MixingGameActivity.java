@@ -157,8 +157,8 @@ public class MixingGameActivity extends GameActivity{
 
 				String wordByUser = wordOfUser.getText().toString();
 				if (wordByUser.equals(currentWord)){
-						Win();
-						MoishButton.setClickable(false);
+					MoishButton.setClickable(false);
+					Win();
 						}
 				
 				else {
