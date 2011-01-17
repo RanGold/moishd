@@ -86,6 +86,9 @@ public class TruthPartGameActivity extends GameActivity {
 					Win();
 				else 
 					Lose();
+				
+				yes.setClickable(false);
+				no.setClickable(false);
 
 			}
 		});
@@ -96,6 +99,9 @@ public class TruthPartGameActivity extends GameActivity {
 					Win();
 				else 
 					Lose();
+				
+				yes.setClickable(false);
+				no.setClickable(false);
 
 			}
 		});
