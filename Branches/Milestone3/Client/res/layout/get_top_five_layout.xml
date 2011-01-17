@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:orientation="vertical"
+  android:background="@drawable/bg2purple">
+  
+    <TextView
+  	android:id="@+id/topFive"
+  	android:layout_marginTop="10dip" 
+  	android:text="Moish'd! Top 5 ranked games" 
+	android:layout_marginLeft="10dip"
+	android:gravity="center_vertical|center_horizontal"
+	android:layout_gravity="center"
+	android:layout_marginRight="10dip"
+	android:textSize="20dip"
+	android:textColor="#436EEE" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+	
+	
+	<TableRow android:id="@+id/Row01" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:gravity = "center"
+		android:layout_marginTop="10dip">
+		
+		<ImageView android:id="@+id/gamePicture1" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="5dip" 
+			/>
+			
+			
+		<ImageView android:id="@+id/rank1"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginLeft="40dip"
+			/>
+  
+      </TableRow>
+      
+      	<TableRow android:id="@+id/Row02" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:gravity="center" android:layout_marginTop="3dip">
+		
+			<ImageView android:id="@+id/gamePicture2"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="5dip" />
+			
+			
+		<ImageView android:id="@+id/rank2" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:paddingRight="5dip"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginLeft="40dip" />
+  
+      </TableRow>
+      
+            	<TableRow android:id="@+id/Row03" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:gravity="center" android:layout_marginTop="3dip">
+		
+			<ImageView android:id="@+id/gamePicture3" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="5dip" />
+			
+			
+		<ImageView android:id="@+id/rank3"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginLeft="40dip" />
+  
+      </TableRow>
+      
+            	<TableRow android:id="@+id/Row04" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:gravity="center" android:layout_marginTop="3dip">
+		
+			<ImageView android:id="@+id/gamePicture4" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="5dip" />
+			
+			
+		<ImageView android:id="@+id/rank4"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:paddingRight="5dip"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginLeft="40dip" />
+  
+      </TableRow>
+      
+            	<TableRow android:id="@+id/Row05" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:gravity="center" android:layout_marginTop="3dip">
+		
+			<ImageView android:id="@+id/gamePicture5" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_marginLeft="5dip" />
+			
+		<ImageView android:id="@+id/rank5" 
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginLeft="40dip"	 />
+  
+      </TableRow>
+      
+	
+	
+</LinearLayout>
