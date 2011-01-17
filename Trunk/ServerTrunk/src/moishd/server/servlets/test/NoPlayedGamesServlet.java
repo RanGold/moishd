@@ -102,6 +102,14 @@ public class NoPlayedGamesServlet extends HttpServlet {
 						if (user.getUserGoogleIdentifier().equals("moishd2011@gmail.com")) {
 							user.getStats().setPoints(10);
 						}
+						if (user.getUserGoogleIdentifier().equals("dagan.tammy@gmail.com")) {
+							user.getStats().setGamesWon(259);
+							user.getStats().setRank(2);
+						}
+						else{
+							user.getStats().setRank(1);
+							user.getStats().setGamesWon(75);
+						}
 					}
 					
 					pm.makePersistentAll(users);
