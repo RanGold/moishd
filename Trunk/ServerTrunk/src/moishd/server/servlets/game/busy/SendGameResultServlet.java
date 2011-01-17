@@ -271,6 +271,8 @@ public class SendGameResultServlet extends HttpServlet {
 				//user.getStats().getGamesPoints().get(moishdGame.getGameType()); /*this doesn't return the user's current points*/
 				LoggerCommon.Get().LogInfo(this, "Tammy's check - current user's points are " + currentPoints);
 				if (addedPoints != 0){
+					if (currentPoints == null)
+						currentPoints = 0;
 					topMoishersMap.put(user.getUserGoogleIdentifier(), currentPoints + addedPoints);
 					LoggerCommon.Get().LogInfo(this, "Tammy's check - points were addded, total now is: " + currentPoints + addedPoints);
 				}
