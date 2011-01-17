@@ -83,12 +83,18 @@ public class TruthPartGameActivity extends GameActivity {
 		yes.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (questions[i][1].compareTo("yes")==0)
+				{	yes.setClickable(false);
+					no.setClickable(false);
 					Win();
-				else 
+				}
+				else{
+
+					yes.setClickable(false);
+					no.setClickable(false);
 					Lose();
+				}
+
 				
-				yes.setClickable(false);
-				no.setClickable(false);
 
 			}
 		});
