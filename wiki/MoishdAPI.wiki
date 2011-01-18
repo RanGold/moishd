@@ -1,4 +1,4 @@
 #labels Phase-Implementation,Featured
 How to easily implement a game for Moish'd! infrastucture.
 
-[http://code.google.com/p/moishd/downloads/detail?name=Moishd api.pdf]
+[http://code.google.com/p/moishd/downloads/detail?name=Moishd%api.pdf]
