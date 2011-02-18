@@ -1,6 +1,5 @@
 package moishd.android.games;
 
-
 import java.util.Random;
 
 import moishd.android.R;
@@ -65,8 +64,11 @@ public class TruthOrDareActivity extends Activity{
 				returnGameTypeToCallingActivity(gameType);
 			}
 		});
-
-
+	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
 	}
 
 	private void returnGameTypeToCallingActivity(String gameType){
@@ -76,7 +78,7 @@ public class TruthOrDareActivity extends Activity{
 		finish();		
 	}
 
-	public class MyCount extends CountDownTimer {
+	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}
@@ -100,11 +102,6 @@ public class TruthOrDareActivity extends Activity{
 			flag = (flag+1) % 4;
 
 		}
-	}
-	
-	@Override
-	public void onBackPressed(){
-		return;
 	}
 
 }

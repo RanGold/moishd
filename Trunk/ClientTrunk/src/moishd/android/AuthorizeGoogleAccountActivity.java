@@ -85,6 +85,22 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 		
 	}
 
+	private void onGetAuthToken(Bundle bundle) {
+		moishdPreferences.setReturnFromAuth(true);
+		String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
+		setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
+		finish();
+	}
+	
+	private void onError(){
+		moishdPreferences.setReturnFromAuth(true);
+		Intent resultIntent = new Intent();
+		setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+		finish();		
+	}
+	
 	private class GetAuthTokenCallback implements AccountManagerCallback<Bundle> {
 		public void run(AccountManagerFuture<Bundle> result) {
 			Bundle bundle;
@@ -114,20 +130,5 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 		}
 	};
 
-	protected void onGetAuthToken(Bundle bundle) {
-		moishdPreferences.setReturnFromAuth(true);
-		String auth_token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-		Intent resultIntent = new Intent();
-		resultIntent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), auth_token);
-		setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
-		finish();
-	}
-	
-	protected void onError(){
-		moishdPreferences.setReturnFromAuth(true);
-		Intent resultIntent = new Intent();
-		setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
-		finish();		
-	}
 
 }

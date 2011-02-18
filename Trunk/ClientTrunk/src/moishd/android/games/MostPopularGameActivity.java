@@ -16,12 +16,6 @@ public class MostPopularGameActivity extends Activity{
 	boolean flag = true;
 	String gameId, authString, gameType, action;
 	
-	protected void SetTexts(){
-		text1 = (TextView) findViewById(R.id.text1);
-		text2 = (TextView) findViewById(R.id.text2);
-		
-	}
-	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.most_popular_game_layout);
@@ -40,17 +34,28 @@ public class MostPopularGameActivity extends Activity{
 		
 	}
 	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 	
+	private void SetTexts(){
+		text1 = (TextView) findViewById(R.id.text1);
+		text2 = (TextView) findViewById(R.id.text2);	
+	}
 	
-	public class MyCount extends CountDownTimer {
+	private class MyCount extends CountDownTimer {
+		
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}    
+		
 		public void onFinish() {
 			Intent GameTypeIntent = new Intent();
 			setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
 			finish();		
 		}
+		
 		public void onTick(long millisUntilFinished) {
 			SetTexts();
 			if(flag){
@@ -64,12 +69,6 @@ public class MostPopularGameActivity extends Activity{
 				
 			}
 			flag = !flag;
-		
 		}
-	}
-	
-	@Override
-	public void onBackPressed(){
-		return;
 	}
 }

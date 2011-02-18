@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.you_have_been_moishd);
@@ -20,7 +19,6 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(false);
 		
-
 		int points = getIntent().getIntExtra(IntentExtraKeysEnum.Points.toString(), 0);
 
 		ImageView moishdHand = (ImageView) findViewById(R.id.hands);
@@ -50,13 +48,8 @@ public class YouHaveBeenMoishdActivity extends WinnerAndLoserActivity{
 
 		moishdHand.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-			checkIfRankNeeded();
-		
-			
+			checkIfRankNeeded();			
 			}});
-
-
-
 	}
 
 }

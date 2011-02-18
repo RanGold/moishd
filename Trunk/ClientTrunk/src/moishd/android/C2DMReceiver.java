@@ -54,7 +54,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		boolean startIntent = true;
 		//don't care about MoishdPreferences available status
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
-			Log.d("TEST","checkAlive???");
 			startIntent = false;
 			ServerCommunication.sendAlive();
 		}

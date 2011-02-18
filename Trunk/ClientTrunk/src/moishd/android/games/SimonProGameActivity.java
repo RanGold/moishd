@@ -21,7 +21,6 @@ public class SimonProGameActivity extends GameActivity{
 	TextView word, wrong, explain,tries; 
 	Button click1, click2, click3, giveUp;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -83,6 +82,7 @@ public class SimonProGameActivity extends GameActivity{
 					wrongAnswer();
 			}
 		});
+
 		click2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (arr[counter] == indentify[1]){
@@ -94,7 +94,6 @@ public class SimonProGameActivity extends GameActivity{
 				}
 				else
 					wrongAnswer();
-
 			}
 		});		
 
@@ -121,9 +120,8 @@ public class SimonProGameActivity extends GameActivity{
 			}
 		});
 
-
 	}
-	
+
 	private void RunAnimations() {     
 		Animation a = AnimationUtils.loadAnimation(this, R.anim.animation4);     
 		a.reset();     
@@ -166,7 +164,7 @@ public class SimonProGameActivity extends GameActivity{
 		click3.setClickable(false);
 		Win();
 	}
-	
+
 	private void messUp(){	
 
 		click1 = (Button) findViewById(R.id.clickOnMe1);
@@ -201,7 +199,7 @@ public class SimonProGameActivity extends GameActivity{
 		click3.setText(Integer.toString(indentify[2]));
 
 	}
-	
+
 	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
@@ -220,7 +218,7 @@ public class SimonProGameActivity extends GameActivity{
 			tries.setVisibility(0);
 
 		}  
-		
+
 		public void onTick(long millisUntilFinished) {
 			if (counter != 5) {
 				number = Integer.toString(arr[counter]);

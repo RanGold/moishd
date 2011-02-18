@@ -15,7 +15,7 @@ public class YouMoishdActivity extends WinnerAndLoserActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.you_moishd);
-		
+
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(false);
 
@@ -24,13 +24,13 @@ public class YouMoishdActivity extends WinnerAndLoserActivity {
 		ImageView moishdHand = (ImageView) findViewById(R.id.hands);
 		TextView text = (TextView) findViewById(R.id.youMoishdText);
 		TextView bottomText  = (TextView) findViewById(R.id.clickOnHand);
-		
+
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/COOPBL.ttf");
 		text.setTypeface(fontName);
 		bottomText.setTypeface(fontName);
-		
+
 		checkIfGameIsNearBy();
-		
+
 		if (points==1){
 			text.setText("Great job! You've Moish'd the opponent and won " + points + " point! " + addToMesseage);
 		}
@@ -42,11 +42,7 @@ public class YouMoishdActivity extends WinnerAndLoserActivity {
 		}
 		moishdHand.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-			
 				checkIfRankNeeded();
-		
-
-
 			}});
 	}
 }

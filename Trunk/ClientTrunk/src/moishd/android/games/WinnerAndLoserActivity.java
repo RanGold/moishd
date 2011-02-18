@@ -11,7 +11,6 @@ public class WinnerAndLoserActivity extends Activity{
 	int textSize;
 	boolean needToChangeTextSize = false;
 	
-	
 	public void checkIfGameIsNearBy() {
 		gameNearBy = getIntent().getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
 		if (gameNearBy.equals("yes")) {
