@@ -14,56 +14,14 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 public class RankForGameActivity extends Activity{
 
 	String game_type,authToken;
 	String gray = "gray";
-	String yellos = "yellow";
+	String yellow = "yellow";
 	ImageView rank1,rank2,rank3,rank4,rank5,done;
 	Bitmap yellowStar,grayStar,thankYou;
 	int star_rank;
-
-	public void ColorStars(int star){
-		rank1 = (ImageView) findViewById(R.id.rank1);
-		rank2 = (ImageView) findViewById(R.id.rank2);
-		rank3 = (ImageView) findViewById(R.id.rank3);
-		rank4 = (ImageView) findViewById(R.id.rank4);
-		rank5 = (ImageView) findViewById(R.id.rank5);
-		done = (ImageView) findViewById(R.id.done);
-
-		star_rank = star;
-		switch(star){
-		case 5:
-			rank5.setImageBitmap(yellowStar);
-		case 4:
-			rank4.setImageBitmap(yellowStar);
-		case 3:
-			rank3.setImageBitmap(yellowStar);
-		case 2:
-			rank2.setImageBitmap(yellowStar);
-		case 1:
-			rank1.setImageBitmap(yellowStar);
-			break;
-		}
-
-
-		switch(star){
-		case 1:
-			rank2.setImageBitmap(grayStar);
-		case 2:
-			rank3.setImageBitmap(grayStar);
-		case 3:
-			rank4.setImageBitmap(grayStar);
-		case 4:
-			rank5.setImageBitmap(grayStar);
-			break;
-		}
-
-		done.setClickable(true);
-		done.setVisibility(View.VISIBLE);
-	}
-
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -75,7 +33,6 @@ public class RankForGameActivity extends Activity{
 		game_type = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
 		Log.d("Tammy", "The game type for rank is " + game_type);
-
 		
 		yellowStar = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_star);
 		grayStar = BitmapFactory.decodeResource(getResources(), R.drawable.gray_star);
@@ -91,11 +48,9 @@ public class RankForGameActivity extends Activity{
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text.setTypeface(fontName);
 
-
 		rank1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(1);
-
 			}
 		});	
 
@@ -103,13 +58,11 @@ public class RankForGameActivity extends Activity{
 			public void onClick(View v) {
 				ColorStars(2);
 			}
-			
 		});
 
 		rank3.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ColorStars(3);
-
 			}
 		});
 
@@ -132,11 +85,53 @@ public class RankForGameActivity extends Activity{
 				count.start();
 			}
 		});
-
-
 	}
+	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
+	
+	private void ColorStars(int star){
+		rank1 = (ImageView) findViewById(R.id.rank1);
+		rank2 = (ImageView) findViewById(R.id.rank2);
+		rank3 = (ImageView) findViewById(R.id.rank3);
+		rank4 = (ImageView) findViewById(R.id.rank4);
+		rank5 = (ImageView) findViewById(R.id.rank5);
+		done = (ImageView) findViewById(R.id.done);
 
-	public class MyCount extends CountDownTimer {
+		star_rank = star;
+		switch(star){
+		case 5:
+			rank5.setImageBitmap(yellowStar);
+		case 4:
+			rank4.setImageBitmap(yellowStar);
+		case 3:
+			rank3.setImageBitmap(yellowStar);
+		case 2:
+			rank2.setImageBitmap(yellowStar);
+		case 1:
+			rank1.setImageBitmap(yellowStar);
+			break;
+		}
+
+		switch(star){
+		case 1:
+			rank2.setImageBitmap(grayStar);
+		case 2:
+			rank3.setImageBitmap(grayStar);
+		case 3:
+			rank4.setImageBitmap(grayStar);
+		case 4:
+			rank5.setImageBitmap(grayStar);
+			break;
+		}
+
+		done.setClickable(true);
+		done.setVisibility(View.VISIBLE);
+	}
+	
+	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}    
@@ -151,10 +146,5 @@ public class RankForGameActivity extends Activity{
 			done.setImageBitmap(thankYou);
 
 		}
-	}
-	
-	@Override
-	public void onBackPressed(){
-		return;
 	}
 }

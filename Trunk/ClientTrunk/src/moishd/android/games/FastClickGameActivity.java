@@ -54,7 +54,6 @@ public class FastClickGameActivity extends GameActivity{
 
 		Animation myAnimation = AnimationUtils.loadAnimation(this, R.anim.animation);
 		word.startAnimation(myAnimation);
-		
 
 		click1.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

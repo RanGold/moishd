@@ -21,7 +21,6 @@ public class TopFiveGamesActivity extends Activity{
 	TextView text;
 	int flag = 1;
 
-
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.get_top_five_layout);  
@@ -70,8 +69,7 @@ public class TopFiveGamesActivity extends Activity{
 			topFive = ServerCommunication.getTopFivePopular(authString);
 		}
 		
-		MyCount count;
-		count= new MyCount(30000,1000);
+		MyCount count = new MyCount(30000,1000);
 		count.start();
 
 		int listSize = topFive.size();
@@ -79,33 +77,33 @@ public class TopFiveGamesActivity extends Activity{
 		switch(listSize){
 		case(5): 
 			String gameType5 = topFive.get(4).split(":")[0];
-		double rankOfGame5 = Double.parseDouble(topFive.get(4).split(":")[1]);
-		gamepic5.setImageBitmap(setPicture(gameType5));
-		rank5.setImageBitmap(setRank(rankOfGame5));
+			double rankOfGame5 = Double.parseDouble(topFive.get(4).split(":")[1]);
+			gamepic5.setImageBitmap(setPicture(gameType5));
+			rank5.setImageBitmap(setRank(rankOfGame5));
 
 		case(4):
 			String gameType4 = topFive.get(3).split(":")[0];
-		double rankOfGame4 = Double.parseDouble(topFive.get(3).split(":")[1]);
-		gamepic4.setImageBitmap(setPicture(gameType4));
-		rank4.setImageBitmap(setRank(rankOfGame4));
+			double rankOfGame4 = Double.parseDouble(topFive.get(3).split(":")[1]);
+			gamepic4.setImageBitmap(setPicture(gameType4));
+			rank4.setImageBitmap(setRank(rankOfGame4));
 
 		case(3):
 			String gameType3 = topFive.get(2).split(":")[0];
-		double rankOfGame3 = Double.parseDouble(topFive.get(2).split(":")[1]);
-		gamepic3.setImageBitmap(setPicture(gameType3));
-		rank3.setImageBitmap(setRank(rankOfGame3));
+			double rankOfGame3 = Double.parseDouble(topFive.get(2).split(":")[1]);
+			gamepic3.setImageBitmap(setPicture(gameType3));
+			rank3.setImageBitmap(setRank(rankOfGame3));
 
 		case(2):
 			String gameType2 = topFive.get(1).split(":")[0];
-		double rankOfGame2 = Double.parseDouble(topFive.get(1).split(":")[1]);
-		gamepic2.setImageBitmap(setPicture(gameType2));
-		rank2.setImageBitmap(setRank(rankOfGame2));
+			double rankOfGame2 = Double.parseDouble(topFive.get(1).split(":")[1]);
+			gamepic2.setImageBitmap(setPicture(gameType2));
+			rank2.setImageBitmap(setRank(rankOfGame2));
 
 		case(1):
 			String gameType1 = topFive.get(0).split(":")[0];
-		double rankOfGame1 = Double.parseDouble(topFive.get(0).split(":")[1]);
-		gamepic1.setImageBitmap(setPicture(gameType1));
-		rank1.setImageBitmap(setRank(rankOfGame1));
+			double rankOfGame1 = Double.parseDouble(topFive.get(0).split(":")[1]);
+			gamepic1.setImageBitmap(setPicture(gameType1));
+			rank1.setImageBitmap(setRank(rankOfGame1));
 		}
 	}
 
@@ -167,9 +165,7 @@ public class TopFiveGamesActivity extends Activity{
 		else {
 			return null;
 		}
-
 	}
-
 
 	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {

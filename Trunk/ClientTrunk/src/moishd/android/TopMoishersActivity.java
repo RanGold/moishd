@@ -80,6 +80,12 @@ public class TopMoishersActivity extends Activity{
 		list = (ListView) findViewById(R.id.topMoishersList);
 		list.setAdapter(new EfficientAdapter(this));
 	}
+	
+	@Override 
+	public void onBackPressed(){
+		topMoishers =  new ArrayList<ClientMoishdUser>();
+		finish();
+	}
 
 	private void updateList() {
 		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
@@ -243,11 +249,5 @@ public class TopMoishersActivity extends Activity{
 			TextView userName;
 			TextView points;
 		}
-	}
-	
-	@Override 
-	public void onBackPressed(){
-		topMoishers =  new ArrayList<ClientMoishdUser>();
-		finish();
 	}
 }

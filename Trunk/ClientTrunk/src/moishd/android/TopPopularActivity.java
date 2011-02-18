@@ -155,7 +155,6 @@ public class TopPopularActivity extends Activity{
 		//TODO - check if the request has succeeded
 		boolean requestToServer = ServerCommunication.setSingleUserUnbusy(authString);
 		finish();
-
 	}
 }
 
