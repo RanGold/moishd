@@ -1,9 +1,7 @@
 package moishd.common;
 
 public enum ServletNamesEnum {
-
-
-
+	
 	UserLogin,
 	GetAllUsers,
 	GetCurrentUser,
@@ -32,7 +30,4 @@ public enum ServletNamesEnum {
 	IsBusy,
 	GetTopFivePopular,
 	GetTopGamePlayers;
-
-
-	
 }

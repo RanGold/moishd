@@ -23,14 +23,14 @@ public class TopPopularActivity extends Activity{
 	int flag=1;
 
 	public void onCreate(Bundle savedInstanceState) {
+		
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.top_popular);
-		
+
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(false);
 
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-
 
 		trivia = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_no_name);
 		fastClick = BitmapFactory.decodeResource(getResources(), R.drawable.fast_click_no_name);
@@ -67,31 +67,25 @@ public class TopPopularActivity extends Activity{
 
 		switch(listSize){
 		case(5): 
-			//TODO - erase the split
 			String gameType5 = topFive.get(4).split(":")[0];
-		gamepic5.setImageBitmap(setPicture(gameType5));
-		game5.setText(setName(gameType5));
-
+			gamepic5.setImageBitmap(setPicture(gameType5));
+			game5.setText(setName(gameType5));
 		case(4):
-			//TODO - erase the split
 			String gameType4 = topFive.get(3).split(":")[0];
-		gamepic4.setImageBitmap(setPicture(gameType4));
-		game4.setText(setName(gameType4));		
+			gamepic4.setImageBitmap(setPicture(gameType4));
+			game4.setText(setName(gameType4));		
 		case(3):
-			//TODO - erase the split
 			String gameType3 = topFive.get(2).split(":")[0];
-		gamepic3.setImageBitmap(setPicture(gameType3));
-		game3.setText(setName(gameType3));		
+			gamepic3.setImageBitmap(setPicture(gameType3));
+			game3.setText(setName(gameType3));		
 		case(2):
-			//TODO - erase the split
 			String gameType2 = topFive.get(1).split(":")[0];
-		gamepic2.setImageBitmap(setPicture(gameType2));
-		game2.setText(setName(gameType2));
+			gamepic2.setImageBitmap(setPicture(gameType2));
+			game2.setText(setName(gameType2));
 		case(1):			
-			//TODO - erase the split
 			String gameType1 = topFive.get(0).split(":")[0];
-		gamepic1.setImageBitmap(setPicture(gameType1));
-		game1.setText(setName(gameType1));	}
+			gamepic1.setImageBitmap(setPicture(gameType1));
+			game1.setText(setName(gameType1));	}
 	}
 
 	private Bitmap setPicture(String gameType){
@@ -127,9 +121,7 @@ public class TopPopularActivity extends Activity{
 		}
 		else
 			return null;
-
 	}
-
 
 	private class MyCount extends CountDownTimer {
 
@@ -157,13 +149,13 @@ public class TopPopularActivity extends Activity{
 			flag = (flag+1) % 4;
 		}
 	}
-	
+
 	@Override 
 	public void onBackPressed(){
 		//TODO - check if the request has succeeded
 		boolean requestToServer = ServerCommunication.setSingleUserUnbusy(authString);
 		finish();
-		
+
 	}
 }
 

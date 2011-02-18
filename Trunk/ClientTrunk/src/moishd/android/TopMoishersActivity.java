@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +65,6 @@ public class TopMoishersActivity extends Activity{
 		fontName = Typeface.createFromAsset(getAssets(), "fonts/mailrays.ttf");			
 		fontNameForList = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 
-
 		GamesEnum gameName = (GamesEnum) getIntent().getExtras().get(IntentExtraKeysEnum.GameType.toString());
 		String authToken = (String) getIntent().getExtras().get(IntentExtraKeysEnum.GoogleAuthToken.toString());
 
@@ -77,7 +75,7 @@ public class TopMoishersActivity extends Activity{
 		header.setText(gameName.getFullName()+ "\n Top Moishers\n");
 		header.setTypeface(fontName);
 		header.setTextSize(25);
-		new GetTopMoishersTask().execute(getGameName(gameName), authToken);
+		new GetTopMoishersTask().execute(GamesEnum.getGameName(gameName), authToken);
 
 		list = (ListView) findViewById(R.id.topMoishersList);
 		list.setAdapter(new EfficientAdapter(this));
@@ -100,21 +98,6 @@ public class TopMoishersActivity extends Activity{
 		});
 		AlertDialog alert = builder.create(); 
 		alert.show();
-	}
-
-	private String getGameName(GamesEnum gameName){
-
-		switch (gameName){
-		case DareFastClick:
-			return GamesEnum.DareFastClick.toString();
-		case DareMixing:
-			return GamesEnum.DareMixing.toString();
-		case DareSimonPro:
-			return GamesEnum.DareSimonPro.toString();
-		case Truth:
-			return GamesEnum.Truth.toString();
-		}
-		return null;
 	}
 
 	private class GetTopMoishersTask extends AsyncTask<String, Integer, List<Object>> {
@@ -210,18 +193,11 @@ public class TopMoishersActivity extends Activity{
 		}
 	}
 
-
 	private static class EfficientAdapter extends BaseAdapter {
 		private LayoutInflater mInflater;
 
-		//private Bitmap blankImage;
-
 		public EfficientAdapter(Context context) {
-			// Cache the LayoutInflate to avoid asking for a new one each time.
 			mInflater = LayoutInflater.from(context);
-
-			// Icons bound to the rows.
-			//blankImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_facebook);
 		}
 
 		public int getCount() {
@@ -252,14 +228,12 @@ public class TopMoishersActivity extends Activity{
 
 				convertView.setTag(holder);
 			} else {
-
 				holder = (ViewHolder) convertView.getTag();
 			}
 
 			holder.userPic.setImageDrawable(topMoishersPictures.get(position));
 			holder.userName.setText(topMoishers.get(position).getUserNick());
 			holder.points.setText(String.valueOf(topMoishers.get(position).getStats().getTopMoisherPoints()));
-			Log.d("Tammy", "TopMoishersActivity- num of points of" + topMoishers.get(position).getUserNick() + "is " + String.valueOf(topMoishers.get(position).getStats().getTopMoisherPoints()));
 
 			return convertView;
 		}
@@ -275,7 +249,5 @@ public class TopMoishersActivity extends Activity{
 	public void onBackPressed(){
 		topMoishers =  new ArrayList<ClientMoishdUser>();
 		finish();
-		
 	}
-
 }

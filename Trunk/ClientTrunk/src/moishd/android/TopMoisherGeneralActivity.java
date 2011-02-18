@@ -1,8 +1,5 @@
 package moishd.android;
 
-import java.util.ArrayList;
-
-import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.common.GamesEnum;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.MoishdPreferences;

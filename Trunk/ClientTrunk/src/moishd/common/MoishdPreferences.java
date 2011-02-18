@@ -6,7 +6,6 @@ import android.content.SharedPreferences.Editor;
 
 public class MoishdPreferences {
 	private static MoishdPreferences THEMoishdPreferences;
-	private static Context AppContext;
 	private static SharedPreferences genericSharedPreferences;
 	
 	public static MoishdPreferences getMoishdPreferences (Context context){
@@ -20,7 +19,6 @@ public class MoishdPreferences {
 	}
 	
 	private MoishdPreferences (Context context){
-		AppContext = context;
 		genericSharedPreferences = context.getSharedPreferences("Moishd_Preferences",Context.MODE_PRIVATE);
 	}
 	
