@@ -21,4 +21,19 @@ public enum GamesEnum {
 	public String getFullName() {
 		return this.name;
 	}
+	
+	public static String getGameName(GamesEnum gameName){
+
+		switch (gameName){
+		case DareFastClick:
+			return GamesEnum.DareFastClick.toString();
+		case DareMixing:
+			return GamesEnum.DareMixing.toString();
+		case DareSimonPro:
+			return GamesEnum.DareSimonPro.toString();
+		case Truth:
+			return GamesEnum.Truth.toString();
+		}
+		return null;
+	}
 }

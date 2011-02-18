@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-
 public class GameActivity extends Activity{
 	public final static int SERVER_ERROR = 0;
 	public final static int SERVER_OK = 1;
@@ -22,25 +21,21 @@ public class GameActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(false);
-		
 	}
-	
 
 	protected void onNewIntent (Intent intent){
 		action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
-		
+
 		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
-			
-			
+
 			String result = intent.getStringExtra(IntentExtraKeysEnum.PushGameResult.toString());
 			int points = intent.getIntExtra(IntentExtraKeysEnum.Points.toString(), -1);
 			int newRank = intent.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
 			int numOfTrophies = intent.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), -1);
 			String trophiesString = intent.getStringExtra(IntentExtraKeysEnum.Trophies.toString());
 			String nearByGame = intent.getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
-			
+
 			Intent intentForResult = new Intent();
-			
 
 			if (result.equals("Won")){ 
 				intentForResult.setClass(this, YouMoishdActivity.class);
@@ -56,9 +51,8 @@ public class GameActivity extends Activity{
 				GetAllExtras();
 				SetAllExtras(intentForResult);				
 				startActivity(intentForResult);
-				
-							}
-		
+			}
+
 			Intent resultIntent = new Intent();
 			resultIntent.putExtra(IntentExtraKeysEnum.Trophies.toString(), trophiesString);
 			resultIntent.putExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), numOfTrophies);
@@ -67,29 +61,25 @@ public class GameActivity extends Activity{
 
 			if (serverFlag != SERVER_ERROR){
 				setResult(IntentResultCodesEnum.OK.getCode(), resultIntent);
-			}else{
+			}
+			else{
 				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
-			}				
+			}
+			
 			finish();
 		}
-
-		
 	}
-
 
 	protected void CommonForWinAndLose(){
 		Toast.makeText(GameActivity.this, "Please wait for result", Toast.LENGTH_LONG).show();
 		GetAllExtras();
-
 	}
-	
+
 	protected void SetAllExtras(Intent intent){
-
 		intent.putExtra(IntentExtraKeysEnum.GoogleAuthToken.toString(), authString);
-		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
-		
+		intent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);	
 	}
-	
+
 	protected void GetAllExtras(){
 		gameId = getIntent().getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
 		authString = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
@@ -107,25 +97,25 @@ public class GameActivity extends Activity{
 		boolean serverResponse = ServerCommunication.sendLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
 	}
-	
+
 	protected void setFlag(boolean serverResponse){
-	
+
 		if (!serverResponse) {
 			serverFlag=SERVER_ERROR;
 		}
 		else {
 			serverFlag=SERVER_OK;
 		}
-		
 	}
-	
+
 	protected void LoseTechnicly(){
 		GetAllExtras();
 		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
 	}
+	
 	@Override
-	final public void onBackPressed(){
+	 public final void onBackPressed(){
 		LoseTechnicly();		
 	}
 
