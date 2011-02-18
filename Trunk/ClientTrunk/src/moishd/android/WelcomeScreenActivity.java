@@ -289,18 +289,18 @@ public class WelcomeScreenActivity extends Activity{
 	//authorize user's Google account
 	private void authorizeGoogleAccount(Account account){
 
-		googleAuthString = moishdPreferences.getGoogleAuthToken(account.name);
-		if (googleAuthString.equals("")){
+//		googleAuthString = moishdPreferences.getGoogleAuthToken(account.name);
+//		if (googleAuthString.equals("")){
 			Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
 			intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
 			startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
-		}
+	/*	}
 		else{
 			moishdPreferences.setCurrentGoogleAuthToken(googleAuthString);
 			currentlyLoggedInWith.setText("You're corrently logged in with: \n" + account.name);
 			switchAccounts.setVisibility(View.VISIBLE);
 			switchAccounts.setClickable(true);
-		}
+		}*/
 	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process

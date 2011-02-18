@@ -5,6 +5,7 @@ import java.io.IOException;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.IntentResultCodesEnum;
 import moishd.common.MoishdPreferences;
+import moishd.common.ServerRequest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -25,7 +26,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 	private AccountManagerFuture<Bundle> bundleToken;
 	Account account = null;
 	AccountManager accountManager = null;
-	boolean needInvalidate = true;
+	//boolean needInvalidate = true;
 	private MoishdPreferences moishdPreferences ;	
 
 	@Override
@@ -113,8 +114,7 @@ public class AuthorizeGoogleAccountActivity extends Activity {
 					startActivity(intent);
 				} else {
 					String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
-					if (needInvalidate){
-						needInvalidate=false;
+					if (!ServerRequest.Get().GetCookie(authToken)){
 						accountManager.invalidateAuthToken(account.type, authToken);
 						onResume();
 					}
