@@ -1,6 +1,7 @@
 package moishd.common;
 
 public enum GamesEnum {
+	
 	Truth("Truth", "Trivia"),
 	DareSimonPro("DareSimonPro", "Simon Pro"),
 	DareMixing("DareMixing", "Mixing"),

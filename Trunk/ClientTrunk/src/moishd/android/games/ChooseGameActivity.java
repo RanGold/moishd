@@ -20,10 +20,8 @@ import moishd.android.ServerCommunication;
 public class ChooseGameActivity extends Activity{
 	
 	ImageView mixing,simonPro,fastClick,trivia;
-	Bitmap 	simonProPic1,simonProPic2,simonProPic3, 
-			triviaPic1,triviaPic2,triviaPic3;	
+	Bitmap simonProPic1, simonProPic2, simonProPic3, triviaPic1, triviaPic2, triviaPic3;	
 	int flag = 1;
-	
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -48,9 +46,7 @@ public class ChooseGameActivity extends Activity{
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
 		text.setTypeface(fontName);
 		
-		
-		MyCount count;
-		count= new MyCount(30000,1000);
+		MyCount count = new MyCount(30000,1000);
 		count.start();
 		
 		mixing.setOnClickListener(new OnClickListener() {
@@ -58,7 +54,6 @@ public class ChooseGameActivity extends Activity{
 				returnGameTypeToCallingActivity(IntentExtraKeysEnum.DareMixing.toString());
 			}
 		});	
-		
 		
 		simonPro.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -80,8 +75,20 @@ public class ChooseGameActivity extends Activity{
 		});
 	}
 	
+	@Override
+	public void onBackPressed(){
+		return;
+	}
 	
-	public class MyCount extends CountDownTimer {
+	private void returnGameTypeToCallingActivity(String gameType){
+		Intent GameTypeIntent = new Intent();
+		ServerCommunication.sendGamePlayedToServer(gameType,getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString()));
+		GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
+		setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
+		finish();		
+	}
+	
+	private class MyCount extends CountDownTimer {
 		public MyCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
 		}    
@@ -109,19 +116,4 @@ public class ChooseGameActivity extends Activity{
 		
 		}
 	}
-	
-	private void returnGameTypeToCallingActivity(String gameType){
-		Intent GameTypeIntent = new Intent();
-		ServerCommunication.sendGamePlayedToServer(gameType,getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString()));
-		GameTypeIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), gameType);
-		setResult(IntentResultCodesEnum.OK.getCode(), GameTypeIntent);
-		finish();		
-	}
-	
-	@Override
-	public void onBackPressed(){
-		return;
-	}
-
-
 }
