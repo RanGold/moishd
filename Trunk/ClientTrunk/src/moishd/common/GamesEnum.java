@@ -11,15 +11,15 @@ public enum GamesEnum {
 	private String enumName;
 
 	GamesEnum(String enumName, String name) {
-		this.name = name;
 		this.enumName = enumName;
+		this.name = name;
 	}
 
 	public String toString() {
 		return this.enumName;
 	}
 	
-	public String getFullName() {
+	public String getName() {
 		return this.name;
 	}
 	
@@ -36,5 +36,24 @@ public enum GamesEnum {
 			return GamesEnum.Truth.toString();
 		}
 		return null;
+	}
+	
+	public static String getGameNameWithSpaces(String gameName){
+		
+		if (gameName.equals(IntentExtraKeysEnum.DareFastClick.toString())) {
+			return GamesEnum.DareFastClick.getName();
+		}
+		else if (gameName.equals(IntentExtraKeysEnum.DareMixing.toString())) {
+			return GamesEnum.DareMixing.getName();
+		}
+		else if (gameName.equals(IntentExtraKeysEnum.DareSimonPro.toString())) {
+			return GamesEnum.DareSimonPro.getName();
+		}
+		else if (gameName.equals(IntentExtraKeysEnum.Truth.toString())) {
+			return GamesEnum.Truth.getName();
+		}
+		else{
+			return null;
+		}
 	}
 }

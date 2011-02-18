@@ -72,7 +72,7 @@ public class TopMoishersActivity extends Activity{
 			topMoishers = new ArrayList<ClientMoishdUser>();
 		}
 		TextView header = (TextView) findViewById(R.id.top_moishers_header);
-		header.setText(gameName.getFullName()+ "\n Top Moishers\n");
+		header.setText(gameName.getName()+ "\n Top Moishers\n");
 		header.setTypeface(fontName);
 		header.setTextSize(25);
 		new GetTopMoishersTask().execute(GamesEnum.getGameName(gameName), authToken);
