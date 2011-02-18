@@ -8,6 +8,10 @@ public class MoishdPreferences {
 	private static MoishdPreferences THEMoishdPreferences;
 	private static SharedPreferences genericSharedPreferences;
 	
+	private MoishdPreferences (Context context){
+		genericSharedPreferences = context.getSharedPreferences("Moishd_Preferences",Context.MODE_PRIVATE);
+	}
+	
 	public static MoishdPreferences getMoishdPreferences (Context context){
 		if (THEMoishdPreferences==null)
 			THEMoishdPreferences =  new MoishdPreferences(context);
@@ -17,11 +21,6 @@ public class MoishdPreferences {
 	public static MoishdPreferences getMoishdPreferences(){
 		return getMoishdPreferences(null);
 	}
-	
-	private MoishdPreferences (Context context){
-		genericSharedPreferences = context.getSharedPreferences("Moishd_Preferences",Context.MODE_PRIVATE);
-	}
-	
 		
 	public boolean userIsAvailable() {
 		return getBooleanFromSP(SharedPreferencesKeysEnum.AvailableStatus);
@@ -80,11 +79,6 @@ public class MoishdPreferences {
 		setStringToSP(SharedPreferencesKeysEnum.FacebookFirstName, firstName);
 	}
 
-	
-	//public String 
-	
-
-	
 	//**************  private Getters + Setters ******************/
 	private String getStringFromSP(SharedPreferencesKeysEnum key){
 		return genericSharedPreferences.getString(key.toString(), "");
