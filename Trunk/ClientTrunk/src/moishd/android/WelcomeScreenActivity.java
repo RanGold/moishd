@@ -189,7 +189,7 @@ public class WelcomeScreenActivity extends Activity{
 		if (connectivityManager== null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}
-		if (!moishdPreferences.isReturnedFromAuth()){
+		else if (!moishdPreferences.isReturnedFromAuth()){
 			if (googleAuthString == ""){
 				startGoogleAuth();
 			}
