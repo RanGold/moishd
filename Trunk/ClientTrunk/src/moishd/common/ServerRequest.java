@@ -53,39 +53,32 @@ public class ServerRequest  {
 	
 	public boolean GetCookie(String auth_token) {
 		if (this.authToken != null && !this.authToken.equals(auth_token)) {
-			removeCookie();
+			this.authToken = auth_token;
+			return this.GetCookie(true);
+		} else {
+			return this.GetCookie();
 		}
-		this.authToken = auth_token;
-		return this.GetCookie();
 	}
 	
 	public boolean GetCookie() {
-		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
-		
-		if (this.DoesHaveCookie()) {
-			return true;
-		}
-		else {
-			Log.d("COOKIE", "Getting cookie, authToken = " + (authToken == null ? "null" : this.authToken));
-			Log.d("COOKIE", "Getting cookie");
-			if (authToken == null){
-				authToken=moishdPreferences.getCurrentGoogleAuthToken();
-			}
-			return (authToken != null ? GetCookieFromServer(this.authToken) : false);
-		}
+		return this.GetCookie(false);
 	}
 	
-	public void removeCookie(){
-		Cookie cookieToRemove = null;
-		for(Cookie cookie : http_client.getCookieStore().getCookies()) {
-			if(cookie.getName().equals("ACSID")) {
-				cookieToRemove = cookie;
+	private boolean GetCookie(boolean override) {
+		MoishdPreferences moishdPreferences = MoishdPreferences
+				.getMoishdPreferences();
+
+		if (this.DoesHaveCookie() && !override) {
+			return true;
+		} else {
+			Log.d("COOKIE", "Getting cookie, authToken = "
+					+ (authToken == null ? "null" : this.authToken));
+			Log.d("COOKIE", "Getting cookie");
+			if (authToken == null) {
+				authToken = moishdPreferences.getCurrentGoogleAuthToken();
 			}
-		}
-		
-		if (cookieToRemove != null) {
-			Log.d("COOKIE", "removing cookie");
-			http_client.getCookieStore().getCookies().remove(cookieToRemove);
+			return (authToken != null ? GetCookieFromServer(this.authToken)
+					: false);
 		}
 	}
 	
