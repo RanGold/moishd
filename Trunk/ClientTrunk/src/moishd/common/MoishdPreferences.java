@@ -39,11 +39,19 @@ public class MoishdPreferences {
 	}
 	
 	public boolean isReturnedFromAuth(){
-		return getBooleanFromSP(SharedPreferencesKeysEnum.ReturnedFroAuth);
+		return getBooleanFromSP(SharedPreferencesKeysEnum.ReturnedFromAuth);
 	}
 	
 	public void setReturnFromAuth(boolean value){
-		setBooleanToSP(SharedPreferencesKeysEnum.ReturnedFroAuth, value);
+		setBooleanToSP(SharedPreferencesKeysEnum.ReturnedFromAuth, value);
+	}
+	
+	public boolean isReturnedFromAllOnlineUsersActivity(){
+		return getBooleanFromSP(SharedPreferencesKeysEnum.ReturnedFromAllOnlineUsersActivity);
+	}
+	
+	public void setReturnedFromAllOnlineUsersActivity(boolean value){
+		setBooleanToSP(SharedPreferencesKeysEnum.ReturnedFromAllOnlineUsersActivity, value);
 	}
 	
 	public String getGoogleAuthToken(String userGoogleAccount){

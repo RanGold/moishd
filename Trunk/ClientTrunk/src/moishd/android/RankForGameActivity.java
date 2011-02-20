@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -32,12 +31,13 @@ public class RankForGameActivity extends Activity{
 
 		game_type = getIntent().getStringExtra(IntentExtraKeysEnum.GameType.toString());
 		authToken = getIntent().getStringExtra(IntentExtraKeysEnum.GoogleAuthToken.toString());
-		Log.d("Tammy", "The game type for rank is " + game_type);
 		
 		yellowStar = BitmapFactory.decodeResource(getResources(), R.drawable.yellow_star);
 		grayStar = BitmapFactory.decodeResource(getResources(), R.drawable.gray_star);
 		thankYou = BitmapFactory.decodeResource(getResources(), R.drawable.thank_you);
+		
 		TextView text = (TextView)findViewById(R.id.rank);
+		
 		rank1 = (ImageView) findViewById(R.id.rank1);
 		rank2 = (ImageView) findViewById(R.id.rank2);
 		rank3 = (ImageView) findViewById(R.id.rank3);

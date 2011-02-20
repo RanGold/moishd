@@ -52,18 +52,28 @@ import com.google.android.c2dm.C2DMessaging;
 public class WelcomeScreenActivity extends Activity{
 
 	protected static Facebook facebook;
+	protected static boolean unregisterC2DM = true;
+
 	private static final String APP_ID = "108614622540129";
-
 	private Account userGoogleAccount;
-
 	private static LoginButton loginButton;
 	private AsyncFacebookRunner asyncRunner;
-
 	private MoishdPreferences moishdPreferences = null;
 	private LocationManagment locationManagment;
 	private ConnectivityManager connectivityManager;
 	private Location location;
 	private ProgressDialog progressDialog ;
+	private String googleAuthString = null;
+	private int numberOfTriesLeft = 3;
+	private Timer timer;
+	private Handler timerHandler = new Handler();
+	private boolean sessionIsValid;
+	private Intent intent;
+	private String[] names;
+	private Account[] accounts ;
+	private TextView currentlyLoggedInWith ;
+	private Button switchAccounts;
+
 	private final int DIALOG_AUTH_TOKEN_DECLINED = 11;
 	private final int DIALOG_FACEBOOK_ERROR = 12;
 	private final int DIALOG_MOISHD_SERVER_REGISTRATION_ERROR = 13;
@@ -75,20 +85,6 @@ public class WelcomeScreenActivity extends Activity{
 	private final int DIALOG_NO_INTERNET_CONNECTION = 19;
 	private final int DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT = 20;
 	private final int DIALOG_ALREADY_LOGIN = 21;
-
-	private String googleAuthString = null;
-	private int numberOfTriesLeft = 3;
-	private Timer timer;
-	private Handler timerHandler = new Handler();
-	private boolean sessionIsValid;
-	private Intent intent;
-	private String[] names;
-	private Account[] accounts ;
-	
-	protected static boolean unregisterC2DM = true;
-	
-	TextView currentlyLoggedInWith ;
-	Button switchAccounts;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -112,8 +108,9 @@ public class WelcomeScreenActivity extends Activity{
 				break;
 
 			case REGISTRATION_COMPLETE:
-				if (progressDialog != null)
+				if (progressDialog != null){
 					progressDialog.dismiss();
+				}
 				intent = new Intent().setClass(getApplicationContext(), AllOnlineUsersActivity.class);
 				startActivity(intent);	
 				break;
@@ -155,6 +152,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		facebook = new Facebook(APP_ID);
 		asyncRunner = new AsyncFacebookRunner(facebook);
+
 		//check if the user is logged in into Facebook
 		sessionIsValid = SessionStore.restore(facebook, this);
 		SessionEvents.addAuthListener(new MoishdAuthListener());
@@ -165,10 +163,10 @@ public class WelcomeScreenActivity extends Activity{
 		locationManagment = LocationManagment.getLocationManagment(getApplicationContext(), googleAuthString);
 
 		googleAuthString = "";
-		
+
 		currentlyLoggedInWith = (TextView) findViewById(R.id.currentlyLoggedIn);
 		switchAccounts = (Button) findViewById(R.id.switchAccounts);
-		
+
 		switchAccounts.setVisibility(View.INVISIBLE);
 		switchAccounts.setClickable(false);
 		switchAccounts.setOnClickListener(new OnClickListener() {
@@ -186,10 +184,10 @@ public class WelcomeScreenActivity extends Activity{
 	@Override
 	protected void onResume(){
 		super.onResume();
-		if (connectivityManager== null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
+		if (connectivityManager == null || connectivityManager.getActiveNetworkInfo() == null || connectivityManager.getActiveNetworkInfo().getState() == NetworkInfo.State.DISCONNECTED) {
 			showDialog(DIALOG_NO_INTERNET_CONNECTION);
 		}
-		else if (!moishdPreferences.isReturnedFromAuth()){
+		else if (!moishdPreferences.isReturnedFromAllOnlineUsersActivity() && !moishdPreferences.isReturnedFromAuth()){
 			if (googleAuthString == ""){
 				startGoogleAuth();
 			}
@@ -197,13 +195,13 @@ public class WelcomeScreenActivity extends Activity{
 				doAuthSucceed();
 			}
 			else{
-				currentlyLoggedInWith.setText("You're corrently logged in with " + userGoogleAccount.name);
+				currentlyLoggedInWith.setText("You're currently logged in with " + userGoogleAccount.name);
 				switchAccounts.setVisibility(View.VISIBLE);
 				switchAccounts.setClickable(true);
 			}
 		}
-		else{
-			//does nothing because the dialog takes care of getting starting startGoogleAuth()
+		if (moishdPreferences.isReturnedFromAllOnlineUsersActivity()){
+			moishdPreferences.setReturnedFromAllOnlineUsersActivity(false);
 		}
 	}
 
@@ -227,7 +225,7 @@ public class WelcomeScreenActivity extends Activity{
 			}
 			else{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. Retry?")
+				builder.setMessage("Moish'd! cannot start because it requires a Google account for registration. Retry?")
 				.setCancelable(false)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -289,24 +287,15 @@ public class WelcomeScreenActivity extends Activity{
 	//authorize user's Google account
 	private void authorizeGoogleAccount(Account account){
 
-//		googleAuthString = moishdPreferences.getGoogleAuthToken(account.name);
-//		if (googleAuthString.equals("")){
-			Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
-			intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
-			startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
-	/*	}
-		else{
-			moishdPreferences.setCurrentGoogleAuthToken(googleAuthString);
-			currentlyLoggedInWith.setText("You're corrently logged in with: \n" + account.name);
-			switchAccounts.setVisibility(View.VISIBLE);
-			switchAccounts.setClickable(true);
-		}*/
+		Intent intent = new Intent(this, AuthorizeGoogleAccountActivity.class);
+		intent.putExtra(IntentExtraKeysEnum.GoogleAccount.toString(), account);
+		startActivityForResult(intent, IntentRequestCodesEnum.GetGoogleAccountToken.getCode());
 	}
 
 	//in case Facebook login process succeeds - retrieve user's Facebook profile for registration process
 	private void doAuthSucceed(){
 		Log.d("Facebook", "doAuthSucceed");
-		
+
 		Intent registrationIntent = new Intent("com.google.android.c2dm.intent.REGISTER");
 		registrationIntent.putExtra("app", PendingIntent.getBroadcast(this, 0, new Intent(), 0)); // boilerplate
 		registrationIntent.putExtra("sender", "app.moishd@gmail.com");
@@ -316,7 +305,7 @@ public class WelcomeScreenActivity extends Activity{
 		progressDialog = ProgressDialog.show(this, null, "Registering with Moish'd! server", true, false);		
 
 		timer=new Timer();
-		timer.schedule(new ifRegisteredThanLoginTask(), 3000, 5000);
+		timer.schedule(new ifRegisteredThenLoginTask(), 3000, 5000);
 	}
 
 	private boolean isC2DMRegistered() {
@@ -362,7 +351,7 @@ public class WelcomeScreenActivity extends Activity{
 		switch (id) {
 		case DIALOG_NO_ACCOUNTS:
 			builder.setTitle("Error");
-			builder.setMessage("Moish'd! cannot start as it requires a Google account for registration. " +
+			builder.setMessage("Moish'd! cannot start because it requires a Google account for registration. " +
 			"Please create one under Settings/Accounts & Sync.")
 			.setCancelable(false)
 			.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
@@ -377,7 +366,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		case DIALOG_NO_INTERNET_CONNECTION:
 			builder.setTitle("Error");
-			builder.setMessage("Moish'd! cannot start as it requires internet connection.")
+			builder.setMessage("Moish'd! cannot start because it requires internet connection.")
 			.setCancelable(false)
 			.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -386,7 +375,7 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();
-			
+
 		case DIALOG_SHOW_ACCOUNTS:
 			builder.setTitle("Select a Google account");
 			String[] names = args.getStringArray("names");
@@ -396,12 +385,12 @@ public class WelcomeScreenActivity extends Activity{
 					authorizeGoogleAccount(userGoogleAccount);
 					dismissDialog(DIALOG_SHOW_ACCOUNTS);
 					removeDialog(DIALOG_SHOW_ACCOUNTS);					
-					}	
+				}	
 			});
 			return builder.create();
 		case DIALOG_AUTH_TOKEN_DECLINED:
 			builder.setTitle("Error");
-			builder.setMessage("Moish'd! cannot start as it requires your permission to access your Google account for registration needs. " +
+			builder.setMessage("Moish'd! cannot start because it requires your permission to access your Google account for registration needs. " +
 			"Retry?")
 			.setCancelable(false)
 			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -419,7 +408,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		case DIALOG_FACEBOOK_ERROR:
 			builder.setTitle("Error");
-			builder.setMessage("Registration to Facebook server failed. Please retry in a few seconds.")
+			builder.setMessage("Registration to Facebook failed. Please retry in a few seconds.")
 			.setCancelable(false)
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -455,7 +444,7 @@ public class WelcomeScreenActivity extends Activity{
 
 		case DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT:
 			builder.setTitle("Error");
-			builder.setMessage("The Google account you selected doesn't match the one you registered with. please try again.")
+			builder.setMessage("The Google account you have selected doesn't match the one you registered with. please try again.")
 			.setNeutralButton("Dismiss", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
@@ -480,7 +469,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	}
 
-	private class ifRegisteredThanLoginTask extends TimerTask{
+	private class ifRegisteredThenLoginTask extends TimerTask{
 		private Runnable run;
 
 		@Override
@@ -513,7 +502,7 @@ public class WelcomeScreenActivity extends Activity{
 		}
 
 	}
-	
+
 	private class MoishdAuthListener implements AuthListener {
 		public void onAuthSucceed() {
 			doAuthSucceed();
@@ -561,7 +550,6 @@ public class WelcomeScreenActivity extends Activity{
 				newUser.setFacebookID(userId);
 				newUser.setPictureLink(pictureLink);
 				newUser.setRegisterID(C2DMessaging.getRegistrationId(getApplicationContext()));
-
 
 				location = locationManagment.getLastKnownLocation();
 				moishdPreferences.setUserName(userName);

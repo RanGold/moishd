@@ -221,34 +221,9 @@ public class ServerCommunication {
 			Log.d("GAE ERROR", "an Error occured");
 			return false;
 		}
-/*		else{
-			try {
-				HttpEntity entity = response.getEntity();
-				if (entity == null){
-					return null;
-				} else{
-					String content = convertStreamToString(entity.getContent());
-					if (content.equals("")){
-						return null;
-					}else{
-						return content;
-					}
-				}
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}*/
 		return true;
 	}
 
-/*	public static ClientMoishdUser retrieveInvitation(String gameId, String authString) {
-		HttpResponse response = SendReqToServer(ServletNamesEnum.GetGameInitiator, gameId, authString);
-		return getUserFromResponse(response);
-	}*/
-	
 	//TODO check if there's a need in the game_id
 	public static boolean sendRankToServer(String gameType,int rank, String authString) {
 		HttpResponse response = SendReqToServer(ServletNamesEnum.RankGame,gameType+":"+rank, authString);
@@ -287,7 +262,6 @@ public class ServerCommunication {
 	public static boolean sendInvitationResponse(String gameId, String responseString, String authString, String isPopular) {
 
 		String invitationResponse = gameId + "#" + responseString + "#" + isPopular;
-		Log.d("Tammy", invitationResponse);
 		HttpResponse response = SendReqToServer(ServletNamesEnum.InvitationResponse, invitationResponse, authString);
 		if (response == null || response.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
