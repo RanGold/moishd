@@ -1,7 +1,8 @@
 package moishd.common;
 
 public enum SharedPreferencesKeysEnum {
-	ReturnedFroAuth,
+	ReturnedFromAuth,
+	ReturnedFromAllOnlineUsersActivity,
 	UserName,
 	AvailableStatus,
 	GoogleAuthToken,
