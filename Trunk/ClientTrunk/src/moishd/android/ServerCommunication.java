@@ -136,14 +136,12 @@ public class ServerCommunication {
 	}
 
 	public static List<ClientMoishdUser> getNearbyUsers(String authString){
-		Log.d("loc","started getNearBy");
 		HttpResponse response = SendReqToServer(ServletNamesEnum.GetNearbyUsers, null, authString);
-		Log.d("loc","ended getNearBy");
 		return getUserListFromResponse(response);
 	}
 
 
-	public static boolean setUserBusy(String authString){
+/*	public static boolean setUserBusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetBusy,authString);
 		if (resp == null || resp.containsHeader("Error")){
 			Log.d("GAE ERROR", "an Error occured");
@@ -151,7 +149,7 @@ public class ServerCommunication {
 		}else{
 			return true;
 		}
-	}
+	}*/
 
 	public static boolean setSingleUserUnbusy(String authString){
 		HttpResponse resp = activateServlet(ServletNamesEnum.SetNotBusy,authString);
@@ -299,6 +297,7 @@ public class ServerCommunication {
 			return true;
 		}			
 	}
+	
 	private static HttpResponse activateServlet(ServletNamesEnum servletName, String authString){
 		return SendToServer(servletName, null, null, authString);
 	}

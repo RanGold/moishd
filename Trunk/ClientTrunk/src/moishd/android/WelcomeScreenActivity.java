@@ -74,7 +74,6 @@ public class WelcomeScreenActivity extends Activity{
 	private TextView currentlyLoggedInWith ;
 	private Button switchAccounts;
 
-	private final int DIALOG_AUTH_TOKEN_DECLINED = 11;
 	private final int DIALOG_FACEBOOK_ERROR = 12;
 	private final int DIALOG_MOISHD_SERVER_REGISTRATION_ERROR = 13;
 	private final int DIALOG_C2DM_ERROR = 14;
@@ -85,6 +84,7 @@ public class WelcomeScreenActivity extends Activity{
 	private final int DIALOG_NO_INTERNET_CONNECTION = 19;
 	private final int DIALOG_FACEBOOK_ACCOUNT_NOT_MATCH_SERVER_GOOGLE_ACCOUNT = 20;
 	private final int DIALOG_ALREADY_LOGIN = 21;
+	private final int DIALOG_QUIT = 22;
 
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -132,6 +132,7 @@ public class WelcomeScreenActivity extends Activity{
 					progressDialog.dismiss();
 				showDialog(DIALOG_ALREADY_LOGIN);
 			}
+			
 		}
 	};
 
@@ -177,7 +178,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	@Override
 	public void onBackPressed(){
-		moveTaskToBack(true);
+		showDialog(DIALOG_QUIT);
 		return;
 	}
 
@@ -195,7 +196,7 @@ public class WelcomeScreenActivity extends Activity{
 				doAuthSucceed();
 			}
 			else{
-				currentlyLoggedInWith.setText("You're currently logged in with " + userGoogleAccount.name);
+				currentlyLoggedInWith.setText("You're currently logged in with \n" + userGoogleAccount.name);
 				switchAccounts.setVisibility(View.VISIBLE);
 				switchAccounts.setClickable(true);
 			}
@@ -225,7 +226,8 @@ public class WelcomeScreenActivity extends Activity{
 			}
 			else{
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage("Moish'd! cannot start because it requires a Google account for registration. Retry?")
+				builder.setMessage("Moish'd! cannot start because it requires your permission to access your Google account for registration needs. " +
+				"Retry?")
 				.setCancelable(false)
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -237,7 +239,7 @@ public class WelcomeScreenActivity extends Activity{
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {	
 						moishdPreferences.setReturnFromAuth(false);
-						moveTaskToBack(true);
+						System.exit(0);
 					}});
 
 				AlertDialog alert = builder.create();
@@ -371,13 +373,14 @@ public class WelcomeScreenActivity extends Activity{
 			.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
-					moveTaskToBack(true);
+					System.exit(0);
 				}
 			});
 			return builder.create();
 
 		case DIALOG_SHOW_ACCOUNTS:
 			builder.setTitle("Select a Google account");
+			builder.setCancelable(false);
 			String[] names = args.getStringArray("names");
 			builder.setItems(names, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
@@ -388,24 +391,7 @@ public class WelcomeScreenActivity extends Activity{
 				}	
 			});
 			return builder.create();
-		case DIALOG_AUTH_TOKEN_DECLINED:
-			builder.setTitle("Error");
-			builder.setMessage("Moish'd! cannot start because it requires your permission to access your Google account for registration needs. " +
-			"Retry?")
-			.setCancelable(false)
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					showDialog(DIALOG_SHOW_ACCOUNTS);
-				}
-			})
-			.setNegativeButton("No", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					//finish();
-					moveTaskToBack(true);
-				}
-			});
-			return builder.create();
-
+			
 		case DIALOG_FACEBOOK_ERROR:
 			builder.setTitle("Error");
 			builder.setMessage("Registration to Facebook failed. Please retry in a few seconds.")
@@ -464,7 +450,23 @@ public class WelcomeScreenActivity extends Activity{
 				}
 			});
 			return builder.create();  
-		}
+		
+		case DIALOG_QUIT:
+			builder.setTitle("Warning");
+			builder.setMessage("You're about to leave Moish'd!. Are you sure you want to quit?")
+			.setCancelable(false)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					System.exit(0);
+				}
+			})
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {	
+					dialog.cancel();
+				}
+			});
+			return builder.create();
+		}		
 		return null;
 
 	}
