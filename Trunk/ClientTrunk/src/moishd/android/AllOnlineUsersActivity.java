@@ -380,7 +380,10 @@ public class AllOnlineUsersActivity extends Activity{
 
 		else if (requestCode == IntentRequestCodesEnum.GetChosenGame.getCode()){
 			gameType = data.getStringExtra(IntentExtraKeysEnum.GameType.toString());
-			sendInvitationResponse("Accept" + gameType, "");
+			boolean invitationResult = sendInvitationResponse("Accept" + gameType, "");
+			if (invitationResult==false){
+				sendMessageToHandler(DIALOG_SERVER_ERROR);
+			}
 		}
 		else if (requestCode == IntentRequestCodesEnum.GameRequestCode.getCode()){
 			int newRank = data.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
@@ -880,7 +883,10 @@ public class AllOnlineUsersActivity extends Activity{
 			})
 			.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					sendInvitationResponse("Decline", "");  
+					boolean invitationResult = sendInvitationResponse("Decline", "");
+					if (invitationResult==false){
+						sendMessageToHandler(DIALOG_SERVER_ERROR);
+					}
 					dismissAndRemoveDialog(DIALOG_RETRIEVE_USER_INVITATION, true);
 				}
 			});
