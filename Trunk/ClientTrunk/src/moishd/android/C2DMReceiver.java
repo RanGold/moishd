@@ -127,7 +127,6 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			
 			moishdPreferences.setAvailableStatus(true);
 			
-			
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PopularGame.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(16));

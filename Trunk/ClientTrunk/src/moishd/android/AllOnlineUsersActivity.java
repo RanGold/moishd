@@ -303,7 +303,6 @@ public class AllOnlineUsersActivity extends Activity{
 				retrieveInvitation(inviterName);
 			}
 			else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
-				Log.d("Amico","cancel timer on gameDeclined");
 				turnOffTimer();
 				userDeclinedToMoishDialog();
 				game_id = null;
@@ -385,7 +384,7 @@ public class AllOnlineUsersActivity extends Activity{
 				sendMessageToHandler(DIALOG_SERVER_ERROR);
 			}
 		}
-		else if (requestCode == IntentRequestCodesEnum.GameRequestCode.getCode()){
+		else if (requestCode == IntentRequestCodesEnum.GameRequestCode.getCode() && resultCode == IntentResultCodesEnum.OK.getCode()){
 			int newRank = data.getIntExtra(IntentExtraKeysEnum.Rank.toString(), -1);
 			int numOfTrophies = data.getIntExtra(IntentExtraKeysEnum.NumberOfTrophies.toString(), -1);
 
@@ -554,25 +553,21 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private void retrieveInvitation(String inviterName){
 		Bundle bundle = new Bundle();
-		Log.d("Tammy",inviterName);
 		bundle.putString("userName", inviterName);
 		showDialog(DIALOG_RETRIEVE_USER_INVITATION, bundle);
 	}
 
 	private boolean sendInvitationResponse(String response, String isPopular){
-
 		return ServerCommunication.sendInvitationResponse(game_id, response, authToken, isPopular);
 	}
 
 	private void userIsBusy(String invitedUser){
-
 		Bundle bundle = new Bundle();
 		bundle.putString("userName", invitedUser);
 		showDialog(DIALOG_USER_IS_BUSY, bundle);
 	}
 
 	private void userIsOffline(String invitedUser){
-
 		Bundle bundle = new Bundle();
 		bundle.putString("userName", invitedUser);
 		showDialog(DIALOG_USER_IS_OFFLINE, bundle);
@@ -690,7 +685,7 @@ public class AllOnlineUsersActivity extends Activity{
 			header.setText("Online Facebook friends");
 			break;
 		}
-		header.setTypeface(fontHeader); //tammy
+		header.setTypeface(fontHeader);
 		EfficientAdapter listAdapter = (EfficientAdapter) list.getAdapter();
 		listAdapter.notifyDataSetChanged();
 	}
@@ -698,9 +693,9 @@ public class AllOnlineUsersActivity extends Activity{
 	private void facebookFriendsFirstRetrievalCompleted() { 
 		mainProgressDialog.dismiss();
 		serverHasFacebookFriends = true;
-		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends)) //tammy
+		if (currentUsersType.equals(GetUsersByTypeEnum.FacebookFriends))
 			new GetUsersTask().execute(GetUsersByTypeEnum.FacebookFriends.toString(), authToken, friendsID);
-		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers)) //tammy
+		else if (currentUsersType.equals(GetUsersByTypeEnum.MergedUsers))
 			new GetUsersTask().execute(GetUsersByTypeEnum.MergedUsers.toString(), authToken, friendsID);			
 	}
 
@@ -725,14 +720,12 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case FACEBOOK_POST_TROPHIES_UPDATED:
 			String trophiesList = bundle.getString("trophiesList");
-			Log.d("Tammy", "FACEBOOK_POST_TROPHIES_UPDATED " + trophiesList);
 			message = firstName +"'s Moish'd! trophies have just been updated! New trophies receieved:\n" + trophiesList;
 			parameters.putString("description", message);
 			parameters.putString("name", "Moish'd! trophies have been updated!");
 
 		case FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED:
 			String trophies = bundle.getString("trophiesList");
-			Log.d("Tammy", "FACEBOOK_POST_RANK_AND_TROPHIES_UPDATED " + trophies);
 			message = firstName +"'s Moish'd! rank and trophies has just been updated! \n" +
 			"New trophies receieved:\n" + trophies;
 			parameters.putString("description", message);
@@ -752,16 +745,11 @@ public class AllOnlineUsersActivity extends Activity{
 
 		case DIALOG_USER_CANCELED_GAME:
 			String user;
-			Log.d("Tammy", "init name is " + initName);
-			Log.d("Tammy", "rec name is " + recName);
-			Log.d("Tammy", "my name is " + myUserName);
 			if (myUserName.equals(initName)){
 				user = recName;
-				Log.d("TEST", "BUSY USER IS " + user);
 			}
 			else{
 				user = initName;
-				Log.d("TEST", "BUSY USER IS " + user);
 			}
 			((AlertDialog)dialog).setMessage("The game with " + user + " has been canceled.");
 			super.onPrepareDialog(id, dialog, args);

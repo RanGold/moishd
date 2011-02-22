@@ -6,17 +6,34 @@ import moishd.common.IntentResultCodesEnum;
 import moishd.common.MoishdPreferences;
 import moishd.common.PushNotificationTypeEnum;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.Toast;
 
 public class GameActivity extends Activity{
 	public final static int SERVER_ERROR = 0;
 	public final static int SERVER_OK = 1;
 	public final static int DIDNT_CALL_SERVER = 2;
+	protected static final int AN_ERROR_OCCURED = 3;
 	String gameId, authString, gameType, action;
 	int serverFlag = DIDNT_CALL_SERVER;
+	private waitForResponse timerForResponse;
+	private boolean timerOn;
 
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case AN_ERROR_OCCURED:
+				showErrorOccuredDialog();
+				break;
+			}
+		}
+	};
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
@@ -24,6 +41,9 @@ public class GameActivity extends Activity{
 	}
 
 	protected void onNewIntent (Intent intent){
+		if (timerOn){
+			timerForResponse.cancel();
+		}
 		action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 
 		if (action.equals(PushNotificationTypeEnum.GameResult.toString())){
@@ -65,7 +85,6 @@ public class GameActivity extends Activity{
 			else{
 				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
 			}
-			
 			finish();
 		}
 	}
@@ -90,12 +109,18 @@ public class GameActivity extends Activity{
 		CommonForWinAndLose();
 		boolean serverResponse = ServerCommunication.sendWinToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
+		timerForResponse= new waitForResponse(40000,1000);
+		timerForResponse.start();
+		timerOn=true;
 	}
 
 	protected void Lose(){		
 		CommonForWinAndLose();
 		boolean serverResponse = ServerCommunication.sendLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
+		timerForResponse= new waitForResponse(40000,1000);
+		timerForResponse.start();
+		timerOn=true;
 	}
 
 	protected void setFlag(boolean serverResponse){
@@ -112,11 +137,45 @@ public class GameActivity extends Activity{
 		GetAllExtras();
 		boolean serverResponse = ServerCommunication.sendTechnicalLoseToServer(gameId, authString, gameType);
 		setFlag(serverResponse);
+		timerForResponse= new waitForResponse(20000,1000);
+		timerForResponse.start();
+		timerOn=true;
 	}
 	
 	@Override
 	 public final void onBackPressed(){
 		LoseTechnicly();		
+	}
+	
+	private void showErrorOccuredDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("An error occured.")
+		.setCancelable(false)
+		.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {	
+				Intent resultIntent = new Intent();
+				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+				finish();
+			}});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+	
+	private class waitForResponse extends CountDownTimer {
+		
+		private waitForResponse(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}    
+		public void onFinish() {
+			Message registrationErrorMessage = Message.obtain();
+			registrationErrorMessage.setTarget(mHandler);
+			registrationErrorMessage.what = AN_ERROR_OCCURED;
+			registrationErrorMessage.sendToTarget();
+		}    
+
+		public void onTick(long millisUntilFinished) {
+		}
 	}
 
 }
