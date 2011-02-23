@@ -4,7 +4,7 @@ public enum GamesEnum {
 	
 	Truth("Truth", "Trivia"),
 	DareSimonPro("DareSimonPro", "Simon Pro"),
-	DareMixing("DareMixing", "Mixing"),
+	DareMixing("DareMixing", "Mixed Word"),
 	DareFastClick("DareFastClick", "Fast Click");
 	
 	private String name;
