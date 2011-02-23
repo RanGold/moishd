@@ -15,14 +15,12 @@ public class WinnerAndLoserActivity extends Activity{
 		gameNearBy = getIntent().getStringExtra(IntentExtraKeysEnum.NearByGame.toString());
 		if (gameNearBy.equals("yes")) {
 			addToMesseage = "You\'ve got double points for playing with a nearby user.";
+			needToChangeTextSize = true;
 		}
 		else{
 			addToMesseage="";
 		}
 		
-		if (!addToMesseage.equals("")){
-			needToChangeTextSize = true;
-		}
 		
 	}
 	

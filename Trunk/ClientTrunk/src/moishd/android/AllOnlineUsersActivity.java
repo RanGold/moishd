@@ -606,8 +606,11 @@ public class AllOnlineUsersActivity extends Activity{
 			intent.setClass(this, SimonProGameActivity.class);
 		else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
 			intent.setClass(this, MixingGameActivity.class);
-		else //TODO right now else case is fast click.
+		else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 			intent.setClass(this, FastClickGameActivity.class);
+		else { //TODO -default is DareMixing
+			intent.setClass(this, MixingGameActivity.class);
+		}
 	}
 
 	private void StartGamePopular(){
