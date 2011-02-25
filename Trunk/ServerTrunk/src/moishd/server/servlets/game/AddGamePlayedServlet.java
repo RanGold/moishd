@@ -26,6 +26,7 @@ public class AddGamePlayedServlet extends GeneralServlet{
 			String input = request.getReader().readLine();				
 			String gameType = input;
 			
+			// Updating game stats
 			Queue queue = QueueFactory.getQueue("gameStatsQueue");
 			queue.add (TaskOptions.Builder.url("/queues/UpdateGameStats").method(Method.POST).
 					param("gameType", gameType).param("rank", "-1").param("isRank", "0"));

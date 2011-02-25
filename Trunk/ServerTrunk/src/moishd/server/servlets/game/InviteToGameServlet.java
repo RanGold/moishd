@@ -26,6 +26,7 @@ public class InviteToGameServlet extends GeneralServlet {
 		if (user != null) {
 			String recID = request.getReader().readLine();
 			
+			// Sending synchronized game invitation
 			Queue queue = QueueFactory.getQueue("inviteQueue");
 			queue.add (TaskOptions.Builder.url("/queues/SendInviteToGame").method(Method.POST).
 					param("initID", user.getEmail()).param("recID", recID));
