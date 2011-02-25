@@ -14,6 +14,7 @@ public class AliveServlet extends GeneralServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
+		// Causes alive status change
 		super.doPost(request, response);
 	}
 }

@@ -35,6 +35,7 @@ public class FilterServlet extends GeneralServlet {
 						new TypeToken<List<String>>() {
 						}.getType());
 
+				// Getting users filtered by a dynamic field
 				List<ClientMoishdUser> users = DSCommon
 						.GetFilteredRegisteredClientUsers(user.getEmail(),
 								true, fieldName, filterValues);
