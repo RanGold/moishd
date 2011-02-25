@@ -82,6 +82,7 @@ public class SendGameResultServlet extends HttpServlet {
 					if (winner.getLocation().isInitialized() && 
 							loser.getLocation().isInitialized() &&
 							DSCommon.CalculateDistance(winner.getLocation(), loser.getLocation()) <=1){
+						
 						LoggerCommon.Get().LogInfo(this, "winner location is " + winner.getLocation());
 						LoggerCommon.Get().LogInfo(this, "loser location is " + loser.getLocation());
 						LoggerCommon.Get().LogInfo(this, "distance is " + DSCommon.CalculateDistance(winner.getLocation(), loser.getLocation()));
@@ -94,7 +95,7 @@ public class SendGameResultServlet extends HttpServlet {
 						winPayload.put("NearByGame", "no");
 						losePayload.put("NearByGame", "no");
 					}
-
+					
 					if (winValue.toString().equals("LostTechnicly") || loseValue.toString().equals("LostTechnicly")) {
 						technicalLose = 0;
 					}
@@ -102,7 +103,6 @@ public class SendGameResultServlet extends HttpServlet {
 						technicalLose = factorNearBy; 
 					}
 					if (winValue.toString().equals("Won")){
-						
 						int [] pointsAddedToBothSides = UpdateGameStatistics(tg, winner, loser);
 						winPayload.put("Points", String.valueOf(pointsAddedToBothSides[0]));
 						losePayload.put("Points", String.valueOf(pointsAddedToBothSides[1]));
@@ -122,6 +122,8 @@ public class SendGameResultServlet extends HttpServlet {
 					C2DMCommon.PushGenericMessage(loser.getRegisterID(), 
 							C2DMCommon.Actions.GameResult.toString(), losePayload);
 
+					factorNearBy = 1;
+					
 					List<BusyObject> busyUsers = new LinkedList<BusyObject>();
 					busyUsers.add(new BusyObject(mInitUser.getUserGoogleIdentifier(), false, mInitUser.getBusyWith()));
 					busyUsers.add(new BusyObject(mRecUser.getUserGoogleIdentifier(), false, mRecUser.getBusyWith()));
@@ -163,32 +165,26 @@ public class SendGameResultServlet extends HttpServlet {
 
 		int winnerPoints = winner.getStats().getPoints();
 		int loserPoints = loser.getStats().getPoints();
+		
 		LoggerCommon.Get().LogInfo(this, winner.getUserNick() + " points before are " + winnerPoints);
 		LoggerCommon.Get().LogInfo(this, loser.getUserNick() + " points before are " + loserPoints);
+		
 		int [] addedPoints = new int[2];
 		//Do points logic
 		if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameTruth.getGameName())){
 			winner.getStats().setPoints(winnerPoints + (1*factorNearBy));
 			addedPoints[0] = 1 *factorNearBy;
 			addedPoints[1] = 0*technicalLose;
-		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.getGameName())){
-			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
-			loser.getStats().setPoints(loserPoints + (1*technicalLose));
-			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*technicalLose;
-		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.getGameName())){
-			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
-			loser.getStats().setPoints(loserPoints + (1*technicalLose));
-			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*technicalLose;
-		}else if(moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.getGameName())){
-			winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
-			loser.getStats().setPoints(loserPoints + (1*technicalLose));
-			addedPoints[0] = 3*factorNearBy;
-			addedPoints[1] = 1*technicalLose;
+		}else if (moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareFastClick.getGameName())||
+				moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareMixing.getGameName()) ||
+				moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDareSimonPro.getGameName()) ||
+				moishdGame.getGameType().equals(C2DMCommon.Actions.StartGameDarePixOPair.getGameName())){
+					winner.getStats().setPoints(winnerPoints + (3*factorNearBy));
+					loser.getStats().setPoints(loserPoints + (1*technicalLose));
+					addedPoints[0] = 3*factorNearBy;
+					addedPoints[1] = 1*technicalLose;
 		}
 		else{
-
 		}
 
 		winner.SaveChanges();
@@ -197,6 +193,7 @@ public class SendGameResultServlet extends HttpServlet {
 		
 		LoggerCommon.Get().LogInfo(this, winner.getUserNick() + " points after are " + winner.getStats().getPoints());
 		LoggerCommon.Get().LogInfo(this, loser.getUserNick() + " points after are " + loser.getStats().getPoints());
+		
 		Map<String,Integer> winnerGamesPoints = winner.getStats().getGamesPoints();
 		updateGamePoints(winnerGamesPoints, winner, addedPoints[0], moishdGame);
 
@@ -206,17 +203,22 @@ public class SendGameResultServlet extends HttpServlet {
 		return addedPoints;
 	}
 
+	/*update points per user and for top moishers*/
 	private void updateGamePoints(Map<String,Integer> gamesPointsList, MoishdUser user, int addedPoints, MoishdGame moishdGame){
 
 		boolean updated = false;
 		int currentGamePoints = -1;
 
+		/*the user's point list is null, meaning - there are no points for this user
+		 * creating a new list*/
 		if (gamesPointsList == null){
 			currentGamePoints = addedPoints;
 			LoggerCommon.Get().LogInfo(this, "GamePointsList is null, user is " + user.getUserId() + " points: " + addedPoints);
 			gamesPointsList = new HashMap<String,Integer>();
 			gamesPointsList.put(moishdGame.getGameType(), addedPoints);
 			user.getStats().setGamesPoints(gamesPointsList);
+			/*Tammy - I've added this line, I think the null exception is thrown because of the fact that the new
+			 * data is saved only at the end of the method.*/
 		}
 		else{
 			for (Entry<String, Integer> current : gamesPointsList.entrySet()) {
@@ -229,6 +231,7 @@ public class SendGameResultServlet extends HttpServlet {
 					break;
 				}
 			}
+			/*there are no points for the specified game, adding a new game*/
 			if (!updated){
 				LoggerCommon.Get().LogInfo(this, "Game not found, previous " + 0 + ", points: " + addedPoints);
 				currentGamePoints = addedPoints;
@@ -236,14 +239,17 @@ public class SendGameResultServlet extends HttpServlet {
 			}
 		}
 
+		user.SaveChanges();
+
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
 		LoggerCommon.Get().LogInfo(this, "Game stats: game is  " +  gameStatistics.getGameType());
 		Map<String, Integer> topMoishersMap = gameStatistics.getTopMoishers();
+		
 		if (topMoishersMap == null){
 			LoggerCommon.Get().LogInfo(this, "Top moishers is null");
 			topMoishersMap = new HashMap<String, Integer>();
 			topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
-			gameStatistics.setTopMoishers(topMoishersMap);
+			gameStatistics.setTopMoishers(topMoishersMap);			
 		}
 		else{
 			String moisherWithLeastPointsId = "";
@@ -261,23 +267,14 @@ public class SendGameResultServlet extends HttpServlet {
 				}
 			}
 			if (moisherWithLeastPointsPoints == -1){ /*this could never happen???? how can we have more points to a user than a game? only if her's the first one*/
-					topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
-				
+				topMoishersMap.put(user.getUserGoogleIdentifier(), currentGamePoints);
 			}
 
 			else if (moisherWithLeastPointsPoints < currentGamePoints){
 				
-				Integer currentPoints = topMoishersMap.get(user.getUserGoogleIdentifier()); 
-				//user.getStats().getGamesPoints().get(moishdGame.getGameType()); /*this doesn't return the user's current points*/
-				LoggerCommon.Get().LogInfo(this, "Tammy's check - current user's points are " + currentPoints);
-				if (addedPoints != 0){
-					if (currentPoints == null)
-						currentPoints = 0;
-					topMoishersMap.put(user.getUserGoogleIdentifier(), currentPoints + addedPoints);
-					LoggerCommon.Get().LogInfo(this, "Tammy's check - points were addded, total now is: " + currentPoints + addedPoints);
-				}
+				topMoishersMap.put(user.getUserGoogleIdentifier(), currentGamePoints);
+				LoggerCommon.Get().LogInfo(this, "Tammy's check - points were addded, total now is: " + currentGamePoints);
 				
-			//hila	topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
 				if (topMoishersMap.size() > 5){
 					topMoishersMap.remove(moisherWithLeastPointsId);
 				}

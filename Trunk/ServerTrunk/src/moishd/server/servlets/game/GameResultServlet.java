@@ -27,6 +27,7 @@ public class GameResultServlet extends GeneralServlet {
 		Won,
 		Lost,
 		LostTechnicly
+		
 	}
 	
 	protected String servletName;
