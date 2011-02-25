@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import moishd.android.R;
 
 import moishd.android.facebook.AsyncFacebookRunner;
 import moishd.android.facebook.BaseDialogListener;
@@ -45,6 +46,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -83,6 +85,8 @@ public class AllOnlineUsersActivity extends Activity{
 	private String gameType;
 	private String opponent_google_id;
 	private String opponent_nick_name;
+	private String offer_opponent_google_id;
+	private String offer_opponent_nick_name;
 	private String initName;
 	private String recName;
 	private String myUserName;
@@ -92,7 +96,7 @@ public class AllOnlineUsersActivity extends Activity{
 
 	private int currentClickPosition;
 	private MoishdPreferences moishdPreferences ;
-	private TextView header;
+	private TextView header, gameOfferLine;
 	private ListView list;
 
 	private AsyncFacebookRunner asyncRunner;
@@ -184,7 +188,17 @@ public class AllOnlineUsersActivity extends Activity{
 		header.setText("All online users");
 		header.setTextSize(20);
 		header.setTypeface(fontHeader);
-
+		
+		gameOfferLine = (TextView) findViewById(R.id.gameOfferLine);
+		
+		gameOfferLine.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				gameOfferLine.setText("");
+				gameOfferLine.setClickable(false);
+				GetGameOfferDialog();
+			}
+		});	
+		
 		//need the authToken for server requests
 		firstName = getFacebookUserName(false);
 
@@ -344,9 +358,13 @@ public class AllOnlineUsersActivity extends Activity{
 				startGameDare();
 			}
 			else if(action.equals(PushNotificationTypeEnum.GameOffer.toString())){
-				opponent_google_id =  intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
-				opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
-				GetGameOfferDialog();
+				offer_opponent_google_id =  intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
+				offer_opponent_nick_name =  intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
+				gameOfferLine.setBackgroundColor(Color.BLACK);
+				gameOfferLine.setTextColor(Color.WHITE);
+				gameOfferLine.setText("You've got one game invitation");
+				gameOfferLine.setTextSize(13);
+				gameOfferLine.setClickable(true);
 			}
 		}
 	}
@@ -807,21 +825,21 @@ public class AllOnlineUsersActivity extends Activity{
 			return builder.create();  
 
 		case DIALOG_GET_GAME_OFFER:
-			builder.setMessage("Hey! " + opponent_nick_name + " has a higher rank than you! Would you like to show him/her what you've got?!")
+			builder.setMessage("Hey! " + offer_opponent_nick_name + " has a higher rank than you! Would you like to show him/her what you've got?!")
 			.setCancelable(false)
 			.setPositiveButton("Oh yes!", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER, true);
-					inviteUserOfferedByServerToMoish(opponent_google_id);
-					opponent_google_id=null;
-					opponent_nick_name=null;
+					inviteUserOfferedByServerToMoish(offer_opponent_google_id);
+					offer_opponent_google_id=null;
+					offer_opponent_nick_name=null;
 				}
 			})
 			.setNegativeButton("No, thank you", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dismissAndRemoveDialog(DIALOG_GET_GAME_OFFER, true);
-					opponent_google_id=null;
-					opponent_nick_name=null;
+					offer_opponent_google_id=null;
+					offer_opponent_nick_name=null;
 				}
 			});
 			return builder.create();
