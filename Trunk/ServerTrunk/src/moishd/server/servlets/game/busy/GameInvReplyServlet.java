@@ -175,6 +175,19 @@ public class GameInvReplyServlet extends GeneralServlet {
 								tg.setGameType(C2DMCommon.Actions.StartGameDareFastClick
 										.getGameName());
 								tg.SaveChanges();
+							}
+								else if (invReply.equals("AcceptDarePixOPair")) {
+									C2DMCommon.PushGenericMessage(mInitUser
+											.getRegisterID(),
+											C2DMCommon.Actions.StartGameDarePixOPair
+													.getPopular(popular), payload);
+									C2DMCommon.PushGenericMessage(mRecUser
+											.getRegisterID(),
+											C2DMCommon.Actions.StartGameDarePixOPair
+													.getPopular(popular), payload);
+									tg.setGameType(C2DMCommon.Actions.StartGameDarePixOPair
+											.getGameName());
+									tg.SaveChanges();
 							} else {
 								LoggerCommon.Get().LogInfo(this,"in 10");
 								C2DMCommon.PushGenericMessage(

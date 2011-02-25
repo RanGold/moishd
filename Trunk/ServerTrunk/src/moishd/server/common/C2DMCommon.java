@@ -28,6 +28,7 @@ public class C2DMCommon {
 		StartGameDareSimonPro,
 		StartGameDareMixing,
 		StartGameDareFastClick,
+		StartGameDarePixOPair,
 		PlayerBusy, 
 		PlayerOffline, 
 		GameOffer, 
