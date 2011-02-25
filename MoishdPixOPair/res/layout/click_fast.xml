@@ -1,0 +1,119 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/myLayout" 
+	android:orientation="vertical"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:background="@drawable/bg2">
+
+	<TextView android:text="Click on the buttons as fast as you can according to the number on the screen" 
+	android:paddingLeft="12dip"
+	android:paddingRight="12dip"
+	
+	android:gravity="center_vertical|center_horizontal"
+	android:paddingTop="10dip"
+	android:textSize="20dip"
+	android:id="@+id/explaination"
+	android:textColor="#7A67EE" 
+	android:textStyle="bold"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content">
+	</TextView>
+	
+	  	
+<TableRow android:id="@+id/TableRow01" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:layout_marginTop="20dip"
+android:layout_marginBottom="30dip"
+android:paddingLeft="20dip">
+
+	<TextView 
+	android:id="@+id/theWord" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:textColor="#00FF00" 
+	android:textStyle="bold"
+	android:paddingTop="5dip"
+	android:gravity="center_vertical|center_horizontal">
+	</TextView>
+	
+	</TableRow>
+	
+  
+  
+
+
+
+  	
+<TableRow android:id="@+id/TableRow01" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:paddingLeft="20dip">
+
+
+
+<Button android:id="@+id/clickOnMe1" 
+	android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="40dip" 
+	android:layout_height="wrap_content"
+	
+	android:background="#FF6347">
+	
+</Button>
+
+
+
+<Button android:id="@+id/clickOnMe2" 
+		android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:layout_marginLeft ="60dip"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:visibility="invisible"
+	android:background="#FFFF00"
+	>
+</Button>
+
+</TableRow>
+
+<TableRow android:id="@+id/TableRow02" 
+android:layout_width="match_parent" 
+android:layout_height="wrap_content"
+android:layout_marginBottom="30dip"
+android:paddingLeft="20dip">
+
+<Button android:id="@+id/clickOnMe3" 
+	android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="40dip" 
+	android:visibility="invisible"
+	android:layout_height="wrap_content"
+	android:background="#9932CC">
+	
+</Button>
+
+<Button android:id="@+id/clickOnMe4" 
+		android:clickable="true"
+	android:text="Moish!"
+	android:textStyle="bold"
+	android:drawableBottom="@drawable/middle_size_hand"
+	android:layout_width="wrap_content"
+	android:layout_marginLeft="60dip" 
+	android:layout_height="wrap_content"
+	android:visibility="invisible"
+	android:background="#00FF00"
+		>
+</Button>
+
+</TableRow>
+</LinearLayout>
