@@ -64,6 +64,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 					payload.put("RecName", mRecUser.getUserNick());
 					boolean deleteGame = true;
 					
+					// Deciding on push messages by the player response and players busy state
 					if (invReply.equals("Decline")) {
 						LoggerCommon.Get().LogInfo(this,"Decline");
 						if (mInitUser.isPartnerWith(tg.getPlayerRecId()) &&
@@ -175,8 +176,7 @@ public class GameInvReplyServlet extends GeneralServlet {
 								tg.setGameType(C2DMCommon.Actions.StartGameDareFastClick
 										.getGameName());
 								tg.SaveChanges();
-							}
-								else if (invReply.equals("AcceptDarePixOPair")) {
+							} else if (invReply.equals("AcceptDarePixOPair")) {
 									C2DMCommon.PushGenericMessage(mInitUser
 											.getRegisterID(),
 											C2DMCommon.Actions.StartGameDarePixOPair
