@@ -5,6 +5,15 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	
+	
+							
+	<TextView android:id="@+id/gameOfferLine" 
+		android:layout_height="wrap_content"
+		android:textStyle="normal|bold" 
+		android:gravity="center_vertical|center_horizontal"
+		android:layout_width="fill_parent">
+		</TextView>
+		
 	<TextView android:id="@+id/usersTypeHeader" 
 		android:layout_height="wrap_content"
 		android:textStyle="normal|bold" 
