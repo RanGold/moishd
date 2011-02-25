@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class TopPopularActivity extends Activity{
 
-	Bitmap trivia,fastClick,clickMemory, mixedWord;
+	Bitmap trivia,fastClick,clickMemory, mixedWord, pixOPair;
 	TextView text, game1,game2,game3,game4,game5;
 	ImageView gamepic1,gamepic2,gamepic3,gamepic4,gamepic5;
 	String authString;
@@ -36,6 +36,7 @@ public class TopPopularActivity extends Activity{
 		fastClick = BitmapFactory.decodeResource(getResources(), R.drawable.fast_click_no_name);
 		clickMemory = BitmapFactory.decodeResource(getResources(), R.drawable.click_memory_no_name);
 		mixedWord = BitmapFactory.decodeResource(getResources(), R.drawable.mixed_word_no_name);
+		pixOPair = BitmapFactory.decodeResource(getResources(), R.drawable.icon);
 
 		gamepic1 =(ImageView) findViewById (R.id.gamePicture1);
 		gamepic2 =(ImageView) findViewById (R.id.gamePicture2);
@@ -98,6 +99,9 @@ public class TopPopularActivity extends Activity{
 		else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString())) {
 			return clickMemory;
 		}
+		else if (gameType.equals(IntentExtraKeysEnum.DarePixOPair.toString())) {
+			return pixOPair;
+		}
 		else if (gameType.equals(IntentExtraKeysEnum.Truth.toString())) {
 			return trivia;
 		}
@@ -115,6 +119,9 @@ public class TopPopularActivity extends Activity{
 		}
 		else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString())) {
 			return "Click memory";
+		}
+		else if (gameType.equals(IntentExtraKeysEnum.DarePixOPair.toString())) {
+			return "Pix-O-Pair";
 		}
 		else if (gameType.equals(IntentExtraKeysEnum.Truth.toString())) {
 			return "Trivia";

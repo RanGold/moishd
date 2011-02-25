@@ -23,6 +23,7 @@ import moishd.android.games.MostPopularGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthOrDareActivity;
 import moishd.android.games.TruthPartGameActivity;
+import moishd.android.games.pixOpair.myMoishdActivity;
 import moishd.client.dataObjects.ClientMoishdUser;
 import moishd.client.dataObjects.TrophiesEnum;
 import moishd.common.GetUsersByTypeEnum;
@@ -83,7 +84,6 @@ public class AllOnlineUsersActivity extends Activity{
 	private String authToken;
 	private String game_id;
 	private String gameType;
-	private String opponent_google_id;
 	private String opponent_nick_name;
 	private String offer_opponent_google_id;
 	private String offer_opponent_nick_name;
@@ -626,9 +626,8 @@ public class AllOnlineUsersActivity extends Activity{
 			intent.setClass(this, MixingGameActivity.class);
 		else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
 			intent.setClass(this, FastClickGameActivity.class);
-		else { //TODO -default is DareMixing
-			intent.setClass(this, MixingGameActivity.class);
-		}
+		else if (gameType.equals(IntentExtraKeysEnum.DarePixOPair.toString()))
+			intent.setClass(this, myMoishdActivity.class);
 	}
 
 	private void StartGamePopular(){

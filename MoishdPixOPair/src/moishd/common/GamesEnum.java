@@ -5,7 +5,8 @@ public enum GamesEnum {
 	Truth("Truth", "Trivia"),
 	DareSimonPro("DareSimonPro", "Simon Pro"),
 	DareMixing("DareMixing", "Mixed Word"),
-	DareFastClick("DareFastClick", "Fast Click");
+	DareFastClick("DareFastClick", "Fast Click"),
+	DarePixOPair("StartGameDarePixOPair", "Pix-O-Pair");
 	
 	private String name;
 	private String enumName;
@@ -34,6 +35,8 @@ public enum GamesEnum {
 			return GamesEnum.DareSimonPro.toString();
 		case Truth:
 			return GamesEnum.Truth.toString();
+		case DarePixOPair:
+			return GamesEnum.DarePixOPair.toString();
 		}
 		return null;
 	}
@@ -50,6 +53,9 @@ public enum GamesEnum {
 			return GamesEnum.DareSimonPro.getName();
 		}
 		else if (gameName.equals(IntentExtraKeysEnum.Truth.toString())) {
+			return GamesEnum.Truth.getName();
+		}
+		else if (gameName.equals(IntentExtraKeysEnum.DarePixOPair.toString())) {
 			return GamesEnum.Truth.getName();
 		}
 		else{

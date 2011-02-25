@@ -141,7 +141,7 @@ public class WelcomeScreenActivity extends Activity{
 		super.onCreate(savedInstanceState);
 
 		moishdPreferences = MoishdPreferences.getMoishdPreferences(getApplicationContext());
-		setContentView(R.layout.main);
+		setContentView(R.layout.welcome_screen_layout);
 		loginButton = (LoginButton) findViewById(R.id.login);
 		TextView text = (TextView) findViewById(R.id.moishdName);
 		switchAccounts = (Button) findViewById(R.id.switchAccounts);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Moishd!</string>
+	<string name="app_name">MoishdPixOPair</string>
 	<string name="refresh">Refresh</string>
 	<string name="get_all_users">All users</string>
 	<string name="get_all_facebook_friends">Facebook friends</string>
@@ -10,4 +10,10 @@
 	<string name="top_five_ranked">Top five ranked games</string>
 	<string name="top_five_popular">Top five popular games</string>
 	<string name="top_moishers">Top Moishers</string>
+	<string name="larotau">Start</string>
+    <string name="add_new">New Game</string>
+ 	<string name="remove">Exit Game</string>
+  	<string name="cancel">Cancel</string>
+	<string name="patnubay">Guidelines</string>
+	<string name="labastau">Exit</string>
 </resources>

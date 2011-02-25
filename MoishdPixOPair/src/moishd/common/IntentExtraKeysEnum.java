@@ -16,6 +16,7 @@ public enum IntentExtraKeysEnum {
 	DareSimonPro("DareSimonPro"),
 	DareMixing("DareMixing"),
 	DareFastClick("DareFastClick"),
+	DarePixOPair("DarePixOPair"),
 	MoishdUser("MoishdUser"),
 	MoishdUsersList("MoishdUsersList"),
 	Points("Points"),
