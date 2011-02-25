@@ -13,6 +13,7 @@ public enum PushNotificationTypeEnum {
 	StartGameDare,
 	StartGameDareSimonPro,
 	StartGameDareMixing,
+	StartGameDarePixOPair,
 	PopularGame,
 	StartGameDareFastClick,
 	GameResult,

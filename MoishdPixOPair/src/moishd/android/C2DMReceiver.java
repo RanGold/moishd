@@ -19,6 +19,7 @@ import moishd.android.games.FastClickGameActivity;
 import moishd.android.games.MixingGameActivity;
 import moishd.android.games.SimonProGameActivity;
 import moishd.android.games.TruthPartGameActivity;
+import moishd.android.games.pixOpair.myMoishdActivity;
 import moishd.common.MoishdPreferences;
 import moishd.common.IntentExtraKeysEnum;
 import moishd.common.PushNotificationTypeEnum;
@@ -144,7 +145,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		//TODO- we have to decide weather we want a game to be canceled in case one of the user in not in the main screen.
 		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
-				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())){
+				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())||
+				action.equals(PushNotificationTypeEnum.StartGameDarePixOPair.toString())){
 			
 			moishdPreferences.setAvailableStatus(true);
 			
@@ -182,17 +184,22 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			String gameType = resultWithGameType.substring(placeToCut+1);
 
 			resultIntent.putExtra(IntentExtraKeysEnum.PushGameResult.toString(), result);
-	
-	
-				
-			if (gameType.equals(IntentExtraKeysEnum.Truth.toString()))
+
+			if (gameType.equals(IntentExtraKeysEnum.Truth.toString())){
 				resultIntent.setClass(this, TruthPartGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString()))
+			}
+			else if (gameType.equals(IntentExtraKeysEnum.DareSimonPro.toString())){
 				resultIntent.setClass(this, SimonProGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString()))
+			}
+			else if (gameType.equals(IntentExtraKeysEnum.DareMixing.toString())){
 				resultIntent.setClass(this, MixingGameActivity.class);
-			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString()))
+			}
+			else if (gameType.equals(IntentExtraKeysEnum.DareFastClick.toString())){
 				resultIntent.setClass(this, FastClickGameActivity.class);
+			}
+			else if (gameType.equals(IntentExtraKeysEnum.DarePixOPair.toString())){
+				resultIntent.setClass(this, myMoishdActivity.class);
+			}
 		
 		}
 		Log.d("TEST", "action is " + action);

@@ -30,6 +30,7 @@ public class TopMoisherGeneralActivity extends Activity{
 		ImageView simonPro = (ImageView) findViewById(R.id.gameIconSimonPro);
 		ImageView fastClick = (ImageView) findViewById(R.id.gameIconFastClick);
 		ImageView trivia = (ImageView) findViewById(R.id.gameIconTrivia);
+		ImageView pixOPair = (ImageView) findViewById(R.id.gameIconPixOPair);
 		TextView text = (TextView) findViewById(R.id.text);
 
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/mailrays.ttf");
@@ -55,6 +56,13 @@ public class TopMoisherGeneralActivity extends Activity{
 		fastClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DareFastClick);
+				startActivity(topMoishersIntent);
+			}
+		});
+		
+		pixOPair.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				topMoishersIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), GamesEnum.DarePixOPair);
 				startActivity(topMoishersIntent);
 			}
 		});

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 public class TruthOrDareActivity extends Activity{
 	String gameType;
-	int numberOfDareGames = 3;
+	int numberOfDareGames = 4;
 	TextView text;
 	int flag = 1;
 
@@ -54,12 +54,15 @@ public class TruthOrDareActivity extends Activity{
 				if (i==0)
 					gameType = IntentExtraKeysEnum.DareSimonPro.toString();
 
-				else if (i==1)
+				else if (i==1){
 					gameType = IntentExtraKeysEnum.DareMixing.toString();
-
-				else
+				}
+				else if (i==2){
 					gameType = IntentExtraKeysEnum.DareFastClick.toString();
-
+				}				
+				else {
+					gameType = IntentExtraKeysEnum.DarePixOPair.toString();
+				}
 
 				returnGameTypeToCallingActivity(gameType);
 			}

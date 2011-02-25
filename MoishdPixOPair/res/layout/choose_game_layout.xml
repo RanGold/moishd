@@ -29,7 +29,7 @@
 	<ImageView android:id="@+id/mixing"
 		android:src="@drawable/mixing_game"
 		android:layout_width="120dip" 
-		android:layout_height="140dip"	
+		android:layout_height="120dip"	
 		android:clickable="true"
 		android:layout_marginLeft="40dip"/>
 
@@ -37,9 +37,8 @@
 		android:src="@drawable/simonpro_2"
 		android:clickable="true"
 		android:layout_width="120dip" 
-		android:layout_height="140dip"
-		layout_marginLeft="20dip"
-		android:layout_marginTop="14dip"/>
+		android:layout_height="120dip"
+		layout_marginLeft="20dip"/>
 
 	</TableRow>
 
@@ -54,7 +53,7 @@
   		android:src="@drawable/trivia_1"
   		android:clickable="true"
 		android:layout_width="120dip" 
-		android:layout_height="140dip"
+		android:layout_height="120dip"
 		android:layout_marginLeft="40dip"
        />	
 	
@@ -62,12 +61,24 @@
   		android:src="@drawable/fast_click_game"
   		android:clickable="true"
 		android:layout_width="120dip" 
-		android:layout_height="140dip"
-		android:paddingRight="5dip"
-		android:layout_marginTop="10dip"
+		android:layout_height="120dip"
 		layout_marginLeft="20dip"
    />
 
+  	</TableRow>
+  		<TableRow 
+		android:id="@+id/Row02" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		>
+	
+  	<ImageView android:id="@+id/pixopair"
+  		android:src="@drawable/icon"
+  		android:clickable="true"
+		android:layout_width="120dip" 
+		android:layout_height="120dip"
+		android:layout_marginLeft="40dip"
+       />
   	</TableRow>
 
 </LinearLayout>

@@ -28,18 +28,17 @@
 	
 	<ImageView android:id="@+id/gameIconMixing"
 		android:src="@drawable/mixing_game"
-		android:layout_width="120dip" 
-		android:layout_height="140dip"	
+		android:layout_width="70dip" 
+		android:layout_height="70dip"	
 		android:clickable="true"
-		android:layout_marginLeft="40dip"/>
+		android:layout_marginLeft="20dip"/>
 
 	<ImageView android:id="@+id/gameIconSimonPro"
 		android:src="@drawable/simonpro_2"
 		android:clickable="true"
-		android:layout_width="120dip" 
-		android:layout_height="140dip"
-		layout_marginLeft="20dip"
-		android:layout_marginTop="14dip"/>
+		android:layout_width="70dip" 
+		android:layout_height="70dip"
+		layout_marginLeft="20dip"/>
 
 	</TableRow>
 
@@ -52,10 +51,35 @@
   	<ImageView android:id="@+id/gameIconTrivia"
   		android:src="@drawable/trivia_1"
   		android:clickable="true"
-		android:layout_width="120dip" 
-		android:layout_height="140dip"
-		android:layout_marginLeft="40dip"
+		android:layout_width="70dip" 
+		android:layout_height="70dip"
+		android:layout_marginLeft="20dip"
        />	
+	
+  	<ImageView android:id="@+id/gameIconFastClick"
+  		android:src="@drawable/fast_click_game"
+  		android:clickable="true"
+		android:layout_width="70dip" 
+		android:layout_height="70dip"
+		android:layout_marginTop="10dip"
+		layout_marginLeft="20dip"
+   />
+
+  	</TableRow>
+  	
+  	<TableRow 
+		android:id="@+id/Row03" 
+		android:layout_width="match_parent" 
+		android:layout_height="match_parent"
+		>
+	
+  	<ImageView android:id="@+id/gameIconPixOPair"
+  		android:src="@drawable/icon"
+  		android:clickable="true"
+		android:layout_width="70dip" 
+		android:layout_height="70dip"
+		android:layout_marginLeft="20dip"
+       /><!--	
 	
   	<ImageView android:id="@+id/gameIconFastClick"
   		android:src="@drawable/fast_click_game"
@@ -67,6 +91,6 @@
 		layout_marginLeft="20dip"
    />
 
-  	</TableRow>
+  	--></TableRow>
 
 </LinearLayout>

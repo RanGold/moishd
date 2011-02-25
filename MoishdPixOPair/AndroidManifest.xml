@@ -55,8 +55,7 @@
 		<activity android:name=".TopMoisherActivity" android:label="@string/app_name" android:screenOrientation="portrait"></activity>
 		<activity android:name=".TopPopularActivity" android:label="@string/app_name" android:screenOrientation="portrait"></activity>
 		<activity android:name=".games.MostPopularGameActivity" android:label="@string/app_name" android:screenOrientation="portrait">	</activity>
-
-				
+        <activity android:name=".games.pixOpair.myMoishdActivity" android:label="@string/app_name" android:screenOrientation="portrait" android:launchMode="singleTop">	</activity>
 		<service android:name=".C2DMReceiver"/>
 		<receiver android:name="com.google.android.c2dm.C2DMBroadcastReceiver" 
                   android:permission="com.google.android.c2dm.permission.SEND">

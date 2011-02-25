@@ -19,9 +19,9 @@ import moishd.android.ServerCommunication;
 
 public class ChooseGameActivity extends Activity{
 	
-	ImageView mixing,simonPro,fastClick,trivia;
-	Bitmap simonProPic1, simonProPic2, simonProPic3, triviaPic1, triviaPic2, triviaPic3;	
-	int flag = 1;
+	private ImageView mixing,simonPro,fastClick,trivia, pixOPair;
+	private Bitmap simonProPic1, simonProPic2, simonProPic3, triviaPic1, triviaPic2, triviaPic3;	
+	private int flag = 1;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
@@ -41,6 +41,7 @@ public class ChooseGameActivity extends Activity{
 		simonPro = (ImageView) findViewById(R.id.simonpro);
 		fastClick = (ImageView) findViewById(R.id.fastClick);
 		trivia = (ImageView) findViewById(R.id.trivia);
+		pixOPair = (ImageView) findViewById(R.id.pixopair);
 		TextView text = (TextView) findViewById(R.id.text);
 		
 		Typeface fontName = Typeface.createFromAsset(getAssets(), "fonts/FORTE.ttf");
@@ -64,6 +65,13 @@ public class ChooseGameActivity extends Activity{
 		fastClick.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				returnGameTypeToCallingActivity(IntentExtraKeysEnum.DareFastClick.toString());
+
+			}
+		});
+		
+		pixOPair.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				returnGameTypeToCallingActivity(IntentExtraKeysEnum.DarePixOPair.toString());
 
 			}
 		});
