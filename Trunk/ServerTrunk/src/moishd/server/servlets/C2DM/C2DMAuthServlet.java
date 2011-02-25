@@ -21,14 +21,15 @@ public class C2DMAuthServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	throws IOException {
-//		LoggerCommon.Get().LogInfo("adsd", "check1");
+//		Checing recieved headers
+//		LoggerCommon.Get().LogInfo("C2DMAuthServlet", "headers start");
 //		String headername = ""; 
 //		for(@SuppressWarnings("rawtypes")
 //		Enumeration e = request.getHeaderNames(); e.hasMoreElements();){
 //			headername = (String)e.nextElement();
-//			LoggerCommon.Get().LogInfo("adsd", headername + " - " + request.getHeader(headername));
+//			LoggerCommon.Get().LogInfo("C2DMAuthServlet", headername + " - " + request.getHeader(headername));
 //		}
-//		LoggerCommon.Get().LogInfo("adsd", "check2");
+//		LoggerCommon.Get().LogInfo("C2DMAuthServlet", "headers end");
 		if ((UserServiceFactory.getUserService().isUserLoggedIn()
 				&& UserServiceFactory.getUserService().isUserAdmin()) ||
 			(request.getHeader("X-AppEngine-Cron").equals("true") &&
