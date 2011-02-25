@@ -208,6 +208,7 @@ public class WelcomeScreenActivity extends Activity{
 
 	@Override
 	protected void onDestroy (){
+		Log.d("TEST","ondestroy");
 		if(isC2DMRegistered()){
 			unregisterC2DM();
 		}
@@ -239,6 +240,7 @@ public class WelcomeScreenActivity extends Activity{
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {	
 						moishdPreferences.setReturnFromAuth(false);
+						onDestroy();
 						System.exit(0);
 					}});
 
@@ -373,6 +375,7 @@ public class WelcomeScreenActivity extends Activity{
 			.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
+					onDestroy();
 					System.exit(0);
 				}
 			});
@@ -457,6 +460,7 @@ public class WelcomeScreenActivity extends Activity{
 			.setCancelable(false)
 			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					onDestroy();
 					System.exit(0);
 				}
 			})
