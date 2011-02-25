@@ -2,6 +2,8 @@ package moishd.server.dataObjects;
 
 import java.io.Serializable;
 
+// Used on the busy queue to help set busy to multiple
+// users on synchronous time
 public class BusyObject implements Serializable {
 	/**
 	 * 
