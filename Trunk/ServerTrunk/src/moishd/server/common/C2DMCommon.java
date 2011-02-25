@@ -46,69 +46,27 @@ public class C2DMCommon {
 			}
 		}
 	}
-	
-	 //private static final Logger log = Logger.getLogger(moishd.server.common.C2DMCommon.class.getName());
 
-	 public static final String URI = "/tasks/c2dm";
+	public static final String URI = "/tasks/c2dm";
 
-	 public static final String RETRY_COUNT = "X-AppEngine-TaskRetryCount";
+	public static final String RETRY_COUNT = "X-AppEngine-TaskRetryCount";
 
-	 static int MAX_RETRY = 3;
-	
-//	public static int PushGenericMessage1 
-//	(String regId, String action, int retries, ServletContext context,
-//			Map<String,String> payloads) {
-//		String registrationId = regId;
-//        int retryCount = retries;
-//        if (retryCount != -1) {
-//            if (retryCount > MAX_RETRY) {
-//                log.severe("Too many retries, drop message for :" + registrationId);
-//                return 200;
-//            }
-//        }
-//        
-//        @SuppressWarnings("unchecked")
-//		//Map<String, String[]> params = req.getParameterMap();
-//        String collapse =  String.valueOf((action + 
-//				(payloads.size() > 0 ? 
-//						(String)payloads.values().toArray()[0] : 
-//							"")).hashCode());
-//        boolean delayWhenIdle = false;
-//            //null != req.getParameter(C2DMessaging.PARAM_DELAY_WHILE_IDLE);
-//
-//        try {
-//            // Send doesn't retry !! 
-//            // We use the queue exponential backoff for retries.
-//            boolean sentOk = C2DMessaging.get(context)
-//              .sendNoRetry(registrationId, collapse, params, delayWhenIdle);
-//            log.info("Retry result " + sentOk + " " + registrationId);
-//            if (sentOk) {
-//                resp.setStatus(200); 
-//                resp.getOutputStream().write("OK".getBytes());
-//            } else {
-//                resp.setStatus(500); // retry this task
-//            }
-//        } catch (IOException ex) {
-//            resp.setStatus(200); 
-//            resp.getOutputStream().write(("Non-retriable error:" + 
-//              ex.toString()).getBytes());            
-//        }
-//		
-//	}
-	
-	
+	static int MAX_RETRY = 3;
+
 	public static boolean PushGenericMessage 
 	(String regId, String action, 
 			Map<String,String> payloads) throws ServletException, IOException {
 		String auth_token = getAuthToken(true);
 
 		HttpURLConnection connection = null; 
-		try { 
+		try {
+			// Building c2dm push message request
 			URL url = null; 
 
 			try { 
 				url = new URL("https://android.apis.google.com/c2dm/send"); 
 			} catch(MalformedURLException e) { 
+				LoggerCommon.Get().LogInfo("C2DMCommon", e.getMessage());
 				// Exception handling 
 			} 
 			connection = (HttpURLConnection)url.openConnection();
@@ -118,6 +76,7 @@ public class C2DMCommon {
 			connection.setRequestProperty("Authorization", "GoogleLogin auth=" + auth_token);
 
 		} catch (Exception e) { 
+			LoggerCommon.Get().LogInfo("C2DMCommon", e.getMessage());
 			// Exception handling 
 		} 
 		StringBuilder sb = new StringBuilder(); 
@@ -133,6 +92,7 @@ public class C2DMCommon {
 		}
 		String data = sb.toString();
 		try { 
+			// Getting push result
 			DataOutputStream stream = new DataOutputStream(connection.getOutputStream());
 			stream.writeBytes(data); 
 			stream.flush(); 
@@ -141,6 +101,7 @@ public class C2DMCommon {
 					String.valueOf(connection.getResponseCode()));
 			String newAuth = connection.getHeaderField("update-client-auth");
 			
+			// C2DM auth expired
 			if (newAuth != null) {
 				LoggerCommon.Get().LogInfo("C2DMCommon", "Updating C2DM auth token");
 				DSCommon.SetC2DMAuth(newAuth);
@@ -178,6 +139,7 @@ public class C2DMCommon {
 		return false;
 	}
 
+	// Getting new auth token and updating it on the datastore
 	public static String getAuthToken(Boolean getCurrent) throws ServletException, IOException {
 		if (getCurrent) {
 			List<C2DMAuth> auths = DSCommon.GetAllC2DMAuth();
