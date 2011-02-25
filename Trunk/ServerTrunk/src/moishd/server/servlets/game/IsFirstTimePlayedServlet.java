@@ -21,6 +21,7 @@ public class IsFirstTimePlayedServlet extends GeneralServlet{
 		
 		if (user != null) {
 			String gameType = request.getReader().readLine();
+			// Counting palyed time and replying if it is the third time played
 			if (!mUser.getGameTypesPlayed().containsKey(gameType)) {
 				mUser.getGameTypesPlayed().put(gameType, 1);
 				mUser.SaveChanges();

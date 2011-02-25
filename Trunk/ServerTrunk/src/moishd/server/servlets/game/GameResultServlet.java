@@ -27,7 +27,6 @@ public class GameResultServlet extends GeneralServlet {
 		Won,
 		Lost,
 		LostTechnicly
-		
 	}
 	
 	protected String servletName;
@@ -57,6 +56,7 @@ public class GameResultServlet extends GeneralServlet {
 				}
 				tg.SaveChanges();
 				
+				// Sending the result synchronized
 				Queue queue = QueueFactory.getQueue("resultQueue");
 				queue.add (TaskOptions.Builder.url("/queues/SendGameResult").method(Method.POST).
 						param("gameId", gameId).param("gameType", gameType).
