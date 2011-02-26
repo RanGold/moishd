@@ -6,7 +6,7 @@ public enum GamesEnum {
 	DareSimonPro("DareSimonPro", "Simon Pro"),
 	DareMixing("DareMixing", "Mixed Word"),
 	DareFastClick("DareFastClick", "Fast Click"),
-	DarePixOPair("StartGameDarePixOPair", "Pix-O-Pair");
+	DarePixOPair("DarePixOPair", "Pix-O-Pair");
 	
 	private String name;
 	private String enumName;
