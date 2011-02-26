@@ -29,6 +29,7 @@ public class ChooseGameActivity extends Activity{
 		
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(false);
+	
 
 		triviaPic1 = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_1);
 		triviaPic2 = BitmapFactory.decodeResource(getResources(), R.drawable.trivia_2);

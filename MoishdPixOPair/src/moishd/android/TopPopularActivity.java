@@ -36,7 +36,7 @@ public class TopPopularActivity extends Activity{
 		fastClick = BitmapFactory.decodeResource(getResources(), R.drawable.fast_click_no_name);
 		clickMemory = BitmapFactory.decodeResource(getResources(), R.drawable.click_memory_no_name);
 		mixedWord = BitmapFactory.decodeResource(getResources(), R.drawable.mixed_word_no_name);
-		pixOPair = BitmapFactory.decodeResource(getResources(), R.drawable.icon);
+		pixOPair = BitmapFactory.decodeResource(getResources(), R.drawable.pixopair_no_name);
 
 		gamepic1 =(ImageView) findViewById (R.id.gamePicture1);
 		gamepic2 =(ImageView) findViewById (R.id.gamePicture2);
