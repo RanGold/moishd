@@ -215,6 +215,7 @@ public class SendGameResultServlet extends HttpServlet {
 			currentGamePoints = addedPoints;
 			LoggerCommon.Get().LogInfo(this, "GamePointsList is null, user is " + user.getUserId() + " points: " + addedPoints);
 			gamesPointsList = new HashMap<String,Integer>();
+			LoggerCommon.Get().LogInfo(this, "GamePointsList created, user is " + user.getUserId() + " points added: " + addedPoints);
 			gamesPointsList.put(moishdGame.getGameType(), addedPoints);
 			user.getStats().setGamesPoints(gamesPointsList);
 			/*Tammy - I've added this line, I think the null exception is thrown because of the fact that the new
@@ -224,7 +225,7 @@ public class SendGameResultServlet extends HttpServlet {
 			for (Entry<String, Integer> current : gamesPointsList.entrySet()) {
 				if (current.getKey().equals(moishdGame.getGameType())){
 					int previousGamePoints = current.getValue();
-					LoggerCommon.Get().LogInfo(this, "Game found, previous " + previousGamePoints + ", points: " + addedPoints);
+					LoggerCommon.Get().LogInfo(this, "Game found, previous " + previousGamePoints + ", points: " + (previousGamePoints + addedPoints));
 					currentGamePoints = previousGamePoints + addedPoints;
 					current.setValue(currentGamePoints);
 					updated = true;
@@ -239,6 +240,7 @@ public class SendGameResultServlet extends HttpServlet {
 			}
 		}
 
+		user.getStats().setGamesPoints(gamesPointsList);
 		user.SaveChanges();
 
 		GameStatistics gameStatistics = DSCommon.GetGameStatByName(moishdGame.getGameType());
@@ -249,34 +251,35 @@ public class SendGameResultServlet extends HttpServlet {
 			LoggerCommon.Get().LogInfo(this, "Top moishers is null");
 			topMoishersMap = new HashMap<String, Integer>();
 			topMoishersMap.put(user.getUserGoogleIdentifier(), addedPoints);
+			LoggerCommon.Get().LogInfo(this, "Top moishers list created, adding user " + user.getUserGoogleIdentifier() + "with " + addedPoints + " points");
 			gameStatistics.setTopMoishers(topMoishersMap);			
 		}
 		else{
 			String moisherWithLeastPointsId = "";
 			int moisherWithLeastPointsPoints = -1;
 			LoggerCommon.Get().LogInfo(this, "Top moishers NOT null");
+			LoggerCommon.Get().LogInfo(this, "moishers count is " + topMoishersMap.entrySet().size());
 			for (Entry<String, Integer> currentMoisher : topMoishersMap.entrySet()){
-				LoggerCommon.Get().LogInfo(this, "moishers count is " + topMoishersMap.entrySet().size());
-
+				LoggerCommon.Get().LogInfo(this, "current Moisher is" + currentMoisher.getKey() + ", has " + currentMoisher.getValue() + " points");
 				int currentMoisherPoints = currentMoisher.getValue();
-				if (currentMoisherPoints < currentGamePoints){ // why do we even check this? more players?
+				if (currentMoisherPoints < currentGamePoints){
 					if (moisherWithLeastPointsPoints == -1 || moisherWithLeastPointsPoints > currentMoisher.getValue()){ //gets in always the first time
 						moisherWithLeastPointsId = currentMoisher.getKey(); //now he is the lower moisher
 						moisherWithLeastPointsPoints = currentMoisher.getValue();
 					}
 				}
 			}
-			if (moisherWithLeastPointsPoints == -1){ /*this could never happen???? how can we have more points to a user than a game? only if her's the first one*/
+			if (moisherWithLeastPointsPoints == -1){
+				LoggerCommon.Get().LogInfo(this, "current MoisherPoints are -1, adding current user with " + currentGamePoints + " points");
 				topMoishersMap.put(user.getUserGoogleIdentifier(), currentGamePoints);
 			}
-
 			else if (moisherWithLeastPointsPoints < currentGamePoints){
 				
 				topMoishersMap.put(user.getUserGoogleIdentifier(), currentGamePoints);
-				LoggerCommon.Get().LogInfo(this, "Tammy's check - points were addded, total now is: " + currentGamePoints);
-				
+				LoggerCommon.Get().LogInfo(this, "adding current user with " + currentGamePoints + " points");				
 				if (topMoishersMap.size() > 5){
 					topMoishersMap.remove(moisherWithLeastPointsId);
+					LoggerCommon.Get().LogInfo(this, "removing user" + moisherWithLeastPointsId + " from top moishers");				
 				}
 			}
 			gameStatistics.setTopMoishers(topMoishersMap);
