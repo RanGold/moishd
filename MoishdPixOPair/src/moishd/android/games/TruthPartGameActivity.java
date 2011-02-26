@@ -16,9 +16,7 @@ public class TruthPartGameActivity extends GameActivity {
 	int i;
 
 	final String[][] questions ={
-			{"Is Tammy's last name Dagan?","yes"}, 
-			{"Is it 2012?","no"},
-			{"Is this the first milestone?","no"},
+			{"Is Israel located in Asia?", "yes"}, 
 			{"Is the spoken language in France is hebrew?","no"},
 			{"Do dogs have color sight?","no"},
 			{"Is Bariloche the capital city of Argentina?", "no"},
