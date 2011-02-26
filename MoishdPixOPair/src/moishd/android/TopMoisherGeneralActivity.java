@@ -17,6 +17,7 @@ public class TopMoisherGeneralActivity extends Activity{
 	private Intent topMoishersIntent;
 	private String authToken;
 
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.top_moishers_general_layout);
