@@ -155,6 +155,7 @@ public class GameActivity extends Activity{
 			public void onClick(DialogInterface dialog, int id) {	
 				Intent resultIntent = new Intent();
 				setResult(IntentResultCodesEnum.Failed.getCode(), resultIntent);
+				dialog.dismiss();
 				finish();
 			}});
 
