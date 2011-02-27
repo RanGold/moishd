@@ -372,9 +372,13 @@ public class AllOnlineUsersActivity extends Activity{
 	@Override
 	protected void onDestroy (){
 		super.onDestroy();
+		if (mainProgressDialog != null && mainProgressDialog.isShowing()){
+			mainProgressDialog.dismiss();
+		}
 		locationManagment.stopUpdateLocation();
 		refreshTimer.cancel();
 	}
+	
 	@Override
 	protected void onResume(){
 		super.onResume();
@@ -1225,10 +1229,6 @@ public class AllOnlineUsersActivity extends Activity{
 			}
 		}
 
-		protected void onProgressUpdate(Integer... progress) {
-			onProgressUpdate(progress[0]);
-		}
-
 		@SuppressWarnings("unchecked")
 		protected void onPostExecute(List<Object> resultList) {
 			if (resultList.size() == 2){
@@ -1247,7 +1247,9 @@ public class AllOnlineUsersActivity extends Activity{
 					sendMessageToHandler(messageCodeInt);
 				}
 			}
-			mainProgressDialog.dismiss();
+			if (mainProgressDialog != null && mainProgressDialog.isShowing()){
+				mainProgressDialog.dismiss();
+			}		
 		}
 
 		private Drawable LoadImageFromWebOperations(String url){
