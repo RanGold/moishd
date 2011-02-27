@@ -10,6 +10,7 @@
 	<TextView android:id="@+id/gameOfferLine" 
 		android:layout_height="wrap_content"
 		android:textStyle="normal|bold" 
+		android:clickable="false"
 		android:gravity="center_vertical|center_horizontal"
 		android:layout_width="fill_parent">
 		</TextView>
