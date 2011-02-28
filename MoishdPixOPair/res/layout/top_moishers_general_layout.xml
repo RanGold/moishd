@@ -5,6 +5,8 @@
 	android:layout_height="fill_parent">
 
 <ScrollView android:id="@+id/scroll" 
+	android:scrollbars="vertical"
+	android:fadeScrollbars="false"
   	android:layout_width="fill_parent"
   	android:layout_height="fill_parent">
 
