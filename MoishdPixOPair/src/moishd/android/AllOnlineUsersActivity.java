@@ -193,8 +193,9 @@ public class AllOnlineUsersActivity extends Activity{
 		
 		gameOfferLine.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				gameOfferLine.setText("");
 				gameOfferLine.setClickable(false);
+				gameOfferLine.setVisibility(View.INVISIBLE);
+				gameOfferLine.setText("");
 				GetGameOfferDialog();
 			}
 		});	
@@ -364,6 +365,7 @@ public class AllOnlineUsersActivity extends Activity{
 				gameOfferLine.setTextColor(Color.WHITE);
 				gameOfferLine.setText("You've got one game invitation");
 				gameOfferLine.setTextSize(13);
+				gameOfferLine.setVisibility(View.VISIBLE);
 				gameOfferLine.setClickable(true);
 			}
 		}
