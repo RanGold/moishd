@@ -63,12 +63,6 @@ public class LoggerCommon {
 		sb.append('\n');
 		sb.append(messages[0].toString());
 		
-		/* TODO : check if stack tarce is being printed
-		for (StackTraceElement ste : messages) {
-			sb.append(ste.toString());
-			sb.append('\n');
-		}*/
-		
 		this.getLog(servlet.getServletName()).log(Level.SEVERE, sb.toString());
 		
 		if (response != null) {
