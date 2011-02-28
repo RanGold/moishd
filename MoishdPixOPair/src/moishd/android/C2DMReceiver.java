@@ -46,28 +46,24 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 
 		String action = intent.getStringExtra(IntentExtraKeysEnum.PushAction.toString());
 		String game_id = intent.getStringExtra(IntentExtraKeysEnum.PushGameId.toString());
-		Log.d("Tammy",action);
 		
 		Intent resultIntent = new Intent();
 		resultIntent.putExtra(IntentExtraKeysEnum.PushGameId.toString(), game_id);
 		resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		boolean startIntent = true;
-		//don't care about MoishdPreferences available status
+
 		if (action.equals(PushNotificationTypeEnum.CheckAlive.toString())){
 			startIntent = false;
 			ServerCommunication.sendAlive();
 		}
-		/*TODO have to decided what to do in this case - are we planning to open 'All online users activity' even if we are in
-		 * another screen- like Top moishers? Because currently when we are on these kinds of screens we are not able to get
-		 * any push message, unless we'll define it otherwise. For final submission. 
-		 */
+
 		else if (action.equals(PushNotificationTypeEnum.Disconnect.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.Disconnect.toString());
 			}
-		// We don't want to get game canceled notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
+		
 		else if (action.equals(PushNotificationTypeEnum.GameCanceled.toString())){
 			String initName = intent.getStringExtra(IntentExtraKeysEnum.InitName.toString());
 			String recName = intent.getStringExtra(IntentExtraKeysEnum.RecName.toString());
@@ -77,37 +73,32 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.RecName.toString(), recName);
 		}
 
-		// We don't want to get game offer notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
 		else if (action.equals(PushNotificationTypeEnum.GameOffer.toString())){
 			String authTokenOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString());
-			Log.d("Tammy","google id " + authTokenOfOpponent);
 			String UserNickNameOfOpponent = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString());
-			Log.d("Tammy","user nick of opponent " + UserNickNameOfOpponent);
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameOffer.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GoogleIdOfOpponent.toString(), authTokenOfOpponent);
 			resultIntent.putExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString(), UserNickNameOfOpponent);
 		}
 		
-		// We don't want to get game invitations notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
 		else if (action.equals(PushNotificationTypeEnum.GameInvitation.toString())){
-			Log.d("Tammy","gotGameInvitation");
-			Log.d("Tammy", "displayTopMoishers - status now is " + moishdPreferences.userIsAvailable());
+
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameInvitation.toString());
 			String inviterName = intent.getStringExtra("InviterName");
 			resultIntent.putExtra("Inviter", inviterName);
 		}
-		// We don't want to get game declined notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
+		
 		else if (action.equals(PushNotificationTypeEnum.GameDeclined.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.GameDeclined.toString());
 		}
-		// We don't want to get player busy notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
+		
 		else if (action.equals(PushNotificationTypeEnum.PlayerBusy.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			String opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString()); 
@@ -115,15 +106,14 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerBusy.toString());
 		}
 		
-		// We don't want to get player offline notifications while we are at topMoishers, top 5 popular and own statistics.
-		// That's why we do not activate our moishdPreferences status to 'true'
+
 		else if (action.equals(PushNotificationTypeEnum.PlayerOffline.toString())){
 			resultIntent.setClass(this, AllOnlineUsersActivity.class);
 			String opponent_nick_name = intent.getStringExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString()); 
 			resultIntent.putExtra(IntentExtraKeysEnum.UserNickNameOfOpponent.toString(), opponent_nick_name);
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.PlayerOffline.toString());
 		}
-		//TODO- we have to decide weather we want a game to be canceled in case one of the user in not in the main screen.
+
 		else if (action.substring(0,7).equals("Popular")){
 			
 			moishdPreferences.setAvailableStatus(true);
@@ -133,7 +123,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(16));
 		}
 		
-		//TODO- we have to decide weather we want a game to be canceled in case one of the user in not in the main screen.
+
 		else if(action.equals(PushNotificationTypeEnum.StartGameTruth.toString())){
 			
 			moishdPreferences.setAvailableStatus(true);
@@ -142,7 +132,7 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 			resultIntent.putExtra(IntentExtraKeysEnum.PushAction.toString(), PushNotificationTypeEnum.StartGameTruth.toString());
 			resultIntent.putExtra(IntentExtraKeysEnum.GameType.toString(), action.substring(9));
 		}
-		//TODO- we have to decide weather we want a game to be canceled in case one of the user in not in the main screen.
+
 		else if(action.equals(PushNotificationTypeEnum.StartGameDareSimonPro.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareMixing.toString())||
 				action.equals(PushNotificationTypeEnum.StartGameDareFastClick.toString())||
@@ -203,9 +193,8 @@ public class C2DMReceiver extends C2DMBaseReceiver {
 		
 		}
 		Log.d("TEST", "action is " + action);
-		Log.d("Tammy", "before if " +  moishdPreferences.userIsAvailable());
+
 		if (startIntent && moishdPreferences.userIsAvailable()){
-			Log.d("Tammy", "right before opening the intent " +  moishdPreferences.userIsAvailable());
 			startActivity(resultIntent);
 			
 		}
