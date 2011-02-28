@@ -29,12 +29,12 @@ android:layout_height="wrap_content"
 android:layout_width="wrap_content">
 <ImageView android:paddingRight="5dip" 
 android:id="@+id/pixopair" 
-android:src="@drawable/iconpix" 
+android:src="@drawable/iconpix2" 
 android:clickable="true" 
-android:layout_marginLeft="40dip"
+android:layout_marginLeft="45dip"
 android:layout_marginTop="10dip" 
-android:layout_height="140dip" 
-android:layout_width="120dip">
+android:layout_height="120dip" 
+android:layout_width="100dip">
 </ImageView>
 </TableRow>
 </LinearLayout>
