@@ -138,7 +138,6 @@ public class RankForGameActivity extends Activity{
 		public void onFinish() {
 			ServerCommunication.sendRankToServer(game_type,star_rank,authToken);
 			ServerCommunication.setSingleUserUnbusy(authToken);
-			//TODO check if the result is not an error
 			finish();
 		}    
 		public void onTick(long millisUntilFinished) {

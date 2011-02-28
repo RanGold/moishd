@@ -159,8 +159,7 @@ public class TopPopularActivity extends Activity{
 
 	@Override 
 	public void onBackPressed(){
-		//TODO - check if the request has succeeded
-		boolean requestToServer = ServerCommunication.setSingleUserUnbusy(authString);
+		ServerCommunication.setSingleUserUnbusy(authString);
 		finish();
 	}
 }

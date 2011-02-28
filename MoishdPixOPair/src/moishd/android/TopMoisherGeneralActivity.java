@@ -85,7 +85,6 @@ public class TopMoisherGeneralActivity extends Activity{
 	public void onBackPressed(){
 		MoishdPreferences moishdPreferences = MoishdPreferences.getMoishdPreferences();
 		moishdPreferences.setAvailableStatus(true);
-		//TODO check if there isn't an error returned.
 		finish();
 		
 	}
