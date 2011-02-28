@@ -58,10 +58,15 @@ public class UserLoginServlet extends GeneralServlet {
 				
 				if (muser.isRegistered()) {
 					LoggerCommon.Get().LogInfo(this, 
-							"Tried to login twice with the same user \r\n" + 
-							"Logging off current user connection");
-					C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
-							C2DMCommon.Actions.Disconnect.toString(), new HashMap<String, String>());
+							"Tried to login twice with the same user");
+					if (!muser.getRegisterID().equals(newUser.getRegisterID())) {
+						LoggerCommon.Get().LogInfo(this, "Logging off current user connection");
+						C2DMCommon.PushGenericMessage(muser.getRegisterID(), 
+								C2DMCommon.Actions.Disconnect.toString(), new HashMap<String, String>());
+					} else {
+						LoggerCommon.Get().LogInfo(this, 
+							"Same RegisterID"); 
+					}
 					muser.InitUser();
 				} 
 				
