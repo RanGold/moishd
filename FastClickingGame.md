@@ -1,0 +1,1 @@
+http://moishd.googlecode.com/files/fast_clicking.JPG

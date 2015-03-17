@@ -1,0 +1,2 @@
+Choose your game opponent
+![http://moishd.googlecode.com/files/Picture8.png](http://moishd.googlecode.com/files/Picture8.png)
